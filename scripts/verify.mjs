@@ -6,6 +6,7 @@ import { dirname } from 'node:path';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dataFile = join(root, 'data', 'workbench.json');
+const envFile = join(root, '.env');
 const port = 18787;
 const baseUrl = `http://127.0.0.1:${port}`;
 const api = `${baseUrl}/api/data`;
@@ -58,6 +59,27 @@ async function requestUrl(url, method, payload) {
   });
   const body = await response.json();
   return { response, body };
+}
+
+async function hasDeepSeekApiKey() {
+  if (String(process.env.DEEPSEEK_API_KEY || '').trim()) return true;
+  try {
+    const raw = await readFile(envFile, 'utf8');
+    return raw
+      .split(/\r?\n/)
+      .some((line) => {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) return false;
+        const separator = trimmed.indexOf('=');
+        if (separator === -1) return false;
+        const key = trimmed.slice(0, separator).trim();
+        const value = trimmed.slice(separator + 1).trim().replace(/^['"]|['"]$/g, '');
+        return key === 'DEEPSEEK_API_KEY' && Boolean(value);
+      });
+  } catch (error) {
+    if (error.code === 'ENOENT') return false;
+    throw error;
+  }
 }
 
 async function main() {
@@ -143,11 +165,18 @@ async function main() {
   const aiTest = await requestUrl(`${baseUrl}/api/test-ai-connection`, 'POST', {
     model: 'deepseek-chat'
   });
-  if (aiTest.response.status !== 400 || aiTest.body.error !== '等待用户提供API Key') {
-    throw new Error('Missing API key should be recorded as a system error');
-  }
-  if (!aiTest.body.data?.systemErrors?.some((error) => error.operation === '测试AI连接')) {
-    throw new Error('AI connection errors should be visible in system error logs');
+  const apiKeyConfigured = await hasDeepSeekApiKey();
+  if (!apiKeyConfigured) {
+    if (aiTest.response.status !== 400 || aiTest.body.error !== '等待用户提供API Key') {
+      throw new Error('Missing API key should be recorded as a system error');
+    }
+    if (!aiTest.body.data?.systemErrors?.some((error) => error.operation === '测试AI连接')) {
+      throw new Error('AI connection errors should be visible in system error logs');
+    }
+  } else {
+    if (!aiTest.response.ok || aiTest.body.data?.modelConnection?.status !== '已连接') {
+      throw new Error(`DeepSeek connection test failed: ${aiTest.body.error || aiTest.response.status}`);
+    }
   }
 
   console.log('MVP verification passed');
