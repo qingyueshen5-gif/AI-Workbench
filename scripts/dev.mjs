@@ -4,13 +4,11 @@ import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const viteBin = process.platform === 'win32'
-  ? join(root, 'node_modules', '.bin', 'vite.cmd')
-  : join(root, 'node_modules', '.bin', 'vite');
+const viteCli = join(root, 'node_modules', 'vite', 'bin', 'vite.js');
 
 const processes = [
   spawn(process.execPath, ['server.mjs'], { cwd: root, stdio: 'inherit' }),
-  spawn(viteBin, ['--host', '127.0.0.1'], { cwd: root, stdio: 'inherit', shell: false })
+  spawn(process.execPath, [viteCli, '--host', '127.0.0.1'], { cwd: root, stdio: 'inherit' })
 ];
 
 function stopAll() {
