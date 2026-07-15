@@ -1,27 +1,36 @@
 # CURRENT_TASK.md — 当前任务
 
-> 最新更新：2026-07-14
+> 最新更新：2026-07-15
 
-## 当前阶段：项目启动
+## 当前阶段：MVP 工作台已跑通
 
 ### 今天完成
 - [x] 创建 GitHub 仓库 AI-Workbench
 - [x] 建立四个基础文档（README / PRODUCT / PRINCIPLES / CURRENT_TASK）
 - [x] Codex CLI 恢复正常工作
+- [x] 按 `Codex任务卡_MVP工作台.md` 完成最小闭环：发指令 → 系统留痕 → 展示进度
+- [x] 新增 React + Tailwind 本地网页
+- [x] 新增 Node 本地 API，数据写入 `data/workbench.json`
+- [x] 完成四个页面：首页、聊天页、任务状态页、历史记录页
+- [x] 实现失败任务必须填写失败原因的强制规则
 
-### 本周目标（W29）
+### 本次改动文件
+- `package.json` / `package-lock.json`：项目脚本与依赖
+- `index.html` / `vite.config.js` / `tailwind.config.js` / `postcss.config.js`：前端工程配置
+- `server.mjs`：本地 JSON 存储 API
+- `scripts/dev.mjs`：同时启动 API 与 Vite 开发服务器
+- `src/main.jsx` / `src/styles.css`：MVP 工作台页面与样式
+- `.gitignore`：忽略依赖、构建产物、本地缓存和运行数据
 
-1. **搭建脚本目录结构**
-   - scripts/ 目录初始化
-   - 第一个可用脚本（待定）
+### 验证结果
+- [x] `npm.cmd install --cache .npm-cache`
+- [x] `npm.cmd run build`
+- [x] `node --check server.mjs`
+- [x] API 校验：无失败原因的失败任务返回 400
 
-2. **确定第一个核心功能**
-   - 从日常高频需求中选一个
-   - 用最简单的方式实现
-
-3. **建立开发节奏**
-   - 每天推进一步
-   - 不贪多
+### 下一步
+1. 连续使用 3-7 天，每天记录目标、任务和失败原因。
+2. 到期回答：好不好用？卡在哪？
 
 ## 任务记录规则
 
