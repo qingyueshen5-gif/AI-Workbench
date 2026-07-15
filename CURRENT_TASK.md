@@ -27,6 +27,7 @@
 - [x] `npm.cmd run build`
 - [x] `node --check server.mjs`
 - [x] API 校验：无失败原因的失败任务返回 400
+- [x] 新增 `npm run verify`，自动校验 JSON 持久化和失败原因必填规则
 
 ### 下一步
 1. 连续使用 3-7 天，每天记录目标、任务和失败原因。

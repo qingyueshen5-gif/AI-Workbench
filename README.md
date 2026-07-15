@@ -58,6 +58,7 @@ http://127.0.0.1:5173
 ```bash
 npm run build
 node --check server.mjs
+npm run verify
 ```
 
 ## 数据说明
