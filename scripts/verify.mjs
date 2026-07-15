@@ -6,10 +6,13 @@ import { dirname } from 'node:path';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dataFile = join(root, 'data', 'workbench.json');
-const api = 'http://127.0.0.1:8787/api/data';
+const port = 18787;
+const baseUrl = `http://127.0.0.1:${port}`;
+const api = `${baseUrl}/api/data`;
 
 const server = spawn(process.execPath, ['server.mjs'], {
   cwd: root,
+  env: { ...process.env, PORT: String(port) },
   stdio: ['ignore', 'pipe', 'pipe']
 });
 
@@ -47,6 +50,16 @@ async function request(method, payload) {
   return { response, body };
 }
 
+async function requestUrl(url, method, payload) {
+  const response = await fetch(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: payload ? JSON.stringify(payload) : undefined
+  });
+  const body = await response.json();
+  return { response, body };
+}
+
 async function main() {
   await rm(dataFile, { force: true });
   await waitForServer();
@@ -54,6 +67,18 @@ async function main() {
   const today = new Date().toISOString().slice(0, 10);
   const validData = {
     dailyGoals: { [today]: '验证 MVP 闭环' },
+    preferences: {
+      defaultOwner: 'Codex',
+      dailyTaskLimit: 7,
+      deepSeekModel: 'deepseek-chat'
+    },
+    modelConnection: {
+      status: '未连接',
+      provider: '',
+      model: '',
+      checkedAt: ''
+    },
+    systemErrors: [],
     messages: [
       {
         id: 'verify-message',
@@ -88,6 +113,14 @@ async function main() {
   if (persisted.tasks[0]?.status !== '已完成') {
     throw new Error('Task status was not persisted');
   }
+  if (persisted.preferences?.defaultOwner !== 'Codex') {
+    throw new Error('Preferences were not persisted');
+  }
+
+  const loaded = await request('GET');
+  if (!loaded.response.ok || loaded.body.storage?.taskCount !== 1) {
+    throw new Error('Storage status was not returned');
+  }
 
   const invalidFailedTask = {
     ...validData,
@@ -105,6 +138,16 @@ async function main() {
   const accepted = await request('PUT', validFailedTask);
   if (!accepted.response.ok) {
     throw new Error('Failed tasks with a failure reason should be accepted');
+  }
+
+  const aiTest = await requestUrl(`${baseUrl}/api/test-ai-connection`, 'POST', {
+    model: 'deepseek-chat'
+  });
+  if (aiTest.response.status !== 400 || aiTest.body.error !== '等待用户提供API Key') {
+    throw new Error('Missing API key should be recorded as a system error');
+  }
+  if (!aiTest.body.data?.systemErrors?.some((error) => error.operation === '测试AI连接')) {
+    throw new Error('AI connection errors should be visible in system error logs');
   }
 
   console.log('MVP verification passed');

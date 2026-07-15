@@ -18,6 +18,8 @@
 - [x] 新增 `CHANGELOG.md` 记录 v0.1.0
 - [x] 修复 Windows 下 `npm run dev` 一键启动问题
 - [x] 新增自动验证脚本 `npm run verify`
+- [x] v0.1.1 扩充显示面板：模型连接状态、用户偏好、存储状态、系统错误日志
+- [x] 新增 DeepSeek API 连接测试入口
 
 ### 当前任务
 - [ ] 验证现有功能是否完整
@@ -25,6 +27,7 @@
 - [ ] 判断哪些功能需要合并
 - [ ] 判断哪些功能需要隐藏
 - [ ] 判断哪些功能需要删除
+- [ ] 等待用户在 `.env` 中提供API Key后实测 DeepSeek API 连接
 
 ### 本次改动文件
 - `CONTEXT.md`：项目基准文档，供后续 GPT / Codex / Claude 新对话同步上下文
@@ -34,7 +37,7 @@
 - `index.html` / `vite.config.js` / `tailwind.config.js` / `postcss.config.js`：前端工程配置
 - `server.mjs`：本地 JSON 存储 API
 - `scripts/dev.mjs`：同时启动 API 与 Vite 开发服务器，兼容 Windows
-- `scripts/verify.mjs`：自动验证本地持久化与失败原因必填规则
+- `scripts/verify.mjs`：自动验证本地持久化、失败原因必填规则、存储状态和无 API Key 错误日志
 - `src/main.jsx` / `src/styles.css`：MVP 工作台页面与样式
 - `.gitignore`：忽略依赖、构建产物、本地缓存、运行数据和本地日志
 
@@ -45,6 +48,8 @@
 - [x] API 校验：无失败原因的失败任务返回 400
 - [x] 新增 `npm run verify`，自动校验 JSON 持久化和失败原因必填规则
 - [x] `npm.cmd run dev` 可启动 API 与 Vite，本地访问地址为 `http://127.0.0.1:5173`
+- [x] `npm run verify` 覆盖无 API Key 时的系统错误日志写入
+- [ ] DeepSeek API 真实调用等待用户提供可用 API Key
 
 ### 下一步
 1. 用户最终验收 Phase 2：连续使用 3-7 天，每天记录目标、任务和失败原因。

@@ -4,6 +4,30 @@ import './styles.css';
 
 const statuses = ['待开始', '进行中', '已完成', '失败'];
 const owners = ['GPT', 'Codex', 'Claude', '人工'];
+const defaultData = {
+  dailyGoals: {},
+  messages: [],
+  tasks: [],
+  preferences: {
+    defaultOwner: '人工',
+    dailyTaskLimit: 5,
+    deepSeekModel: 'deepseek-chat'
+  },
+  modelConnection: {
+    status: '未连接',
+    provider: '',
+    model: '',
+    checkedAt: ''
+  },
+  systemErrors: [],
+  storage: {
+    fileSizeBytes: 0,
+    taskCount: 0,
+    messageCount: 0,
+    historyDayCount: 0,
+    systemErrorCount: 0
+  }
+};
 const dateKey = (value = new Date()) => {
   const date = value instanceof Date ? value : new Date(value);
   const year = date.getFullYear();
@@ -16,7 +40,7 @@ const timeText = (value) => new Date(value).toLocaleString('zh-CN', { hour12: fa
 const newId = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
 function App() {
-  const [data, setData] = useState({ dailyGoals: {}, messages: [], tasks: [] });
+  const [data, setData] = useState(defaultData);
   const [activePage, setActivePage] = useState('home');
   const [loading, setLoading] = useState(true);
   const [saveError, setSaveError] = useState('');
@@ -24,7 +48,7 @@ function App() {
   useEffect(() => {
     fetch('/api/data')
       .then((response) => response.json())
-      .then((payload) => setData(payload))
+      .then((payload) => setData({ ...defaultData, ...payload }))
       .catch((error) => setSaveError(error.message))
       .finally(() => setLoading(false));
   }, []);
@@ -40,6 +64,7 @@ function App() {
         .then(async (response) => {
           const payload = await response.json();
           if (!response.ok) throw new Error(payload.error || '保存失败');
+          setData({ ...defaultData, ...payload });
           setSaveError('');
         })
         .catch((error) => {
@@ -83,7 +108,7 @@ function App() {
 
         <section className="min-w-0 flex-1">
           {saveError && <div className="mb-4 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">{saveError}</div>}
-          {activePage === 'home' && <Home data={data} updateData={updateData} />}
+          {activePage === 'home' && <Home data={data} updateData={updateData} setData={setData} />}
           {activePage === 'chat' && <Chat data={data} updateData={updateData} />}
           {activePage === 'tasks' && <Tasks data={data} updateData={updateData} />}
           {activePage === 'history' && <History data={data} />}
@@ -93,7 +118,7 @@ function App() {
   );
 }
 
-function Home({ data, updateData }) {
+function Home({ data, updateData, setData }) {
   const today = todayKey();
   const goal = data.dailyGoals[today] || '';
   const todayTasks = data.tasks.filter((task) => dateKey(task.createdAt) === today);
@@ -118,6 +143,12 @@ function Home({ data, updateData }) {
 
   return (
     <div className="space-y-5">
+      <div className="grid gap-5 lg:grid-cols-3">
+        <ModelConnectionPanel data={data} setData={setData} />
+        <StorageStatusPanel storage={data.storage} />
+        <PreferencesPanel data={data} updateData={updateData} />
+      </div>
+
       <section className="bg-white p-5 shadow-sm ring-1 ring-zinc-200">
         <label className="mb-2 block text-sm font-medium text-zinc-600">今天目标</label>
         <input
@@ -174,6 +205,118 @@ function Home({ data, updateData }) {
         </ul>
       </section>
     </div>
+  );
+}
+
+function ModelConnectionPanel({ data, setData }) {
+  const [testing, setTesting] = useState(false);
+  const [testError, setTestError] = useState('');
+  const connection = data.modelConnection || defaultData.modelConnection;
+  const preferences = data.preferences || defaultData.preferences;
+  const statusText = connection.status === '已连接'
+    ? `已连接：${connection.provider} ${connection.model}`
+    : '未连接';
+
+  async function testConnection() {
+    setTesting(true);
+    setTestError('');
+    try {
+      const response = await fetch('/api/test-ai-connection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: preferences.deepSeekModel
+        })
+      });
+      const payload = await response.json();
+      if (payload.data) setData({ ...defaultData, ...payload.data });
+      if (!response.ok) throw new Error(payload.error || '测试AI连接失败');
+    } catch (error) {
+      setTestError(error.message);
+    } finally {
+      setTesting(false);
+    }
+  }
+
+  return (
+    <section className="bg-white p-5 shadow-sm ring-1 ring-zinc-200">
+      <h2 className="mb-3 text-base font-semibold">模型连接状态</h2>
+      <div className={connection.status === '已连接' ? 'text-sm font-medium text-emerald-700' : 'text-sm font-medium text-zinc-700'}>
+        {statusText}
+      </div>
+      {connection.checkedAt && <div className="mt-1 text-xs text-zinc-500">最近测试：{timeText(connection.checkedAt)}</div>}
+      <button
+        onClick={testConnection}
+        disabled={testing}
+        className="mt-4 w-full rounded-md bg-zinc-900 px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:bg-zinc-400"
+      >
+        {testing ? '测试中...' : '测试AI连接'}
+      </button>
+      {testError && <div className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{testError}</div>}
+    </section>
+  );
+}
+
+function StorageStatusPanel({ storage = defaultData.storage }) {
+  return (
+    <section className="bg-white p-5 shadow-sm ring-1 ring-zinc-200">
+      <h2 className="mb-3 text-base font-semibold">存储状态</h2>
+      <dl className="space-y-2 text-sm">
+        <div className="flex justify-between gap-3"><dt className="text-zinc-500">数据文件</dt><dd>{formatBytes(storage.fileSizeBytes || 0)}</dd></div>
+        <div className="flex justify-between gap-3"><dt className="text-zinc-500">任务</dt><dd>{storage.taskCount || 0} 条</dd></div>
+        <div className="flex justify-between gap-3"><dt className="text-zinc-500">消息</dt><dd>{storage.messageCount || 0} 条</dd></div>
+        <div className="flex justify-between gap-3"><dt className="text-zinc-500">历史天数</dt><dd>{storage.historyDayCount || 0} 天</dd></div>
+        <div className="flex justify-between gap-3"><dt className="text-zinc-500">系统错误</dt><dd>{storage.systemErrorCount || 0} 条</dd></div>
+      </dl>
+    </section>
+  );
+}
+
+function PreferencesPanel({ data, updateData }) {
+  const preferences = data.preferences || defaultData.preferences;
+  const [draft, setDraft] = useState(preferences);
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    setDraft(preferences);
+  }, [preferences.defaultOwner, preferences.dailyTaskLimit, preferences.deepSeekModel]);
+
+  function savePreferences() {
+    updateData((current) => ({
+      ...current,
+      preferences: {
+        ...current.preferences,
+        ...draft,
+        dailyTaskLimit: Number(draft.dailyTaskLimit) || 0
+      }
+    }));
+    setSaved(true);
+    setTimeout(() => setSaved(false), 1600);
+  }
+
+  return (
+    <section className="bg-white p-5 shadow-sm ring-1 ring-zinc-200">
+      <h2 className="mb-3 text-base font-semibold">用户偏好</h2>
+      <div className="space-y-3">
+        <label className="block">
+          <span className="text-sm text-zinc-500">默认负责人</span>
+          <select value={draft.defaultOwner} onChange={(event) => setDraft({ ...draft, defaultOwner: event.target.value })} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm">
+            {owners.map((owner) => <option key={owner}>{owner}</option>)}
+          </select>
+        </label>
+        <label className="block">
+          <span className="text-sm text-zinc-500">每日任务数量上限</span>
+          <input value={draft.dailyTaskLimit} onChange={(event) => setDraft({ ...draft, dailyTaskLimit: event.target.value })} type="number" min="0" className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm" />
+        </label>
+        <label className="block">
+          <span className="text-sm text-zinc-500">DeepSeek 测试模型</span>
+          <input value={draft.deepSeekModel || ''} onChange={(event) => setDraft({ ...draft, deepSeekModel: event.target.value })} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm" />
+        </label>
+        <button onClick={savePreferences} className="w-full rounded-md border border-zinc-300 px-4 py-2 text-sm hover:bg-zinc-50">
+          {saved ? '已保存' : '保存偏好'}
+        </button>
+      </div>
+    </section>
   );
 }
 
@@ -369,6 +512,11 @@ function History({ data }) {
   const failedMatches = data.tasks.filter((task) =>
     task.status === '失败' && task.failureReason?.toLowerCase().includes(query.trim().toLowerCase())
   );
+  const systemErrorMatches = (data.systemErrors || []).filter((error) => {
+    const keyword = query.trim().toLowerCase();
+    const text = `${error.description || ''} ${error.operation || ''}`.toLowerCase();
+    return keyword && text.includes(keyword);
+  });
 
   return (
     <div className="space-y-5">
@@ -386,6 +534,29 @@ function History({ data }) {
             {!failedMatches.length && <li className="py-4 text-sm text-zinc-500">没有匹配结果。</li>}
           </ul>
         )}
+      </section>
+
+      <section className="bg-white p-5 shadow-sm ring-1 ring-zinc-200">
+        <h2 className="mb-4 text-lg font-semibold">系统级错误日志</h2>
+        {query.trim() && (
+          <ul className="mb-4 divide-y divide-zinc-200">
+            {systemErrorMatches.map((error) => (
+              <li key={error.id} className="py-3 text-sm">
+                <div className="text-xs text-zinc-500">{timeText(error.createdAt)} · {error.operation}</div>
+                <div className="mt-1 text-red-700">{error.description}</div>
+              </li>
+            ))}
+          </ul>
+        )}
+        <ul className="divide-y divide-zinc-200">
+          {(data.systemErrors || []).map((error) => (
+            <li key={error.id} className="py-3 text-sm">
+              <div className="text-xs text-zinc-500">{timeText(error.createdAt)} · {error.operation}</div>
+              <div className="mt-1 text-zinc-700">{error.description}</div>
+            </li>
+          ))}
+          {!(data.systemErrors || []).length && <li className="py-4 text-sm text-zinc-500">暂无系统错误。</li>}
+        </ul>
       </section>
 
       {days.map((day) => {
@@ -422,6 +593,12 @@ function statusClass(status) {
   if (status === '进行中') return 'bg-blue-100 text-blue-800';
   if (status === '失败') return 'bg-red-100 text-red-800';
   return 'bg-zinc-100 text-zinc-700';
+}
+
+function formatBytes(bytes) {
+  if (!bytes) return '0 B';
+  if (bytes < 1024) return `${bytes} B`;
+  return `${(bytes / 1024).toFixed(1)} KB`;
 }
 
 createRoot(document.getElementById('root')).render(<App />);
