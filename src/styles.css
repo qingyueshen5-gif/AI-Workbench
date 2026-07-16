@@ -6,6 +6,65 @@ body {
   margin: 0;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.workbench-shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.history-sidebar {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 260px;
+  height: 100vh;
+}
+
+.chat-main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  height: 100vh;
+}
+
+.chat-stream {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.chat-messages {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.chat-input-area {
+  flex: 0 0 auto;
+}
+
+.workbench-right {
+  flex: 0 0 320px;
+  width: 320px;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+@media (max-width: 1023px) {
+  .history-sidebar,
+  .workbench-right {
+    display: none;
+  }
+}
+
 button,
 input,
 textarea,

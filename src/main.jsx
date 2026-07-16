@@ -90,21 +90,23 @@ function App() {
   }
 
   if (loading) {
-    return <main className="min-h-screen bg-zinc-100 p-6 text-zinc-800">加载中...</main>;
+    return <main className="min-h-screen bg-white p-6 text-zinc-800">加载中...</main>;
   }
 
   const selectedTask = data.tasks.find((task) => task.id === selectedTaskId);
 
   return (
-    <main className="min-h-screen bg-zinc-100 text-zinc-950">
-      <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-4 px-4 py-4 lg:flex-row">
-        <section className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-zinc-200">
+    <main className="bg-white text-zinc-950">
+      <div className="workbench-shell w-full">
+        <ConversationSidebar data={data} />
+
+        <section className="chat-main bg-white">
           <TopBar data={data} />
           {saveError && <div className="mx-5 mt-4 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">{saveError}</div>}
           <ChatStream data={data} setData={setData} setSaveError={setSaveError} updateData={updateData} />
         </section>
 
-        <aside className="flex w-full shrink-0 flex-col gap-4 overflow-y-auto lg:w-96">
+        <aside className="workbench-right hidden border-l border-zinc-200 bg-zinc-50 px-4 py-4 xl:block">
           <TodayPanel data={data} />
           <TaskPanel
             data={data}
@@ -130,14 +132,64 @@ function mergeData(payload) {
   };
 }
 
+function ConversationSidebar({ data }) {
+  const recentMessages = [...data.messages].reverse().slice(0, 12);
+  const days = [...new Set([
+    ...Object.keys(data.dailyGoals),
+    ...data.tasks.map((task) => dateKey(task.createdAt))
+  ])].sort((a, b) => b.localeCompare(a)).slice(0, 8);
+
+  return (
+    <aside className="history-sidebar hidden border-r border-zinc-200 bg-zinc-50 md:flex">
+      <div className="flex h-16 items-center justify-between px-4">
+        <div>
+          <h1 className="text-lg font-semibold">AI Workbench</h1>
+          <div className="text-xs text-zinc-500">聊天工作台</div>
+        </div>
+        <div className="rounded-md border border-zinc-300 px-2 py-1 text-xs text-zinc-500">v0.2</div>
+      </div>
+
+      <div className="min-h-0 flex-1 overflow-y-auto px-3 pb-4">
+        <div className="mb-2 px-2 text-xs font-semibold text-zinc-500">Recents</div>
+        <div className="space-y-1">
+          {recentMessages.map((message) => (
+            <button key={message.id} className="block w-full truncate rounded-md px-3 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-200">
+              {message.content}
+            </button>
+          ))}
+          {!recentMessages.length && <div className="px-3 py-6 text-sm text-zinc-500">暂无对话</div>}
+        </div>
+
+        {!!days.length && (
+          <div className="mt-6">
+            <div className="mb-2 px-2 text-xs font-semibold text-zinc-500">History</div>
+            <div className="space-y-1">
+              {days.map((day) => (
+                <button key={day} className="block w-full truncate rounded-md px-3 py-2 text-left text-sm text-zinc-600 hover:bg-zinc-200">
+                  {data.dailyGoals[day] || `${day} 的记录`}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="border-t border-zinc-200 p-3">
+        <div className="truncate text-sm font-medium">本地项目</div>
+        <div className="text-xs text-zinc-500">F:\AI-Workbench</div>
+      </div>
+    </aside>
+  );
+}
+
 function TopBar({ data }) {
   const connection = data.modelConnection || defaultData.modelConnection;
   const connected = connection.status === '已连接';
   return (
-    <header className="flex items-center justify-between border-b border-zinc-200 px-5 py-4">
+    <header className="flex h-16 shrink-0 items-center justify-between border-b border-zinc-100 px-5">
       <div>
-        <h1 className="text-lg font-semibold">AI Workbench</h1>
-        <div className="text-sm text-zinc-500">聊天驱动目标、任务和偏好</div>
+        <h1 className="text-base font-semibold">当前对话</h1>
+        <div className="text-xs text-zinc-500">聊天驱动目标、任务和偏好</div>
       </div>
       <div className={connected ? 'text-right text-sm text-emerald-700' : 'text-right text-sm text-zinc-600'}>
         <div className="font-medium">{connected ? `DeepSeek ${connection.model}` : 'DeepSeek 未连接'}</div>
@@ -217,44 +269,52 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
   }
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
-      <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5">
-        <div className="mx-auto max-w-3xl space-y-5">
+    <div className="chat-stream">
+      <div className="chat-messages px-4">
+        <div className="mx-auto flex min-h-full max-w-3xl flex-col justify-end py-8">
+          <div className="space-y-6">
           {data.messages.map((message) => (
             <article key={message.id} className="group">
-              <div className="mb-1 text-xs text-zinc-500">{timeText(message.createdAt)}</div>
-              <div className="rounded-lg bg-zinc-100 px-4 py-3 text-sm leading-6 text-zinc-900">
+              <div className="mb-1 text-right text-xs text-zinc-400">{timeText(message.createdAt)}</div>
+              <div className="ml-auto max-w-[78%] rounded-2xl bg-zinc-100 px-4 py-3 text-sm leading-6 text-zinc-900">
                 {message.content}
               </div>
-              {!!message.extraction?.applied?.length && (
-                <ul className="mt-2 space-y-1 text-xs text-emerald-700">
-                  {message.extraction.applied.map((item) => <li key={item}>{item}</li>)}
-                </ul>
-              )}
-              {!!message.extraction?.suggestions?.length && (
-                <div className="mt-2 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
-                  {message.extraction.suggestions.map((suggestion, index) => (
-                    <div key={`${suggestion.type}-${suggestion.text}-${index}`} className="flex items-center justify-between gap-3 py-1">
-                      <span className="min-w-0">{suggestion.text}</span>
-                      <button onClick={() => applySuggestion(message, suggestion)} className="shrink-0 rounded-md border border-amber-300 px-2 py-1 text-xs hover:bg-amber-100">
-                        确认
-                      </button>
+              {(!!message.extraction?.applied?.length || !!message.extraction?.suggestions?.length) && (
+                <div className="mt-3 max-w-[78%] text-sm">
+                  {!!message.extraction?.applied?.length && (
+                    <ul className="space-y-1 text-emerald-700">
+                      {message.extraction.applied.map((item) => <li key={item}>{item}</li>)}
+                    </ul>
+                  )}
+                  {!!message.extraction?.suggestions?.length && (
+                    <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-amber-900">
+                      {message.extraction.suggestions.map((suggestion, index) => (
+                        <div key={`${suggestion.type}-${suggestion.text}-${index}`} className="flex items-center justify-between gap-3 py-1">
+                          <span className="min-w-0">{suggestion.text}</span>
+                          <button onClick={() => applySuggestion(message, suggestion)} className="shrink-0 rounded-md border border-amber-300 px-2 py-1 text-xs hover:bg-amber-100">
+                            确认
+                          </button>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
               )}
             </article>
           ))}
           {!data.messages.length && (
-            <div className="py-24 text-center text-sm text-zinc-500">
-              直接说今天想做什么，工作台会从聊天里提炼目标、任务和偏好。
+            <div className="pb-24 text-center">
+              <div className="text-2xl font-semibold text-zinc-900">今天要推进什么？</div>
+              <div className="mt-3 text-sm text-zinc-500">直接输入目标、任务或偏好，工作台会自动提炼。</div>
             </div>
           )}
+          </div>
         </div>
       </div>
 
-      <div className="border-t border-zinc-200 bg-white p-4">
-        <div className="mx-auto flex max-w-3xl gap-2">
+      <div className="chat-input-area bg-white px-4 pb-5 pt-3">
+        <div className="mx-auto flex max-w-3xl items-end gap-2 rounded-3xl border border-zinc-300 bg-white px-4 py-3 shadow-sm">
+          <button type="button" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-zinc-300 text-xl leading-none text-zinc-600">+</button>
           <textarea
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
@@ -264,11 +324,11 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
                 sendMessage();
               }
             }}
-            className="min-h-12 flex-1 resize-none rounded-lg border border-zinc-300 px-3 py-3 text-sm outline-none focus:border-zinc-800"
+            className="max-h-32 min-h-8 flex-1 resize-none border-0 bg-transparent px-1 py-1 text-sm leading-6 outline-none"
             placeholder="例如：我今天想把登录页面做完，默认负责人是Codex。"
           />
-          <button onClick={sendMessage} disabled={sending || !draft.trim()} className="h-12 rounded-lg bg-zinc-900 px-5 text-sm text-white disabled:cursor-not-allowed disabled:bg-zinc-400">
-            {sending ? '提炼中' : '发送'}
+          <button onClick={sendMessage} disabled={sending || !draft.trim()} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-sm text-white disabled:cursor-not-allowed disabled:bg-zinc-300">
+            {sending ? '…' : '↑'}
           </button>
         </div>
       </div>
@@ -282,8 +342,8 @@ function TodayPanel({ data }) {
   const doneCount = todayTasks.filter((task) => task.status === '已完成').length;
   const progress = todayTasks.length ? Math.round((doneCount / todayTasks.length) * 100) : 0;
   return (
-    <section className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-zinc-200">
-      <h2 className="text-sm font-semibold">今日</h2>
+    <section className="border-b border-zinc-200 pb-4">
+      <h2 className="text-xs font-semibold uppercase tracking-wide text-zinc-500">今日</h2>
       <div className="mt-3 text-sm text-zinc-700">{data.dailyGoals[today] || '还没有从聊天中提炼出今日目标'}</div>
       <div className="mt-4 h-2 overflow-hidden rounded-full bg-zinc-200">
         <div className="h-full bg-emerald-600" style={{ width: `${progress}%` }} />
@@ -334,9 +394,9 @@ function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId, upda
   }
 
   return (
-    <section className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-zinc-200">
+    <section className="border-b border-zinc-200 py-4">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-semibold">任务</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-wide text-zinc-500">任务</h2>
         <span className="text-xs text-zinc-500">{data.tasks.length} 条</span>
       </div>
       <ul className="max-h-64 divide-y divide-zinc-200 overflow-y-auto">
@@ -401,8 +461,8 @@ function HistoryPanel({ data }) {
   }, [data]);
 
   return (
-    <section className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-zinc-200">
-      <h2 className="text-sm font-semibold">历史和错误</h2>
+    <section className="py-4">
+      <h2 className="text-xs font-semibold uppercase tracking-wide text-zinc-500">历史和错误</h2>
       <input value={query} onChange={(event) => setQuery(event.target.value)} className="mt-3 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-800" placeholder="搜索失败原因或系统错误" />
       {keyword && (
         <div className="mt-3 space-y-2 text-sm">
