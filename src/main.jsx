@@ -11,7 +11,8 @@ const defaultData = {
   preferences: {
     defaultOwner: '人工',
     dailyTaskLimit: 5,
-    deepSeekModel: 'deepseek-chat'
+    deepSeekModel: 'deepseek-chat',
+    communicationStyle: ''
   },
   modelConnection: {
     status: '未连接',
@@ -28,6 +29,7 @@ const defaultData = {
     systemErrorCount: 0
   }
 };
+
 const dateKey = (value = new Date()) => {
   const date = value instanceof Date ? value : new Date(value);
   const year = date.getFullYear();
@@ -41,367 +43,269 @@ const newId = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
 function App() {
   const [data, setData] = useState(defaultData);
-  const [activePage, setActivePage] = useState('home');
   const [loading, setLoading] = useState(true);
   const [saveError, setSaveError] = useState('');
+  const [selectedTaskId, setSelectedTaskId] = useState('');
 
   useEffect(() => {
     fetch('/api/data')
       .then((response) => response.json())
-      .then((payload) => setData({ ...defaultData, ...payload }))
+      .then((payload) => setData(mergeData(payload)))
       .catch((error) => setSaveError(error.message))
       .finally(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    if (!data.tasks.length) {
+      setSelectedTaskId('');
+      return;
+    }
+    if (!selectedTaskId || !data.tasks.some((task) => task.id === selectedTaskId)) {
+      setSelectedTaskId(data.tasks[0].id);
+    }
+  }, [data.tasks, selectedTaskId]);
+
+  async function saveData(next) {
+    const response = await fetch('/api/data', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(next)
+    });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || '保存失败');
+    setData(mergeData(payload));
+    setSaveError('');
+    return mergeData(payload);
+  }
+
   function updateData(updater) {
     setData((current) => {
       const next = typeof updater === 'function' ? updater(current) : updater;
-      fetch('/api/data', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(next)
-      })
-        .then(async (response) => {
-          const payload = await response.json();
-          if (!response.ok) throw new Error(payload.error || '保存失败');
-          setData({ ...defaultData, ...payload });
-          setSaveError('');
-        })
-        .catch((error) => {
-          setSaveError(error.message);
-          setData(current);
-        });
+      saveData(next).catch((error) => {
+        setSaveError(error.message);
+        setData(current);
+      });
       return next;
     });
   }
 
   if (loading) {
-    return <main className="min-h-screen bg-stone-50 p-6 text-zinc-800">加载中...</main>;
+    return <main className="min-h-screen bg-zinc-100 p-6 text-zinc-800">加载中...</main>;
   }
 
-  const pages = [
-    ['home', '首页'],
-    ['chat', '聊天'],
-    ['tasks', '任务状态'],
-    ['history', '历史记录']
-  ];
+  const selectedTask = data.tasks.find((task) => task.id === selectedTaskId);
 
   return (
-    <main className="min-h-screen bg-stone-50 text-zinc-900">
-      <div className="mx-auto flex w-full max-w-6xl gap-5 px-5 py-6">
-        <aside className="w-36 shrink-0">
-          <h1 className="mb-4 text-xl font-semibold">AI Workbench</h1>
-          <nav className="space-y-2">
-            {pages.map(([id, label]) => (
-              <button
-                key={id}
-                onClick={() => setActivePage(id)}
-                className={`w-full rounded-md px-3 py-2 text-left text-sm ${
-                  activePage === id ? 'bg-zinc-900 text-white' : 'bg-white text-zinc-700 hover:bg-zinc-100'
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </nav>
-        </aside>
-
-        <section className="min-w-0 flex-1">
-          {saveError && <div className="mb-4 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">{saveError}</div>}
-          {activePage === 'home' && <Home data={data} updateData={updateData} setData={setData} />}
-          {activePage === 'chat' && <Chat data={data} updateData={updateData} />}
-          {activePage === 'tasks' && <Tasks data={data} updateData={updateData} />}
-          {activePage === 'history' && <History data={data} />}
+    <main className="min-h-screen bg-zinc-100 text-zinc-950">
+      <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-4 px-4 py-4 lg:flex-row">
+        <section className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-zinc-200">
+          <TopBar data={data} />
+          {saveError && <div className="mx-5 mt-4 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">{saveError}</div>}
+          <ChatStream data={data} setData={setData} setSaveError={setSaveError} updateData={updateData} />
         </section>
+
+        <aside className="flex w-full shrink-0 flex-col gap-4 overflow-y-auto lg:w-96">
+          <TodayPanel data={data} />
+          <TaskPanel
+            data={data}
+            selectedTask={selectedTask}
+            selectedTaskId={selectedTaskId}
+            setSelectedTaskId={setSelectedTaskId}
+            updateData={updateData}
+          />
+          <HistoryPanel data={data} />
+        </aside>
       </div>
     </main>
   );
 }
 
-function Home({ data, updateData, setData }) {
-  const today = todayKey();
-  const goal = data.dailyGoals[today] || '';
-  const todayTasks = data.tasks.filter((task) => dateKey(task.createdAt) === today);
-  const doneCount = todayTasks.filter((task) => task.status === '已完成').length;
-  const progress = todayTasks.length ? Math.round((doneCount / todayTasks.length) * 100) : 0;
-  const [newTask, setNewTask] = useState('');
+function mergeData(payload) {
+  return {
+    ...defaultData,
+    ...payload,
+    preferences: { ...defaultData.preferences, ...(payload.preferences || {}) },
+    modelConnection: { ...defaultData.modelConnection, ...(payload.modelConnection || {}) },
+    storage: { ...defaultData.storage, ...(payload.storage || {}) }
+  };
+}
 
-  function addTask() {
-    if (!newTask.trim()) return;
-    const task = {
-      id: newId(),
-      title: newTask.trim(),
-      status: '待开始',
-      owner: '人工',
-      createdAt: new Date().toISOString(),
-      notes: '',
-      failureReason: ''
-    };
-    updateData((current) => ({ ...current, tasks: [task, ...current.tasks] }));
-    setNewTask('');
+function TopBar({ data }) {
+  const connection = data.modelConnection || defaultData.modelConnection;
+  const connected = connection.status === '已连接';
+  return (
+    <header className="flex items-center justify-between border-b border-zinc-200 px-5 py-4">
+      <div>
+        <h1 className="text-lg font-semibold">AI Workbench</h1>
+        <div className="text-sm text-zinc-500">聊天驱动目标、任务和偏好</div>
+      </div>
+      <div className={connected ? 'text-right text-sm text-emerald-700' : 'text-right text-sm text-zinc-600'}>
+        <div className="font-medium">{connected ? `DeepSeek ${connection.model}` : 'DeepSeek 未连接'}</div>
+        {connection.checkedAt && <div className="text-xs text-zinc-500">{timeText(connection.checkedAt)}</div>}
+      </div>
+    </header>
+  );
+}
+
+function ChatStream({ data, setData, setSaveError, updateData }) {
+  const [draft, setDraft] = useState('');
+  const [sending, setSending] = useState(false);
+
+  async function sendMessage() {
+    const content = draft.trim();
+    if (!content || sending) return;
+    setSending(true);
+    setDraft('');
+    setSaveError('');
+    try {
+      const response = await fetch('/api/chat-message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content })
+      });
+      const payload = await response.json();
+      if (payload.data) setData(mergeData(payload.data));
+      if (!response.ok) throw new Error(payload.error || '聊天提炼失败');
+      if (payload.warning) setSaveError(payload.warning);
+    } catch (error) {
+      setSaveError(error.message);
+      updateData((current) => ({
+        ...current,
+        messages: [...current.messages, { id: newId(), role: 'user', content, createdAt: new Date().toISOString() }]
+      }));
+    } finally {
+      setSending(false);
+    }
+  }
+
+  function applySuggestion(message, suggestion) {
+    updateData((current) => {
+      const today = todayKey();
+      const next = { ...current };
+      if (suggestion.type === 'goal') {
+        next.dailyGoals = { ...current.dailyGoals, [today]: suggestion.text };
+      }
+      if (suggestion.type === 'task') {
+        next.tasks = [{
+          id: newId(),
+          title: suggestion.text,
+          status: '待开始',
+          owner: current.preferences.defaultOwner || '人工',
+          createdAt: new Date().toISOString(),
+          notes: '由用户确认的聊天提炼',
+          failureReason: '',
+          sourceMessageId: message.id
+        }, ...current.tasks];
+      }
+      if (suggestion.type === 'preference') {
+        next.preferences = { ...current.preferences, communicationStyle: suggestion.text };
+      }
+      next.messages = current.messages.map((item) =>
+        item.id === message.id
+          ? {
+              ...item,
+              extraction: {
+                ...item.extraction,
+                suggestions: (item.extraction?.suggestions || []).filter((candidate) => candidate !== suggestion),
+                applied: [...(item.extraction?.applied || []), `已确认：${suggestion.text}`]
+              }
+            }
+          : item
+      );
+      return next;
+    });
   }
 
   return (
-    <div className="space-y-5">
-      <div className="grid gap-5 lg:grid-cols-3">
-        <ModelConnectionPanel data={data} setData={setData} />
-        <StorageStatusPanel storage={data.storage} />
-        <PreferencesPanel data={data} updateData={updateData} />
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5">
+        <div className="mx-auto max-w-3xl space-y-5">
+          {data.messages.map((message) => (
+            <article key={message.id} className="group">
+              <div className="mb-1 text-xs text-zinc-500">{timeText(message.createdAt)}</div>
+              <div className="rounded-lg bg-zinc-100 px-4 py-3 text-sm leading-6 text-zinc-900">
+                {message.content}
+              </div>
+              {!!message.extraction?.applied?.length && (
+                <ul className="mt-2 space-y-1 text-xs text-emerald-700">
+                  {message.extraction.applied.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              )}
+              {!!message.extraction?.suggestions?.length && (
+                <div className="mt-2 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+                  {message.extraction.suggestions.map((suggestion, index) => (
+                    <div key={`${suggestion.type}-${suggestion.text}-${index}`} className="flex items-center justify-between gap-3 py-1">
+                      <span className="min-w-0">{suggestion.text}</span>
+                      <button onClick={() => applySuggestion(message, suggestion)} className="shrink-0 rounded-md border border-amber-300 px-2 py-1 text-xs hover:bg-amber-100">
+                        确认
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </article>
+          ))}
+          {!data.messages.length && (
+            <div className="py-24 text-center text-sm text-zinc-500">
+              直接说今天想做什么，工作台会从聊天里提炼目标、任务和偏好。
+            </div>
+          )}
+        </div>
       </div>
 
-      <section className="bg-white p-5 shadow-sm ring-1 ring-zinc-200">
-        <label className="mb-2 block text-sm font-medium text-zinc-600">今天目标</label>
-        <input
-          value={goal}
-          onChange={(event) =>
-            updateData((current) => ({
-              ...current,
-              dailyGoals: { ...current.dailyGoals, [today]: event.target.value }
-            }))
-          }
-          className="w-full rounded-md border border-zinc-300 px-3 py-2 text-base outline-none focus:border-zinc-800"
-          placeholder="写下一行今天目标"
-        />
-      </section>
-
-      <section className="bg-white p-5 shadow-sm ring-1 ring-zinc-200">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">今日完成</h2>
-          <span className="text-sm text-zinc-600">{doneCount} / {todayTasks.length}，{progress}%</span>
-        </div>
-        <div className="mb-4 h-2 overflow-hidden rounded-full bg-zinc-200">
-          <div className="h-full bg-emerald-600" style={{ width: `${progress}%` }} />
-        </div>
-        <div className="flex gap-2">
-          <input
-            value={newTask}
-            onChange={(event) => setNewTask(event.target.value)}
-            onKeyDown={(event) => event.key === 'Enter' && addTask()}
-            className="min-w-0 flex-1 rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800"
-            placeholder="新增今天任务"
+      <div className="border-t border-zinc-200 bg-white p-4">
+        <div className="mx-auto flex max-w-3xl gap-2">
+          <textarea
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+              }
+            }}
+            className="min-h-12 flex-1 resize-none rounded-lg border border-zinc-300 px-3 py-3 text-sm outline-none focus:border-zinc-800"
+            placeholder="例如：我今天想把登录页面做完，默认负责人是Codex。"
           />
-          <button onClick={addTask} className="rounded-md bg-zinc-900 px-4 py-2 text-sm text-white">添加</button>
+          <button onClick={sendMessage} disabled={sending || !draft.trim()} className="h-12 rounded-lg bg-zinc-900 px-5 text-sm text-white disabled:cursor-not-allowed disabled:bg-zinc-400">
+            {sending ? '提炼中' : '发送'}
+          </button>
         </div>
-        <ul className="mt-4 divide-y divide-zinc-200">
-          {todayTasks.map((task) => (
-            <li key={task.id} className="flex items-center gap-3 py-3">
-              <input
-                type="checkbox"
-                checked={task.status === '已完成'}
-                onChange={(event) =>
-                  updateData((current) => ({
-                    ...current,
-                    tasks: current.tasks.map((item) =>
-                      item.id === task.id ? { ...item, status: event.target.checked ? '已完成' : '待开始' } : item
-                    )
-                  }))
-                }
-                className="h-4 w-4"
-              />
-              <span className={task.status === '已完成' ? 'text-zinc-400 line-through' : ''}>{task.title}</span>
-            </li>
-          ))}
-          {!todayTasks.length && <li className="py-6 text-sm text-zinc-500">今天还没有任务。</li>}
-        </ul>
-      </section>
+      </div>
     </div>
   );
 }
 
-function ModelConnectionPanel({ data, setData }) {
-  const [testing, setTesting] = useState(false);
-  const [testError, setTestError] = useState('');
-  const connection = data.modelConnection || defaultData.modelConnection;
-  const preferences = data.preferences || defaultData.preferences;
-  const statusText = connection.status === '已连接'
-    ? `已连接：${connection.provider} ${connection.model}`
-    : '未连接';
-
-  async function testConnection() {
-    setTesting(true);
-    setTestError('');
-    try {
-      const response = await fetch('/api/test-ai-connection', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: preferences.deepSeekModel
-        })
-      });
-      const payload = await response.json();
-      if (payload.data) setData({ ...defaultData, ...payload.data });
-      if (!response.ok) throw new Error(payload.error || '测试AI连接失败');
-    } catch (error) {
-      setTestError(error.message);
-    } finally {
-      setTesting(false);
-    }
-  }
-
+function TodayPanel({ data }) {
+  const today = todayKey();
+  const todayTasks = data.tasks.filter((task) => dateKey(task.createdAt) === today);
+  const doneCount = todayTasks.filter((task) => task.status === '已完成').length;
+  const progress = todayTasks.length ? Math.round((doneCount / todayTasks.length) * 100) : 0;
   return (
-    <section className="bg-white p-5 shadow-sm ring-1 ring-zinc-200">
-      <h2 className="mb-3 text-base font-semibold">模型连接状态</h2>
-      <div className={connection.status === '已连接' ? 'text-sm font-medium text-emerald-700' : 'text-sm font-medium text-zinc-700'}>
-        {statusText}
+    <section className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-zinc-200">
+      <h2 className="text-sm font-semibold">今日</h2>
+      <div className="mt-3 text-sm text-zinc-700">{data.dailyGoals[today] || '还没有从聊天中提炼出今日目标'}</div>
+      <div className="mt-4 h-2 overflow-hidden rounded-full bg-zinc-200">
+        <div className="h-full bg-emerald-600" style={{ width: `${progress}%` }} />
       </div>
-      {connection.checkedAt && <div className="mt-1 text-xs text-zinc-500">最近测试：{timeText(connection.checkedAt)}</div>}
-      <button
-        onClick={testConnection}
-        disabled={testing}
-        className="mt-4 w-full rounded-md bg-zinc-900 px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:bg-zinc-400"
-      >
-        {testing ? '测试中...' : '测试AI连接'}
-      </button>
-      {testError && <div className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{testError}</div>}
-    </section>
-  );
-}
-
-function StorageStatusPanel({ storage = defaultData.storage }) {
-  return (
-    <section className="bg-white p-5 shadow-sm ring-1 ring-zinc-200">
-      <h2 className="mb-3 text-base font-semibold">存储状态</h2>
-      <dl className="space-y-2 text-sm">
-        <div className="flex justify-between gap-3"><dt className="text-zinc-500">数据文件</dt><dd>{formatBytes(storage.fileSizeBytes || 0)}</dd></div>
-        <div className="flex justify-between gap-3"><dt className="text-zinc-500">任务</dt><dd>{storage.taskCount || 0} 条</dd></div>
-        <div className="flex justify-between gap-3"><dt className="text-zinc-500">消息</dt><dd>{storage.messageCount || 0} 条</dd></div>
-        <div className="flex justify-between gap-3"><dt className="text-zinc-500">历史天数</dt><dd>{storage.historyDayCount || 0} 天</dd></div>
-        <div className="flex justify-between gap-3"><dt className="text-zinc-500">系统错误</dt><dd>{storage.systemErrorCount || 0} 条</dd></div>
-      </dl>
-    </section>
-  );
-}
-
-function PreferencesPanel({ data, updateData }) {
-  const preferences = data.preferences || defaultData.preferences;
-  const [draft, setDraft] = useState(preferences);
-  const [saved, setSaved] = useState(false);
-
-  useEffect(() => {
-    setDraft(preferences);
-  }, [preferences.defaultOwner, preferences.dailyTaskLimit, preferences.deepSeekModel]);
-
-  function savePreferences() {
-    updateData((current) => ({
-      ...current,
-      preferences: {
-        ...current.preferences,
-        ...draft,
-        dailyTaskLimit: Number(draft.dailyTaskLimit) || 0
-      }
-    }));
-    setSaved(true);
-    setTimeout(() => setSaved(false), 1600);
-  }
-
-  return (
-    <section className="bg-white p-5 shadow-sm ring-1 ring-zinc-200">
-      <h2 className="mb-3 text-base font-semibold">用户偏好</h2>
-      <div className="space-y-3">
-        <label className="block">
-          <span className="text-sm text-zinc-500">默认负责人</span>
-          <select value={draft.defaultOwner} onChange={(event) => setDraft({ ...draft, defaultOwner: event.target.value })} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm">
-            {owners.map((owner) => <option key={owner}>{owner}</option>)}
-          </select>
-        </label>
-        <label className="block">
-          <span className="text-sm text-zinc-500">每日任务数量上限</span>
-          <input value={draft.dailyTaskLimit} onChange={(event) => setDraft({ ...draft, dailyTaskLimit: event.target.value })} type="number" min="0" className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm" />
-        </label>
-        <label className="block">
-          <span className="text-sm text-zinc-500">DeepSeek 测试模型</span>
-          <input value={draft.deepSeekModel || ''} onChange={(event) => setDraft({ ...draft, deepSeekModel: event.target.value })} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm" />
-        </label>
-        <button onClick={savePreferences} className="w-full rounded-md border border-zinc-300 px-4 py-2 text-sm hover:bg-zinc-50">
-          {saved ? '已保存' : '保存偏好'}
-        </button>
+      <div className="mt-2 text-xs text-zinc-500">{doneCount} / {todayTasks.length} 已完成</div>
+      <div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs text-zinc-600">
+        <div className="rounded-md bg-zinc-100 p-2">任务 {data.storage.taskCount || data.tasks.length}</div>
+        <div className="rounded-md bg-zinc-100 p-2">消息 {data.storage.messageCount || data.messages.length}</div>
+        <div className="rounded-md bg-zinc-100 p-2">错误 {data.storage.systemErrorCount || data.systemErrors.length}</div>
       </div>
     </section>
   );
 }
 
-function Chat({ data, updateData }) {
-  const [message, setMessage] = useState('');
-
-  function sendMessage() {
-    if (!message.trim()) return;
-    const entry = { id: newId(), content: message.trim(), createdAt: new Date().toISOString(), isTask: false, taskId: '' };
-    updateData((current) => ({ ...current, messages: [...current.messages, entry] }));
-    setMessage('');
-  }
-
-  function markAsTask(entry) {
-    if (entry.isTask) return;
-    const task = {
-      id: newId(),
-      title: entry.content,
-      status: '待开始',
-      owner: '人工',
-      createdAt: new Date().toISOString(),
-      notes: '',
-      failureReason: '',
-      sourceMessageId: entry.id
-    };
-    updateData((current) => ({
-      ...current,
-      messages: current.messages.map((item) => item.id === entry.id ? { ...item, isTask: true, taskId: task.id } : item),
-      tasks: [task, ...current.tasks]
-    }));
-  }
-
-  return (
-    <section className="bg-white p-5 shadow-sm ring-1 ring-zinc-200">
-      <h2 className="mb-4 text-lg font-semibold">聊天</h2>
-      <div className="flex gap-2">
-        <input
-          value={message}
-          onChange={(event) => setMessage(event.target.value)}
-          onKeyDown={(event) => event.key === 'Enter' && sendMessage()}
-          className="min-w-0 flex-1 rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800"
-          placeholder="输入消息"
-        />
-        <button onClick={sendMessage} className="rounded-md bg-zinc-900 px-4 py-2 text-sm text-white">发送</button>
-      </div>
-      <ul className="mt-5 space-y-3">
-        {data.messages.map((entry) => (
-          <li key={entry.id} className="rounded-md border border-zinc-200 p-3">
-            <div className="mb-1 text-xs text-zinc-500">{timeText(entry.createdAt)}</div>
-            <div className="whitespace-pre-wrap text-sm">{entry.content}</div>
-            <button
-              onClick={() => markAsTask(entry)}
-              disabled={entry.isTask}
-              className="mt-3 rounded-md border border-zinc-300 px-3 py-1.5 text-xs disabled:cursor-not-allowed disabled:bg-zinc-100 disabled:text-zinc-400"
-            >
-              {entry.isTask ? '已同步到任务列表' : '标记为任务'}
-            </button>
-          </li>
-        ))}
-        {!data.messages.length && <li className="py-6 text-sm text-zinc-500">暂无消息。</li>}
-      </ul>
-    </section>
-  );
-}
-
-function Tasks({ data, updateData }) {
-  const [selectedId, setSelectedId] = useState(data.tasks[0]?.id || '');
+function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId, updateData }) {
   const [failureDraft, setFailureDraft] = useState('');
   const [statusError, setStatusError] = useState('');
-  const selected = data.tasks.find((task) => task.id === selectedId);
 
   useEffect(() => {
-    if (!data.tasks.length) {
-      setSelectedId('');
-      return;
-    }
-    if (!data.tasks.some((task) => task.id === selectedId)) {
-      setSelectedId(data.tasks[0].id);
-    }
-  }, [data.tasks, selectedId]);
-
-  useEffect(() => {
-    setFailureDraft(selected?.failureReason || '');
+    setFailureDraft(selectedTask?.failureReason || '');
     setStatusError('');
-  }, [selected?.id]);
+  }, [selectedTask?.id]);
 
   function updateTask(id, patch) {
     updateData((current) => ({
@@ -411,194 +315,127 @@ function Tasks({ data, updateData }) {
   }
 
   function changeStatus(status) {
-    if (!selected) return;
-    if (status === '失败' && !selected.failureReason?.trim()) {
-      setFailureDraft('');
+    if (!selectedTask) return;
+    if (status === '失败' && !selectedTask.failureReason?.trim()) {
       setStatusError('标记失败前必须填写失败原因。');
       return;
     }
     setStatusError('');
-    updateTask(selected.id, { status });
+    updateTask(selectedTask.id, { status });
   }
 
   function saveFailure() {
-    if (!selected || !failureDraft.trim()) {
+    if (!selectedTask || !failureDraft.trim()) {
       setStatusError('失败原因不能为空。');
       return;
     }
     setStatusError('');
-    updateTask(selected.id, { status: '失败', failureReason: failureDraft.trim() });
-    setFailureDraft('');
+    updateTask(selectedTask.id, { status: '失败', failureReason: failureDraft.trim() });
   }
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px]">
-      <section className="bg-white p-5 shadow-sm ring-1 ring-zinc-200">
-        <h2 className="mb-4 text-lg font-semibold">任务列表</h2>
-        <ul className="divide-y divide-zinc-200">
-          {data.tasks.map((task) => (
-            <li key={task.id}>
-              <button
-                onClick={() => setSelectedId(task.id)}
-                className={`flex w-full items-center justify-between gap-3 py-3 text-left ${selectedId === task.id ? 'text-zinc-950' : 'text-zinc-700'}`}
-              >
-                <span className="min-w-0 truncate">{task.title}</span>
-                <span className={`shrink-0 rounded-md px-2 py-1 text-xs ${statusClass(task.status)}`}>{task.status}</span>
-              </button>
-            </li>
-          ))}
-          {!data.tasks.length && <li className="py-6 text-sm text-zinc-500">暂无任务。</li>}
-        </ul>
-      </section>
-
-      <section className="bg-white p-5 shadow-sm ring-1 ring-zinc-200">
-        <h2 className="mb-4 text-lg font-semibold">任务详情</h2>
-        {selected ? (
-          <div className="space-y-4">
-            <div>
-              <div className="text-sm text-zinc-500">任务</div>
-              <div className="mt-1 text-sm">{selected.title}</div>
-            </div>
-            <label className="block">
-              <span className="text-sm text-zinc-500">状态</span>
-              <select value={selected.status} onChange={(event) => changeStatus(event.target.value)} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2">
-                {statuses.map((status) => <option key={status}>{status}</option>)}
-              </select>
-            </label>
-            <label className="block">
-              <span className="text-sm text-zinc-500">负责人</span>
-              <select value={selected.owner} onChange={(event) => updateTask(selected.id, { owner: event.target.value })} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2">
-                {owners.map((owner) => <option key={owner}>{owner}</option>)}
-              </select>
-            </label>
-            <div>
-              <div className="text-sm text-zinc-500">创建时间</div>
-              <div className="mt-1 text-sm">{timeText(selected.createdAt)}</div>
-            </div>
-            <label className="block">
-              <span className="text-sm text-zinc-500">备注</span>
-              <textarea value={selected.notes || ''} onChange={(event) => updateTask(selected.id, { notes: event.target.value })} className="mt-1 h-24 w-full rounded-md border border-zinc-300 px-3 py-2" />
-            </label>
-            <label className="block">
-              <span className="text-sm text-zinc-500">失败原因</span>
-              <textarea
-                value={failureDraft}
-                onChange={(event) => setFailureDraft(event.target.value)}
-                className="mt-1 h-24 w-full rounded-md border border-zinc-300 px-3 py-2"
-                placeholder="失败时必填"
-              />
-            </label>
-            {statusError && <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{statusError}</div>}
-            <button onClick={saveFailure} className="w-full rounded-md bg-red-700 px-4 py-2 text-sm text-white">
-              {selected.status === '失败' ? '保存失败原因' : '保存为失败'}
+    <section className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-zinc-200">
+      <div className="mb-3 flex items-center justify-between">
+        <h2 className="text-sm font-semibold">任务</h2>
+        <span className="text-xs text-zinc-500">{data.tasks.length} 条</span>
+      </div>
+      <ul className="max-h-64 divide-y divide-zinc-200 overflow-y-auto">
+        {data.tasks.map((task) => (
+          <li key={task.id}>
+            <button onClick={() => setSelectedTaskId(task.id)} className={`flex w-full items-center justify-between gap-3 py-2 text-left text-sm ${selectedTaskId === task.id ? 'text-zinc-950' : 'text-zinc-600'}`}>
+              <span className="min-w-0 truncate">{task.title}</span>
+              <span className={`shrink-0 rounded-md px-2 py-1 text-xs ${statusClass(task.status)}`}>{task.status}</span>
             </button>
-          </div>
-        ) : (
-          <div className="text-sm text-zinc-500">选择一个任务查看详情。</div>
-        )}
-      </section>
-    </div>
+          </li>
+        ))}
+        {!data.tasks.length && <li className="py-6 text-sm text-zinc-500">聊天后自动生成任务。</li>}
+      </ul>
+
+      {selectedTask && (
+        <div className="mt-4 border-t border-zinc-200 pt-4">
+          <div className="text-sm font-medium">{selectedTask.title}</div>
+          <label className="mt-3 block">
+            <span className="text-xs text-zinc-500">状态</span>
+            <select value={selectedTask.status} onChange={(event) => changeStatus(event.target.value)} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm">
+              {statuses.map((status) => <option key={status}>{status}</option>)}
+            </select>
+          </label>
+          <label className="mt-3 block">
+            <span className="text-xs text-zinc-500">负责人</span>
+            <select value={selectedTask.owner} onChange={(event) => updateTask(selectedTask.id, { owner: event.target.value })} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm">
+              {owners.map((owner) => <option key={owner}>{owner}</option>)}
+            </select>
+          </label>
+          <label className="mt-3 block">
+            <span className="text-xs text-zinc-500">备注</span>
+            <textarea value={selectedTask.notes || ''} onChange={(event) => updateTask(selectedTask.id, { notes: event.target.value })} className="mt-1 h-20 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm" />
+          </label>
+          <label className="mt-3 block">
+            <span className="text-xs text-zinc-500">失败原因</span>
+            <textarea value={failureDraft} onChange={(event) => setFailureDraft(event.target.value)} className="mt-1 h-20 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm" />
+          </label>
+          {statusError && <div className="mt-2 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{statusError}</div>}
+          <button onClick={saveFailure} className="mt-3 w-full rounded-md bg-red-700 px-4 py-2 text-sm text-white">
+            {selectedTask.status === '失败' ? '保存失败原因' : '保存为失败'}
+          </button>
+        </div>
+      )}
+    </section>
   );
 }
 
-function History({ data }) {
+function HistoryPanel({ data }) {
   const [query, setQuery] = useState('');
-  const days = useMemo(() => {
-    const keys = new Set(Object.keys(data.dailyGoals));
-    data.tasks.forEach((task) => keys.add(dateKey(task.createdAt)));
-    return [...keys].sort((a, b) => b.localeCompare(a));
-  }, [data]);
-
+  const keyword = query.trim().toLowerCase();
   const failedMatches = data.tasks.filter((task) =>
-    task.status === '失败' && task.failureReason?.toLowerCase().includes(query.trim().toLowerCase())
+    keyword && task.status === '失败' && task.failureReason?.toLowerCase().includes(keyword)
   );
   const systemErrorMatches = (data.systemErrors || []).filter((error) => {
-    const keyword = query.trim().toLowerCase();
     const text = `${error.description || ''} ${error.operation || ''}`.toLowerCase();
     return keyword && text.includes(keyword);
   });
+  const days = useMemo(() => {
+    const keys = new Set(Object.keys(data.dailyGoals));
+    data.tasks.forEach((task) => keys.add(dateKey(task.createdAt)));
+    return [...keys].sort((a, b) => b.localeCompare(a)).slice(0, 8);
+  }, [data]);
 
   return (
-    <div className="space-y-5">
-      <section className="bg-white p-5 shadow-sm ring-1 ring-zinc-200">
-        <h2 className="mb-4 text-lg font-semibold">失败原因搜索</h2>
-        <input value={query} onChange={(event) => setQuery(event.target.value)} className="w-full rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800" placeholder="输入关键词" />
-        {query.trim() && (
-          <ul className="mt-4 divide-y divide-zinc-200">
-            {failedMatches.map((task) => (
-              <li key={task.id} className="py-3 text-sm">
-                <div className="font-medium">{task.title}</div>
-                <div className="mt-1 text-zinc-600">{task.failureReason}</div>
-              </li>
-            ))}
-            {!failedMatches.length && <li className="py-4 text-sm text-zinc-500">没有匹配结果。</li>}
-          </ul>
-        )}
-      </section>
-
-      <section className="bg-white p-5 shadow-sm ring-1 ring-zinc-200">
-        <h2 className="mb-4 text-lg font-semibold">系统级错误日志</h2>
-        {query.trim() && (
-          <ul className="mb-4 divide-y divide-zinc-200">
-            {systemErrorMatches.map((error) => (
-              <li key={error.id} className="py-3 text-sm">
-                <div className="text-xs text-zinc-500">{timeText(error.createdAt)} · {error.operation}</div>
-                <div className="mt-1 text-red-700">{error.description}</div>
-              </li>
-            ))}
-          </ul>
-        )}
-        <ul className="divide-y divide-zinc-200">
-          {(data.systemErrors || []).map((error) => (
-            <li key={error.id} className="py-3 text-sm">
-              <div className="text-xs text-zinc-500">{timeText(error.createdAt)} · {error.operation}</div>
-              <div className="mt-1 text-zinc-700">{error.description}</div>
-            </li>
-          ))}
-          {!(data.systemErrors || []).length && <li className="py-4 text-sm text-zinc-500">暂无系统错误。</li>}
-        </ul>
-      </section>
-
-      {days.map((day) => {
-        const tasks = data.tasks.filter((task) => dateKey(task.createdAt) === day);
-        const done = tasks.filter((task) => task.status === '已完成').length;
-        return (
-          <section key={day} className="bg-white p-5 shadow-sm ring-1 ring-zinc-200">
-            <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-base font-semibold">{day}</h3>
-              <span className="text-sm text-zinc-600">{done} / {tasks.length}</span>
+    <section className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-zinc-200">
+      <h2 className="text-sm font-semibold">历史和错误</h2>
+      <input value={query} onChange={(event) => setQuery(event.target.value)} className="mt-3 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-800" placeholder="搜索失败原因或系统错误" />
+      {keyword && (
+        <div className="mt-3 space-y-2 text-sm">
+          {[...failedMatches.map((task) => ({ id: task.id, title: task.title, detail: task.failureReason })), ...systemErrorMatches.map((error) => ({ id: error.id, title: error.operation, detail: error.description }))].map((item) => (
+            <div key={item.id} className="rounded-md bg-zinc-100 p-2">
+              <div className="font-medium">{item.title}</div>
+              <div className="mt-1 text-zinc-600">{item.detail}</div>
             </div>
-            <div className="mb-3 text-sm text-zinc-700">目标：{data.dailyGoals[day] || '未填写'}</div>
-            <ul className="space-y-2">
-              {tasks.map((task) => (
-                <li key={task.id} className="rounded-md border border-zinc-200 p-3 text-sm">
-                  <div className="flex justify-between gap-3">
-                    <span>{task.title}</span>
-                    <span className={`shrink-0 rounded-md px-2 py-1 text-xs ${statusClass(task.status)}`}>{task.status}</span>
-                  </div>
-                  {task.status === '失败' && <div className="mt-2 text-red-700">失败原因：{task.failureReason}</div>}
-                </li>
-              ))}
-              {!tasks.length && <li className="text-sm text-zinc-500">当天没有任务。</li>}
-            </ul>
-          </section>
-        );
-      })}
-    </div>
+          ))}
+          {!failedMatches.length && !systemErrorMatches.length && <div className="text-zinc-500">没有匹配结果。</div>}
+        </div>
+      )}
+      <div className="mt-4 space-y-3">
+        {days.map((day) => {
+          const tasks = data.tasks.filter((task) => dateKey(task.createdAt) === day);
+          return (
+            <div key={day} className="border-t border-zinc-200 pt-3 text-sm">
+              <div className="font-medium">{day}</div>
+              <div className="mt-1 text-zinc-600">{data.dailyGoals[day] || '未填写目标'}</div>
+              <div className="mt-1 text-xs text-zinc-500">{tasks.length} 个任务</div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 
 function statusClass(status) {
   if (status === '已完成') return 'bg-emerald-100 text-emerald-800';
-  if (status === '进行中') return 'bg-blue-100 text-blue-800';
+  if (status === '进行中') return 'bg-sky-100 text-sky-800';
   if (status === '失败') return 'bg-red-100 text-red-800';
   return 'bg-zinc-100 text-zinc-700';
-}
-
-function formatBytes(bytes) {
-  if (!bytes) return '0 B';
-  if (bytes < 1024) return `${bytes} B`;
-  return `${(bytes / 1024).toFixed(1)} KB`;
 }
 
 createRoot(document.getElementById('root')).render(<App />);

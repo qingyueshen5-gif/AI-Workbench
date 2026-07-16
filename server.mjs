@@ -28,6 +28,8 @@ const initialData = {
   systemErrors: []
 };
 
+const extractionConfidenceThreshold = 0.75;
+
 function loadLocalEnv() {
   try {
     const raw = readFileSync(envFile, 'utf8');
@@ -120,6 +122,144 @@ function describeDeepSeekError(statusCode, payload) {
   return message || `DeepSeek API返回错误 ${statusCode}`;
 }
 
+function extractJsonObject(text) {
+  const raw = String(text || '').trim();
+  if (!raw) throw new Error('DeepSeek未返回提炼结果');
+  try {
+    return JSON.parse(raw);
+  } catch {
+    const match = raw.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error('DeepSeek返回结果不是JSON');
+    return JSON.parse(match[0]);
+  }
+}
+
+async function callDeepSeek(apiKey, model, messages, timeoutMs = 20000) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const deepSeekResponse = await fetch(`${deepSeekBaseUrl}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model,
+        messages,
+        stream: false
+      }),
+      signal: controller.signal
+    });
+    const result = await deepSeekResponse.json().catch(() => ({}));
+    if (!deepSeekResponse.ok) {
+      const error = new Error(describeDeepSeekError(deepSeekResponse.status, result));
+      error.statusCode = deepSeekResponse.status;
+      error.payload = result;
+      throw error;
+    }
+    return result;
+  } catch (error) {
+    if (error.name === 'AbortError') throw new Error('网络超时');
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function extractStructureFromMessage(apiKey, model, content, currentData) {
+  const today = new Date().toISOString().slice(0, 10);
+  const result = await callDeepSeek(apiKey, model, [
+    {
+      role: 'system',
+      content: [
+        '你是AI Workbench的信息提炼器，只把用户聊天内容转换成结构化数据，不执行任务。',
+        '只返回JSON，不要Markdown，不要解释。',
+        'JSON格式：{"goal":{"text":"","confidence":0},"tasks":[{"title":"","owner":"","confidence":0}],"preferences":{"defaultOwner":"","dailyTaskLimit":null,"communicationStyle":"","confidence":0},"needsConfirmation":[{"type":"goal|task|preference","text":"","reason":""}]}',
+        '只有明确表达今天目标、待办任务或偏好时才填写；不确定时不要自动写入，放到needsConfirmation。',
+        'owner只能是GPT、Codex、Claude、人工之一；无法判断则留空。',
+        `今天日期是${today}。`
+      ].join('\n')
+    },
+    {
+      role: 'user',
+      content: JSON.stringify({
+        message: content,
+        currentGoal: currentData.dailyGoals[today] || '',
+        currentPreferences: currentData.preferences,
+        existingTasks: currentData.tasks.slice(0, 20).map((task) => ({
+          title: task.title,
+          status: task.status,
+          owner: task.owner
+        }))
+      })
+    }
+  ]);
+  const text = result.choices?.[0]?.message?.content || '';
+  return extractJsonObject(text);
+}
+
+function applyExtraction(data, extraction, sourceMessageId) {
+  const today = new Date().toISOString().slice(0, 10);
+  const next = normalizeData(data);
+  const applied = [];
+  const suggestions = Array.isArray(extraction.needsConfirmation) ? extraction.needsConfirmation : [];
+  const goal = extraction.goal || {};
+  if (goal.text && Number(goal.confidence || 0) >= extractionConfidenceThreshold) {
+    next.dailyGoals = { ...next.dailyGoals, [today]: String(goal.text).trim() };
+    applied.push(`更新今日目标：${goal.text}`);
+  } else if (goal.text) {
+    suggestions.push({ type: 'goal', text: String(goal.text), reason: '目标判断不够确定' });
+  }
+
+  const existingTitles = new Set(next.tasks.map((task) => task.title.trim().toLowerCase()));
+  for (const item of Array.isArray(extraction.tasks) ? extraction.tasks : []) {
+    const title = String(item.title || '').trim();
+    if (!title) continue;
+    if (Number(item.confidence || 0) >= extractionConfidenceThreshold) {
+      if (existingTitles.has(title.toLowerCase())) continue;
+      next.tasks = [{
+        id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        title,
+        status: '待开始',
+        owner: ownersFromValue(item.owner) || next.preferences.defaultOwner || '人工',
+        createdAt: new Date().toISOString(),
+        notes: '从聊天自动提炼',
+        failureReason: '',
+        sourceMessageId
+      }, ...next.tasks];
+      existingTitles.add(title.toLowerCase());
+      applied.push(`创建任务：${title}`);
+    } else {
+      suggestions.push({ type: 'task', text: title, reason: '任务判断不够确定' });
+    }
+  }
+
+  const preferences = extraction.preferences || {};
+  if (Number(preferences.confidence || 0) >= extractionConfidenceThreshold) {
+    const patch = {};
+    const owner = ownersFromValue(preferences.defaultOwner);
+    if (owner) patch.defaultOwner = owner;
+    if (Number.isFinite(Number(preferences.dailyTaskLimit)) && Number(preferences.dailyTaskLimit) >= 0) {
+      patch.dailyTaskLimit = Number(preferences.dailyTaskLimit);
+    }
+    if (preferences.communicationStyle) patch.communicationStyle = String(preferences.communicationStyle).trim();
+    if (Object.keys(patch).length) {
+      next.preferences = { ...next.preferences, ...patch };
+      applied.push('更新用户偏好');
+    }
+  } else if (preferences.defaultOwner || preferences.dailyTaskLimit || preferences.communicationStyle) {
+    suggestions.push({ type: 'preference', text: JSON.stringify(preferences), reason: '偏好判断不够确定' });
+  }
+
+  return { data: next, applied, suggestions };
+}
+
+function ownersFromValue(value) {
+  const owner = String(value || '').trim();
+  return ['GPT', 'Codex', 'Claude', '人工'].includes(owner) ? owner : '';
+}
+
 function readBody(request) {
   return new Promise((resolve, reject) => {
     let body = '';
@@ -170,6 +310,89 @@ const server = createServer(async (request, response) => {
       }
       await writeData(data);
       sendJson(response, 200, await readDataWithMeta());
+      return;
+    }
+
+    if (request.url === '/api/chat-message' && request.method === 'POST') {
+      const body = await readBody(request);
+      const payload = JSON.parse(body || '{}');
+      const content = String(payload.content || '').trim();
+      if (!content) {
+        sendJson(response, 400, { error: '消息不能为空' });
+        return;
+      }
+
+      const currentData = await readData();
+      const message = {
+        id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        content,
+        createdAt: new Date().toISOString(),
+        role: 'user',
+        isTask: false,
+        taskId: ''
+      };
+      let nextData = normalizeData({
+        ...currentData,
+        messages: [...currentData.messages, message]
+      });
+
+      loadLocalEnv();
+      const apiKey = String(process.env.DEEPSEEK_API_KEY || '').trim();
+      const model = String(nextData.preferences.deepSeekModel || initialData.preferences.deepSeekModel).trim();
+      if (!apiKey) {
+        const errorLog = createSystemError('等待用户提供API Key，聊天内容已保存但未自动提炼', '聊天自动提炼');
+        nextData = {
+          ...nextData,
+          modelConnection: { status: '未连接', provider: '', model: '', checkedAt: new Date().toISOString() },
+          systemErrors: [errorLog, ...nextData.systemErrors]
+        };
+        await writeData(nextData);
+        sendJson(response, 200, { data: await readDataWithMeta(), applied: [], suggestions: [], warning: errorLog.description });
+        return;
+      }
+
+      try {
+        const extraction = await extractStructureFromMessage(apiKey, model, content, nextData);
+        const appliedResult = applyExtraction(nextData, extraction, message.id);
+        const updatedMessages = appliedResult.data.messages.map((item) =>
+          item.id === message.id
+            ? {
+                ...item,
+                extraction: {
+                  applied: appliedResult.applied,
+                  suggestions: appliedResult.suggestions,
+                  raw: extraction
+                }
+              }
+            : item
+        );
+        nextData = {
+          ...appliedResult.data,
+          messages: updatedMessages,
+          preferences: { ...appliedResult.data.preferences, deepSeekModel: model },
+          modelConnection: {
+            status: '已连接',
+            provider: 'DeepSeek',
+            model,
+            checkedAt: new Date().toISOString()
+          }
+        };
+        await writeData(nextData);
+        sendJson(response, 200, {
+          data: await readDataWithMeta(),
+          applied: appliedResult.applied,
+          suggestions: appliedResult.suggestions
+        });
+      } catch (error) {
+        const errorLog = createSystemError(error.message, '聊天自动提炼');
+        nextData = {
+          ...nextData,
+          modelConnection: { status: '未连接', provider: '', model: '', checkedAt: new Date().toISOString() },
+          systemErrors: [errorLog, ...nextData.systemErrors]
+        };
+        await writeData(nextData);
+        sendJson(response, error.statusCode || 500, { error: error.message, data: await readDataWithMeta() });
+      }
       return;
     }
 
