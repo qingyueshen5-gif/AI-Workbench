@@ -134,6 +134,19 @@ function extractJsonObject(text) {
   }
 }
 
+function createAssistantMessage(content) {
+  return {
+    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    content: String(content || '我在，直接告诉我你想安排什么。').trim(),
+    createdAt: new Date().toISOString(),
+    role: 'assistant'
+  };
+}
+
+function isCasualGreeting(content) {
+  return /^(你好|您好|hello|hi|hey|哈喽|在吗|嗨)[！!。.\s]*$/i.test(String(content || '').trim());
+}
+
 async function callDeepSeek(apiKey, model, messages, timeoutMs = 20000) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
@@ -175,8 +188,10 @@ async function extractStructureFromMessage(apiKey, model, content, currentData) 
       content: [
         '你是AI Workbench的信息提炼器，只把用户聊天内容转换成结构化数据，不执行任务。',
         '只返回JSON，不要Markdown，不要解释。',
-        'JSON格式：{"goal":{"text":"","confidence":0},"tasks":[{"title":"","owner":"","confidence":0}],"preferences":{"defaultOwner":"","dailyTaskLimit":null,"communicationStyle":"","confidence":0},"needsConfirmation":[{"type":"goal|task|preference","text":"","reason":""}]}',
+        'JSON格式：{"reply":"","goal":{"text":"","confidence":0},"tasks":[{"title":"","owner":"","confidence":0}],"preferences":{"defaultOwner":"","dailyTaskLimit":null,"communicationStyle":"","confidence":0},"needsConfirmation":[{"type":"goal|task|preference","text":"","reason":""}]}',
         '只有明确表达今天目标、待办任务或偏好时才填写；不确定时不要自动写入，放到needsConfirmation。',
+        '如果只是寒暄、问候或闲聊，goal.text留空、tasks为空、preferences保持空值，reply给出简短自然回应。',
+        'reply必须始终填写，语气简洁，不要说自己已经执行了任务。',
         'owner只能是GPT、Codex、Claude、人工之一；无法判断则留空。',
         `今天日期是${today}。`
       ].join('\n')
@@ -196,7 +211,17 @@ async function extractStructureFromMessage(apiKey, model, content, currentData) 
     }
   ]);
   const text = result.choices?.[0]?.message?.content || '';
-  return extractJsonObject(text);
+  const extraction = extractJsonObject(text);
+  if (isCasualGreeting(content)) {
+    return {
+      ...extraction,
+      goal: { text: '', confidence: 0 },
+      tasks: [],
+      preferences: { defaultOwner: '', dailyTaskLimit: null, communicationStyle: '', confidence: 0 },
+      needsConfirmation: []
+    };
+  }
+  return extraction;
 }
 
 function applyExtraction(data, extraction, sourceMessageId) {
@@ -341,8 +366,10 @@ const server = createServer(async (request, response) => {
       const model = String(nextData.preferences.deepSeekModel || initialData.preferences.deepSeekModel).trim();
       if (!apiKey) {
         const errorLog = createSystemError('等待用户提供API Key，聊天内容已保存但未自动提炼', '聊天自动提炼');
+        const assistantMessage = createAssistantMessage('我已收到消息，但当前还没有配置 DeepSeek API Key，所以暂时不能自动提炼。');
         nextData = {
           ...nextData,
+          messages: [...nextData.messages, assistantMessage],
           modelConnection: { status: '未连接', provider: '', model: '', checkedAt: new Date().toISOString() },
           systemErrors: [errorLog, ...nextData.systemErrors]
         };
@@ -354,6 +381,7 @@ const server = createServer(async (request, response) => {
       try {
         const extraction = await extractStructureFromMessage(apiKey, model, content, nextData);
         const appliedResult = applyExtraction(nextData, extraction, message.id);
+        const assistantMessage = createAssistantMessage(extraction.reply);
         const updatedMessages = appliedResult.data.messages.map((item) =>
           item.id === message.id
             ? {
@@ -368,7 +396,7 @@ const server = createServer(async (request, response) => {
         );
         nextData = {
           ...appliedResult.data,
-          messages: updatedMessages,
+          messages: [...updatedMessages, assistantMessage],
           preferences: { ...appliedResult.data.preferences, deepSeekModel: model },
           modelConnection: {
             status: '已连接',
@@ -385,8 +413,10 @@ const server = createServer(async (request, response) => {
         });
       } catch (error) {
         const errorLog = createSystemError(error.message, '聊天自动提炼');
+        const assistantMessage = createAssistantMessage(`这次没有处理成功：${error.message}`);
         nextData = {
           ...nextData,
+          messages: [...nextData.messages, assistantMessage],
           modelConnection: { status: '未连接', provider: '', model: '', checkedAt: new Date().toISOString() },
           systemErrors: [errorLog, ...nextData.systemErrors]
         };

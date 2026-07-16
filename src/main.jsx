@@ -274,13 +274,16 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
         <div className="mx-auto flex min-h-full max-w-3xl flex-col justify-end py-8">
           <div className="space-y-6">
           {data.messages.map((message) => (
-            <article key={message.id} className="group">
-              <div className="mb-1 text-right text-xs text-zinc-400">{timeText(message.createdAt)}</div>
-              <div className="ml-auto max-w-[78%] rounded-2xl bg-zinc-100 px-4 py-3 text-sm leading-6 text-zinc-900">
+            <article key={message.id} className={message.role === 'assistant' ? 'group' : 'group text-right'}>
+              <div className={message.role === 'assistant' ? 'mb-1 text-xs text-zinc-400' : 'mb-1 text-right text-xs text-zinc-400'}>{timeText(message.createdAt)}</div>
+              <div className={message.role === 'assistant'
+                ? 'max-w-[78%] rounded-2xl bg-white px-1 py-2 text-sm leading-6 text-zinc-900'
+                : 'ml-auto max-w-[78%] rounded-2xl bg-zinc-100 px-4 py-3 text-sm leading-6 text-zinc-900'}
+              >
                 {message.content}
               </div>
               {(!!message.extraction?.applied?.length || !!message.extraction?.suggestions?.length) && (
-                <div className="mt-3 max-w-[78%] text-sm">
+                <div className="ml-auto mt-3 max-w-[78%] text-left text-sm">
                   {!!message.extraction?.applied?.length && (
                     <ul className="space-y-1 text-emerald-700">
                       {message.extraction.applied.map((item) => <li key={item}>{item}</li>)}
