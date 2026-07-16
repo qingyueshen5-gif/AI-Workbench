@@ -42,6 +42,12 @@ const dateKey = (value = new Date()) => {
 const todayKey = () => dateKey();
 const timeText = (value) => new Date(value).toLocaleString('zh-CN', { hour12: false });
 const newId = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+const createSystemError = (description, operation) => ({
+  id: newId(),
+  createdAt: new Date().toISOString(),
+  description,
+  operation
+});
 
 function App() {
   const [data, setData] = useState(defaultData);
@@ -77,7 +83,6 @@ function App() {
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.error || '保存失败');
     setData(mergeData(payload));
-    setSaveError('');
     return mergeData(payload);
   }
 
@@ -105,7 +110,14 @@ function App() {
 
         <section className="chat-main bg-white">
           <TopBar data={data} panelOpen={panelOpen} setPanelOpen={setPanelOpen} />
-          {saveError && <div className="mx-5 mt-4 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">{saveError}</div>}
+          {saveError && (
+            <div className="mx-5 mt-4 flex items-start justify-between gap-3 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">
+              <div className="whitespace-pre-wrap">{saveError}</div>
+              <button onClick={() => setSaveError('')} className="shrink-0 rounded border border-red-300 px-2 py-0.5 text-xs hover:bg-red-100">
+                关闭
+              </button>
+            </div>
+          )}
           <ChatStream data={data} setData={setData} setSaveError={setSaveError} updateData={updateData} />
         </section>
 
@@ -298,12 +310,15 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
     } catch (error) {
       setSaveError(error.message);
       const fallbackMessage = { id: newId(), role: 'user', content, createdAt: new Date().toISOString() };
+      const assistantMessage = { id: newId(), role: 'assistant', content: `这次没有处理成功：${error.message}`, createdAt: new Date().toISOString() };
+      const errorLog = createSystemError(error.message, '聊天发送');
       updateData((current) => ({
         ...current,
-        messages: [...getActiveMessages(current), fallbackMessage],
+        systemErrors: [errorLog, ...(current.systemErrors || [])],
+        messages: [...getActiveMessages(current), fallbackMessage, assistantMessage],
         conversations: (current.conversations || []).map((conversation) =>
           conversation.id === current.activeConversationId
-            ? { ...conversation, messages: [...(conversation.messages || []), fallbackMessage], updatedAt: fallbackMessage.createdAt }
+            ? { ...conversation, messages: [...(conversation.messages || []), fallbackMessage, assistantMessage], updatedAt: assistantMessage.createdAt }
             : conversation
         )
       }));
