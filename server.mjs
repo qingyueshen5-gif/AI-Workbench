@@ -341,19 +341,22 @@ async function extractStructureFromMessage(apiKey, model, content, currentData) 
     }
   ];
   const jsonResponseFormat = { type: 'json_object' };
-  let result = await callDeepSeek(apiKey, model, messages, { tools: runtimeTools, response_format: jsonResponseFormat });
+  let result = await callDeepSeek(apiKey, model, messages, { tools: runtimeTools });
   const firstMessage = result.choices?.[0]?.message;
+  const toolResults = [];
   if (firstMessage?.tool_calls?.length) {
     messages.push(firstMessage);
     for (const toolCall of firstMessage.tool_calls) {
       try {
         const toolResult = await executeToolCall(toolCall);
+        toolResults.push({ name: toolCall.function?.name || '', result: toolResult });
         messages.push({
           role: 'tool',
           tool_call_id: toolCall.id,
           content: JSON.stringify(toolResult)
         });
       } catch (error) {
+        toolResults.push({ name: toolCall.function?.name || '', error: error.message });
         messages.push({
           role: 'tool',
           tool_call_id: toolCall.id,
@@ -362,9 +365,12 @@ async function extractStructureFromMessage(apiKey, model, content, currentData) 
       }
     }
     result = await callDeepSeek(apiKey, model, messages, { response_format: jsonResponseFormat });
+  } else if (firstMessage?.content) {
+    result = { ...result, choices: [{ ...result.choices?.[0], message: firstMessage }] };
   }
   const text = result.choices?.[0]?.message?.content || '';
   const extraction = extractJsonObject(text);
+  if (toolResults.length) extraction.toolResults = toolResults;
   if (isCasualGreeting(content)) {
     return {
       ...extraction,
