@@ -80,9 +80,14 @@ npm.cmd install
 
 ```bash
 DEEPSEEK_API_KEY=（去DeepSeek官网自己的账户里获取，不要抄别人的）
+SERPER_API_KEY=（可选；需要通用网络搜索能力时填写，去 serper.dev 获取）
 ```
 
 注意：`.env` 只能留在本机，不能提交到 GitHub。
+
+说明：
+- `DEEPSEEK_API_KEY`：用于聊天提炼和模型回复。
+- `SERPER_API_KEY`：用于 `web_search` 通用联网搜索工具。没有这个 key 时，模型仍可聊天和提炼，但不能执行实时搜索、新闻、当前价格等查询。
 
 ## 启动项目
 

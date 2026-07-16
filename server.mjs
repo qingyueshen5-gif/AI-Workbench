@@ -193,21 +193,100 @@ function isCasualGreeting(content) {
   return /^(你好|您好|hello|hi|hey|哈喽|在吗|嗨)[！!。.\s]*$/i.test(String(content || '').trim());
 }
 
-async function callDeepSeek(apiKey, model, messages, timeoutMs = 20000) {
+async function webSearch({ query, num_results = 5 }) {
+  const searchQuery = String(query || '').trim();
+  if (!searchQuery) throw new Error('缺少搜索关键词');
+  loadLocalEnv();
+  const apiKey = String(process.env.SERPER_API_KEY || '').trim();
+  if (!apiKey) throw new Error('等待用户提供SERPER_API_KEY，无法执行联网搜索');
+  const response = await fetch('https://google.serper.dev/search', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-API-KEY': apiKey
+    },
+    body: JSON.stringify({
+      q: searchQuery,
+      num: Math.min(Math.max(Number(num_results) || 5, 1), 10)
+    })
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const message = payload?.message || payload?.error || `搜索服务返回错误 ${response.status}`;
+    throw new Error(message);
+  }
+  const organic = Array.isArray(payload.organic) ? payload.organic : [];
+  const news = Array.isArray(payload.news) ? payload.news : [];
+  const answerBox = payload.answerBox ? [{
+    title: payload.answerBox.title || 'Answer box',
+    snippet: payload.answerBox.answer || payload.answerBox.snippet || '',
+    link: payload.answerBox.link || '',
+    date: payload.answerBox.date || ''
+  }] : [];
+  const results = [...answerBox, ...news, ...organic].slice(0, Math.min(Math.max(Number(num_results) || 5, 1), 10));
+  return {
+    query: searchQuery,
+    source: 'Serper Google Search API',
+    results: results.map((item) => ({
+      title: item.title || '',
+      snippet: item.snippet || '',
+      link: item.link || '',
+      date: item.date || item.publishedDate || ''
+    }))
+  };
+}
+
+const runtimeTools = [
+  {
+    type: 'function',
+    function: {
+      name: 'web_search',
+      description: 'Search the web for current, time-sensitive, news, market, product price, policy, release, or factual status questions. Do not use for stable common knowledge.',
+      parameters: {
+        type: 'object',
+        properties: {
+          query: {
+            type: 'string',
+            description: 'A concise search query that captures what must be looked up.'
+          },
+          num_results: {
+            type: 'integer',
+            description: 'Number of search results to retrieve, from 1 to 10.'
+          }
+        },
+        required: ['query']
+      }
+    }
+  }
+];
+
+async function executeToolCall(toolCall) {
+  const name = toolCall?.function?.name;
+  const args = JSON.parse(toolCall?.function?.arguments || '{}');
+  if (name === 'web_search') return webSearch(args);
+  throw new Error(`未知工具：${name}`);
+}
+
+async function callDeepSeek(apiKey, model, messages, options = {}) {
+  const timeoutMs = options.timeoutMs || 20000;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
+    const body = {
+      model,
+      messages,
+      stream: false
+    };
+    if (options.tools) body.tools = options.tools;
+    if (options.tool_choice) body.tool_choice = options.tool_choice;
+    if (options.response_format) body.response_format = options.response_format;
     const deepSeekResponse = await fetch(`${deepSeekBaseUrl}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${apiKey}`
       },
-      body: JSON.stringify({
-        model,
-        messages,
-        stream: false
-      }),
+      body: JSON.stringify(body),
       signal: controller.signal
     });
     const result = await deepSeekResponse.json().catch(() => ({}));
@@ -228,15 +307,18 @@ async function callDeepSeek(apiKey, model, messages, timeoutMs = 20000) {
 
 async function extractStructureFromMessage(apiKey, model, content, currentData) {
   const today = new Date().toISOString().slice(0, 10);
-  const result = await callDeepSeek(apiKey, model, [
+  const messages = [
     {
       role: 'system',
       content: [
-        '你是AI Workbench的信息提炼器，只把用户聊天内容转换成结构化数据，不执行任务。',
+        '你是AI Workbench的信息提炼器和简洁助手。',
         '只返回JSON，不要Markdown，不要解释。',
         'JSON格式：{"reply":"","goal":{"text":"","confidence":0},"tasks":[{"title":"","owner":"","confidence":0}],"preferences":{"defaultOwner":"","dailyTaskLimit":null,"communicationStyle":"","confidence":0},"needsConfirmation":[{"type":"goal|task|preference","text":"","reason":""}]}',
         '只有明确表达今天目标、待办任务或偏好时才填写；不确定时不要自动写入，放到needsConfirmation。',
         '如果只是寒暄、问候或闲聊，goal.text留空、tasks为空、preferences保持空值，reply给出简短自然回应。',
+        '你可以按需调用web_search工具。实时数据、新闻、当前状态、价格、版本、政策、公司人物等可能变化的问题必须先搜索；稳定常识或历史问题不要搜索。',
+        '如果用户的问题需要当前信息但你没有调用web_search，不要猜测答案；请调用工具。',
+        '搜索结果只作为依据，reply需要你整理后回答用户，不要原样倾倒搜索结果；涉及当前信息时简要说明来源名称或链接。',
         'reply必须始终填写，语气简洁，不要说自己已经执行了任务。',
         'owner只能是DeepSeek、人工、Codex、GPT、Claude之一；当前真实接入的是DeepSeek，Codex/GPT/Claude暂未接入，无法判断则留空。',
         `今天日期是${today}。`
@@ -246,6 +328,8 @@ async function extractStructureFromMessage(apiKey, model, content, currentData) 
       role: 'user',
       content: JSON.stringify({
         message: content,
+        webSearchAvailable: Boolean(String(process.env.SERPER_API_KEY || '').trim()),
+        webSearchToolName: 'web_search',
         currentGoal: currentData.dailyGoals[today] || '',
         currentPreferences: currentData.preferences,
         existingTasks: currentData.tasks.slice(0, 20).map((task) => ({
@@ -255,7 +339,30 @@ async function extractStructureFromMessage(apiKey, model, content, currentData) 
         }))
       })
     }
-  ]);
+  ];
+  const jsonResponseFormat = { type: 'json_object' };
+  let result = await callDeepSeek(apiKey, model, messages, { tools: runtimeTools, response_format: jsonResponseFormat });
+  const firstMessage = result.choices?.[0]?.message;
+  if (firstMessage?.tool_calls?.length) {
+    messages.push(firstMessage);
+    for (const toolCall of firstMessage.tool_calls) {
+      try {
+        const toolResult = await executeToolCall(toolCall);
+        messages.push({
+          role: 'tool',
+          tool_call_id: toolCall.id,
+          content: JSON.stringify(toolResult)
+        });
+      } catch (error) {
+        messages.push({
+          role: 'tool',
+          tool_call_id: toolCall.id,
+          content: JSON.stringify({ error: error.message })
+        });
+      }
+    }
+    result = await callDeepSeek(apiKey, model, messages, { response_format: jsonResponseFormat });
+  }
   const text = result.choices?.[0]?.message?.content || '';
   const extraction = extractJsonObject(text);
   if (isCasualGreeting(content)) {

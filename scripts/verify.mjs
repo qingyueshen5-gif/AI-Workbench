@@ -82,9 +82,31 @@ async function hasDeepSeekApiKey() {
   }
 }
 
+async function hasSerperApiKey() {
+  if (String(process.env.SERPER_API_KEY || '').trim()) return true;
+  try {
+    const raw = await readFile(envFile, 'utf8');
+    return raw
+      .split(/\r?\n/)
+      .some((line) => {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) return false;
+        const separator = trimmed.indexOf('=');
+        if (separator === -1) return false;
+        const key = trimmed.slice(0, separator).trim();
+        const value = trimmed.slice(separator + 1).trim().replace(/^['"]|['"]$/g, '');
+        return key === 'SERPER_API_KEY' && Boolean(value);
+      });
+  } catch (error) {
+    if (error.code === 'ENOENT') return false;
+    throw error;
+  }
+}
+
 async function verifyUiSource() {
   const main = await readFile(join(root, 'src', 'main.jsx'), 'utf8');
   const styles = await readFile(join(root, 'src', 'styles.css'), 'utf8');
+  const serverSource = await readFile(join(root, 'server.mjs'), 'utf8');
   const expectations = [
     [main.includes('aria-label="更多对话操作"') && main.includes('删除'), 'Conversation more menu with delete action is missing'],
     [styles.includes('.conversation-row:hover .conversation-menu-button'), 'Conversation menu hover style is missing'],
@@ -93,7 +115,10 @@ async function verifyUiSource() {
     [main.includes('负责人') && main.includes('DeepSeek') && main.includes('未接入'), 'Owner connection state options are missing'],
     [main.includes('今天要推进什么？'), 'Empty conversation welcome state is missing'],
     [!main.includes('聊天驱动目标、任务和偏好'), 'Technical top-bar helper text should not be permanently visible'],
-    [!main.includes('F:\\AI-Workbench'), 'Local workspace path should not be permanently visible']
+    [!main.includes('F:\\AI-Workbench'), 'Local workspace path should not be permanently visible'],
+    [serverSource.includes("name: 'web_search'") && serverSource.includes('https://google.serper.dev/search'), 'Generic web_search tool is missing'],
+    [serverSource.includes('tool_calls') && serverSource.includes('实时数据、新闻、当前状态、价格'), 'DeepSeek web_search tool-call policy is missing'],
+    [serverSource.includes('Serper Google Search API'), 'Search results should identify the Serper source']
   ];
   for (const [passes, message] of expectations) {
     if (!passes) throw new Error(message);
@@ -242,6 +267,24 @@ async function main() {
   } else {
     if (!aiTest.response.ok || aiTest.body.data?.modelConnection?.status !== '已连接') {
       throw new Error(`DeepSeek connection test failed: ${aiTest.body.error || aiTest.response.status}`);
+    }
+  }
+
+  if (await hasSerperApiKey()) {
+    const raw = await readFile(envFile, 'utf8').catch(() => '');
+    const keyLine = raw.split(/\r?\n/).find((line) => line.trim().startsWith('SERPER_API_KEY='));
+    const serperKey = String(process.env.SERPER_API_KEY || keyLine?.split('=')?.slice(1).join('=') || '').trim().replace(/^['"]|['"]$/g, '');
+    const searchResponse = await fetch('https://google.serper.dev/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-KEY': serperKey
+      },
+      body: JSON.stringify({ q: 'OpenAI latest news', num: 3 })
+    });
+    const searchBody = await searchResponse.json().catch(() => ({}));
+    if (!searchResponse.ok || !Array.isArray(searchBody.organic)) {
+      throw new Error(`Serper search failed: ${searchBody.message || searchResponse.status}`);
     }
   }
 
