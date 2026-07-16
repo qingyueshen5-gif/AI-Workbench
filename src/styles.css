@@ -51,6 +51,28 @@ body,
   flex: 0 0 auto;
 }
 
+.task-list-item {
+  display: block;
+  border: 1px solid rgb(228 228 231);
+  border-left: 3px solid rgb(161 161 170);
+  border-radius: 0.5rem;
+  background: white;
+  padding: 0.625rem 0.75rem;
+  transition: border-color 120ms ease, background-color 120ms ease, box-shadow 120ms ease;
+}
+
+.task-list-item:hover {
+  border-color: rgb(161 161 170);
+  background: rgb(250 250 250);
+}
+
+.task-list-item-active {
+  border-color: rgb(39 39 42);
+  border-left-color: rgb(39 39 42);
+  background: rgb(244 244 245);
+  box-shadow: 0 1px 2px rgb(24 24 27 / 0.08);
+}
+
 .conversation-menu-button {
   position: absolute;
   top: 50%;

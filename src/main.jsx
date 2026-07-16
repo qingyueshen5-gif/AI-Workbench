@@ -55,6 +55,13 @@ const createSystemError = (description, operation) => ({
   description,
   operation
 });
+const createFailureReason = (task) => {
+  const title = String(task?.title || '未命名任务').trim();
+  const owner = String(task?.owner || '未指定负责人').trim();
+  const notes = String(task?.notes || '').trim();
+  const noteText = notes ? `；备注：${notes.slice(0, 80)}` : '';
+  return `系统自动记录：任务「${title}」被标记为失败。当前负责人：${owner}${noteText}。`;
+};
 
 function App() {
   const [data, setData] = useState(defaultData);
@@ -558,10 +565,13 @@ function TodayPanel({ data, selectedTaskId, setSelectedTaskId }) {
               key={task.id}
               type="button"
               onClick={() => setSelectedTaskId(task.id)}
-              className={`flex w-full items-center justify-between gap-3 rounded-md px-2 py-2 text-left text-sm hover:bg-zinc-100 ${selectedTaskId === task.id ? 'bg-zinc-100 text-zinc-950' : 'text-zinc-700'}`}
+              className={`task-list-item mb-2 w-full text-left ${selectedTaskId === task.id ? 'task-list-item-active' : ''}`}
             >
-              <span className="min-w-0 truncate">{task.title}</span>
-              <span className={`shrink-0 rounded-md px-2 py-1 text-xs ${statusClass(task.status)}`}>{task.status}</span>
+              <div className="flex items-start justify-between gap-3">
+                <span className="min-w-0 text-sm font-medium text-zinc-900">{task.title}</span>
+                <span className={`shrink-0 rounded-md px-2 py-1 text-xs ${statusClass(task.status)}`}>{task.status}</span>
+              </div>
+              <div className="mt-2 text-xs text-zinc-500">负责人：{task.owner || '未指定'} · ID：{String(task.id).slice(-6)}</div>
             </button>
           ))}
           {!todayTasks.length && <div className="px-2 py-3 text-sm text-zinc-500">这个目标下还没有关联任务。</div>}
@@ -598,8 +608,11 @@ function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId, upda
 
   function changeStatus(status) {
     if (!selectedTask) return;
-    if (status === '失败' && !selectedTask.failureReason?.trim()) {
-      setStatusError('标记失败前必须填写失败原因。');
+    if (status === '失败') {
+      const failureReason = selectedTask.failureReason?.trim() || createFailureReason(selectedTask);
+      setFailureDraft(failureReason);
+      setStatusError('');
+      updateTask(selectedTask.id, { status, failureReason });
       return;
     }
     setStatusError('');
@@ -607,12 +620,11 @@ function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId, upda
   }
 
   function saveFailure() {
-    if (!selectedTask || !failureDraft.trim()) {
-      setStatusError('失败原因不能为空。');
-      return;
-    }
+    if (!selectedTask) return;
+    const failureReason = failureDraft.trim() || createFailureReason(selectedTask);
     setStatusError('');
-    updateTask(selectedTask.id, { status: '失败', failureReason: failureDraft.trim() });
+    setFailureDraft(failureReason);
+    updateTask(selectedTask.id, { status: '失败', failureReason });
   }
 
   return (
@@ -621,12 +633,19 @@ function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId, upda
         <h2 className="text-xs font-semibold uppercase tracking-wide text-zinc-500">任务</h2>
         <span className="text-xs text-zinc-500">{data.tasks.length} 条</span>
       </div>
-      <ul className="max-h-64 divide-y divide-zinc-200 overflow-y-auto">
+      <ul className="max-h-72 space-y-2 overflow-y-auto pr-1">
         {data.tasks.map((task) => (
           <li key={task.id}>
-            <button onClick={() => setSelectedTaskId(task.id)} className={`flex w-full items-center justify-between gap-3 py-2 text-left text-sm ${selectedTaskId === task.id ? 'text-zinc-950' : 'text-zinc-600'}`}>
-              <span className="min-w-0 truncate">{task.title}</span>
-              <span className={`shrink-0 rounded-md px-2 py-1 text-xs ${statusClass(task.status)}`}>{task.status}</span>
+            <button onClick={() => setSelectedTaskId(task.id)} className={`task-list-item w-full text-left ${selectedTaskId === task.id ? 'task-list-item-active' : ''}`}>
+              <div className="flex items-start justify-between gap-3">
+                <span className="min-w-0 text-sm font-medium text-zinc-900">{task.title}</span>
+                <span className={`shrink-0 rounded-md px-2 py-1 text-xs ${statusClass(task.status)}`}>{task.status}</span>
+              </div>
+              <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-zinc-500">
+                <span>负责人：{task.owner || '未指定'}</span>
+                <span>{dateKey(task.createdAt)}</span>
+                <span>ID：{String(task.id).slice(-6)}</span>
+              </div>
             </button>
           </li>
         ))}
@@ -654,11 +673,11 @@ function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId, upda
           </label>
           <label className="mt-3 block">
             <span className="text-xs text-zinc-500">失败原因</span>
-            <textarea value={failureDraft} onChange={(event) => setFailureDraft(event.target.value)} className="mt-1 h-20 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm" />
+            <textarea value={failureDraft} onChange={(event) => setFailureDraft(event.target.value)} className="mt-1 h-20 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm" placeholder="选择失败状态时会自动生成，仍可按实际情况补充。" />
           </label>
           {statusError && <div className="mt-2 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{statusError}</div>}
           <button onClick={saveFailure} className="mt-3 w-full rounded-md bg-red-700 px-4 py-2 text-sm text-white">
-            {selectedTask.status === '失败' ? '保存失败原因' : '保存为失败'}
+            {selectedTask.status === '失败' ? '更新失败原因' : '标记失败并自动生成原因'}
           </button>
         </div>
       )}

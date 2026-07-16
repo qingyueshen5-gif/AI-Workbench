@@ -113,6 +113,8 @@ async function verifyUiSource() {
     [main.includes('scrollTo({ top: container.scrollHeight'), 'Chat stream auto-scroll is missing'],
     [main.includes('查看关联任务') && main.includes('setSelectedTaskId(task.id)'), 'Today goal task expansion is missing'],
     [main.includes('负责人') && main.includes('DeepSeek') && main.includes('未接入'), 'Owner connection state options are missing'],
+    [main.includes('createFailureReason') && main.includes('标记失败并自动生成原因'), 'Automatic failure reason UI is missing'],
+    [main.includes('task-list-item') && styles.includes('.task-list-item-active'), 'Task visual separation styles are missing'],
     [main.includes('今天要推进什么？'), 'Empty conversation welcome state is missing'],
     [!main.includes('聊天驱动目标、任务和偏好'), 'Technical top-bar helper text should not be permanently visible'],
     [!main.includes('F:\\AI-Workbench'), 'Local workspace path should not be permanently visible'],
@@ -235,13 +237,13 @@ async function main() {
     throw new Error('Storage status was not returned');
   }
 
-  const invalidFailedTask = {
+  const autoFailedTask = {
     ...validData,
     tasks: [{ ...validData.tasks[0], status: '失败', failureReason: '' }]
   };
-  const rejected = await request('PUT', invalidFailedTask);
-  if (rejected.response.status !== 400 || rejected.body.error !== '失败任务必须填写失败原因') {
-    throw new Error('Failed tasks without a failure reason should be rejected');
+  const autoFilled = await request('PUT', autoFailedTask);
+  if (!autoFilled.response.ok || !autoFilled.body.tasks[0]?.failureReason?.includes('系统自动记录')) {
+    throw new Error('Failed tasks without a failure reason should be auto-filled');
   }
 
   const validFailedTask = {

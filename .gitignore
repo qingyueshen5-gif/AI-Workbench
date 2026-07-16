@@ -5,3 +5,5 @@ data/
 .env
 .dev-server*.log
 .api*.log
+.wsl-cache/
+.wsl/

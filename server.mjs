@@ -79,7 +79,7 @@ function normalizeData(data) {
     conversations,
     activeConversationId,
     messages: activeConversation?.messages || legacyMessages,
-    tasks: data.tasks || [],
+    tasks: normalizeTasks(data.tasks),
     preferences: { ...initialData.preferences, ...(data.preferences || {}) },
     modelConnection: { ...initialData.modelConnection, ...(data.modelConnection || {}) },
     systemErrors: data.systemErrors || []
@@ -103,6 +103,23 @@ function deriveConversationTitle(conversation) {
   );
   const fallbackUserLikeMessage = (conversation?.messages || []).find((message) => !isInternalActionMessage(message));
   return sanitizeTitleText(firstUserMessage?.content || fallbackUserLikeMessage?.content) || '新对话';
+}
+
+function createFailureReason(task) {
+  const title = String(task?.title || '未命名任务').trim();
+  const owner = String(task?.owner || '未指定负责人').trim();
+  const notes = String(task?.notes || '').trim();
+  const noteText = notes ? `；备注：${notes.slice(0, 80)}` : '';
+  return `系统自动记录：任务「${title}」被标记为失败。当前负责人：${owner}${noteText}。`;
+}
+
+function normalizeTasks(tasks) {
+  return (Array.isArray(tasks) ? tasks : []).map((task) => {
+    if (task?.status === '失败' && !String(task.failureReason || '').trim()) {
+      return { ...task, failureReason: createFailureReason(task) };
+    }
+    return task;
+  });
 }
 
 async function readData() {
@@ -485,13 +502,6 @@ const server = createServer(async (request, response) => {
     if (request.url === '/api/data' && request.method === 'PUT') {
       const body = await readBody(request);
       const data = normalizeData(JSON.parse(body || '{}'));
-      const invalidFailedTask = data.tasks?.find(
-        (task) => task.status === '失败' && !task.failureReason?.trim()
-      );
-      if (invalidFailedTask) {
-        sendJson(response, 400, { error: '失败任务必须填写失败原因' });
-        return;
-      }
       await writeData(data);
       sendJson(response, 200, await readDataWithMeta());
       return;

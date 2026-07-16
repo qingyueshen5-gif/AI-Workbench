@@ -23,11 +23,19 @@
 - [x] 打 `v0.1.1-stable` 备份标签并推送，作为大改前稳定回退点
 - [x] v0.2.0 收缩为聊天中心界面，取消四个独立 tab
 - [x] 新增 DeepSeek 聊天自动提炼：从自然语言识别今日目标、任务和偏好
+- [x] 修复对话持久化：支持连续对话、标题推导和会话恢复
+- [x] 上线通用搜索能力：DeepSeek 可通过工具调用执行实时联网搜索
+- [x] 修复失败任务留痕体验：标记失败时自动生成失败原因，用户可再编辑
+- [x] 优化任务列表视觉区分：任务卡片显示负责人、日期和短 ID
+- [x] 完成 Hermes v0.17.0 安装收尾：清理重复 WSL 发行版，验证 Playwright Chromium 可运行，读取并归档 doctor 结果
 
 ### 当前任务
-- [ ] 连续使用 v0.2.0，观察聊天提炼是否比表单更省操作
-- [ ] 判断右侧任务/历史栏是否还需要继续收缩
-- [ ] 记录 AI 误判样例，决定后续确认机制怎么改
+- [ ] 明天运行 `hermes setup`，完成 Hermes `.env` 和 config 迁移
+- [ ] 修复 Hermes `auth.lock` / `logs\.__agent.lock` 权限问题
+- [ ] 补齐 Hermes 所需 API keys：Anthropic、OpenRouter、xAI、GITHUB_TOKEN 等按实际需要配置
+- [ ] 处理视觉细节 5 项，继续压缩不必要的界面负担
+- [ ] 评估本地工作台开机自启方案
+- [ ] 评估部署方案，明确本地版、内网版或云端版的边界
 
 ### 本次改动文件
 - `CONTEXT.md`：项目基准文档，供后续 GPT / Codex / Claude 新对话同步上下文
@@ -40,6 +48,7 @@
 - `scripts/verify.mjs`：自动验证本地持久化、失败原因必填规则、存储状态和无 API Key 错误日志
 - `src/main.jsx` / `src/styles.css`：聊天中心工作台页面与样式
 - `.gitignore`：忽略依赖、构建产物、本地缓存、运行数据和本地日志
+- `hermes-doctor-2026-07-16.txt`：Hermes doctor 健康检查原始输出，用于后续排查配置问题
 
 ### 验证结果
 - [x] `npm.cmd install --cache .npm-cache`
@@ -50,11 +59,14 @@
 - [x] `npm.cmd run dev` 可启动 API 与 Vite，本地访问地址为 `http://127.0.0.1:5173`
 - [x] `npm run verify` 覆盖无 API Key 时的系统错误日志写入
 - [x] DeepSeek API 真实调用已接入聊天自动提炼
+- [x] Hermes doctor 输出已读取：主体安装可用，剩余为 `.env`、config、API key 和 lock 权限配置问题
+- [x] `.wsl-cache/` 和 `.wsl/` 已加入 `.gitignore`，避免 Ubuntu 安装包和 WSL 运行目录进入项目文件监控/版本库
 
 ### 下一步
-1. 用户连续使用 v0.2.0，重点观察聊天提炼是否真正减少操作。
-2. 收集 AI 误判和不确定提示样例，决定下一轮收缩或确认方式。
-3. 不要跳到自动执行、多 Agent 调度或电脑操作；这些属于 Phase 5。
+1. 运行 `hermes setup` / `hermes doctor --fix`，完成 Hermes 配置迁移和 `.env` 创建。
+2. 修复 Hermes lock 文件权限，并补齐必要 API keys。
+3. 完成视觉细节 5 项、开机自启和部署方案评估。
+4. 不要跳到自动执行、多 Agent 调度或电脑操作；这些属于 Phase 5。
 
 ## 任务记录规则
 

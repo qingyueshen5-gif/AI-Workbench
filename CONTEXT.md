@@ -76,6 +76,11 @@ Phase 6 连续使用、商业化与扩展        未开始
 | Codex沙盒内push超时/授权卡住 | Codex运行环境是隔离沙盒，浏览器跳转登录在里面容易失败 | 换到电脑自带终端（PowerShell/CMD）执行登录和push，不要在Codex对话框里硬跑这一步 |
 | Codex窗口意外关闭/断连后不知道怎么重开 | 正常操作，不是故障 | 打开文件资源管理器进入 `F:\AI-Workbench`，在地址栏输入 `cmd` 或右键"在终端中打开"，在弹出的终端里输入 `codex` 回车，会自动加载到项目目录，之前的进度不会丢（都存在GitHub和本地文件里） |
 | Codex任务量太大导致502/连接中断 | 一次性要求做的事情太多，处理超时 | 把任务拆小，分批发送，不要一次性发多步骤的大任务卡 |
+| Hermes安装过程中出现多个重复WSL发行版 | 反复导入/尝试环境时留下了 `Ubuntu-24.04`、`HermesUbuntu`、`HermesAgentUbuntu`、`Ubuntu` 等重复发行版 | 2026-07-16 已用 `wsl --unregister` 清理重复发行版，只保留 `HermesUserUbuntu`（另保留 Docker 自带的 `docker-desktop`）；`.wsl\HermesUbuntu` 注销后残留空目录也已删除 |
+| Hermes主程序和WSL运行环境不在同一个位置 | Hermes主体安装在 Windows/Anaconda 的 Python 环境，命令为 `D:\Anaconda\Scripts\hermes.exe`；`HermesUserUbuntu` 发行版内默认进入 `root`，PATH 里没有 `hermes` 命令 | `hermes doctor` 里出现大量 `D:\Anaconda\Lib\site-packages\...` 是因为 Windows 侧 Hermes 正在用 Anaconda Python 运行，不是 WSL 路径串了；以后验证 Hermes 主程序用 Windows 侧 `hermes --version` / `hermes doctor`，验证浏览器运行环境用 `wsl -d HermesUserUbuntu -- ...` |
+| Hermes v0.17.0 安装后健康检查仍有未完成配置 | 2026-07-16 `hermes doctor` 显示 Python 3.13.5、SSL、核心 Python 包、git、rg、docker、Node.js、agent-browser、Playwright Chromium、内置 memory 和多数工具可用；但 `.env` 缺失、config 版本 `v0 -> v30` 待迁移、Anthropic API key 无效、OpenRouter 未配置、xAI HTTP 400、Skills Hub 未初始化、缺少 `GITHUB_TOKEN`、部分扩展工具因 token/系统依赖不可用 | doctor 最后明确列出 3 个待处理项：运行 `hermes setup` 创建 `.env`，运行 `hermes doctor --fix` 或 `hermes setup` 迁移 config，再配置缺失 API keys；这些属于 Hermes 后续配置问题，不是安装主体失败 |
+| Hermes doctor 输出大量 Python traceback | Hermes 日志系统要写 `C:\Users\胖胖虎\AppData\Local\hermes\logs\.__agent.lock`，鉴权检查也要访问 `auth.lock`，当前权限被拒绝，所以每次插件注册/工具检查写日志时都重复打印 `PermissionError: [Errno 13] Permission denied` | 这类 traceback 影响日志和部分 auth 状态检查，但 doctor 仍继续完成并给出总结。处理方式：关闭可能占用 Hermes 的进程后删除或修复 `logs\.__agent.lock` / `auth.lock` 权限；必要时用当前 Windows 用户重新运行 `hermes setup` 或 `hermes doctor --fix`，不要用管理员/普通用户混跑同一份 Hermes 配置目录 |
+| WSL内Chromium启动时出现DBus/localhost乱码警告 | Headless Chromium 在 WSL/root 环境里没有系统 DBus，WSL 启动时也会输出 localhost/NAT 相关乱码警告 | 2026-07-16 已用 `/root/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome --headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage --dump-dom about:blank` 实测，返回 `<html><head></head><body></body></html>` 且退出码为 0，说明浏览器能跑；这些警告暂不阻塞 |
 
 以后任务卡都要求：Codex完成代码改动后，自己尝试commit+push；如果push因环境问题失败，直接对照上表处理，不需要每次重新排查一遍。
 
