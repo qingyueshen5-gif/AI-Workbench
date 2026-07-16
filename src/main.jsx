@@ -7,6 +7,8 @@ const owners = ['GPT', 'Codex', 'Claude', '人工'];
 const defaultData = {
   dailyGoals: {},
   messages: [],
+  conversations: [],
+  activeConversationId: '',
   tasks: [],
   preferences: {
     defaultOwner: '人工',
@@ -46,6 +48,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [saveError, setSaveError] = useState('');
   const [selectedTaskId, setSelectedTaskId] = useState('');
+  const [panelOpen, setPanelOpen] = useState(false);
 
   useEffect(() => {
     fetch('/api/data')
@@ -98,25 +101,23 @@ function App() {
   return (
     <main className="bg-white text-zinc-950">
       <div className="workbench-shell w-full">
-        <ConversationSidebar data={data} />
+        <ConversationSidebar data={data} updateData={updateData} />
 
         <section className="chat-main bg-white">
-          <TopBar data={data} />
+          <TopBar data={data} panelOpen={panelOpen} setPanelOpen={setPanelOpen} />
           {saveError && <div className="mx-5 mt-4 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">{saveError}</div>}
           <ChatStream data={data} setData={setData} setSaveError={setSaveError} updateData={updateData} />
         </section>
 
-        <aside className="workbench-right hidden border-l border-zinc-200 bg-zinc-50 px-4 py-4 xl:block">
-          <TodayPanel data={data} />
-          <TaskPanel
-            data={data}
-            selectedTask={selectedTask}
-            selectedTaskId={selectedTaskId}
-            setSelectedTaskId={setSelectedTaskId}
-            updateData={updateData}
-          />
-          <HistoryPanel data={data} />
-        </aside>
+        <RightDrawer
+          open={panelOpen}
+          setOpen={setPanelOpen}
+          data={data}
+          selectedTask={selectedTask}
+          selectedTaskId={selectedTaskId}
+          setSelectedTaskId={setSelectedTaskId}
+          updateData={updateData}
+        />
       </div>
     </main>
   );
@@ -126,14 +127,25 @@ function mergeData(payload) {
   return {
     ...defaultData,
     ...payload,
+    conversations: payload.conversations || [],
+    activeConversationId: payload.activeConversationId || payload.conversations?.[0]?.id || '',
+    messages: getActiveMessages(payload),
     preferences: { ...defaultData.preferences, ...(payload.preferences || {}) },
     modelConnection: { ...defaultData.modelConnection, ...(payload.modelConnection || {}) },
     storage: { ...defaultData.storage, ...(payload.storage || {}) }
   };
 }
 
-function ConversationSidebar({ data }) {
-  const recentMessages = [...data.messages].reverse().slice(0, 12);
+function getActiveConversation(data) {
+  return (data.conversations || []).find((conversation) => conversation.id === data.activeConversationId) || data.conversations?.[0];
+}
+
+function getActiveMessages(data) {
+  return getActiveConversation(data)?.messages || data.messages || [];
+}
+
+function ConversationSidebar({ data, updateData }) {
+  const conversations = [...(data.conversations || [])].sort((a, b) => String(b.updatedAt || '').localeCompare(String(a.updatedAt || '')));
   const days = [...new Set([
     ...Object.keys(data.dailyGoals),
     ...data.tasks.map((task) => dateKey(task.createdAt))
@@ -150,14 +162,37 @@ function ConversationSidebar({ data }) {
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto px-3 pb-4">
+        <button
+          onClick={() => {
+            const createdAt = new Date().toISOString();
+            const conversation = { id: newId(), title: '新对话', createdAt, updatedAt: createdAt, messages: [] };
+            updateData((current) => ({
+              ...current,
+              activeConversationId: conversation.id,
+              conversations: [conversation, ...(current.conversations || [])],
+              messages: []
+            }));
+          }}
+          className="mb-4 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-left text-sm hover:bg-zinc-100"
+        >
+          新建对话
+        </button>
         <div className="mb-2 px-2 text-xs font-semibold text-zinc-500">Recents</div>
         <div className="space-y-1">
-          {recentMessages.map((message) => (
-            <button key={message.id} className="block w-full truncate rounded-md px-3 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-200">
-              {message.content}
+          {conversations.map((conversation) => (
+            <button
+              key={conversation.id}
+              onClick={() => updateData((current) => ({
+                ...current,
+                activeConversationId: conversation.id,
+                messages: conversation.messages || []
+              }))}
+              className={`block w-full truncate rounded-md px-3 py-2 text-left text-sm ${conversation.id === data.activeConversationId ? 'bg-zinc-200 text-zinc-950' : 'text-zinc-700 hover:bg-zinc-200'}`}
+            >
+              {conversation.title || conversation.messages?.[0]?.content || '新对话'}
             </button>
           ))}
-          {!recentMessages.length && <div className="px-3 py-6 text-sm text-zinc-500">暂无对话</div>}
+          {!conversations.length && <div className="px-3 py-6 text-sm text-zinc-500">暂无对话</div>}
         </div>
 
         {!!days.length && (
@@ -182,7 +217,7 @@ function ConversationSidebar({ data }) {
   );
 }
 
-function TopBar({ data }) {
+function TopBar({ data, panelOpen, setPanelOpen }) {
   const connection = data.modelConnection || defaultData.modelConnection;
   const connected = connection.status === '已连接';
   return (
@@ -195,13 +230,54 @@ function TopBar({ data }) {
         <div className="font-medium">{connected ? `DeepSeek ${connection.model}` : 'DeepSeek 未连接'}</div>
         {connection.checkedAt && <div className="text-xs text-zinc-500">{timeText(connection.checkedAt)}</div>}
       </div>
+      <button
+        onClick={() => setPanelOpen(!panelOpen)}
+        className="ml-4 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-zinc-200 text-xl leading-none hover:bg-zinc-100"
+        aria-label="打开侧边面板"
+      >
+        ≡
+      </button>
     </header>
+  );
+}
+
+function RightDrawer({ open, setOpen, data, selectedTask, selectedTaskId, setSelectedTaskId, updateData }) {
+  return (
+    <>
+      {open && <button className="drawer-backdrop" aria-label="关闭侧边面板" onClick={() => setOpen(false)} />}
+      <aside className={`drawer-panel ${open ? 'drawer-panel-open' : ''}`}>
+        <div className="flex h-16 items-center justify-between border-b border-zinc-200 px-4">
+          <h2 className="text-sm font-semibold">工作台侧栏</h2>
+          <button onClick={() => setOpen(false)} className="rounded-md border border-zinc-200 px-2 py-1 text-sm hover:bg-zinc-100">关闭</button>
+        </div>
+        <div className="h-[calc(100vh-4rem)] overflow-y-auto px-4 py-4">
+          <section className="border-b border-zinc-200 pb-4">
+            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-500">今日和任务</h3>
+            <TodayPanel data={data} />
+            <div className="mt-4">
+              <TaskPanel
+                data={data}
+                selectedTask={selectedTask}
+                selectedTaskId={selectedTaskId}
+                setSelectedTaskId={setSelectedTaskId}
+                updateData={updateData}
+              />
+            </div>
+          </section>
+          <section className="py-4">
+            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-500">历史和错误</h3>
+            <HistoryPanel data={data} />
+          </section>
+        </div>
+      </aside>
+    </>
   );
 }
 
 function ChatStream({ data, setData, setSaveError, updateData }) {
   const [draft, setDraft] = useState('');
   const [sending, setSending] = useState(false);
+  const messages = getActiveMessages(data);
 
   async function sendMessage() {
     const content = draft.trim();
@@ -213,7 +289,7 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
       const response = await fetch('/api/chat-message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content })
+        body: JSON.stringify({ content, conversationId: data.activeConversationId })
       });
       const payload = await response.json();
       if (payload.data) setData(mergeData(payload.data));
@@ -221,9 +297,15 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
       if (payload.warning) setSaveError(payload.warning);
     } catch (error) {
       setSaveError(error.message);
+      const fallbackMessage = { id: newId(), role: 'user', content, createdAt: new Date().toISOString() };
       updateData((current) => ({
         ...current,
-        messages: [...current.messages, { id: newId(), role: 'user', content, createdAt: new Date().toISOString() }]
+        messages: [...getActiveMessages(current), fallbackMessage],
+        conversations: (current.conversations || []).map((conversation) =>
+          conversation.id === current.activeConversationId
+            ? { ...conversation, messages: [...(conversation.messages || []), fallbackMessage], updatedAt: fallbackMessage.createdAt }
+            : conversation
+        )
       }));
     } finally {
       setSending(false);
@@ -252,7 +334,8 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
       if (suggestion.type === 'preference') {
         next.preferences = { ...current.preferences, communicationStyle: suggestion.text };
       }
-      next.messages = current.messages.map((item) =>
+      const messages = getActiveMessages(current);
+      const nextMessages = messages.map((item) =>
         item.id === message.id
           ? {
               ...item,
@@ -264,6 +347,12 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
             }
           : item
       );
+      next.messages = nextMessages;
+      next.conversations = (current.conversations || []).map((conversation) =>
+        conversation.id === current.activeConversationId
+          ? { ...conversation, messages: nextMessages, updatedAt: new Date().toISOString() }
+          : conversation
+      );
       return next;
     });
   }
@@ -273,7 +362,7 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
       <div className="chat-messages px-4">
         <div className="mx-auto flex min-h-full max-w-3xl flex-col justify-end py-8">
           <div className="space-y-6">
-          {data.messages.map((message) => (
+          {messages.map((message) => (
             <article key={message.id} className={message.role === 'assistant' ? 'group' : 'group text-right'}>
               <div className={message.role === 'assistant' ? 'mb-1 text-xs text-zinc-400' : 'mb-1 text-right text-xs text-zinc-400'}>{timeText(message.createdAt)}</div>
               <div className={message.role === 'assistant'
@@ -305,7 +394,7 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
               )}
             </article>
           ))}
-          {!data.messages.length && (
+          {!messages.length && (
             <div className="pb-24 text-center">
               <div className="text-2xl font-semibold text-zinc-900">今天要推进什么？</div>
               <div className="mt-3 text-sm text-zinc-500">直接输入目标、任务或偏好，工作台会自动提炼。</div>

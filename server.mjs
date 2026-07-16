@@ -13,6 +13,8 @@ const deepSeekBaseUrl = 'https://api.deepseek.com';
 const initialData = {
   dailyGoals: {},
   messages: [],
+  conversations: [],
+  activeConversationId: '',
   tasks: [],
   preferences: {
     defaultOwner: '人工',
@@ -50,11 +52,27 @@ function loadLocalEnv() {
 loadLocalEnv();
 
 function normalizeData(data) {
+  const legacyMessages = Array.isArray(data.messages) ? data.messages : [];
+  let conversations = Array.isArray(data.conversations) ? data.conversations : [];
+  if (!conversations.length && legacyMessages.length) {
+    const firstMessage = legacyMessages[0];
+    conversations = [{
+      id: 'default-conversation',
+      title: String(firstMessage.content || '新对话').slice(0, 32),
+      createdAt: firstMessage.createdAt || new Date().toISOString(),
+      updatedAt: legacyMessages[legacyMessages.length - 1]?.createdAt || new Date().toISOString(),
+      messages: legacyMessages
+    }];
+  }
+  const activeConversationId = data.activeConversationId || conversations[0]?.id || '';
+  const activeConversation = conversations.find((conversation) => conversation.id === activeConversationId) || conversations[0];
   return {
     ...initialData,
     ...data,
     dailyGoals: data.dailyGoals || {},
-    messages: data.messages || [],
+    conversations,
+    activeConversationId,
+    messages: activeConversation?.messages || legacyMessages,
     tasks: data.tasks || [],
     preferences: { ...initialData.preferences, ...(data.preferences || {}) },
     modelConnection: { ...initialData.modelConnection, ...(data.modelConnection || {}) },
@@ -80,6 +98,9 @@ async function writeData(data) {
 
 async function readDataWithMeta() {
   const data = await readData();
+  const messageCount = data.conversations.length
+    ? data.conversations.reduce((total, conversation) => total + (conversation.messages?.length || 0), 0)
+    : data.messages.length;
   let fileSizeBytes = 0;
   try {
     fileSizeBytes = (await stat(dataFile)).size;
@@ -91,7 +112,7 @@ async function readDataWithMeta() {
     storage: {
       fileSizeBytes,
       taskCount: data.tasks.length,
-      messageCount: data.messages.length,
+      messageCount,
       historyDayCount: new Set([
         ...Object.keys(data.dailyGoals),
         ...data.tasks.map((task) => String(task.createdAt || '').slice(0, 10)).filter(Boolean)
@@ -348,6 +369,25 @@ const server = createServer(async (request, response) => {
       }
 
       const currentData = await readData();
+      const requestedConversationId = String(payload.conversationId || currentData.activeConversationId || '').trim();
+      let conversations = currentData.conversations.length ? currentData.conversations : [{
+        id: requestedConversationId || 'default-conversation',
+        title: content.slice(0, 32) || '新对话',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        messages: currentData.messages || []
+      }];
+      let activeConversation = conversations.find((conversation) => conversation.id === requestedConversationId) || conversations[0];
+      if (!activeConversation) {
+        activeConversation = {
+          id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+          title: content.slice(0, 32) || '新对话',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          messages: []
+        };
+        conversations = [activeConversation, ...conversations];
+      }
       const message = {
         id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
         content,
@@ -356,9 +396,22 @@ const server = createServer(async (request, response) => {
         isTask: false,
         taskId: ''
       };
+      const activeMessages = [...(activeConversation.messages || []), message];
+      conversations = conversations.map((conversation) =>
+        conversation.id === activeConversation.id
+          ? {
+              ...conversation,
+              title: conversation.title || content.slice(0, 32) || '新对话',
+              updatedAt: message.createdAt,
+              messages: activeMessages
+            }
+          : conversation
+      );
       let nextData = normalizeData({
         ...currentData,
-        messages: [...currentData.messages, message]
+        conversations,
+        activeConversationId: activeConversation.id,
+        messages: activeMessages
       });
 
       loadLocalEnv();
@@ -369,7 +422,12 @@ const server = createServer(async (request, response) => {
         const assistantMessage = createAssistantMessage('我已收到消息，但当前还没有配置 DeepSeek API Key，所以暂时不能自动提炼。');
         nextData = {
           ...nextData,
-          messages: [...nextData.messages, assistantMessage],
+          conversations: nextData.conversations.map((conversation) =>
+            conversation.id === activeConversation.id
+              ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...activeMessages, assistantMessage] }
+              : conversation
+          ),
+          messages: [...activeMessages, assistantMessage],
           modelConnection: { status: '未连接', provider: '', model: '', checkedAt: new Date().toISOString() },
           systemErrors: [errorLog, ...nextData.systemErrors]
         };
@@ -396,6 +454,12 @@ const server = createServer(async (request, response) => {
         );
         nextData = {
           ...appliedResult.data,
+          conversations: appliedResult.data.conversations.map((conversation) =>
+            conversation.id === activeConversation.id
+              ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...updatedMessages, assistantMessage] }
+              : conversation
+          ),
+          activeConversationId: activeConversation.id,
           messages: [...updatedMessages, assistantMessage],
           preferences: { ...appliedResult.data.preferences, deepSeekModel: model },
           modelConnection: {
@@ -416,7 +480,12 @@ const server = createServer(async (request, response) => {
         const assistantMessage = createAssistantMessage(`这次没有处理成功：${error.message}`);
         nextData = {
           ...nextData,
-          messages: [...nextData.messages, assistantMessage],
+          conversations: nextData.conversations.map((conversation) =>
+            conversation.id === activeConversation.id
+              ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...activeMessages, assistantMessage] }
+              : conversation
+          ),
+          messages: [...activeMessages, assistantMessage],
           modelConnection: { status: '未连接', provider: '', model: '', checkedAt: new Date().toISOString() },
           systemErrors: [errorLog, ...nextData.systemErrors]
         };
