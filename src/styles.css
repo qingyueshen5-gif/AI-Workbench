@@ -51,6 +51,21 @@ body,
   flex: 0 0 auto;
 }
 
+.conversation-menu-button {
+  position: absolute;
+  top: 50%;
+  right: 0.25rem;
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity 120ms ease, background-color 120ms ease;
+}
+
+.conversation-row:hover .conversation-menu-button,
+.conversation-menu-button:focus,
+.conversation-menu-button[aria-expanded="true"] {
+  opacity: 1;
+}
+
 @media (max-width: 1023px) {
   .history-sidebar {
     display: none;

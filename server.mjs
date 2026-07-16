@@ -31,6 +31,8 @@ const initialData = {
 };
 
 const extractionConfidenceThreshold = 0.75;
+const ownerOptions = ['DeepSeek', '人工', 'Codex', 'GPT', 'Claude'];
+const internalActionTexts = new Set(['把这条消息同步为任务']);
 
 function loadLocalEnv() {
   try {
@@ -58,12 +60,16 @@ function normalizeData(data) {
     const firstMessage = legacyMessages[0];
     conversations = [{
       id: 'default-conversation',
-      title: String(firstMessage.content || '新对话').slice(0, 32),
+      title: deriveConversationTitle({ messages: legacyMessages }),
       createdAt: firstMessage.createdAt || new Date().toISOString(),
       updatedAt: legacyMessages[legacyMessages.length - 1]?.createdAt || new Date().toISOString(),
       messages: legacyMessages
     }];
   }
+  conversations = conversations.map((conversation) => ({
+    ...conversation,
+    title: deriveConversationTitle(conversation)
+  }));
   const activeConversationId = data.activeConversationId || conversations[0]?.id || '';
   const activeConversation = conversations.find((conversation) => conversation.id === activeConversationId) || conversations[0];
   return {
@@ -78,6 +84,25 @@ function normalizeData(data) {
     modelConnection: { ...initialData.modelConnection, ...(data.modelConnection || {}) },
     systemErrors: data.systemErrors || []
   };
+}
+
+function sanitizeTitleText(text) {
+  return String(text || '').replace(/\s+/g, ' ').trim().slice(0, 32);
+}
+
+function isInternalActionMessage(message) {
+  const content = sanitizeTitleText(message?.content);
+  return !content || internalActionTexts.has(content) || message?.isTask === true;
+}
+
+function deriveConversationTitle(conversation) {
+  const current = sanitizeTitleText(conversation?.title);
+  if (current && current !== '新对话' && !internalActionTexts.has(current)) return current;
+  const firstUserMessage = (conversation?.messages || []).find((message) =>
+    message.role === 'user' && !isInternalActionMessage(message)
+  );
+  const fallbackUserLikeMessage = (conversation?.messages || []).find((message) => !isInternalActionMessage(message));
+  return sanitizeTitleText(firstUserMessage?.content || fallbackUserLikeMessage?.content) || '新对话';
 }
 
 async function readData() {
@@ -213,7 +238,7 @@ async function extractStructureFromMessage(apiKey, model, content, currentData) 
         '只有明确表达今天目标、待办任务或偏好时才填写；不确定时不要自动写入，放到needsConfirmation。',
         '如果只是寒暄、问候或闲聊，goal.text留空、tasks为空、preferences保持空值，reply给出简短自然回应。',
         'reply必须始终填写，语气简洁，不要说自己已经执行了任务。',
-        'owner只能是GPT、Codex、Claude、人工之一；无法判断则留空。',
+        'owner只能是DeepSeek、人工、Codex、GPT、Claude之一；当前真实接入的是DeepSeek，Codex/GPT/Claude暂未接入，无法判断则留空。',
         `今天日期是${today}。`
       ].join('\n')
     },
@@ -303,7 +328,7 @@ function applyExtraction(data, extraction, sourceMessageId) {
 
 function ownersFromValue(value) {
   const owner = String(value || '').trim();
-  return ['GPT', 'Codex', 'Claude', '人工'].includes(owner) ? owner : '';
+  return ownerOptions.includes(owner) ? owner : '';
 }
 
 function readBody(request) {

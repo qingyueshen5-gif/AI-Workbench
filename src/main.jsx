@@ -1,9 +1,16 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 
 const statuses = ['待开始', '进行中', '已完成', '失败'];
-const owners = ['GPT', 'Codex', 'Claude', '人工'];
+const ownerOptions = [
+  { value: 'DeepSeek', label: 'DeepSeek', status: '已接入' },
+  { value: '人工', label: '人工', status: '手动' },
+  { value: 'Codex', label: 'Codex', status: '未接入' },
+  { value: 'GPT', label: 'GPT', status: '未接入' },
+  { value: 'Claude', label: 'Claude', status: '未接入' }
+];
+const internalActionTexts = new Set(['把这条消息同步为任务']);
 const defaultData = {
   dailyGoals: {},
   messages: [],
@@ -136,16 +143,43 @@ function App() {
 }
 
 function mergeData(payload) {
+  const conversations = sanitizeConversations(payload.conversations || []);
   return {
     ...defaultData,
     ...payload,
-    conversations: payload.conversations || [],
-    activeConversationId: payload.activeConversationId || payload.conversations?.[0]?.id || '',
+    conversations,
+    activeConversationId: payload.activeConversationId || conversations?.[0]?.id || '',
     messages: getActiveMessages(payload),
     preferences: { ...defaultData.preferences, ...(payload.preferences || {}) },
     modelConnection: { ...defaultData.modelConnection, ...(payload.modelConnection || {}) },
     storage: { ...defaultData.storage, ...(payload.storage || {}) }
   };
+}
+
+function sanitizeTitleText(text) {
+  return String(text || '').replace(/\s+/g, ' ').trim().slice(0, 32);
+}
+
+function isInternalActionMessage(message) {
+  const content = sanitizeTitleText(message?.content);
+  return !content || internalActionTexts.has(content) || message?.isTask === true;
+}
+
+function deriveConversationTitle(conversation) {
+  const current = sanitizeTitleText(conversation?.title);
+  if (current && current !== '新对话' && !internalActionTexts.has(current)) return current;
+  const firstUserMessage = (conversation?.messages || []).find((message) =>
+    message.role === 'user' && !isInternalActionMessage(message)
+  );
+  const fallbackUserLikeMessage = (conversation?.messages || []).find((message) => !isInternalActionMessage(message));
+  return sanitizeTitleText(firstUserMessage?.content || fallbackUserLikeMessage?.content) || '新对话';
+}
+
+function sanitizeConversations(conversations) {
+  return (conversations || []).map((conversation) => ({
+    ...conversation,
+    title: deriveConversationTitle(conversation)
+  }));
 }
 
 function getActiveConversation(data) {
@@ -157,6 +191,7 @@ function getActiveMessages(data) {
 }
 
 function ConversationSidebar({ data, updateData }) {
+  const [openMenuId, setOpenMenuId] = useState('');
   const conversations = [...(data.conversations || [])].sort((a, b) => String(b.updatedAt || '').localeCompare(String(a.updatedAt || '')));
   const days = [...new Set([
     ...Object.keys(data.dailyGoals),
@@ -192,17 +227,75 @@ function ConversationSidebar({ data, updateData }) {
         <div className="mb-2 px-2 text-xs font-semibold text-zinc-500">Recents</div>
         <div className="space-y-1">
           {conversations.map((conversation) => (
-            <button
-              key={conversation.id}
-              onClick={() => updateData((current) => ({
-                ...current,
-                activeConversationId: conversation.id,
-                messages: conversation.messages || []
-              }))}
-              className={`block w-full truncate rounded-md px-3 py-2 text-left text-sm ${conversation.id === data.activeConversationId ? 'bg-zinc-200 text-zinc-950' : 'text-zinc-700 hover:bg-zinc-200'}`}
-            >
-              {conversation.title || conversation.messages?.[0]?.content || '新对话'}
-            </button>
+            <div key={conversation.id} className="conversation-row group relative">
+              <button
+                onClick={() => updateData((current) => ({
+                  ...current,
+                  activeConversationId: conversation.id,
+                  messages: conversation.messages || []
+                }))}
+                className={`block w-full truncate rounded-md py-2 pl-3 pr-9 text-left text-sm ${conversation.id === data.activeConversationId ? 'bg-zinc-200 text-zinc-950' : 'text-zinc-700 hover:bg-zinc-200'}`}
+              >
+                {deriveConversationTitle(conversation)}
+              </button>
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setOpenMenuId(openMenuId === conversation.id ? '' : conversation.id);
+                }}
+                className="conversation-menu-button flex h-7 w-7 items-center justify-center rounded-md text-lg leading-none text-zinc-500 hover:bg-zinc-300"
+                aria-label="更多对话操作"
+                aria-expanded={openMenuId === conversation.id}
+              >
+                ⋮
+              </button>
+              {openMenuId === conversation.id && (
+                <div className="absolute right-1 top-9 z-20 w-32 rounded-lg border border-zinc-200 bg-white p-1 text-sm shadow-lg">
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      const nextTitle = window.prompt('重命名对话', deriveConversationTitle(conversation));
+                      if (!nextTitle?.trim()) return;
+                      setOpenMenuId('');
+                      updateData((current) => ({
+                        ...current,
+                        conversations: (current.conversations || []).map((item) =>
+                          item.id === conversation.id ? { ...item, title: sanitizeTitleText(nextTitle), updatedAt: new Date().toISOString() } : item
+                        )
+                      }));
+                    }}
+                    className="w-full rounded-md px-2 py-1.5 text-left text-zinc-700 hover:bg-zinc-100"
+                  >
+                    重命名
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setOpenMenuId('');
+                      updateData((current) => {
+                        const remaining = (current.conversations || []).filter((item) => item.id !== conversation.id);
+                        const nextActive = current.activeConversationId === conversation.id
+                          ? remaining[0]?.id || ''
+                          : current.activeConversationId;
+                        const nextConversation = remaining.find((item) => item.id === nextActive);
+                        return {
+                          ...current,
+                          conversations: remaining,
+                          activeConversationId: nextActive,
+                          messages: nextConversation?.messages || []
+                        };
+                      });
+                    }}
+                    className="w-full rounded-md px-2 py-1.5 text-left text-red-700 hover:bg-red-50"
+                  >
+                    删除
+                  </button>
+                </div>
+              )}
+            </div>
           ))}
           {!conversations.length && <div className="px-3 py-6 text-sm text-zinc-500">暂无对话</div>}
         </div>
@@ -221,26 +314,16 @@ function ConversationSidebar({ data, updateData }) {
         )}
       </div>
 
-      <div className="border-t border-zinc-200 p-3">
-        <div className="truncate text-sm font-medium">本地项目</div>
-        <div className="text-xs text-zinc-500">F:\AI-Workbench</div>
-      </div>
+      <div className="border-t border-zinc-200 p-3 text-xs text-zinc-500">本地优先工作台</div>
     </aside>
   );
 }
 
 function TopBar({ data, panelOpen, setPanelOpen }) {
-  const connection = data.modelConnection || defaultData.modelConnection;
-  const connected = connection.status === '已连接';
   return (
     <header className="flex h-16 shrink-0 items-center justify-between border-b border-zinc-100 px-5">
       <div>
         <h1 className="text-base font-semibold">当前对话</h1>
-        <div className="text-xs text-zinc-500">聊天驱动目标、任务和偏好</div>
-      </div>
-      <div className={connected ? 'text-right text-sm text-emerald-700' : 'text-right text-sm text-zinc-600'}>
-        <div className="font-medium">{connected ? `DeepSeek ${connection.model}` : 'DeepSeek 未连接'}</div>
-        {connection.checkedAt && <div className="text-xs text-zinc-500">{timeText(connection.checkedAt)}</div>}
       </div>
       <button
         onClick={() => setPanelOpen(!panelOpen)}
@@ -265,7 +348,7 @@ function RightDrawer({ open, setOpen, data, selectedTask, selectedTaskId, setSel
         <div className="h-[calc(100vh-4rem)] overflow-y-auto px-4 py-4">
           <section className="border-b border-zinc-200 pb-4">
             <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-500">今日和任务</h3>
-            <TodayPanel data={data} />
+            <TodayPanel data={data} selectedTaskId={selectedTaskId} setSelectedTaskId={setSelectedTaskId} />
             <div className="mt-4">
               <TaskPanel
                 data={data}
@@ -277,7 +360,8 @@ function RightDrawer({ open, setOpen, data, selectedTask, selectedTaskId, setSel
             </div>
           </section>
           <section className="py-4">
-            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-500">历史和错误</h3>
+            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-500">设置、历史和错误</h3>
+            <SettingsPanel data={data} />
             <HistoryPanel data={data} />
           </section>
         </div>
@@ -289,7 +373,14 @@ function RightDrawer({ open, setOpen, data, selectedTask, selectedTaskId, setSel
 function ChatStream({ data, setData, setSaveError, updateData }) {
   const [draft, setDraft] = useState('');
   const [sending, setSending] = useState(false);
+  const messagesRef = useRef(null);
   const messages = getActiveMessages(data);
+
+  useEffect(() => {
+    const container = messagesRef.current;
+    if (!container) return;
+    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+  }, [data.activeConversationId, messages.length]);
 
   async function sendMessage() {
     const content = draft.trim();
@@ -374,7 +465,7 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
 
   return (
     <div className="chat-stream">
-      <div className="chat-messages px-4">
+      <div ref={messagesRef} className="chat-messages px-4">
         <div className="mx-auto flex min-h-full max-w-3xl flex-col justify-end py-8">
           <div className="space-y-6">
           {messages.map((message) => (
@@ -443,7 +534,8 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
   );
 }
 
-function TodayPanel({ data }) {
+function TodayPanel({ data, selectedTaskId, setSelectedTaskId }) {
+  const [expanded, setExpanded] = useState(false);
   const today = todayKey();
   const todayTasks = data.tasks.filter((task) => dateKey(task.createdAt) === today);
   const doneCount = todayTasks.filter((task) => task.status === '已完成').length;
@@ -451,7 +543,30 @@ function TodayPanel({ data }) {
   return (
     <section className="border-b border-zinc-200 pb-4">
       <h2 className="text-xs font-semibold uppercase tracking-wide text-zinc-500">今日</h2>
-      <div className="mt-3 text-sm text-zinc-700">{data.dailyGoals[today] || '还没有从聊天中提炼出今日目标'}</div>
+      <button
+        type="button"
+        onClick={() => setExpanded(!expanded)}
+        className="mt-3 w-full rounded-md px-2 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-100"
+      >
+        <span className="block font-medium text-zinc-900">{data.dailyGoals[today] || '还没有从聊天中提炼出今日目标'}</span>
+        <span className="mt-1 block text-xs text-zinc-500">{expanded ? '收起关联任务' : '查看关联任务'}</span>
+      </button>
+      {expanded && (
+        <div className="mt-2 rounded-lg border border-zinc-200 bg-white p-2">
+          {todayTasks.map((task) => (
+            <button
+              key={task.id}
+              type="button"
+              onClick={() => setSelectedTaskId(task.id)}
+              className={`flex w-full items-center justify-between gap-3 rounded-md px-2 py-2 text-left text-sm hover:bg-zinc-100 ${selectedTaskId === task.id ? 'bg-zinc-100 text-zinc-950' : 'text-zinc-700'}`}
+            >
+              <span className="min-w-0 truncate">{task.title}</span>
+              <span className={`shrink-0 rounded-md px-2 py-1 text-xs ${statusClass(task.status)}`}>{task.status}</span>
+            </button>
+          ))}
+          {!todayTasks.length && <div className="px-2 py-3 text-sm text-zinc-500">这个目标下还没有关联任务。</div>}
+        </div>
+      )}
       <div className="mt-4 h-2 overflow-hidden rounded-full bg-zinc-200">
         <div className="h-full bg-emerald-600" style={{ width: `${progress}%` }} />
       </div>
@@ -530,7 +645,7 @@ function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId, upda
           <label className="mt-3 block">
             <span className="text-xs text-zinc-500">负责人</span>
             <select value={selectedTask.owner} onChange={(event) => updateTask(selectedTask.id, { owner: event.target.value })} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm">
-              {owners.map((owner) => <option key={owner}>{owner}</option>)}
+              {ownerOptions.map((owner) => <option key={owner.value} value={owner.value}>{owner.label}（{owner.status}）</option>)}
             </select>
           </label>
           <label className="mt-3 block">
@@ -547,6 +662,24 @@ function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId, upda
           </button>
         </div>
       )}
+    </section>
+  );
+}
+
+function SettingsPanel({ data }) {
+  const connection = data.modelConnection || defaultData.modelConnection;
+  const connected = connection.status === '已连接';
+  return (
+    <section className="mb-4 rounded-lg border border-zinc-200 bg-white p-3 text-sm">
+      <div className="flex items-center justify-between gap-3">
+        <div className="font-medium text-zinc-900">AI 连接</div>
+        <span className={connected ? 'text-xs text-emerald-700' : 'text-xs text-zinc-500'}>{connected ? '已连接' : '未连接'}</span>
+      </div>
+      <div className="mt-2 text-xs leading-5 text-zinc-500">
+        {connected ? `${connection.provider || 'DeepSeek'} ${connection.model || data.preferences.deepSeekModel}` : 'DeepSeek 暂未连接'}
+        {connection.checkedAt ? ` · ${timeText(connection.checkedAt)}` : ''}
+      </div>
+      <div className="mt-2 text-xs leading-5 text-zinc-500">本地项目路径已隐藏，仅用于本机数据保存。</div>
     </section>
   );
 }

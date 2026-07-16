@@ -82,15 +82,34 @@ async function hasDeepSeekApiKey() {
   }
 }
 
+async function verifyUiSource() {
+  const main = await readFile(join(root, 'src', 'main.jsx'), 'utf8');
+  const styles = await readFile(join(root, 'src', 'styles.css'), 'utf8');
+  const expectations = [
+    [main.includes('aria-label="更多对话操作"') && main.includes('删除'), 'Conversation more menu with delete action is missing'],
+    [styles.includes('.conversation-row:hover .conversation-menu-button'), 'Conversation menu hover style is missing'],
+    [main.includes('scrollTo({ top: container.scrollHeight'), 'Chat stream auto-scroll is missing'],
+    [main.includes('查看关联任务') && main.includes('setSelectedTaskId(task.id)'), 'Today goal task expansion is missing'],
+    [main.includes('负责人') && main.includes('DeepSeek') && main.includes('未接入'), 'Owner connection state options are missing'],
+    [main.includes('今天要推进什么？'), 'Empty conversation welcome state is missing'],
+    [!main.includes('聊天驱动目标、任务和偏好'), 'Technical top-bar helper text should not be permanently visible'],
+    [!main.includes('F:\\AI-Workbench'), 'Local workspace path should not be permanently visible']
+  ];
+  for (const [passes, message] of expectations) {
+    if (!passes) throw new Error(message);
+  }
+}
+
 async function main() {
   await rm(dataFile, { force: true });
   await waitForServer();
+  await verifyUiSource();
 
   const today = new Date().toISOString().slice(0, 10);
   const validData = {
     dailyGoals: { [today]: '验证 MVP 闭环' },
     preferences: {
-      defaultOwner: 'Codex',
+      defaultOwner: 'DeepSeek',
       dailyTaskLimit: 7,
       deepSeekModel: 'deepseek-chat'
     },
@@ -108,14 +127,55 @@ async function main() {
         createdAt: new Date().toISOString(),
         isTask: true,
         taskId: 'verify-task'
+      },
+      {
+        id: 'verify-user-message',
+        content: '验证 MVP 闭环',
+        createdAt: new Date().toISOString(),
+        role: 'user',
+        isTask: false,
+        taskId: ''
       }
     ],
+    conversations: [
+      {
+        id: 'verify-conversation',
+        title: '把这条消息同步为任务',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        messages: [
+          {
+            id: 'verify-message',
+            content: '把这条消息同步为任务',
+            createdAt: new Date().toISOString(),
+            isTask: true,
+            taskId: 'verify-task'
+          },
+          {
+            id: 'verify-user-message',
+            content: '验证 MVP 闭环',
+            createdAt: new Date().toISOString(),
+            role: 'user',
+            isTask: false,
+            taskId: ''
+          }
+        ]
+      },
+      {
+        id: 'empty-conversation',
+        title: '新对话',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        messages: []
+      }
+    ],
+    activeConversationId: 'verify-conversation',
     tasks: [
       {
         id: 'verify-task',
         title: '验证任务持久化',
         status: '已完成',
-        owner: 'Codex',
+        owner: 'DeepSeek',
         createdAt: new Date().toISOString(),
         notes: 'verify script',
         failureReason: ''
@@ -135,8 +195,14 @@ async function main() {
   if (persisted.tasks[0]?.status !== '已完成') {
     throw new Error('Task status was not persisted');
   }
-  if (persisted.preferences?.defaultOwner !== 'Codex') {
+  if (persisted.preferences?.defaultOwner !== 'DeepSeek') {
     throw new Error('Preferences were not persisted');
+  }
+  if (persisted.conversations[0]?.title !== '验证 MVP 闭环') {
+    throw new Error('Internal action text should not be used as a conversation title');
+  }
+  if (persisted.tasks[0]?.owner !== 'DeepSeek') {
+    throw new Error('DeepSeek owner should be persisted');
   }
 
   const loaded = await request('GET');
