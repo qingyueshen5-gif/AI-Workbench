@@ -395,21 +395,17 @@ const server = createServer(async (request, response) => {
 
       const currentData = await readData();
       const requestedConversationId = String(payload.conversationId || currentData.activeConversationId || '').trim();
-      let conversations = currentData.conversations.length ? currentData.conversations : [{
-        id: requestedConversationId || 'default-conversation',
-        title: content.slice(0, 32) || '新对话',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        messages: currentData.messages || []
-      }];
-      let activeConversation = conversations.find((conversation) => conversation.id === requestedConversationId) || conversations[0];
+      let conversations = currentData.conversations.length ? currentData.conversations : [];
+      let activeConversation = requestedConversationId
+        ? conversations.find((conversation) => conversation.id === requestedConversationId)
+        : conversations[0];
       if (!activeConversation) {
         activeConversation = {
-          id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+          id: requestedConversationId || `${Date.now()}-${Math.random().toString(16).slice(2)}`,
           title: content.slice(0, 32) || '新对话',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          messages: []
+          messages: currentData.conversations.length ? [] : currentData.messages || []
         };
         conversations = [activeConversation, ...conversations];
       }
@@ -438,6 +434,7 @@ const server = createServer(async (request, response) => {
         activeConversationId: activeConversation.id,
         messages: activeMessages
       });
+      await writeData(nextData);
 
       loadLocalEnv();
       const apiKey = String(process.env.DEEPSEEK_API_KEY || '').trim();
