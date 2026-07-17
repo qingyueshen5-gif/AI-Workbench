@@ -107,6 +107,32 @@ npm.cmd run dev
 http://127.0.0.1:5173
 ```
 
+## 开机自启动（当前电脑已配置）
+
+当前电脑已配置为 Windows 登录后自动启动本地服务，用户开机后直接打开浏览器书签即可访问：
+
+```text
+http://127.0.0.1:5173
+```
+
+实现方式：
+- 项目内脚本：`scripts/start-workbench-dev.ps1`
+- 后台服务脚本：`scripts/dev-background.mjs`
+- 用户启动项快捷方式：`C:\Users\胖胖虎\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\AI Workbench Dev Server.lnk`
+- 启动逻辑：脚本先检查 `5173` 端口是否已经在运行；如果没有，就隐藏启动 `scripts/dev-background.mjs`，由它拉起 API 和 Vite
+- 运行日志：`.workbench-startup.log` 和 `.workbench-startup.err.log`（已加入 `.gitignore`，不提交）
+
+关闭自启动：
+1. 打开文件资源管理器地址栏，输入：
+
+```text
+shell:startup
+```
+
+2. 删除 `AI Workbench Dev Server.lnk`
+
+临时停止正在运行的本地服务：在任务管理器里结束对应的 `node.exe` 进程，或重启电脑后先删除上面的启动项。
+
 ## 验证是否搭建成功
 
 ```bash

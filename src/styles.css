@@ -88,8 +88,51 @@ body,
   opacity: 1;
 }
 
+.message-timestamp {
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.group:hover .message-timestamp,
+.group:focus-within .message-timestamp {
+  opacity: 1;
+}
+
 @media (max-width: 1023px) {
   .history-sidebar {
+    display: none;
+  }
+}
+
+.mobile-conversation-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  border: 0;
+  background: rgb(24 24 27 / 0.18);
+}
+
+.mobile-conversation-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  width: min(300px, 86vw);
+  height: 100vh;
+  transform: translateX(-100%);
+  transition: transform 180ms ease;
+  box-shadow: 20px 0 40px rgb(24 24 27 / 0.12);
+}
+
+.mobile-conversation-panel-open {
+  transform: translateX(0);
+}
+
+@media (min-width: 768px) {
+  .mobile-conversation-backdrop,
+  .mobile-conversation-panel {
     display: none;
   }
 }
