@@ -3,6 +3,8 @@ import { readFile, writeFile, mkdir, stat } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { agentDefinitions } from './agents/definitions.mjs';
+import { agentRegistry } from './agents/registry.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const dataFile = join(root, 'data', 'workbench.json');
@@ -27,6 +29,7 @@ const initialData = {
     model: '',
     checkedAt: ''
   },
+  agents: agentDefinitions,
   systemErrors: []
 };
 
@@ -82,8 +85,22 @@ function normalizeData(data) {
     tasks: normalizeTasks(data.tasks),
     preferences: { ...initialData.preferences, ...(data.preferences || {}) },
     modelConnection: { ...initialData.modelConnection, ...(data.modelConnection || {}) },
+    agents: normalizeAgents(data.agents),
     systemErrors: data.systemErrors || []
   };
+}
+
+function normalizeAgents(agents) {
+  const byId = new Map((Array.isArray(agents) ? agents : []).map((agent) => [agent.id, agent]));
+  return agentDefinitions.map((definition) => ({
+    ...definition,
+    ...(byId.get(definition.id) || {}),
+    id: definition.id,
+    type: definition.type,
+    capabilities: definition.capabilities,
+    healthCheck: definition.healthCheck,
+    invoke: definition.invoke
+  }));
 }
 
 function sanitizeTitleText(text) {
@@ -496,6 +513,40 @@ const server = createServer(async (request, response) => {
   try {
     if (request.url === '/api/data' && request.method === 'GET') {
       sendJson(response, 200, await readDataWithMeta());
+      return;
+    }
+
+    if (request.url === '/api/agents' && request.method === 'GET') {
+      sendJson(response, 200, { agents: agentRegistry.listAgents() });
+      return;
+    }
+
+    if (request.url === '/api/agents/health' && request.method === 'POST') {
+      const body = await readBody(request);
+      const payload = JSON.parse(body || '{}');
+      const requested = Array.isArray(payload.agentIds) && payload.agentIds.length
+        ? payload.agentIds.map(String)
+        : agentRegistry.listAgents().map((agent) => agent.id);
+      const results = [];
+      for (const agentId of requested) {
+        results.push(await agentRegistry.healthCheck(agentId));
+      }
+      const currentData = await readData();
+      const resultById = new Map(results.map((result) => [result.agentId, result]));
+      await writeData({
+        ...currentData,
+        agents: normalizeAgents(currentData.agents).map((agent) => {
+          const result = resultById.get(agent.id);
+          if (!result) return agent;
+          return {
+            ...agent,
+            status: result.status || (result.ok ? 'available' : 'unavailable'),
+            lastHealthCheckAt: result.checkedAt || new Date().toISOString(),
+            failureCount: result.ok ? 0 : Number(agent.failureCount || 0) + 1
+          };
+        })
+      });
+      sendJson(response, 200, { results, data: await readDataWithMeta() });
       return;
     }
 

@@ -1,6 +1,6 @@
 {
   "name": "ai-workbench",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,7 +8,8 @@
     "api": "node server.mjs",
     "build": "vite build",
     "preview": "vite preview",
-    "verify": "node scripts/verify.mjs"
+    "verify": "node scripts/verify.mjs",
+    "verify:agents": "node scripts/verify-agents.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.4",
