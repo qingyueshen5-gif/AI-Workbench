@@ -20,6 +20,9 @@
 - 新增验证层 MVP：按代码、Hermes、搜索、文件四类任务检查证据完整性、有效性和结果一致性，禁止无证据或无效证据的 run 被标记完成。
 - 新增 `/api/runs/:id/verify` 和 `/api/verification-rules`，工作台可统一验证执行记录并查看当前规则。
 - 新增 `npm run verify:verification`，覆盖成功、假完成和执行失败三类验证场景。
+- 新增错误翻译层 MVP：将超时、权限、API 配置、连接、限流、参数、假完成和执行失败等错误统一转成中文用户消息、内部技术细节和可点击恢复建议。
+- 新增 `/api/errors/normalize` 和 `/api/errors/recovery-hints/:errorType`，用于错误归一化和恢复方案查询。
+- 新增 `npm run verify:errors`，覆盖 5 类真实错误场景，确保用户消息不暴露 traceback 或英文技术错误。
 - 新增 `web_search` 通用联网搜索工具，DeepSeek 可按需调用 Serper Google Search API 查询实时数据、新闻、当前状态、产品价格等变化性问题。
 - `.env` 新增可选 `SERPER_API_KEY` 配置；未配置时保留聊天能力，但联网搜索会返回明确缺 key 错误。
 
@@ -36,6 +39,7 @@
 - `npm run verify:memories`
 - `npm run verify:hermes`
 - `npm run verify:verification`
+- `npm run verify:errors`
 - `npm run verify`
 
 ## v0.2.3 - 遗留任务收尾 + 环境归档

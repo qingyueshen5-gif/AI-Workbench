@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { agentDefinitions } from './agents/definitions.mjs';
 import { agentRegistry } from './agents/registry.mjs';
 import { verificationRules, verifyRun } from './verification/rules.mjs';
+import { getRecoveryHint, normalizeError } from './errors/normalize.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const dataFile = join(root, 'data', 'workbench.json');
@@ -885,6 +886,19 @@ const server = createServer(async (request, response) => {
       return;
     }
 
+    if (pathname === '/api/errors/normalize' && request.method === 'POST') {
+      const body = await readBody(request);
+      const payload = JSON.parse(body || '{}');
+      sendJson(response, 200, { normalized: normalizeError(payload.rawError || payload) });
+      return;
+    }
+
+    const recoveryHintMatch = pathname.match(/^\/api\/errors\/recovery-hints\/([^/]+)$/);
+    if (recoveryHintMatch && request.method === 'GET') {
+      sendJson(response, 200, { hint: getRecoveryHint(decodeURIComponent(recoveryHintMatch[1])) });
+      return;
+    }
+
     if (pathname === '/api/agents/hermes/invoke' && request.method === 'POST') {
       const body = await readBody(request);
       const payload = JSON.parse(body || '{}');
@@ -941,12 +955,20 @@ const server = createServer(async (request, response) => {
         verificationResult: adapterVerification
       });
       const verification = verifyRun(run);
+      const normalizedRunError = verification.ok ? null : normalizeError({
+        reason: verification.reason,
+        type: verification.reason,
+        details: verification.details,
+        rawError: adapterResult.error || null
+      });
       run = {
         ...run,
         status: verification.ok ? run.status : 'failed',
         verified: verification.ok,
         verificationResult: verification,
-        errorUserMessage: verification.ok ? run.errorUserMessage : verification.reason
+        errorRaw: verification.ok ? run.errorRaw : { adapterError: adapterResult.error || null, verification },
+        errorUserMessage: verification.ok ? run.errorUserMessage : normalizedRunError.userMessage,
+        normalizedError: verification.ok ? run.normalizedError : normalizedRunError
       };
       if (Array.isArray(output.suggestions) && output.suggestions.length) {
         run.memorySuggestions = normalizeMemorySuggestions(output.suggestions.map((suggestion) => ({
@@ -1183,6 +1205,12 @@ const server = createServer(async (request, response) => {
         return;
       }
       const verification = verifyRun(run);
+      const normalizedVerificationError = verification.ok ? null : normalizeError({
+        reason: verification.reason,
+        type: verification.reason,
+        details: verification.details,
+        runId
+      });
       const nextStatus = verification.ok ? run.status : 'failed';
       const runs = currentData.runs.map((item) =>
         item.id === runId
@@ -1191,7 +1219,9 @@ const server = createServer(async (request, response) => {
               status: nextStatus,
               verified: verification.ok,
               verificationResult: verification,
-              errorUserMessage: verification.ok ? item.errorUserMessage : verification.reason
+              errorRaw: verification.ok ? item.errorRaw : { verification },
+              errorUserMessage: verification.ok ? item.errorUserMessage : normalizedVerificationError.userMessage,
+              normalizedError: verification.ok ? item.normalizedError : normalizedVerificationError
             }
           : item
       );

@@ -13,7 +13,8 @@
     "verify:tasks-runs": "node scripts/verify-tasks-runs.mjs",
     "verify:memories": "node scripts/verify-memories.mjs",
     "verify:hermes": "node scripts/verify-hermes-adapter.mjs",
-    "verify:verification": "node scripts/verify-verification-layer.mjs"
+    "verify:verification": "node scripts/verify-verification-layer.mjs",
+    "verify:errors": "node scripts/verify-error-normalization.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.4",
