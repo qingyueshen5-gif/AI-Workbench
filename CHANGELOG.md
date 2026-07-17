@@ -17,6 +17,9 @@
 - 完善 Hermes adapter：支持 `invoke(task, context)`，固定使用 `hermes chat -q ... --provider custom -m deepseek-chat --toolsets memory,terminal`，返回结构化结果、命令证据和记忆建议。
 - 新增 `/api/agents/hermes/invoke`，工作台可通过统一 adapter 调 Hermes 执行任务并写入 run 记录。
 - 新增 `npm run verify:hermes`，验证 Hermes 读取 `CURRENT_TASK.md`、返回待办摘要和完整命令证据。
+- 新增验证层 MVP：按代码、Hermes、搜索、文件四类任务检查证据完整性、有效性和结果一致性，禁止无证据或无效证据的 run 被标记完成。
+- 新增 `/api/runs/:id/verify` 和 `/api/verification-rules`，工作台可统一验证执行记录并查看当前规则。
+- 新增 `npm run verify:verification`，覆盖成功、假完成和执行失败三类验证场景。
 - 新增 `web_search` 通用联网搜索工具，DeepSeek 可按需调用 Serper Google Search API 查询实时数据、新闻、当前状态、产品价格等变化性问题。
 - `.env` 新增可选 `SERPER_API_KEY` 配置；未配置时保留聊天能力，但联网搜索会返回明确缺 key 错误。
 
@@ -32,6 +35,7 @@
 - `npm run verify:tasks-runs`
 - `npm run verify:memories`
 - `npm run verify:hermes`
+- `npm run verify:verification`
 - `npm run verify`
 
 ## v0.2.3 - 遗留任务收尾 + 环境归档

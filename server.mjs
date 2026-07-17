@@ -5,6 +5,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { agentDefinitions } from './agents/definitions.mjs';
 import { agentRegistry } from './agents/registry.mjs';
+import { verificationRules, verifyRun } from './verification/rules.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const dataFile = join(root, 'data', 'workbench.json');
@@ -879,6 +880,11 @@ const server = createServer(async (request, response) => {
       return;
     }
 
+    if (pathname === '/api/verification-rules' && request.method === 'GET') {
+      sendJson(response, 200, { rules: verificationRules });
+      return;
+    }
+
     if (pathname === '/api/agents/hermes/invoke' && request.method === 'POST') {
       const body = await readBody(request);
       const payload = JSON.parse(body || '{}');
@@ -909,16 +915,16 @@ const server = createServer(async (request, response) => {
         model: payload.model || 'deepseek-chat',
         toolsets: payload.toolsets || 'memory,terminal'
       });
-      const verification = agentRegistry.verify('hermes', adapterResult);
+      const adapterVerification = agentRegistry.verify('hermes', adapterResult);
       const output = adapterResult.output || {
         result: { text: adapterResult.output || '' },
         evidence: adapterResult.evidence || {},
         suggestions: adapterResult.suggestions || []
       };
-      const run = createRunRecord({
+      let run = createRunRecord({
         taskId: task.id,
         agentId: 'hermes',
-        status: adapterResult.status === 'done' && verification.ok ? 'done' : 'failed',
+        status: adapterResult.status === 'done' && adapterVerification.ok ? 'done' : 'failed',
         input: {
           task,
           task_context: taskContext
@@ -931,9 +937,17 @@ const server = createServer(async (request, response) => {
         costEstimate: { currency: 'USD', amount: 0, note: 'Hermes CLI 本地调用，MVP 暂不精算模型成本。' },
         startedAt: output.evidence?.executedAt || new Date().toISOString(),
         finishedAt: output.evidence?.finishedAt || adapterResult.finishedAt || new Date().toISOString(),
-        verified: verification.ok,
-        verificationResult: verification
+        verified: false,
+        verificationResult: adapterVerification
       });
+      const verification = verifyRun(run);
+      run = {
+        ...run,
+        status: verification.ok ? run.status : 'failed',
+        verified: verification.ok,
+        verificationResult: verification,
+        errorUserMessage: verification.ok ? run.errorUserMessage : verification.reason
+      };
       if (Array.isArray(output.suggestions) && output.suggestions.length) {
         run.memorySuggestions = normalizeMemorySuggestions(output.suggestions.map((suggestion) => ({
           ...suggestion,
@@ -1154,6 +1168,47 @@ const server = createServer(async (request, response) => {
         suggestions,
         memoryWritten: false,
         rule: 'Agent 只能提交建议，主记忆仍由工作台决定是否写入。',
+        data: await readDataWithMeta()
+      });
+      return;
+    }
+
+    const runVerifyMatch = pathname.match(/^\/api\/runs\/([^/]+)\/verify$/);
+    if (runVerifyMatch && request.method === 'POST') {
+      const currentData = await readData();
+      const runId = decodeURIComponent(runVerifyMatch[1]);
+      const run = currentData.runs.find((item) => item.id === runId);
+      if (!run) {
+        sendJson(response, 404, { error: '执行记录不存在' });
+        return;
+      }
+      const verification = verifyRun(run);
+      const nextStatus = verification.ok ? run.status : 'failed';
+      const runs = currentData.runs.map((item) =>
+        item.id === runId
+          ? {
+              ...item,
+              status: nextStatus,
+              verified: verification.ok,
+              verificationResult: verification,
+              errorUserMessage: verification.ok ? item.errorUserMessage : verification.reason
+            }
+          : item
+      );
+      const tasks = currentData.tasks.map((task) =>
+        task.id === run.taskId && !verification.ok
+          ? {
+              ...task,
+              status: 'failed',
+              updatedAt: new Date().toISOString(),
+              userVisibleSummary: '执行结果没有通过工作台验证，不能算完成。'
+            }
+          : task
+      );
+      await writeData({ ...currentData, runs, tasks });
+      sendJson(response, 200, {
+        verification,
+        run: runs.find((item) => item.id === runId),
         data: await readDataWithMeta()
       });
       return;
