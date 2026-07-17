@@ -1,6 +1,6 @@
 # CURRENT_TASK.md — 当前任务
 
-> 最新更新：2026-07-16
+> 最新更新：2026-07-17
 
 ## 当前阶段：Phase 3 功能筛选与收缩正在进行
 
@@ -28,10 +28,12 @@
 - [x] 修复失败任务留痕体验：标记失败时自动生成失败原因，用户可再编辑
 - [x] 优化任务列表视觉区分：任务卡片显示负责人、日期和短 ID
 - [x] 完成 Hermes v0.17.0 安装收尾：清理重复 WSL 发行版，验证 Playwright Chromium 可运行，读取并归档 doctor 结果
+- [x] 记录 Agent 双引擎、云端部署和 7x24 运行构想到 `VISION.md`
+- [x] 停止 Hermes gateway，清理 `auth.lock` 和 `logs\.__agent.lock` 问题
+- [x] 以普通 Windows 用户身份重新运行 `hermes doctor`，确认 lock 相关报错已消失
 
 ### 当前任务
-- [ ] 明天运行 `hermes setup`，完成 Hermes `.env` 和 config 迁移
-- [ ] 修复 Hermes `auth.lock` / `logs\.__agent.lock` 权限问题
+- [ ] 等用户确认后运行 `hermes setup`，完成 Hermes `.env` 和 config 迁移
 - [ ] 补齐 Hermes 所需 API keys：Anthropic、OpenRouter、xAI、GITHUB_TOKEN 等按实际需要配置
 - [ ] 处理视觉细节 5 项，继续压缩不必要的界面负担
 - [ ] 评估本地工作台开机自启方案
@@ -49,6 +51,7 @@
 - `src/main.jsx` / `src/styles.css`：聊天中心工作台页面与样式
 - `.gitignore`：忽略依赖、构建产物、本地缓存、运行数据和本地日志
 - `hermes-doctor-2026-07-16.txt`：Hermes doctor 健康检查原始输出，用于后续排查配置问题
+- `hermes-doctor-2026-07-17.txt`：lock 修复后的 Hermes doctor 输出，用于确认权限报错消失
 
 ### 验证结果
 - [x] `npm.cmd install --cache .npm-cache`
@@ -61,10 +64,11 @@
 - [x] DeepSeek API 真实调用已接入聊天自动提炼
 - [x] Hermes doctor 输出已读取：主体安装可用，剩余为 `.env`、config、API key 和 lock 权限配置问题
 - [x] `.wsl-cache/` 和 `.wsl/` 已加入 `.gitignore`，避免 Ubuntu 安装包和 WSL 运行目录进入项目文件监控/版本库
+- [x] 2026-07-17 `hermes doctor` 退出码为 0，未再出现 `Permission denied`、`auth.lock`、`.__agent.lock` 或 `Logging error`
 
 ### 下一步
-1. 运行 `hermes setup` / `hermes doctor --fix`，完成 Hermes 配置迁移和 `.env` 创建。
-2. 修复 Hermes lock 文件权限，并补齐必要 API keys。
+1. 等用户确认后运行 `hermes setup` / `hermes doctor --fix`，完成 Hermes 配置迁移和 `.env` 创建。
+2. 补齐必要 API keys。
 3. 完成视觉细节 5 项、开机自启和部署方案评估。
 4. 不要跳到自动执行、多 Agent 调度或电脑操作；这些属于 Phase 5。
 
