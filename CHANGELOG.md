@@ -17,6 +17,29 @@
 - `npm run build`
 - `npm run verify`
 
+## v0.2.3 - 遗留任务收尾 + 环境归档
+
+### 新增
+
+- `VISION.md` 新增工具层扩展规划：按能力分层接入 Hermes、OpenClaw、Codex、Claude Code、浏览器抓取 Agent、文档/表格/数据处理工具。
+- 新增 Windows 登录自启动脚本：`scripts/start-workbench-dev.ps1` 和 `scripts/dev-background.mjs`，开机后可直接打开 `http://127.0.0.1:5173` 使用。
+- `SETUP.md` 补充开机自启动说明、关闭方式和日志位置。
+
+### 优化
+
+- 完成 v0.2.2 视觉细节第二轮：左侧栏中文化、版本徽标更新、顶部按钮改正规图标、消息时间戳 hover 显示、移动端新增对话切换入口。
+
+### 修复
+
+- 修复 Hermes `.__agent.lock`、`auth.lock`、`session DB readonly` 遗留问题：停止旧 Hermes gateway 自动拉起源，清理锁文件，并记录真实原因。
+- 修复 Hermes doctor 归档文件编码：`hermes-doctor-2026-07-17.txt` 和 `hermes-doctor-2026-07-17-fixed.txt` 已转为 UTF-8 无 BOM。
+
+### 验证
+
+- `npm.cmd run build`
+- 真实 Windows 用户权限运行 `hermes doctor`，无 lock / readonly / Logging error 报错。
+- 本地自启动脚本验证：前端 `5173` 和 API `8787` 均返回 200。
+
 ## v0.2.2 - 功能修复 + 视觉细节对齐
 
 ### 修复
