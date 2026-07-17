@@ -31,10 +31,14 @@
 - [x] 记录 Agent 双引擎、云端部署和 7x24 运行构想到 `VISION.md`
 - [x] 停止 Hermes gateway，清理 `auth.lock` 和 `logs\.__agent.lock` 问题
 - [x] 以普通 Windows 用户身份重新运行 `hermes doctor`，确认 lock 相关报错已消失
+- [x] 完成 Hermes DeepSeek 最小对话验证：`deepseek-chat` 可正常回复
+- [x] 完成 Hermes 四项实测：正式对话成功、联网回答成功、跨会话记忆未生效、文件读取 `CURRENT_TASK.md` 未成功
 
 ### 当前任务
 - [ ] 等用户确认后运行 `hermes setup`，完成 Hermes `.env` 和 config 迁移
 - [ ] 补齐 Hermes 所需 API keys：Anthropic、OpenRouter、xAI、GITHUB_TOKEN 等按实际需要配置
+- [ ] 排查 Hermes 记忆没有跨会话保存的问题
+- [ ] 排查 Hermes 无法读取 `F:\AI-Workbench\CURRENT_TASK.md` 的问题
 - [ ] 处理视觉细节 5 项，继续压缩不必要的界面负担
 - [ ] 评估本地工作台开机自启方案
 - [ ] 评估部署方案，明确本地版、内网版或云端版的边界
@@ -65,12 +69,17 @@
 - [x] Hermes doctor 输出已读取：主体安装可用，剩余为 `.env`、config、API key 和 lock 权限配置问题
 - [x] `.wsl-cache/` 和 `.wsl/` 已加入 `.gitignore`，避免 Ubuntu 安装包和 WSL 运行目录进入项目文件监控/版本库
 - [x] 2026-07-17 `hermes doctor` 退出码为 0，未再出现 `Permission denied`、`auth.lock`、`.__agent.lock` 或 `Logging error`
+- [x] Hermes 首次正式对话：对“你好，请介绍一下你自己。”能正常介绍自身，显示当前连接模型为 DeepSeek Chat
+- [x] Hermes 联网测试：对“今天的 AI 新闻”给出 3 条新闻和来源链接，但同时提示 Firecrawl API Key 未配置
+- [ ] Hermes 记忆测试：告诉偏好后重新启动询问，回复“当前没有保存关于你偏好的记忆条目”，说明跨会话记忆未生效
+- [ ] Hermes 文件执行测试：要求读取 `F:\AI-Workbench\CURRENT_TASK.md`，Hermes 回复文件不存在；即使启用 `file,terminal` 工具集仍未成功读取
 
 ### 下一步
 1. 等用户确认后运行 `hermes setup` / `hermes doctor --fix`，完成 Hermes 配置迁移和 `.env` 创建。
-2. 补齐必要 API keys。
-3. 完成视觉细节 5 项、开机自启和部署方案评估。
-4. 不要跳到自动执行、多 Agent 调度或电脑操作；这些属于 Phase 5。
+2. 优先排查 Hermes 记忆未保存、文件读取失败这两个能力缺口。
+3. 补齐必要 API keys。
+4. 完成视觉细节 5 项、开机自启和部署方案评估。
+5. 不要跳到自动执行、多 Agent 调度或电脑操作；这些属于 Phase 5。
 
 ## 任务记录规则
 
