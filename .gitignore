@@ -8,3 +8,6 @@ data/
 .workbench-startup*.log
 .wsl-cache/
 .wsl/
+.hermes-runtime/
+evidence/
+.e2e-dev*.log

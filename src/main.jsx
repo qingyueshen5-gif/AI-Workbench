@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 
-const appVersion = '0.2.2';
+const appVersion = '0.3.0';
 const statuses = ['待开始', '进行中', '已完成', '失败'];
 const ownerOptions = [
   { value: 'DeepSeek', label: 'DeepSeek', status: '已接入' },
@@ -18,6 +18,7 @@ const defaultData = {
   conversations: [],
   activeConversationId: '',
   tasks: [],
+  runs: [],
   preferences: {
     defaultOwner: '人工',
     dailyTaskLimit: 5,
@@ -49,6 +50,7 @@ const dateKey = (value = new Date()) => {
 };
 const todayKey = () => dateKey();
 const timeText = (value) => new Date(value).toLocaleString('zh-CN', { hour12: false });
+const durationText = (ms = 0) => `${Math.round(Number(ms || 0) / 100) / 10} 秒`;
 const newId = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 const createSystemError = (description, operation) => ({
   id: newId(),
@@ -170,6 +172,7 @@ function mergeData(payload) {
     conversations,
     activeConversationId: payload.activeConversationId || conversations?.[0]?.id || '',
     messages: getActiveMessages(payload),
+    runs: Array.isArray(payload.runs) ? payload.runs : [],
     preferences: { ...defaultData.preferences, ...(payload.preferences || {}) },
     modelConnection: { ...defaultData.modelConnection, ...(payload.modelConnection || {}) },
     storage: { ...defaultData.storage, ...(payload.storage || {}) }
@@ -614,7 +617,7 @@ function TodayPanel({ data, selectedTaskId, setSelectedTaskId }) {
   const [expanded, setExpanded] = useState(false);
   const today = todayKey();
   const todayTasks = data.tasks.filter((task) => dateKey(task.createdAt) === today);
-  const doneCount = todayTasks.filter((task) => task.status === '已完成').length;
+  const doneCount = todayTasks.filter((task) => task.status === '已完成' || task.status === 'done').length;
   const progress = todayTasks.length ? Math.round((doneCount / todayTasks.length) * 100) : 0;
   return (
     <section className="border-b border-zinc-200 pb-4">
@@ -638,7 +641,7 @@ function TodayPanel({ data, selectedTaskId, setSelectedTaskId }) {
             >
               <div className="flex items-start justify-between gap-3">
                 <span className="min-w-0 text-sm font-medium text-zinc-900">{task.title}</span>
-                <span className={`shrink-0 rounded-md px-2 py-1 text-xs ${statusClass(task.status)}`}>{task.status}</span>
+                <span className={`shrink-0 rounded-md px-2 py-1 text-xs ${statusClass(task.status)}`}>{statusText(task.status)}</span>
               </div>
               <div className="mt-2 text-xs text-zinc-500">负责人：{task.owner || '未指定'} · ID：{String(task.id).slice(-6)}</div>
             </button>
@@ -662,6 +665,9 @@ function TodayPanel({ data, selectedTaskId, setSelectedTaskId }) {
 function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId, updateData }) {
   const [failureDraft, setFailureDraft] = useState('');
   const [statusError, setStatusError] = useState('');
+  const selectedRun = selectedTask
+    ? (data.runs || []).find((run) => run.taskId === selectedTask.id)
+    : null;
 
   useEffect(() => {
     setFailureDraft(selectedTask?.failureReason || '');
@@ -708,7 +714,7 @@ function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId, upda
             <button onClick={() => setSelectedTaskId(task.id)} className={`task-list-item w-full text-left ${selectedTaskId === task.id ? 'task-list-item-active' : ''}`}>
               <div className="flex items-start justify-between gap-3">
                 <span className="min-w-0 text-sm font-medium text-zinc-900">{task.title}</span>
-                <span className={`shrink-0 rounded-md px-2 py-1 text-xs ${statusClass(task.status)}`}>{task.status}</span>
+                <span className={`shrink-0 rounded-md px-2 py-1 text-xs ${statusClass(task.status)}`}>{statusText(task.status)}</span>
               </div>
               <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-zinc-500">
                 <span>负责人：{task.owner || '未指定'}</span>
@@ -726,7 +732,7 @@ function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId, upda
           <div className="text-sm font-medium">{selectedTask.title}</div>
           <label className="mt-3 block">
             <span className="text-xs text-zinc-500">状态</span>
-            <select value={selectedTask.status} onChange={(event) => changeStatus(event.target.value)} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm">
+            <select value={statusText(selectedTask.status)} onChange={(event) => changeStatus(event.target.value)} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm">
               {statuses.map((status) => <option key={status}>{status}</option>)}
             </select>
           </label>
@@ -748,6 +754,23 @@ function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId, upda
           <button onClick={saveFailure} className="mt-3 w-full rounded-md bg-red-700 px-4 py-2 text-sm text-white">
             {selectedTask.status === '失败' ? '更新失败原因' : '标记失败并自动生成原因'}
           </button>
+          {selectedRun && (
+            <div className="mt-4 rounded-md border border-zinc-200 bg-zinc-50 p-3 text-xs leading-5 text-zinc-700">
+              <div className="mb-2 font-medium text-zinc-900">执行记录</div>
+              <div>员工：{selectedRun.agentId || '未记录'}</div>
+              <div>状态：{statusText(selectedRun.status)} · 验证：{selectedRun.verified ? '已通过' : '未通过'}</div>
+              <div>耗时：{durationText(selectedRun.evidence?.durationMs || selectedRun.durationMs)}</div>
+              <div>成本：{selectedRun.costEstimate?.note || '暂无估算'}</div>
+              {selectedRun.evidence?.commandRun && (
+                <div className="mt-2 break-words rounded bg-white p-2 text-zinc-600">
+                  命令：{selectedRun.evidence.commandRun}
+                </div>
+              )}
+              {selectedRun.errorUserMessage && (
+                <div className="mt-2 rounded bg-red-50 p-2 text-red-700">{selectedRun.errorUserMessage}</div>
+              )}
+            </div>
+          )}
         </div>
       )}
     </section>
@@ -820,10 +843,17 @@ function HistoryPanel({ data }) {
 }
 
 function statusClass(status) {
-  if (status === '已完成') return 'bg-emerald-100 text-emerald-800';
-  if (status === '进行中') return 'bg-sky-100 text-sky-800';
-  if (status === '失败') return 'bg-red-100 text-red-800';
+  if (status === '已完成' || status === 'done') return 'bg-emerald-100 text-emerald-800';
+  if (status === '进行中' || status === 'running') return 'bg-sky-100 text-sky-800';
+  if (status === '失败' || status === 'failed') return 'bg-red-100 text-red-800';
   return 'bg-zinc-100 text-zinc-700';
+}
+
+function statusText(status) {
+  if (status === 'done') return '已完成';
+  if (status === 'running') return '进行中';
+  if (status === 'failed') return '失败';
+  return status || '未记录';
 }
 
 createRoot(document.getElementById('root')).render(<App />);

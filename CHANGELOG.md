@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 未发布
+## v0.3.0 - MVP 架构闭环
 
 ### 新增
 
@@ -26,6 +26,8 @@
 - 新增环境自愈层 MVP：支持网络重试、Hermes/AppData 权限降级、缺工具安全安装入口、API 配置续期入口、环境变量缺失提示和数据文件自动重建/恢复。
 - 新增 `/api/health/self-heal`、`/api/health/status`、`/api/health/fix-permission`、`/api/health/setup-env`，用于系统主动检测和修复环境问题。
 - 新增 `npm run health:check`、`npm run health:repair` 和 `npm run verify:health`，覆盖网络恢复、权限降级和 API key 缺失三类自愈场景。
+- 新增聊天入口 Hermes 自动调度：用户在网页聊天框提出文件读取/终端类需求时，工作台自动生成 task/context/run 并通过 Hermes adapter 执行。
+- 新增任务详情执行记录展示：可查看对应 run、执行员工、验证状态、命令证据、耗时和成本估算。
 - 新增 `web_search` 通用联网搜索工具，DeepSeek 可按需调用 Serper Google Search API 查询实时数据、新闻、当前状态、产品价格等变化性问题。
 - `.env` 新增可选 `SERPER_API_KEY` 配置；未配置时保留聊天能力，但联网搜索会返回明确缺 key 错误。
 
@@ -33,6 +35,8 @@
 
 - 任务标记为失败时自动生成具体失败原因，不再要求用户先手填。
 - 任务列表和今日目标关联任务改为独立任务卡片，显示负责人、日期和短 ID，减少不同任务被误认为同一件事的风险。
+- Hermes adapter 改用工作台私有 `.hermes-runtime` 运行态目录，避开 AppData 日志锁和 session DB 权限问题；该目录已加入 `.gitignore`。
+- 聊天页 Hermes 返回内容做用户侧清洗，只展示中文结果，不暴露命令回显、session 信息或内部上下文。
 
 ### 验证
 
@@ -45,6 +49,7 @@
 - `npm run verify:errors`
 - `npm run verify:health`
 - `npm run verify`
+- 网页端到端验收：在聊天框发送“让Hermes读取 F:\AI-Workbench\CURRENT_TASK.md 并告诉我现在有哪些待办”，生成 Hermes task/run，验证 `verified=true`。
 
 ## v0.2.3 - 遗留任务收尾 + 环境归档
 

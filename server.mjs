@@ -366,6 +366,44 @@ function ownerFromAgentId(agentId) {
   return '人工';
 }
 
+function routeChatAgent(content) {
+  const text = String(content || '').toLowerCase();
+  if (text.includes('hermes') || (text.includes('current_task.md') && /读|读取|总结|待办/.test(content))) {
+    return 'hermes';
+  }
+  return 'deepseek';
+}
+
+function cleanHermesUserReply(text) {
+  const lines = String(text || '')
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/memory_suggestions\s*:\s*\[[\s\S]*?\]/gi, '')
+    .split(/\r?\n/)
+    .map((line) => line.replace(/[┌┐└┘│─━╭╮╰╯┊⚕💻$]/g, '').trim())
+    .filter((line) => line && !/^(Query:|规则：|task_context_id:|memory_keys:|工作区路径:|任务:|请用terminal|Initializing agent|Resume this session with:|Session:|Duration:|Messages:)/i.test(line))
+    .filter((line) => !/^cat\s+/i.test(line));
+  const startIndex = lines.findIndex((line) => /当前待办|待办列表|文件读取成功|未完成/.test(line));
+  const visible = (startIndex >= 0 ? lines.slice(startIndex) : lines)
+    .join('\n')
+    .replace(/已完成的任务[\s\S]*$/i, '')
+    .replace(/hermes\s+--resume\s+\S+/gi, '')
+    .replace(/Resume this session with:[\s\S]*$/i, '')
+    .replace(/CURRENT_TASK\.md/gi, '当前任务文件')
+    .replace(/Phase\s*(\d+)/gi, '第 $1 阶段')
+    .replace(/hermes setup\s*\/\s*hermes doctor --fix/gi, 'Hermes 配置检查')
+    .replace(/Hermes 配置迁移\s*\/\s*hermes doctor\s*--fix/gi, 'Hermes 配置检查')
+    .replace(/hermes doctor\s*--fix/gi, 'Hermes 自动检查')
+    .replace(/hermes setup/gi, 'Hermes 配置迁移')
+    .replace(/已勾选的[\s\S]*$/i, '')
+    .replace(/多\s*Agent\s*调度/gi, '多员工调度')
+    .replace(/\.env\s+和\s+config\s+迁移/gi, '配置文件迁移')
+    .replace(/API\s*(Keys?|配置)/gi, '接口配置')
+    .replace(/Anthropic、OpenRouter、xAI、GITHUB_TOKEN\s*等/gi, '相关服务')
+    .replace(/OpenRouter|Anthropic|GITHUB_TOKEN|xAI/gi, '相关服务')
+    .trim();
+  return visible || 'Hermes 已完成读取，但没有返回可展示的总结。';
+}
+
 function createTaskRecord({
   userGoal,
   title,
@@ -1336,13 +1374,16 @@ const server = createServer(async (request, response) => {
         conversations = [activeConversation, ...conversations];
       }
       const messageId = createId('message');
+      const routedAgentId = routeChatAgent(content);
       const task = createTaskRecord({
         userGoal: content,
         title: content.slice(0, 48) || '聊天消息处理',
-        assignedAgentId: 'deepseek',
+        assignedAgentId: routedAgentId,
         status: 'running',
         sourceMessageId: messageId,
-        evidenceRequired: ['assistant_reply', 'model_response']
+        evidenceRequired: routedAgentId === 'hermes'
+          ? ['hermes_command', 'stdout', 'stderr', 'exitCode', 'durationMs']
+          : ['assistant_reply', 'model_response']
       });
       const runStartedAt = new Date().toISOString();
       const run = createRunRecord({
@@ -1388,6 +1429,131 @@ const server = createServer(async (request, response) => {
         runs: [run, ...currentData.runs]
       });
       await writeData(nextData);
+
+      if (routedAgentId === 'hermes') {
+        try {
+          const taskContext = buildTaskContextPackage(nextData, task);
+          const adapterResult = await agentRegistry.invoke('hermes', task, {
+            ...taskContext,
+            timeoutMs: 180000,
+            cwd: root,
+            provider: 'custom',
+            model: 'deepseek-chat',
+            toolsets: 'memory,terminal'
+          });
+          const output = adapterResult.output || {
+            result: { text: adapterResult.output || '' },
+            evidence: adapterResult.evidence || {},
+            suggestions: adapterResult.suggestions || []
+          };
+          let patchedRun = createRunRecord({
+            ...run,
+            status: adapterResult.status === 'done' ? 'done' : 'failed',
+            input: {
+              type: 'chat_message',
+              content,
+              conversationId: activeConversation.id,
+              task,
+              task_context: taskContext
+            },
+            output,
+            evidence: output.evidence || adapterResult.evidence || {},
+            errorRaw: adapterResult.error?.raw || null,
+            errorUserMessage: adapterResult.error?.message || '',
+            retryCount: 0,
+            costEstimate: { currency: 'USD', amount: 0, note: 'Hermes CLI 本地调用，MVP 暂不精算模型成本。' },
+            startedAt: output.evidence?.executedAt || run.startedAt,
+            finishedAt: output.evidence?.finishedAt || adapterResult.finishedAt || new Date().toISOString(),
+            verified: false,
+            verificationResult: null
+          });
+          const verification = verifyRun(patchedRun);
+          const normalizedRunError = verification.ok ? null : normalizeError({
+            reason: verification.reason,
+            type: verification.reason,
+            details: verification.details,
+            rawError: adapterResult.error || null
+          });
+          patchedRun = {
+            ...patchedRun,
+            id: run.id,
+            status: verification.ok ? 'done' : 'failed',
+            verified: verification.ok,
+            verificationResult: verification,
+            errorRaw: verification.ok ? patchedRun.errorRaw : { adapterError: adapterResult.error || null, verification },
+            errorUserMessage: verification.ok ? '' : normalizedRunError.userMessage,
+            normalizedError: verification.ok ? null : normalizedRunError
+          };
+          const assistantText = verification.ok
+            ? cleanHermesUserReply(output.result?.text || output.result || output)
+            : (patchedRun.errorUserMessage || 'Hermes 这次没有处理成功，我已经记录原因。');
+          const assistantMessage = createAssistantMessage(assistantText);
+          nextData = {
+            ...nextData,
+            conversations: nextData.conversations.map((conversation) =>
+              conversation.id === activeConversation.id
+                ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...activeMessages, assistantMessage] }
+                : conversation
+            ),
+            messages: [...activeMessages, assistantMessage],
+            tasks: patchTask(nextData.tasks, task.id, {
+              status: patchedRun.status,
+              userVisibleSummary: verification.ok ? assistantText.slice(0, 180) : patchedRun.errorUserMessage
+            }),
+            runs: patchRun(nextData.runs, run.id, patchedRun),
+            modelConnection: {
+              status: verification.ok ? '已连接' : '未连接',
+              provider: 'Hermes',
+              model: 'deepseek-chat',
+              checkedAt: new Date().toISOString()
+            }
+          };
+          await writeData(nextData);
+          sendJson(response, 200, {
+            data: await readDataWithMeta(),
+            routedAgentId: 'hermes',
+            taskId: task.id,
+            runId: run.id,
+            verification
+          });
+        } catch (error) {
+          const healed = await selfHeal({
+            type: /401|invalid_api_key/i.test(error.message) ? 'api_key' : 'network',
+            rawError: error.message
+          }, { root, dataFile, envFile, defaultData: initialData });
+          const normalized = normalizeError(error);
+          const userMessage = healed?.userMessage || normalized.userMessage || 'Hermes 暂时没有处理成功，我已经准备好下一步处理入口。';
+          const assistantMessage = createAssistantMessage(userMessage);
+          const finishedAt = new Date().toISOString();
+          nextData = {
+            ...nextData,
+            conversations: nextData.conversations.map((conversation) =>
+              conversation.id === activeConversation.id
+                ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...activeMessages, assistantMessage] }
+                : conversation
+            ),
+            messages: [...activeMessages, assistantMessage],
+            tasks: patchTask(nextData.tasks, task.id, {
+              status: 'failed',
+              userVisibleSummary: userMessage
+            }),
+            runs: patchRun(nextData.runs, run.id, {
+              status: 'failed',
+              output: null,
+              errorRaw: { message: error.message, healed },
+              errorUserMessage: userMessage,
+              finishedAt,
+              verified: false,
+              verificationResult: { ok: false, reason: 'hermes_invoke_failed' },
+              normalizedError: normalized
+            }),
+            systemErrors: [createSystemError(userMessage, 'Hermes 自动执行'), ...nextData.systemErrors]
+          };
+          await writeData(nextData);
+          sendJson(response, 200, { data: await readDataWithMeta(), routedAgentId: 'hermes', warning: userMessage });
+        }
+        return;
+      }
 
       loadLocalEnv();
       const apiKey = String(process.env.DEEPSEEK_API_KEY || '').trim();

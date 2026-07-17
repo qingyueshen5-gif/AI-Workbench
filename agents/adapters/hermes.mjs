@@ -1,13 +1,42 @@
 import { spawn } from 'node:child_process';
+import { copyFileSync, cpSync, existsSync, mkdirSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { createRunId, capabilityMatch } from '../adapter-contract.mjs';
+
+function prepareHermesHome(cwd) {
+  const runtimeHome = join(cwd, '.hermes-runtime');
+  const sourceHome = process.env.HERMES_SOURCE_HOME || join(process.env.LOCALAPPDATA || '', 'hermes');
+  mkdirSync(runtimeHome, { recursive: true });
+  for (const dir of ['logs', 'sessions', 'memories', 'skills', 'cache', 'sandboxes', 'cron']) {
+    mkdirSync(join(runtimeHome, dir), { recursive: true });
+  }
+  for (const fileName of ['config.yaml', '.env', 'auth.json', 'SOUL.md']) {
+    const source = join(sourceHome, fileName);
+    const target = join(runtimeHome, fileName);
+    if (existsSync(source) && !existsSync(target)) {
+      mkdirSync(dirname(target), { recursive: true });
+      copyFileSync(source, target);
+    }
+  }
+  for (const dirName of ['memories', 'skills']) {
+    const source = join(sourceHome, dirName);
+    const target = join(runtimeHome, dirName);
+    if (existsSync(source)) {
+      cpSync(source, target, { recursive: true, force: false });
+    }
+  }
+  return runtimeHome;
+}
 
 function runCommand(command, args, { timeoutMs = 30000, cwd = process.cwd(), onChild } = {}) {
   return new Promise((resolve) => {
+    const hermesHome = prepareHermesHome(cwd);
     const child = spawn(command, args, {
       cwd,
       windowsHide: true,
       env: {
         ...process.env,
+        HERMES_HOME: hermesHome,
         HERMES_GIT_BASH_PATH: process.env.HERMES_GIT_BASH_PATH || 'C:\\Program Files\\Git\\bin\\bash.exe'
       }
     });
