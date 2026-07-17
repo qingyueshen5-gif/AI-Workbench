@@ -82,8 +82,19 @@ Phase 6 连续使用、商业化与扩展        未开始
 | Hermes doctor 输出大量 Python traceback | Hermes 日志系统要写 `C:\Users\胖胖虎\AppData\Local\hermes\logs\.__agent.lock`，鉴权检查也要访问 `auth.lock`，当前权限被拒绝，所以每次插件注册/工具检查写日志时都重复打印 `PermissionError: [Errno 13] Permission denied` | 这类 traceback 影响日志和部分 auth 状态检查，但 doctor 仍继续完成并给出总结。处理方式：关闭可能占用 Hermes 的进程后删除或修复 `logs\.__agent.lock` / `auth.lock` 权限；必要时用当前 Windows 用户重新运行 `hermes setup` 或 `hermes doctor --fix`，不要用管理员/普通用户混跑同一份 Hermes 配置目录 |
 | WSL内Chromium启动时出现DBus/localhost乱码警告 | Headless Chromium 在 WSL/root 环境里没有系统 DBus，WSL 启动时也会输出 localhost/NAT 相关乱码警告 | 2026-07-16 已用 `/root/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome --headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage --dump-dom about:blank` 实测，返回 `<html><head></head><body></body></html>` 且退出码为 0，说明浏览器能跑；这些警告暂不阻塞 |
 | Hermes 记忆和文件读取能力验证 | 2026-07-17 已确认 Hermes 内置 memory 可用；文件读取失败的根因不是工作区文件不存在，而是 Windows 上 `bash` 先命中 `C:\Windows\System32\bash.exe`，Hermes `local` terminal backend 因此进入默认 WSL（当时是 `docker-desktop`），找不到 `F:\AI-Workbench` | 采用 Windows native Hermes + Git Bash 方案，不把主程序迁入 WSL。理由：Hermes 主程序、配置和 API key 已在 Windows/Anaconda 侧，官方/源码配置也说明 `terminal.backend: local` 是本机执行，Windows 下可用 `HERMES_GIT_BASH_PATH` 指定 Git Bash；已设置用户级环境变量 `HERMES_GIT_BASH_PATH=C:\Program Files\Git\bin\bash.exe`。正确用法：`hermes chat -q "你的问题" --toolsets memory,terminal`（注意 `-q` 后必须紧跟问题文本）。2026-07-17 已实测 Hermes 调用 terminal 执行 `cat "F:/AI-Workbench/CURRENT_TASK.md"` 成功，并总结出今天待办。若以后改回 WSL 路径，Windows 的 `F:\AI-Workbench` 在 WSL 中对应 `/mnt/f/AI-Workbench` |
+| Hermes 仍打印日志/状态数据库权限错误 | 2026-07-17 Hermes 文件读取能力已恢复，但运行 `hermes chat` 时仍会打印 `.__agent.lock` 权限错误和 `session DB readonly` 错误 | 这些错误目前不阻塞对话、记忆、文件执行等核心能力，但属于 Hermes 状态/日志权限遗留问题，后续单独处理；处理前不要把它误判为工作台应用层 bug |
 
 以后任务卡都要求：Codex完成代码改动后，自己尝试commit+push；如果push因环境问题失败，直接对照上表处理，不需要每次重新排查一遍。
+
+**第三方Agent/工具的升级管理规则**
+
+工作台依赖的第三方Agent（Hermes、OpenClaw、Codex等）都是高速迭代的开源项目，升级既可能修复问题、也可能破坏已跑通的配置。规则如下：
+
+1. 不在任务进行中升级，任何升级都单独立项、单独验证
+2. 升级前必须先看官方Release Notes，确认有没有破坏性变更（breaking changes）
+3. 升级前先记录当前可用版本号，出问题能回退（当前基线：Hermes Agent v0.17.0，Codex CLI v0.144.4）
+4. 升级后必须重跑核心能力验证：对话、记忆、文件执行、联网
+5. 定期（比如每周）检查一次是否有重要更新，而不是被提示框推着走
 
 ## 七、已知技术限制（不要重复踩坑）
 
