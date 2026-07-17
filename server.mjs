@@ -18,6 +18,7 @@ const initialData = {
   conversations: [],
   activeConversationId: '',
   tasks: [],
+  runs: [],
   preferences: {
     defaultOwner: '人工',
     dailyTaskLimit: 5,
@@ -83,6 +84,7 @@ function normalizeData(data) {
     activeConversationId,
     messages: activeConversation?.messages || legacyMessages,
     tasks: normalizeTasks(data.tasks),
+    runs: normalizeRuns(data.runs),
     preferences: { ...initialData.preferences, ...(data.preferences || {}) },
     modelConnection: { ...initialData.modelConnection, ...(data.modelConnection || {}) },
     agents: normalizeAgents(data.agents),
@@ -101,6 +103,10 @@ function normalizeAgents(agents) {
     healthCheck: definition.healthCheck,
     invoke: definition.invoke
   }));
+}
+
+function createId(prefix) {
+  return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
 function sanitizeTitleText(text) {
@@ -132,11 +138,149 @@ function createFailureReason(task) {
 
 function normalizeTasks(tasks) {
   return (Array.isArray(tasks) ? tasks : []).map((task) => {
+    const createdAt = task.createdAt || new Date().toISOString();
+    const assignedAgentId = task.assignedAgentId || agentIdFromOwner(task.owner) || agentIdFromOwner(task.assignee) || task.assignee || '';
+    const normalized = {
+      parentTaskId: '',
+      userGoal: task.userGoal || task.goal || task.title || '',
+      priority: task.priority || 'normal',
+      riskLevel: task.riskLevel || 'low',
+      assignedAgentId,
+      dependencies: Array.isArray(task.dependencies) ? task.dependencies : [],
+      evidenceRequired: Array.isArray(task.evidenceRequired)
+        ? task.evidenceRequired
+        : (Array.isArray(task.evidence_required) ? task.evidence_required : ['output']),
+      createdAt,
+      updatedAt: task.updatedAt || createdAt,
+      userVisibleSummary: task.userVisibleSummary || task.title || task.userGoal || '',
+      goal: task.goal || task.userGoal || task.title || '',
+      assignee: task.assignee || assignedAgentId,
+      evidence_required: Array.isArray(task.evidence_required)
+        ? task.evidence_required
+        : (Array.isArray(task.evidenceRequired) ? task.evidenceRequired : ['output']),
+      retry_policy: task.retry_policy || { maxRetries: 1, retryOn: ['timeout', 'temporary_failure'] },
+      ...task
+    };
     if (task?.status === '失败' && !String(task.failureReason || '').trim()) {
-      return { ...task, failureReason: createFailureReason(task) };
+      return { ...normalized, failureReason: createFailureReason(task) };
     }
-    return task;
+    return normalized;
   });
+}
+
+function normalizeRuns(runs) {
+  return (Array.isArray(runs) ? runs : []).map((run) => {
+    const startedAt = run.startedAt || run.createdAt || new Date().toISOString();
+    return {
+      id: run.id || createId('run'),
+      taskId: run.taskId || '',
+      agentId: run.agentId || '',
+      status: run.status || 'pending',
+      input: run.input || {},
+      output: run.output || null,
+      evidence: run.evidence || {},
+      errorRaw: run.errorRaw || null,
+      errorUserMessage: run.errorUserMessage || '',
+      retryCount: Number(run.retryCount || 0),
+      costEstimate: run.costEstimate || { currency: 'USD', amount: 0, note: 'MVP estimate' },
+      startedAt,
+      finishedAt: run.finishedAt || '',
+      verified: Boolean(run.verified),
+      verificationResult: run.verificationResult || null,
+      durationMs: Number(run.durationMs || 0)
+    };
+  });
+}
+
+function agentIdFromOwner(owner) {
+  const value = String(owner || '').trim().toLowerCase();
+  if (value === 'deepseek') return 'deepseek';
+  if (value === 'hermes') return 'hermes';
+  return '';
+}
+
+function ownerFromAgentId(agentId) {
+  if (agentId === 'deepseek') return 'DeepSeek';
+  if (agentId === 'hermes') return 'Hermes';
+  return '人工';
+}
+
+function createTaskRecord({
+  userGoal,
+  title,
+  assignedAgentId = 'deepseek',
+  status = 'pending',
+  sourceMessageId = '',
+  parentTaskId = '',
+  dependencies = [],
+  evidenceRequired = ['assistant_reply', 'model_response'],
+  priority = 'normal',
+  riskLevel = 'low'
+} = {}) {
+  const now = new Date().toISOString();
+  const goal = String(userGoal || title || '').trim();
+  const taskTitle = String(title || goal || '未命名任务').trim();
+  const normalizedAgentId = agentIdFromOwner(assignedAgentId) || assignedAgentId;
+  return {
+    id: createId('task'),
+    parentTaskId,
+    userGoal: goal,
+    title: taskTitle,
+    status,
+    priority,
+    riskLevel,
+    assignedAgentId: normalizedAgentId,
+    dependencies,
+    evidenceRequired,
+    createdAt: now,
+    updatedAt: now,
+    userVisibleSummary: taskTitle,
+    goal,
+    assignee: normalizedAgentId,
+    evidence_required: evidenceRequired,
+    retry_policy: { maxRetries: 1, retryOn: ['timeout', 'temporary_failure'] },
+    owner: ownerFromAgentId(normalizedAgentId),
+    notes: '从聊天自动生成的统一任务记录',
+    failureReason: '',
+    sourceMessageId
+  };
+}
+
+function createRunRecord({
+  taskId,
+  agentId = 'deepseek',
+  status = 'running',
+  input = {},
+  output = null,
+  evidence = {},
+  errorRaw = null,
+  errorUserMessage = '',
+  retryCount = 0,
+  costEstimate = { currency: 'USD', amount: 0, note: 'MVP estimate' },
+  startedAt = new Date().toISOString(),
+  finishedAt = '',
+  verified = false,
+  verificationResult = null
+} = {}) {
+  const durationMs = finishedAt ? Math.max(0, new Date(finishedAt).getTime() - new Date(startedAt).getTime()) : 0;
+  return {
+    id: createId('run'),
+    taskId,
+    agentId,
+    status,
+    input,
+    output,
+    evidence,
+    errorRaw,
+    errorUserMessage,
+    retryCount,
+    costEstimate,
+    startedAt,
+    finishedAt,
+    verified,
+    verificationResult,
+    durationMs
+  };
 }
 
 async function readData() {
@@ -171,6 +315,7 @@ async function readDataWithMeta() {
     storage: {
       fileSizeBytes,
       taskCount: data.tasks.length,
+      runCount: data.runs.length,
       messageCount,
       historyDayCount: new Set([
         ...Object.keys(data.dailyGoals),
@@ -478,6 +623,28 @@ function ownersFromValue(value) {
   return ownerOptions.includes(owner) ? owner : '';
 }
 
+function patchTask(tasks, taskId, patch) {
+  return normalizeTasks(tasks).map((task) =>
+    task.id === taskId
+      ? { ...task, ...patch, updatedAt: patch.updatedAt || new Date().toISOString() }
+      : task
+  );
+}
+
+function patchRun(runs, runId, patch) {
+  return normalizeRuns(runs).map((run) =>
+    run.id === runId
+      ? {
+          ...run,
+          ...patch,
+          durationMs: patch.finishedAt
+            ? Math.max(0, new Date(patch.finishedAt).getTime() - new Date(run.startedAt).getTime())
+            : run.durationMs
+        }
+      : run
+  );
+}
+
 function readBody(request) {
   return new Promise((resolve, reject) => {
     let body = '';
@@ -511,17 +678,20 @@ const server = createServer(async (request, response) => {
   }
 
   try {
-    if (request.url === '/api/data' && request.method === 'GET') {
+    const requestUrl = new URL(request.url, 'http://127.0.0.1');
+    const pathname = requestUrl.pathname;
+
+    if (pathname === '/api/data' && request.method === 'GET') {
       sendJson(response, 200, await readDataWithMeta());
       return;
     }
 
-    if (request.url === '/api/agents' && request.method === 'GET') {
+    if (pathname === '/api/agents' && request.method === 'GET') {
       sendJson(response, 200, { agents: agentRegistry.listAgents() });
       return;
     }
 
-    if (request.url === '/api/agents/health' && request.method === 'POST') {
+    if (pathname === '/api/agents/health' && request.method === 'POST') {
       const body = await readBody(request);
       const payload = JSON.parse(body || '{}');
       const requested = Array.isArray(payload.agentIds) && payload.agentIds.length
@@ -550,7 +720,79 @@ const server = createServer(async (request, response) => {
       return;
     }
 
-    if (request.url === '/api/data' && request.method === 'PUT') {
+    if (pathname === '/api/tasks' && request.method === 'POST') {
+      const body = await readBody(request);
+      const payload = JSON.parse(body || '{}');
+      const currentData = await readData();
+      const task = createTaskRecord({
+        userGoal: payload.userGoal || payload.goal,
+        title: payload.title,
+        assignedAgentId: payload.assignedAgentId || payload.assignee || 'deepseek',
+        status: payload.status || 'pending',
+        sourceMessageId: payload.sourceMessageId || '',
+        parentTaskId: payload.parentTaskId || '',
+        dependencies: Array.isArray(payload.dependencies) ? payload.dependencies : [],
+        evidenceRequired: Array.isArray(payload.evidenceRequired)
+          ? payload.evidenceRequired
+          : (Array.isArray(payload.evidence_required) ? payload.evidence_required : ['output']),
+        priority: payload.priority || 'normal',
+        riskLevel: payload.riskLevel || 'low'
+      });
+      await writeData({ ...currentData, tasks: [task, ...currentData.tasks] });
+      sendJson(response, 201, { task, data: await readDataWithMeta() });
+      return;
+    }
+
+    const taskMatch = pathname.match(/^\/api\/tasks\/([^/]+)$/);
+    if (taskMatch && request.method === 'GET') {
+      const currentData = await readData();
+      const task = currentData.tasks.find((item) => item.id === decodeURIComponent(taskMatch[1]));
+      if (!task) {
+        sendJson(response, 404, { error: '任务不存在' });
+        return;
+      }
+      sendJson(response, 200, { task });
+      return;
+    }
+
+    if (pathname === '/api/runs' && request.method === 'POST') {
+      const body = await readBody(request);
+      const payload = JSON.parse(body || '{}');
+      const currentData = await readData();
+      const run = createRunRecord({
+        taskId: payload.taskId,
+        agentId: agentIdFromOwner(payload.agentId) || payload.agentId || 'deepseek',
+        status: payload.status || 'pending',
+        input: payload.input || {},
+        output: payload.output || null,
+        evidence: payload.evidence || {},
+        errorRaw: payload.errorRaw || null,
+        errorUserMessage: payload.errorUserMessage || '',
+        retryCount: payload.retryCount || 0,
+        costEstimate: payload.costEstimate || { currency: 'USD', amount: 0, note: 'MVP estimate' },
+        startedAt: payload.startedAt || new Date().toISOString(),
+        finishedAt: payload.finishedAt || '',
+        verified: Boolean(payload.verified),
+        verificationResult: payload.verificationResult || null
+      });
+      await writeData({ ...currentData, runs: [run, ...currentData.runs] });
+      sendJson(response, 201, { run, data: await readDataWithMeta() });
+      return;
+    }
+
+    const runMatch = pathname.match(/^\/api\/runs\/([^/]+)$/);
+    if (runMatch && request.method === 'GET') {
+      const currentData = await readData();
+      const run = currentData.runs.find((item) => item.id === decodeURIComponent(runMatch[1]));
+      if (!run) {
+        sendJson(response, 404, { error: '执行记录不存在' });
+        return;
+      }
+      sendJson(response, 200, { run });
+      return;
+    }
+
+    if (pathname === '/api/data' && request.method === 'PUT') {
       const body = await readBody(request);
       const data = normalizeData(JSON.parse(body || '{}'));
       await writeData(data);
@@ -558,7 +800,7 @@ const server = createServer(async (request, response) => {
       return;
     }
 
-    if (request.url === '/api/chat-message' && request.method === 'POST') {
+    if (pathname === '/api/chat-message' && request.method === 'POST') {
       const body = await readBody(request);
       const payload = JSON.parse(body || '{}');
       const content = String(payload.content || '').trim();
@@ -583,13 +825,38 @@ const server = createServer(async (request, response) => {
         };
         conversations = [activeConversation, ...conversations];
       }
+      const messageId = createId('message');
+      const task = createTaskRecord({
+        userGoal: content,
+        title: content.slice(0, 48) || '聊天消息处理',
+        assignedAgentId: 'deepseek',
+        status: 'running',
+        sourceMessageId: messageId,
+        evidenceRequired: ['assistant_reply', 'model_response']
+      });
+      const runStartedAt = new Date().toISOString();
+      const run = createRunRecord({
+        taskId: task.id,
+        agentId: task.assignedAgentId,
+        status: 'running',
+        input: {
+          type: 'chat_message',
+          content,
+          conversationId: activeConversation.id
+        },
+        evidence: {
+          sourceMessageId: messageId
+        },
+        startedAt: runStartedAt
+      });
       const message = {
-        id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        id: messageId,
         content,
         createdAt: new Date().toISOString(),
         role: 'user',
         isTask: false,
-        taskId: ''
+        taskId: task.id,
+        runId: run.id
       };
       const activeMessages = [...(activeConversation.messages || []), message];
       conversations = conversations.map((conversation) =>
@@ -606,7 +873,9 @@ const server = createServer(async (request, response) => {
         ...currentData,
         conversations,
         activeConversationId: activeConversation.id,
-        messages: activeMessages
+        messages: activeMessages,
+        tasks: [task, ...currentData.tasks],
+        runs: [run, ...currentData.runs]
       });
       await writeData(nextData);
 
@@ -616,6 +885,7 @@ const server = createServer(async (request, response) => {
       if (!apiKey) {
         const errorLog = createSystemError('等待用户提供API Key，聊天内容已保存但未自动提炼', '聊天自动提炼');
         const assistantMessage = createAssistantMessage('我已收到消息，但当前还没有配置 DeepSeek API Key，所以暂时不能自动提炼。');
+        const finishedAt = new Date().toISOString();
         nextData = {
           ...nextData,
           conversations: nextData.conversations.map((conversation) =>
@@ -624,6 +894,26 @@ const server = createServer(async (request, response) => {
               : conversation
           ),
           messages: [...activeMessages, assistantMessage],
+          tasks: patchTask(nextData.tasks, task.id, {
+            status: 'blocked',
+            userVisibleSummary: '已收到消息，等待 AI 连接配置完成后处理。'
+          }),
+          runs: patchRun(nextData.runs, run.id, {
+            status: 'failed',
+            output: null,
+            evidence: {
+              sourceMessageId: message.id,
+              assistantMessageId: assistantMessage.id
+            },
+            errorRaw: { message: errorLog.description },
+            errorUserMessage: 'AI 连接还没配置好，消息已保存。',
+            finishedAt,
+            verified: false,
+            verificationResult: {
+              ok: false,
+              reason: '缺少 DeepSeek API Key'
+            }
+          }),
           modelConnection: { status: '未连接', provider: '', model: '', checkedAt: new Date().toISOString() },
           systemErrors: [errorLog, ...nextData.systemErrors]
         };
@@ -636,6 +926,7 @@ const server = createServer(async (request, response) => {
         const extraction = await extractStructureFromMessage(apiKey, model, content, nextData);
         const appliedResult = applyExtraction(nextData, extraction, message.id);
         const assistantMessage = createAssistantMessage(extraction.reply);
+        const finishedAt = new Date().toISOString();
         const updatedMessages = appliedResult.data.messages.map((item) =>
           item.id === message.id
             ? {
@@ -657,6 +948,37 @@ const server = createServer(async (request, response) => {
           ),
           activeConversationId: activeConversation.id,
           messages: [...updatedMessages, assistantMessage],
+          tasks: patchTask(appliedResult.data.tasks, task.id, {
+            status: 'done',
+            userVisibleSummary: extraction.reply || '聊天消息已处理'
+          }),
+          runs: patchRun(appliedResult.data.runs, run.id, {
+            status: 'done',
+            output: {
+              reply: extraction.reply || '',
+              applied: appliedResult.applied,
+              suggestions: appliedResult.suggestions
+            },
+            evidence: {
+              sourceMessageId: message.id,
+              assistantMessageId: assistantMessage.id,
+              provider: 'DeepSeek',
+              model,
+              toolResults: extraction.toolResults || []
+            },
+            costEstimate: {
+              currency: 'USD',
+              amount: 0,
+              note: 'MVP 阶段暂不精算 token 成本，先记录为 0。'
+            },
+            finishedAt,
+            verified: Boolean(extraction.reply),
+            verificationResult: {
+              ok: Boolean(extraction.reply),
+              method: 'assistant_reply_present',
+              evidence: ['assistantMessageId', 'model']
+            }
+          }),
           preferences: { ...appliedResult.data.preferences, deepSeekModel: model },
           modelConnection: {
             status: '已连接',
@@ -674,6 +996,7 @@ const server = createServer(async (request, response) => {
       } catch (error) {
         const errorLog = createSystemError(error.message, '聊天自动提炼');
         const assistantMessage = createAssistantMessage(`这次没有处理成功：${error.message}`);
+        const finishedAt = new Date().toISOString();
         nextData = {
           ...nextData,
           conversations: nextData.conversations.map((conversation) =>
@@ -682,6 +1005,31 @@ const server = createServer(async (request, response) => {
               : conversation
           ),
           messages: [...activeMessages, assistantMessage],
+          tasks: patchTask(nextData.tasks, task.id, {
+            status: 'failed',
+            userVisibleSummary: `这次没有处理成功：${error.message}`
+          }),
+          runs: patchRun(nextData.runs, run.id, {
+            status: 'failed',
+            output: null,
+            evidence: {
+              sourceMessageId: message.id,
+              assistantMessageId: assistantMessage.id,
+              provider: 'DeepSeek',
+              model
+            },
+            errorRaw: {
+              message: error.message,
+              statusCode: error.statusCode || null
+            },
+            errorUserMessage: `这次没有处理成功：${error.message}`,
+            finishedAt,
+            verified: false,
+            verificationResult: {
+              ok: false,
+              reason: error.message
+            }
+          }),
           modelConnection: { status: '未连接', provider: '', model: '', checkedAt: new Date().toISOString() },
           systemErrors: [errorLog, ...nextData.systemErrors]
         };
@@ -691,7 +1039,7 @@ const server = createServer(async (request, response) => {
       return;
     }
 
-    if (request.url === '/api/test-ai-connection' && request.method === 'POST') {
+    if (pathname === '/api/test-ai-connection' && request.method === 'POST') {
       const body = await readBody(request);
       const payload = JSON.parse(body || '{}');
       const currentData = await readData();

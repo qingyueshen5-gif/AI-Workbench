@@ -8,6 +8,9 @@
 - 新增统一员工 adapter 接口：`healthCheck()` / `canHandle()` / `execute()` / `status()` / `cancel()` / `verify()` / `normalizeError()`。
 - 新增 `/api/agents` 和 `/api/agents/health`，核心服务通过统一注册表读取员工档案和健康状态。
 - 新增 `npm run verify:agents`，用于验证已注册员工的健康状态。
+- 新增统一任务结构 MVP：建立 `tasks` 和 `runs` 数据结构，聊天消息会自动生成任务和执行记录。
+- 新增 `/api/tasks`、`/api/tasks/:id`、`/api/runs`、`/api/runs/:id`，支持创建和查询任务/执行记录。
+- 新增 `npm run verify:tasks-runs`，用于模拟聊天消息并验证 task/run 持久化和查询接口。
 - 新增 `web_search` 通用联网搜索工具，DeepSeek 可按需调用 Serper Google Search API 查询实时数据、新闻、当前状态、产品价格等变化性问题。
 - `.env` 新增可选 `SERPER_API_KEY` 配置；未配置时保留聊天能力，但联网搜索会返回明确缺 key 错误。
 
@@ -20,6 +23,7 @@
 
 - `npm run build`
 - `npm run verify:agents`
+- `npm run verify:tasks-runs`
 - `npm run verify`
 
 ## v0.2.3 - 遗留任务收尾 + 环境归档

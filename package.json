@@ -9,7 +9,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "verify": "node scripts/verify.mjs",
-    "verify:agents": "node scripts/verify-agents.mjs"
+    "verify:agents": "node scripts/verify-agents.mjs",
+    "verify:tasks-runs": "node scripts/verify-tasks-runs.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.4",
