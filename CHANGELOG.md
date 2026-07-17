@@ -23,6 +23,9 @@
 - 新增错误翻译层 MVP：将超时、权限、API 配置、连接、限流、参数、假完成和执行失败等错误统一转成中文用户消息、内部技术细节和可点击恢复建议。
 - 新增 `/api/errors/normalize` 和 `/api/errors/recovery-hints/:errorType`，用于错误归一化和恢复方案查询。
 - 新增 `npm run verify:errors`，覆盖 5 类真实错误场景，确保用户消息不暴露 traceback 或英文技术错误。
+- 新增环境自愈层 MVP：支持网络重试、Hermes/AppData 权限降级、缺工具安全安装入口、API 配置续期入口、环境变量缺失提示和数据文件自动重建/恢复。
+- 新增 `/api/health/self-heal`、`/api/health/status`、`/api/health/fix-permission`、`/api/health/setup-env`，用于系统主动检测和修复环境问题。
+- 新增 `npm run health:check`、`npm run health:repair` 和 `npm run verify:health`，覆盖网络恢复、权限降级和 API key 缺失三类自愈场景。
 - 新增 `web_search` 通用联网搜索工具，DeepSeek 可按需调用 Serper Google Search API 查询实时数据、新闻、当前状态、产品价格等变化性问题。
 - `.env` 新增可选 `SERPER_API_KEY` 配置；未配置时保留聊天能力，但联网搜索会返回明确缺 key 错误。
 
@@ -40,6 +43,7 @@
 - `npm run verify:hermes`
 - `npm run verify:verification`
 - `npm run verify:errors`
+- `npm run verify:health`
 - `npm run verify`
 
 ## v0.2.3 - 遗留任务收尾 + 环境归档

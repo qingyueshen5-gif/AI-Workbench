@@ -7,6 +7,7 @@ import { agentDefinitions } from './agents/definitions.mjs';
 import { agentRegistry } from './agents/registry.mjs';
 import { verificationRules, verifyRun } from './verification/rules.mjs';
 import { getRecoveryHint, normalizeError } from './errors/normalize.mjs';
+import { checkHealth, repairAll, selfHeal, setupEnv } from './health/self-heal.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const dataFile = join(root, 'data', 'workbench.json');
@@ -896,6 +897,51 @@ const server = createServer(async (request, response) => {
     const recoveryHintMatch = pathname.match(/^\/api\/errors\/recovery-hints\/([^/]+)$/);
     if (recoveryHintMatch && request.method === 'GET') {
       sendJson(response, 200, { hint: getRecoveryHint(decodeURIComponent(recoveryHintMatch[1])) });
+      return;
+    }
+
+    if (pathname === '/api/health/status' && request.method === 'GET') {
+      sendJson(response, 200, await checkHealth({ root, dataFile, envFile }));
+      return;
+    }
+
+    if (pathname === '/api/health/self-heal' && request.method === 'POST') {
+      const body = await readBody(request);
+      const payload = JSON.parse(body || '{}');
+      const result = await selfHeal(payload.issue || payload, {
+        root,
+        dataFile,
+        envFile,
+        defaultData: initialData,
+        maxRetries: payload.maxRetries,
+        retryDelayMs: payload.retryDelayMs
+      });
+      sendJson(response, 200, result);
+      return;
+    }
+
+    if (pathname === '/api/health/fix-permission' && request.method === 'POST') {
+      sendJson(response, 200, {
+        ok: false,
+        requiresUserAction: true,
+        userMessage: '这里需要更高权限，点下面按钮后按系统提示确认。',
+        suggestedActions: [
+          { action: '点这里获取权限', isClickable: true, url: '/help/permissions' }
+        ],
+        fallbackDescription: '工作台不能静默提权；需要用户确认后才能继续。'
+      });
+      return;
+    }
+
+    if (pathname === '/api/health/setup-env' && request.method === 'POST') {
+      const body = await readBody(request);
+      const payload = JSON.parse(body || '{}');
+      sendJson(response, 200, await setupEnv({ envFile, key: payload.key || payload.envKey, value: payload.value }));
+      return;
+    }
+
+    if (pathname === '/api/health/repair' && request.method === 'POST') {
+      sendJson(response, 200, await repairAll({ root, dataFile, envFile, defaultData: initialData }));
       return;
     }
 

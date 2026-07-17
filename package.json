@@ -14,7 +14,10 @@
     "verify:memories": "node scripts/verify-memories.mjs",
     "verify:hermes": "node scripts/verify-hermes-adapter.mjs",
     "verify:verification": "node scripts/verify-verification-layer.mjs",
-    "verify:errors": "node scripts/verify-error-normalization.mjs"
+    "verify:errors": "node scripts/verify-error-normalization.mjs",
+    "verify:health": "node scripts/verify-health-self-heal.mjs",
+    "health:check": "node scripts/health-check.mjs",
+    "health:repair": "node scripts/health-repair.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.4",
