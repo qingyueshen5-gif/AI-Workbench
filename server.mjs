@@ -19,6 +19,7 @@ const initialData = {
   activeConversationId: '',
   tasks: [],
   runs: [],
+  memories: [],
   preferences: {
     defaultOwner: '人工',
     dailyTaskLimit: 5,
@@ -85,6 +86,7 @@ function normalizeData(data) {
     messages: activeConversation?.messages || legacyMessages,
     tasks: normalizeTasks(data.tasks),
     runs: normalizeRuns(data.runs),
+    memories: normalizeMemories(data.memories),
     preferences: { ...initialData.preferences, ...(data.preferences || {}) },
     modelConnection: { ...initialData.modelConnection, ...(data.modelConnection || {}) },
     agents: normalizeAgents(data.agents),
@@ -187,9 +189,165 @@ function normalizeRuns(runs) {
       finishedAt: run.finishedAt || '',
       verified: Boolean(run.verified),
       verificationResult: run.verificationResult || null,
-      durationMs: Number(run.durationMs || 0)
+      durationMs: Number(run.durationMs || 0),
+      memorySuggestions: normalizeMemorySuggestions(run.memorySuggestions, run.id || '')
     };
   });
+}
+
+const memoryTypes = new Set(['user_preferences', 'project_context', 'task_history', 'error_experiences']);
+const memoryVisibilities = new Set(['user', 'agent', 'system']);
+
+function normalizeMemories(memories) {
+  return (Array.isArray(memories) ? memories : [])
+    .filter((memory) => memory && memory.type && memory.key)
+    .map((memory) => ({
+      id: memory.id || createId('memory'),
+      type: memoryTypes.has(memory.type) ? memory.type : 'project_context',
+      key: String(memory.key || '').trim(),
+      value: memory.value ?? '',
+      source: memory.source || memory.who_created || 'workbench',
+      visibility: memoryVisibilities.has(memory.visibility) ? memory.visibility : 'agent',
+      confidence: Number.isFinite(Number(memory.confidence)) ? Number(memory.confidence) : 1,
+      lastUpdated: memory.lastUpdated || memory.updatedAt || memory.createdAt || new Date().toISOString(),
+      expiresAt: memory.expiresAt || ''
+    }));
+}
+
+function normalizeMemorySuggestions(suggestions, runId = '') {
+  return (Array.isArray(suggestions) ? suggestions : [])
+    .filter((suggestion) => suggestion && suggestion.type && suggestion.key)
+    .map((suggestion) => ({
+      id: suggestion.id || createId('memory-suggestion'),
+      runId: suggestion.runId || runId,
+      type: memoryTypes.has(suggestion.type) ? suggestion.type : 'project_context',
+      key: String(suggestion.key || '').trim(),
+      value: suggestion.value ?? '',
+      source: suggestion.source || 'agent',
+      visibility: memoryVisibilities.has(suggestion.visibility) ? suggestion.visibility : 'agent',
+      confidence: Number.isFinite(Number(suggestion.confidence)) ? Number(suggestion.confidence) : 0.8,
+      status: suggestion.status || 'pending',
+      reason: suggestion.reason || '',
+      createdAt: suggestion.createdAt || new Date().toISOString(),
+      decidedAt: suggestion.decidedAt || '',
+      memoryId: suggestion.memoryId || ''
+    }));
+}
+
+function createMemoryRecord({
+  type,
+  key,
+  value,
+  source = 'workbench',
+  visibility = 'agent',
+  confidence = 1,
+  expiresAt = ''
+} = {}) {
+  return {
+    id: createId('memory'),
+    type: memoryTypes.has(type) ? type : 'project_context',
+    key: String(key || '').trim(),
+    value: value ?? '',
+    source,
+    visibility: memoryVisibilities.has(visibility) ? visibility : 'agent',
+    confidence: Number.isFinite(Number(confidence)) ? Number(confidence) : 1,
+    lastUpdated: new Date().toISOString(),
+    expiresAt
+  };
+}
+
+function isHighRiskMemory(memory) {
+  const text = `${memory?.key || ''} ${JSON.stringify(memory?.value || '')}`.toLowerCase();
+  return /api[_ -]?key|token|secret|password|账号|密码|权限|credential|auth|登录|长期偏好/.test(text);
+}
+
+function readProjectDocumentMemory(fileName, key) {
+  try {
+    const content = readFileSync(join(root, fileName), 'utf8');
+    return {
+      ...createMemoryRecord({
+        type: 'project_context',
+        key,
+        value: {
+          file: fileName,
+          content,
+          summary: `${fileName} 的当前项目上下文全文`
+        },
+        source: 'workspace_document',
+        visibility: 'agent',
+        confidence: 1
+      }),
+      id: `memory-${key.replace(/[^a-z0-9]+/gi, '-')}`
+    };
+  } catch (error) {
+    if (error.code === 'ENOENT') return null;
+    throw error;
+  }
+}
+
+function getProjectDocumentMemories() {
+  return [
+    readProjectDocumentMemory('CONTEXT.md', 'document.context'),
+    readProjectDocumentMemory('VISION.md', 'document.vision'),
+    readProjectDocumentMemory('CURRENT_TASK.md', 'document.current_task'),
+    readProjectDocumentMemory('ARCHITECTURE.md', 'document.architecture')
+  ].filter(Boolean);
+}
+
+function listMemories(data, type = '') {
+  const stored = normalizeMemories(data.memories);
+  const combined = [...stored, ...getProjectDocumentMemories()];
+  const now = Date.now();
+  return combined
+    .filter((memory) => !type || memory.type === type)
+    .filter((memory) => !memory.expiresAt || new Date(memory.expiresAt).getTime() > now)
+    .sort((a, b) => String(b.lastUpdated).localeCompare(String(a.lastUpdated)));
+}
+
+function buildTaskContextPackage(data, task) {
+  const memories = listMemories(data);
+  const memoryByType = (type, limit = 8) => memories
+    .filter((memory) => memory.type === type && memory.visibility !== 'system')
+    .slice(0, limit);
+  const relatedRuns = data.runs
+    .filter((run) => run.taskId === task.id || run.agentId === task.assignedAgentId)
+    .slice(0, 5);
+  return {
+    id: createId('task-context'),
+    taskId: task.id,
+    generatedAt: new Date().toISOString(),
+    policy: {
+      owner: 'workbench',
+      agentCanRead: true,
+      agentCanWriteMainMemory: false,
+      agentMaySubmitMemorySuggestions: true,
+      highRiskMemoryRequiresWorkbenchOrUserApproval: true
+    },
+    task: {
+      id: task.id,
+      userGoal: task.userGoal,
+      title: task.title,
+      assignedAgentId: task.assignedAgentId,
+      dependencies: task.dependencies,
+      evidenceRequired: task.evidenceRequired,
+      retry_policy: task.retry_policy
+    },
+    memories: {
+      user_preferences: memoryByType('user_preferences'),
+      project_context: memoryByType('project_context', 10),
+      task_history: memoryByType('task_history'),
+      error_experiences: memoryByType('error_experiences')
+    },
+    recentRuns: relatedRuns.map((run) => ({
+      id: run.id,
+      taskId: run.taskId,
+      agentId: run.agentId,
+      status: run.status,
+      verified: run.verified,
+      errorUserMessage: run.errorUserMessage,
+      verificationResult: run.verificationResult
+    }))
+  };
 }
 
 function agentIdFromOwner(owner) {
@@ -316,6 +474,7 @@ async function readDataWithMeta() {
       fileSizeBytes,
       taskCount: data.tasks.length,
       runCount: data.runs.length,
+      memoryCount: data.memories.length,
       messageCount,
       historyDayCount: new Set([
         ...Object.keys(data.dailyGoals),
@@ -720,6 +879,94 @@ const server = createServer(async (request, response) => {
       return;
     }
 
+    if (pathname === '/api/memories' && request.method === 'POST') {
+      const body = await readBody(request);
+      const payload = JSON.parse(body || '{}');
+      const currentData = await readData();
+      let memoryPayload = payload;
+      let acceptedSuggestion = null;
+
+      if (payload.runId && payload.suggestionId) {
+        const run = currentData.runs.find((item) => item.id === payload.runId);
+        const suggestion = run?.memorySuggestions?.find((item) => item.id === payload.suggestionId);
+        if (!run || !suggestion) {
+          sendJson(response, 404, { error: '记忆建议不存在' });
+          return;
+        }
+        if (!payload.approved) {
+          sendJson(response, 400, { error: '工作台未确认，不能写入主记忆' });
+          return;
+        }
+        acceptedSuggestion = suggestion;
+        memoryPayload = {
+          type: suggestion.type,
+          key: suggestion.key,
+          value: suggestion.value,
+          source: payload.source || 'workbench_approved_suggestion',
+          visibility: suggestion.visibility,
+          confidence: suggestion.confidence,
+          expiresAt: payload.expiresAt || ''
+        };
+      }
+
+      const memory = createMemoryRecord({
+        type: memoryPayload.type,
+        key: memoryPayload.key,
+        value: memoryPayload.value,
+        source: memoryPayload.source || 'workbench',
+        visibility: memoryPayload.visibility || 'agent',
+        confidence: memoryPayload.confidence ?? 1,
+        expiresAt: memoryPayload.expiresAt || ''
+      });
+      if (!memory.key) {
+        sendJson(response, 400, { error: '记忆 key 不能为空' });
+        return;
+      }
+      if (isHighRiskMemory(memory) && memory.source !== 'workbench' && !payload.approved) {
+        sendJson(response, 403, { error: '高风险记忆必须由工作台验证或用户确认后写入' });
+        return;
+      }
+
+      const nextRuns = acceptedSuggestion
+        ? currentData.runs.map((run) =>
+            run.id === payload.runId
+              ? {
+                  ...run,
+                  memorySuggestions: run.memorySuggestions.map((suggestion) =>
+                    suggestion.id === payload.suggestionId
+                      ? {
+                          ...suggestion,
+                          status: 'accepted',
+                          decidedAt: new Date().toISOString(),
+                          memoryId: memory.id
+                        }
+                      : suggestion
+                  )
+                }
+              : run
+          )
+        : currentData.runs;
+      await writeData({
+        ...currentData,
+        memories: [memory, ...currentData.memories],
+        runs: nextRuns
+      });
+      sendJson(response, 201, { memory, data: await readDataWithMeta() });
+      return;
+    }
+
+    const memoryMatch = pathname.match(/^\/api\/memories\/([^/]+)$/);
+    if (memoryMatch && request.method === 'GET') {
+      const currentData = await readData();
+      const type = decodeURIComponent(memoryMatch[1]);
+      if (!memoryTypes.has(type)) {
+        sendJson(response, 400, { error: '未知记忆类型' });
+        return;
+      }
+      sendJson(response, 200, { memories: listMemories(currentData, type) });
+      return;
+    }
+
     if (pathname === '/api/tasks' && request.method === 'POST') {
       const body = await readBody(request);
       const payload = JSON.parse(body || '{}');
@@ -740,6 +987,18 @@ const server = createServer(async (request, response) => {
       });
       await writeData({ ...currentData, tasks: [task, ...currentData.tasks] });
       sendJson(response, 201, { task, data: await readDataWithMeta() });
+      return;
+    }
+
+    const taskContextMatch = pathname.match(/^\/api\/tasks\/([^/]+)\/context$/);
+    if (taskContextMatch && request.method === 'GET') {
+      const currentData = await readData();
+      const task = currentData.tasks.find((item) => item.id === decodeURIComponent(taskContextMatch[1]));
+      if (!task) {
+        sendJson(response, 404, { error: '任务不存在' });
+        return;
+      }
+      sendJson(response, 200, { task_context: buildTaskContextPackage(currentData, task) });
       return;
     }
 
@@ -777,6 +1036,45 @@ const server = createServer(async (request, response) => {
       });
       await writeData({ ...currentData, runs: [run, ...currentData.runs] });
       sendJson(response, 201, { run, data: await readDataWithMeta() });
+      return;
+    }
+
+    const runSuggestionMatch = pathname.match(/^\/api\/runs\/([^/]+)\/memory-suggestions$/);
+    if (runSuggestionMatch && request.method === 'POST') {
+      const body = await readBody(request);
+      const payload = JSON.parse(body || '{}');
+      const currentData = await readData();
+      const runId = decodeURIComponent(runSuggestionMatch[1]);
+      const run = currentData.runs.find((item) => item.id === runId);
+      if (!run) {
+        sendJson(response, 404, { error: '执行记录不存在' });
+        return;
+      }
+      const rawSuggestions = Array.isArray(payload.memory_suggestions)
+        ? payload.memory_suggestions
+        : (Array.isArray(payload.suggestions) ? payload.suggestions : []);
+      const suggestions = normalizeMemorySuggestions(rawSuggestions.map((suggestion) => ({
+        ...suggestion,
+        runId,
+        source: suggestion.source || run.agentId || 'agent',
+        status: 'pending'
+      })), runId);
+      if (!suggestions.length) {
+        sendJson(response, 400, { error: '记忆建议不能为空' });
+        return;
+      }
+      const runs = currentData.runs.map((item) =>
+        item.id === runId
+          ? { ...item, memorySuggestions: [...(item.memorySuggestions || []), ...suggestions] }
+          : item
+      );
+      await writeData({ ...currentData, runs });
+      sendJson(response, 201, {
+        suggestions,
+        memoryWritten: false,
+        rule: 'Agent 只能提交建议，主记忆仍由工作台决定是否写入。',
+        data: await readDataWithMeta()
+      });
       return;
     }
 
