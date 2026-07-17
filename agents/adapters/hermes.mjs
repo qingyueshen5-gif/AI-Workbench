@@ -1,7 +1,7 @@
 import { spawn } from 'node:child_process';
 import { createRunId, capabilityMatch } from '../adapter-contract.mjs';
 
-function runCommand(command, args, { timeoutMs = 30000, cwd = process.cwd() } = {}) {
+function runCommand(command, args, { timeoutMs = 30000, cwd = process.cwd(), onChild } = {}) {
   return new Promise((resolve) => {
     const child = spawn(command, args, {
       cwd,
@@ -11,6 +11,7 @@ function runCommand(command, args, { timeoutMs = 30000, cwd = process.cwd() } = 
         HERMES_GIT_BASH_PATH: process.env.HERMES_GIT_BASH_PATH || 'C:\\Program Files\\Git\\bin\\bash.exe'
       }
     });
+    onChild?.(child);
     let stdout = '';
     let stderr = '';
     let timedOut = false;
@@ -40,8 +41,84 @@ function stripAnsi(text) {
   return String(text || '').replace(/\x1B\[[0-?]*[ -/]*[@-~]/g, '').trim();
 }
 
+function jsonForPrompt(value) {
+  return JSON.stringify(value || {}, null, 2);
+}
+
+function truncateText(text, maxLength = 1600) {
+  const value = String(text || '');
+  return value.length > maxLength ? `${value.slice(0, maxLength)}\n...[truncated]` : value;
+}
+
+function compactMemory(memory) {
+  return {
+    id: memory?.id,
+    type: memory?.type,
+    key: memory?.key,
+    summary: typeof memory?.value === 'object'
+      ? (memory.value.summary || memory.value.file || memory.key)
+      : truncateText(memory?.value, 160),
+    source: memory?.source,
+    confidence: memory?.confidence
+  };
+}
+
+function compactContextForPrompt(context) {
+  const memories = context?.memories || {};
+  return {
+    id: context?.id,
+    taskId: context?.taskId,
+    generatedAt: context?.generatedAt,
+    policy: context?.policy,
+    task: context?.task,
+    memories: {
+      user_preferences: (memories.user_preferences || []).slice(0, 3).map(compactMemory),
+      project_context: (memories.project_context || []).slice(0, 4).map(compactMemory),
+      task_history: (memories.task_history || []).slice(0, 3).map(compactMemory),
+      error_experiences: (memories.error_experiences || []).slice(0, 3).map(compactMemory)
+    },
+    recentRuns: (context?.recentRuns || []).slice(0, 3)
+  };
+}
+
+function createHermesPrompt(task, context) {
+  const goal = String(task?.userGoal || task?.goal || task?.prompt || task?.title || '').trim();
+  const compactContext = compactContextForPrompt(context);
+  const memoryKeys = Object.entries(compactContext.memories || {})
+    .flatMap(([type, memories]) => (memories || []).map((memory) => `${type}:${memory.key}`))
+    .slice(0, 12);
+  return [
+    '你是AI Workbench的Hermes员工。完成任务，中文回答。',
+    '规则：只能读工作台给的上下文；不能写长期记忆；如有记忆建议只写memory_suggestions，没有就写memory_suggestions: []。',
+    `task_context_id: ${compactContext.id || ''}`,
+    `memory_keys: ${memoryKeys.join(', ') || 'none'}`,
+    '工作区路径: F:/AI-Workbench',
+    `任务: ${goal}`,
+    '请用terminal读取需要的文件，并总结当前待办。'
+  ].join('\n');
+}
+
+function createCommandEvidence(args) {
+  return `hermes ${args.map((arg) => {
+    const text = String(arg);
+    return /\s/.test(text) ? JSON.stringify(text) : text;
+  }).join(' ')}`;
+}
+
+function parseMemorySuggestions(stdout) {
+  const match = String(stdout || '').match(/memory_suggestions\s*:\s*(\[[\s\S]*?\])\s*$/i);
+  if (!match) return [];
+  try {
+    const parsed = JSON.parse(match[1]);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 export function createHermesAdapter(agent) {
   const runs = new Map();
+  const processes = new Map();
 
   return {
     async healthCheck() {
@@ -72,43 +149,84 @@ export function createHermesAdapter(agent) {
       return capabilityMatch(agent, task);
     },
 
-    async execute(task, context = {}) {
+    async invoke(task, context = {}) {
       const runId = createRunId(agent.id);
-      const prompt = String(task?.prompt || task?.goal || task?.title || '').trim();
-      if (!prompt) throw new Error('Hermes 执行任务缺少 prompt');
+      const prompt = createHermesPrompt(task, context);
+      if (!String(task?.userGoal || task?.prompt || task?.goal || task?.title || '').trim()) {
+        throw new Error('Hermes 执行任务缺少目标');
+      }
       const toolsets = String(context.toolsets || 'memory,terminal');
-      const result = await runCommand('hermes', ['chat', '-q', prompt, '--toolsets', toolsets], {
-        timeoutMs: context.timeoutMs || 120000,
-        cwd: context.cwd || process.cwd()
+      const provider = String(context.provider || 'custom');
+      const model = String(context.model || 'deepseek-chat');
+      const args = ['chat', '-q', prompt, '--provider', provider, '-m', model, '--toolsets', toolsets];
+      const commandRun = createCommandEvidence(args);
+      const startedAt = new Date();
+      runs.set(runId, {
+        runId,
+        agentId: agent.id,
+        status: 'running',
+        startedAt: startedAt.toISOString(),
+        evidence: { commandRun }
       });
+      const result = await runCommand('hermes', args, {
+        timeoutMs: context.timeoutMs || 180000,
+        cwd: context.cwd || process.cwd(),
+        onChild: (child) => processes.set(runId, child)
+      });
+      processes.delete(runId);
+      const finishedAt = new Date();
+      const stdout = stripAnsi(result.stdout);
+      const stderr = stripAnsi(result.stderr);
+      const evidence = {
+        commandRun,
+        stdout,
+        stderr,
+        exitCode: result.code,
+        executedAt: startedAt.toISOString(),
+        finishedAt: finishedAt.toISOString(),
+        durationMs: Math.max(0, finishedAt.getTime() - startedAt.getTime())
+      };
 
       const normalized = result.ok
         ? {
             runId,
             agentId: agent.id,
             status: 'done',
-            output: stripAnsi(result.stdout),
-            evidence: {
-              command: `hermes chat -q "<task>" --toolsets ${toolsets}`,
-              exitCode: result.code
+            output: {
+              result: {
+                text: stdout,
+                taskId: task?.id || ''
+              },
+              evidence,
+              suggestions: parseMemorySuggestions(stdout)
             },
-            finishedAt: new Date().toISOString()
+            evidence,
+            suggestions: parseMemorySuggestions(stdout),
+            finishedAt: finishedAt.toISOString()
           }
         : {
             runId,
             agentId: agent.id,
             status: 'failed',
-            output: stripAnsi(result.stdout),
-            error: this.normalizeError(result.error || new Error(result.stderr || result.stdout || 'Hermes execution failed')),
-            evidence: {
-              command: `hermes chat -q "<task>" --toolsets ${toolsets}`,
-              exitCode: result.code,
-              timedOut: result.timedOut
+            output: {
+              result: {
+                text: stdout,
+                taskId: task?.id || ''
+              },
+              evidence,
+              suggestions: []
             },
-            finishedAt: new Date().toISOString()
+            error: this.normalizeError(result.error || new Error(stderr || stdout || 'Hermes execution failed')),
+            evidence: { ...evidence, timedOut: result.timedOut },
+            suggestions: [],
+            finishedAt: finishedAt.toISOString()
           };
       runs.set(runId, normalized);
       return normalized;
+    },
+
+    execute(task, context = {}) {
+      return this.invoke(task, context);
     },
 
     async status(runId) {
@@ -116,14 +234,24 @@ export function createHermesAdapter(agent) {
     },
 
     async cancel(runId) {
-      return { runId, agentId: agent.id, cancelled: false, reason: 'Hermes 当前通过短任务 CLI 调用，未保留可取消的后台 run。' };
+      const child = processes.get(runId);
+      if (!child) return { runId, agentId: agent.id, cancelled: false, reason: '没有正在运行的 Hermes 进程。' };
+      child.kill();
+      processes.delete(runId);
+      const current = runs.get(runId) || {};
+      const cancelled = { ...current, runId, agentId: agent.id, status: 'cancelled', finishedAt: new Date().toISOString() };
+      runs.set(runId, cancelled);
+      return { runId, agentId: agent.id, cancelled: true };
     },
 
     verify(result) {
+      const output = result?.output || {};
+      const evidence = output.evidence || result?.evidence || {};
+      const hasContract = Boolean(output.result && evidence.commandRun && Number.isInteger(evidence.exitCode) && evidence.executedAt);
       return {
-        ok: Boolean(result?.status === 'done' && result.evidence?.command && result.evidence?.exitCode === 0),
-        evidence: result?.evidence || {},
-        message: result?.status === 'done' ? 'Hermes 返回了 CLI 输出和退出码证据。' : 'Hermes 未返回可验证的完成结果。'
+        ok: Boolean(result?.status === 'done' && hasContract && evidence.exitCode === 0),
+        evidence,
+        message: hasContract ? 'Hermes 返回了结构化结果和完整命令证据。' : 'Hermes 输出不符合结构化结果契约。'
       };
     },
 

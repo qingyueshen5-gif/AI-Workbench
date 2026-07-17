@@ -61,6 +61,10 @@ export async function createAgentRegistry(definitions = agentDefinitions) {
       return getAdapter(agentId).canHandle(task);
     },
 
+    invoke(agentId, task, context = {}) {
+      return getAdapter(agentId).invoke(task, context);
+    },
+
     execute(agentId, task, context = {}) {
       return getAdapter(agentId).execute(task, context);
     },

@@ -2,6 +2,7 @@ export function assertAgentAdapter(adapter, agentId) {
   const required = [
     'healthCheck',
     'canHandle',
+    'invoke',
     'execute',
     'status',
     'cancel',

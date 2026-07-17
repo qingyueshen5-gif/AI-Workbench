@@ -110,7 +110,7 @@ export function createDeepSeekAdapter(agent) {
       return capabilityMatch(agent, task);
     },
 
-    async execute(task, context = {}) {
+    async invoke(task, context = {}) {
       const runId = createRunId(agent.id);
       const prompt = String(task?.prompt || task?.goal || task?.title || '').trim();
       if (!prompt) throw new Error('DeepSeek 执行任务缺少 prompt');
@@ -149,6 +149,10 @@ export function createDeepSeekAdapter(agent) {
         runs.set(runId, result);
         return result;
       }
+    },
+
+    execute(task, context = {}) {
+      return this.invoke(task, context);
     },
 
     async status(runId) {

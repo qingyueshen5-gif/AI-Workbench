@@ -879,6 +879,87 @@ const server = createServer(async (request, response) => {
       return;
     }
 
+    if (pathname === '/api/agents/hermes/invoke' && request.method === 'POST') {
+      const body = await readBody(request);
+      const payload = JSON.parse(body || '{}');
+      const currentData = await readData();
+      let task = payload.taskId
+        ? currentData.tasks.find((item) => item.id === payload.taskId)
+        : null;
+      let tasks = currentData.tasks;
+      if (!task) {
+        task = createTaskRecord({
+          userGoal: payload.userGoal || payload.goal || payload.prompt,
+          title: payload.title || payload.userGoal || payload.goal || payload.prompt,
+          assignedAgentId: 'hermes',
+          status: 'running',
+          evidenceRequired: ['hermes_command', 'stdout', 'exit_code']
+        });
+        tasks = [task, ...tasks];
+      } else {
+        tasks = patchTask(tasks, task.id, { status: 'running', assignedAgentId: 'hermes', assignee: 'hermes', owner: 'Hermes' });
+        task = tasks.find((item) => item.id === task.id);
+      }
+      const taskContext = payload.context || buildTaskContextPackage({ ...currentData, tasks }, task);
+      const adapterResult = await agentRegistry.invoke('hermes', task, {
+        ...taskContext,
+        timeoutMs: payload.timeoutMs || 180000,
+        cwd: root,
+        provider: payload.provider || 'custom',
+        model: payload.model || 'deepseek-chat',
+        toolsets: payload.toolsets || 'memory,terminal'
+      });
+      const verification = agentRegistry.verify('hermes', adapterResult);
+      const output = adapterResult.output || {
+        result: { text: adapterResult.output || '' },
+        evidence: adapterResult.evidence || {},
+        suggestions: adapterResult.suggestions || []
+      };
+      const run = createRunRecord({
+        taskId: task.id,
+        agentId: 'hermes',
+        status: adapterResult.status === 'done' && verification.ok ? 'done' : 'failed',
+        input: {
+          task,
+          task_context: taskContext
+        },
+        output,
+        evidence: output.evidence || adapterResult.evidence || {},
+        errorRaw: adapterResult.error?.raw || null,
+        errorUserMessage: adapterResult.error?.message || '',
+        retryCount: 0,
+        costEstimate: { currency: 'USD', amount: 0, note: 'Hermes CLI 本地调用，MVP 暂不精算模型成本。' },
+        startedAt: output.evidence?.executedAt || new Date().toISOString(),
+        finishedAt: output.evidence?.finishedAt || adapterResult.finishedAt || new Date().toISOString(),
+        verified: verification.ok,
+        verificationResult: verification
+      });
+      if (Array.isArray(output.suggestions) && output.suggestions.length) {
+        run.memorySuggestions = normalizeMemorySuggestions(output.suggestions.map((suggestion) => ({
+          ...suggestion,
+          runId: run.id,
+          source: suggestion.source || 'hermes'
+        })), run.id);
+      }
+      const nextTasks = patchTask(tasks, task.id, {
+        status: run.status === 'done' ? 'done' : 'failed',
+        userVisibleSummary: run.status === 'done' ? 'Hermes 已完成执行。' : (run.errorUserMessage || 'Hermes 执行失败。')
+      });
+      await writeData({
+        ...currentData,
+        tasks: nextTasks,
+        runs: [run, ...currentData.runs]
+      });
+      sendJson(response, 200, {
+        task: nextTasks.find((item) => item.id === task.id),
+        run,
+        invoke_result: output,
+        verification,
+        data: await readDataWithMeta()
+      });
+      return;
+    }
+
     if (pathname === '/api/memories' && request.method === 'POST') {
       const body = await readBody(request);
       const payload = JSON.parse(body || '{}');

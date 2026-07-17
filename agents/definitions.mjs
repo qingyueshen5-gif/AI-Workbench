@@ -39,7 +39,7 @@ export const agentDefinitions = [
     invoke: {
       adapter: 'agents/adapters/hermes.mjs',
       mode: 'hermes_chat_cli',
-      command: 'hermes chat -q "<task>" --toolsets memory,terminal'
+      command: 'hermes chat -q "<task>" --provider custom -m deepseek-chat --toolsets memory,terminal'
     },
     status: 'available',
     lastHealthCheckAt: '',

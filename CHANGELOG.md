@@ -14,6 +14,9 @@
 - 新增中央记忆库 MVP：建立 `memories` 数据结构，支持用户偏好、项目上下文、任务历史和错误经验库四类记忆。
 - 新增 `/api/memories`、`/api/memories/:type`、`/api/tasks/:id/context`、`/api/runs/:id/memory-suggestions`，确保 Agent 只能提交记忆建议，主记忆由工作台确认写入。
 - 新增 `npm run verify:memories`，验证“写入偏好 → 生成任务上下文包 → Agent 提建议 → 工作台确认后写入主记忆”的完整流程。
+- 完善 Hermes adapter：支持 `invoke(task, context)`，固定使用 `hermes chat -q ... --provider custom -m deepseek-chat --toolsets memory,terminal`，返回结构化结果、命令证据和记忆建议。
+- 新增 `/api/agents/hermes/invoke`，工作台可通过统一 adapter 调 Hermes 执行任务并写入 run 记录。
+- 新增 `npm run verify:hermes`，验证 Hermes 读取 `CURRENT_TASK.md`、返回待办摘要和完整命令证据。
 - 新增 `web_search` 通用联网搜索工具，DeepSeek 可按需调用 Serper Google Search API 查询实时数据、新闻、当前状态、产品价格等变化性问题。
 - `.env` 新增可选 `SERPER_API_KEY` 配置；未配置时保留聊天能力，但联网搜索会返回明确缺 key 错误。
 
@@ -28,6 +31,7 @@
 - `npm run verify:agents`
 - `npm run verify:tasks-runs`
 - `npm run verify:memories`
+- `npm run verify:hermes`
 - `npm run verify`
 
 ## v0.2.3 - 遗留任务收尾 + 环境归档
