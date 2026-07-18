@@ -312,6 +312,10 @@ function buildTaskContextPackage(data, task) {
   const memoryByType = (type, limit = 8) => memories
     .filter((memory) => memory.type === type && memory.visibility !== 'system')
     .slice(0, limit);
+  const relatedErrorExperiences = memories
+    .filter((memory) => memory.type === 'error_experiences' && memory.visibility !== 'system')
+    .filter((memory) => isRelatedErrorExperience(memory, task))
+    .slice(0, 8);
   const relatedRuns = data.runs
     .filter((run) => run.taskId === task.id || run.agentId === task.assignedAgentId)
     .slice(0, 5);
@@ -339,7 +343,7 @@ function buildTaskContextPackage(data, task) {
       user_preferences: memoryByType('user_preferences'),
       project_context: memoryByType('project_context', 10),
       task_history: memoryByType('task_history'),
-      error_experiences: memoryByType('error_experiences')
+      error_experiences: relatedErrorExperiences.length ? relatedErrorExperiences : memoryByType('error_experiences', 5)
     },
     recentRuns: relatedRuns.map((run) => ({
       id: run.id,
@@ -351,6 +355,60 @@ function buildTaskContextPackage(data, task) {
       verificationResult: run.verificationResult
     }))
   };
+}
+
+function tokenizeTaskText(text) {
+  return String(text || '')
+    .toLowerCase()
+    .split(/[^a-z0-9\u4e00-\u9fa5]+/i)
+    .map((item) => item.trim())
+    .filter((item) => item.length >= 2);
+}
+
+function isRelatedErrorExperience(memory, task) {
+  const taskText = `${task?.title || ''} ${task?.userGoal || ''} ${task?.goal || ''}`;
+  const value = memory?.value || {};
+  const memoryText = `${memory?.key || ''} ${value.task || ''} ${value.reason || ''} ${value.solution || ''} ${JSON.stringify(value)}`;
+  const taskTokens = new Set(tokenizeTaskText(taskText));
+  if (!taskTokens.size) return true;
+  return tokenizeTaskText(memoryText).some((token) => taskTokens.has(token));
+}
+
+function isFailedStatus(status) {
+  return status === '失败' || status === 'failed';
+}
+
+function buildErrorExperienceMemory(task, reason = '', solution = '') {
+  const taskTitle = String(task?.title || task?.userGoal || '未命名任务').trim();
+  const failureReason = String(reason || task?.failureReason || task?.userVisibleSummary || '任务执行失败，原因待补充。').trim();
+  const solutionText = String(solution || '下次执行同类任务时先参考这条失败原因，确认前置条件后再继续。').trim();
+  return createMemoryRecord({
+    type: 'error_experiences',
+    key: `error_experience.${taskTitle}.${Date.now()}`,
+    value: {
+      task: taskTitle,
+      reason: failureReason,
+      solution: solutionText
+    },
+    source: 'workbench_auto_failure',
+    visibility: 'agent',
+    confidence: 1
+  });
+}
+
+function appendFailureMemories(previousData, nextData) {
+  const previousById = new Map(normalizeTasks(previousData.tasks || []).map((task) => [task.id, task]));
+  const existingKeys = new Set(normalizeMemories(nextData.memories || []).map((memory) => memory.key));
+  const memories = [...(nextData.memories || [])];
+  for (const task of normalizeTasks(nextData.tasks || [])) {
+    const previous = previousById.get(task.id);
+    if (!isFailedStatus(task.status) || isFailedStatus(previous?.status)) continue;
+    const memory = buildErrorExperienceMemory(task);
+    if (existingKeys.has(memory.key)) continue;
+    memories.unshift(memory);
+    existingKeys.add(memory.key);
+  }
+  return { ...nextData, memories };
 }
 
 function agentIdFromOwner(owner) {
@@ -1259,11 +1317,11 @@ const server = createServer(async (request, response) => {
         status: run.status === 'done' ? 'done' : 'failed',
         userVisibleSummary: run.status === 'done' ? 'Hermes 已完成执行。' : (run.errorUserMessage || 'Hermes 执行失败。')
       });
-      await writeData({
+      await writeData(appendFailureMemories(currentData, {
         ...currentData,
         tasks: nextTasks,
         runs: [run, ...currentData.runs]
-      });
+      }));
       sendJson(response, 200, {
         task: nextTasks.find((item) => item.id === task.id),
         run,
@@ -1513,7 +1571,7 @@ const server = createServer(async (request, response) => {
             }
           : task
       );
-      await writeData({ ...currentData, runs, tasks });
+      await writeData(appendFailureMemories(currentData, { ...currentData, runs, tasks }));
       sendJson(response, 200, {
         verification,
         run: runs.find((item) => item.id === runId),
@@ -1537,7 +1595,8 @@ const server = createServer(async (request, response) => {
     if (pathname === '/api/data' && request.method === 'PUT') {
       const body = await readBody(request);
       const data = normalizeData(JSON.parse(body || '{}'));
-      await writeData(data);
+      const currentData = await readData();
+      await writeData(appendFailureMemories(currentData, data));
       sendJson(response, 200, await readDataWithMeta());
       return;
     }
@@ -1602,7 +1661,7 @@ const server = createServer(async (request, response) => {
           activeConversationId: activeConversation.id,
           messages: [...activeMessages, assistantMessage]
         });
-        await writeData(nextData);
+        await writeData(appendFailureMemories(currentData, nextData));
         sendJson(response, 200, {
           data: await readDataWithMeta(),
           routedAgentId: 'builtin',
@@ -1658,7 +1717,7 @@ const server = createServer(async (request, response) => {
         tasks: [task, ...currentData.tasks],
         runs: [run, ...currentData.runs]
       });
-      await writeData(nextData);
+      await writeData(appendFailureMemories(currentData, nextData));
 
       if (routedAgentId === 'hermes') {
         try {
@@ -1738,7 +1797,7 @@ const server = createServer(async (request, response) => {
               checkedAt: new Date().toISOString()
             }
           };
-          await writeData(nextData);
+          await writeData(appendFailureMemories(currentData, nextData));
           sendJson(response, 200, {
             data: await readDataWithMeta(),
             routedAgentId: 'hermes',
@@ -1779,7 +1838,7 @@ const server = createServer(async (request, response) => {
             }),
             systemErrors: [createSystemError(userMessage, 'Hermes 自动执行'), ...nextData.systemErrors]
           };
-          await writeData(nextData);
+          await writeData(appendFailureMemories(currentData, nextData));
           sendJson(response, 200, { data: await readDataWithMeta(), routedAgentId: 'hermes', warning: userMessage });
         }
         return;
@@ -1823,7 +1882,7 @@ const server = createServer(async (request, response) => {
           modelConnection: { status: '未连接', provider: '', model: '', checkedAt: new Date().toISOString() },
           systemErrors: [errorLog, ...nextData.systemErrors]
         };
-        await writeData(nextData);
+        await writeData(appendFailureMemories(currentData, nextData));
         sendJson(response, 200, { data: await readDataWithMeta(), applied: [], suggestions: [], warning: errorLog.description });
         return;
       }
@@ -1893,7 +1952,7 @@ const server = createServer(async (request, response) => {
             checkedAt: new Date().toISOString()
           }
         };
-        await writeData(nextData);
+        await writeData(appendFailureMemories(currentData, nextData));
         sendJson(response, 200, {
           data: await readDataWithMeta(),
           applied: appliedResult.applied,
@@ -1939,7 +1998,7 @@ const server = createServer(async (request, response) => {
           modelConnection: { status: '未连接', provider: '', model: '', checkedAt: new Date().toISOString() },
           systemErrors: [errorLog, ...nextData.systemErrors]
         };
-        await writeData(nextData);
+        await writeData(appendFailureMemories(currentData, nextData));
         sendJson(response, error.statusCode || 500, { error: error.message, data: await readDataWithMeta() });
       }
       return;
