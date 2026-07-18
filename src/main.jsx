@@ -451,9 +451,20 @@ function RightDrawer({ open, setOpen, data, selectedTask, selectedTaskId, setSel
 
 function ChatStream({ data, setData, setSaveError, updateData }) {
   const [draft, setDraft] = useState('');
-  const [sending, setSending] = useState(false);
+  const [pendingCount, setPendingCount] = useState(0);
   const messagesRef = useRef(null);
+  const activeConversationIdRef = useRef(data.activeConversationId);
+  const streamTimersRef = useRef(new Set());
   const messages = getActiveMessages(data);
+
+  useEffect(() => {
+    activeConversationIdRef.current = data.activeConversationId;
+  }, [data.activeConversationId]);
+
+  useEffect(() => () => {
+    for (const timer of streamTimersRef.current) clearTimeout(timer);
+    streamTimersRef.current.clear();
+  }, []);
 
   useEffect(() => {
     const container = messagesRef.current;
@@ -461,85 +472,146 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
     container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
   }, [data.activeConversationId, messages.length]);
 
+  function localFailureMessage(error) {
+    const raw = String(error?.message || error || '').trim();
+    if (!navigator.onLine) return '消息没有发出去：当前网络不可用。';
+    if (/Failed to fetch|NetworkError|Load failed|fetch/i.test(raw)) return '消息没有发出去：网络连接失败。';
+    if (/timeout|超时/i.test(raw)) return '消息没有发出去：网络请求超时。';
+    return `这次没有处理成功：${raw || '服务暂时不可用。'}`;
+  }
+
+  function patchMessagesLocally(updater) {
+    setData((current) => {
+      const activeConversation = getActiveConversation(current);
+      const activeId = activeConversation?.id || current.activeConversationId || activeConversationIdRef.current || '';
+      const currentMessages = getActiveMessages(current);
+      const nextMessages = updater(currentMessages);
+      return {
+        ...current,
+        messages: nextMessages,
+        conversations: (current.conversations || []).map((conversation) =>
+          conversation.id === activeId
+            ? { ...conversation, messages: nextMessages, updatedAt: new Date().toISOString() }
+            : conversation
+        )
+      };
+    });
+  }
+
+  function appendLocalMessages(userMessage, assistantMessage) {
+    setData((current) => {
+      const createdAt = userMessage.createdAt;
+      let conversations = current.conversations || [];
+      let activeId = current.activeConversationId || activeConversationIdRef.current;
+      if (!activeId || !conversations.some((conversation) => conversation.id === activeId)) {
+        activeId = `conversation-${newId()}`;
+        activeConversationIdRef.current = activeId;
+        conversations = [{
+          id: activeId,
+          title: sanitizeTitleText(userMessage.content) || '新对话',
+          createdAt,
+          updatedAt: createdAt,
+          messages: []
+        }, ...conversations];
+      }
+      const activeConversation = conversations.find((conversation) => conversation.id === activeId);
+      const nextMessages = [...(activeConversation?.messages || []), userMessage, assistantMessage];
+      return {
+        ...current,
+        activeConversationId: activeId,
+        messages: nextMessages,
+        conversations: conversations.map((conversation) =>
+          conversation.id === activeId
+            ? {
+                ...conversation,
+                title: deriveConversationTitle({ ...conversation, messages: nextMessages }),
+                updatedAt: assistantMessage.createdAt,
+                messages: nextMessages
+              }
+            : conversation
+        )
+      };
+    });
+    return activeConversationIdRef.current;
+  }
+
+  function latestAssistantReply(payload) {
+    const nextData = payload?.data ? mergeData(payload.data) : null;
+    const nextMessages = nextData ? getActiveMessages(nextData) : [];
+    return [...nextMessages].reverse().find((message) => message.role === 'assistant')?.content || '';
+  }
+
+  function streamAssistantMessage(messageId, fullText) {
+    const text = String(fullText || '我处理完了。');
+    patchMessagesLocally((items) =>
+      items.map((item) =>
+        item.id === messageId
+          ? { ...item, content: '', thinking: false, streaming: true }
+          : item
+      )
+    );
+    let index = 0;
+    const tick = () => {
+      index += 1;
+      patchMessagesLocally((items) =>
+        items.map((item) =>
+          item.id === messageId
+            ? {
+                ...item,
+                content: text.slice(0, index),
+                thinking: false,
+                streaming: index < text.length
+              }
+            : item
+        )
+      );
+      if (index < text.length) {
+        const timer = setTimeout(tick, 18);
+        streamTimersRef.current.add(timer);
+      }
+    };
+    const timer = setTimeout(tick, 80);
+    streamTimersRef.current.add(timer);
+  }
+
   async function sendMessage() {
     const content = draft.trim();
-    if (!content || sending) return;
-    setSending(true);
+    if (!content) return;
+    const createdAt = new Date().toISOString();
+    const localUserMessage = { id: `local-user-${newId()}`, role: 'user', content, createdAt };
+    const localAssistantMessage = {
+      id: `local-assistant-${newId()}`,
+      role: 'assistant',
+      content: '思考中',
+      createdAt: new Date().toISOString(),
+      thinking: true
+    };
+    const conversationId = appendLocalMessages(localUserMessage, localAssistantMessage);
+    setPendingCount((count) => count + 1);
     setDraft('');
     setSaveError('');
     try {
       const response = await fetch('/api/chat-message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content, conversationId: data.activeConversationId })
+        body: JSON.stringify({ content, conversationId })
       });
       const payload = await response.json();
-      if (payload.data) setData(mergeData(payload.data));
       if (!response.ok) throw new Error(payload.error || '聊天提炼失败');
-      if (payload.warning) setSaveError(payload.warning);
+      streamAssistantMessage(localAssistantMessage.id, latestAssistantReply(payload) || payload.warning || '我处理完了。');
     } catch (error) {
-      setSaveError(error.message);
-      const fallbackMessage = { id: newId(), role: 'user', content, createdAt: new Date().toISOString() };
-      const assistantMessage = { id: newId(), role: 'assistant', content: `这次没有处理成功：${error.message}`, createdAt: new Date().toISOString() };
-      const errorLog = createSystemError(error.message, '聊天发送');
-      updateData((current) => ({
-        ...current,
-        systemErrors: [errorLog, ...(current.systemErrors || [])],
-        messages: [...getActiveMessages(current), fallbackMessage, assistantMessage],
-        conversations: (current.conversations || []).map((conversation) =>
-          conversation.id === current.activeConversationId
-            ? { ...conversation, messages: [...(conversation.messages || []), fallbackMessage, assistantMessage], updatedAt: assistantMessage.createdAt }
-            : conversation
+      const message = localFailureMessage(error);
+      setSaveError('');
+      patchMessagesLocally((items) =>
+        items.map((item) =>
+          item.id === localAssistantMessage.id
+            ? { ...item, content: message, thinking: false, streaming: false }
+            : item
         )
-      }));
+      );
     } finally {
-      setSending(false);
+      setPendingCount((count) => Math.max(0, count - 1));
     }
-  }
-
-  function applySuggestion(message, suggestion) {
-    updateData((current) => {
-      const today = todayKey();
-      const next = { ...current };
-      if (suggestion.type === 'goal') {
-        next.dailyGoals = { ...current.dailyGoals, [today]: suggestion.text };
-      }
-      if (suggestion.type === 'task') {
-        next.tasks = [{
-          id: newId(),
-          title: suggestion.text,
-          status: '待开始',
-          owner: current.preferences.defaultOwner || '人工',
-          createdAt: new Date().toISOString(),
-          notes: '由用户确认的聊天提炼',
-          failureReason: '',
-          sourceMessageId: message.id
-        }, ...current.tasks];
-      }
-      if (suggestion.type === 'preference') {
-        next.preferences = { ...current.preferences, communicationStyle: suggestion.text };
-      }
-      const messages = getActiveMessages(current);
-      const nextMessages = messages.map((item) =>
-        item.id === message.id
-          ? {
-              ...item,
-              extraction: {
-                ...item.extraction,
-                suggestions: (item.extraction?.suggestions || []).filter((candidate) => candidate !== suggestion),
-                applied: [...(item.extraction?.applied || []), `已确认：${suggestion.text}`]
-              }
-            }
-          : item
-      );
-      next.messages = nextMessages;
-      next.conversations = (current.conversations || []).map((conversation) =>
-        conversation.id === current.activeConversationId
-          ? { ...conversation, messages: nextMessages, updatedAt: new Date().toISOString() }
-          : conversation
-      );
-      return next;
-    });
   }
 
   return (
@@ -554,29 +626,8 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
                 ? 'max-w-[78%] rounded-2xl bg-white px-1 py-2 text-sm leading-6 text-zinc-900'
                 : 'ml-auto max-w-[78%] rounded-2xl bg-zinc-100 px-4 py-3 text-sm leading-6 text-zinc-900'}
               >
-                {message.content}
+                {message.thinking ? <ThinkingDots /> : message.content}
               </div>
-              {(!!message.extraction?.applied?.length || !!message.extraction?.suggestions?.length) && (
-                <div className="ml-auto mt-3 max-w-[78%] text-left text-sm">
-                  {!!message.extraction?.applied?.length && (
-                    <ul className="space-y-1 text-emerald-700">
-                      {message.extraction.applied.map((item) => <li key={item}>{item}</li>)}
-                    </ul>
-                  )}
-                  {!!message.extraction?.suggestions?.length && (
-                    <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-amber-900">
-                      {message.extraction.suggestions.map((suggestion, index) => (
-                        <div key={`${suggestion.type}-${suggestion.text}-${index}`} className="flex items-center justify-between gap-3 py-1">
-                          <span className="min-w-0">{suggestion.text}</span>
-                          <button onClick={() => applySuggestion(message, suggestion)} className="shrink-0 rounded-md border border-amber-300 px-2 py-1 text-xs hover:bg-amber-100">
-                            确认
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
             </article>
           ))}
           {!messages.length && (
@@ -604,12 +655,23 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
             className="max-h-32 min-h-8 flex-1 resize-none border-0 bg-transparent px-1 py-1 text-sm leading-6 outline-none"
             placeholder="例如：我今天想把登录页面做完，默认负责人是Codex。"
           />
-          <button onClick={sendMessage} disabled={sending || !draft.trim()} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-sm text-white disabled:cursor-not-allowed disabled:bg-zinc-300">
-            {sending ? '…' : '↑'}
+          <button onClick={sendMessage} disabled={!draft.trim()} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-sm text-white disabled:cursor-not-allowed disabled:bg-zinc-300">
+            {pendingCount ? '↑' : '↑'}
           </button>
         </div>
       </div>
     </div>
+  );
+}
+
+function ThinkingDots() {
+  return (
+    <span className="thinking-indicator" aria-label="思考中">
+      <span>思考中</span>
+      <span className="thinking-dot" />
+      <span className="thinking-dot" />
+      <span className="thinking-dot" />
+    </span>
   );
 }
 
