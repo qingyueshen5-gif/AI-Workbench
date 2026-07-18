@@ -16,6 +16,7 @@
     "verify:verification": "node scripts/verify-verification-layer.mjs",
     "verify:errors": "node scripts/verify-error-normalization.mjs",
     "verify:health": "node scripts/verify-health-self-heal.mjs",
+    "verify:acceptance": "node scripts/verify-acceptance.mjs",
     "health:check": "node scripts/health-check.mjs",
     "health:repair": "node scripts/health-repair.mjs"
   },
