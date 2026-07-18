@@ -7,6 +7,7 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const viteCli = join(root, 'node_modules', 'vite', 'bin', 'vite.js');
 
 const processes = [
+  spawn(process.execPath, ['model-proxy.mjs'], { cwd: root, stdio: 'inherit' }),
   spawn(process.execPath, ['server.mjs'], { cwd: root, stdio: 'inherit' }),
   spawn(process.execPath, [viteCli, '--host', '127.0.0.1'], { cwd: root, stdio: 'inherit' })
 ];

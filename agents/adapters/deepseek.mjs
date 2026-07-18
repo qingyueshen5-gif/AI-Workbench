@@ -1,32 +1,6 @@
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { createRunId, capabilityMatch } from '../adapter-contract.mjs';
 
-const root = process.cwd();
-const envFile = join(root, '.env');
-const deepSeekBaseUrl = 'https://api.deepseek.com';
-
-function loadLocalEnv() {
-  try {
-    const raw = readFileSync(envFile, 'utf8');
-    for (const line of raw.split(/\r?\n/)) {
-      const trimmed = line.trim();
-      if (!trimmed || trimmed.startsWith('#')) continue;
-      const separator = trimmed.indexOf('=');
-      if (separator === -1) continue;
-      const key = trimmed.slice(0, separator).trim();
-      const value = trimmed.slice(separator + 1).trim().replace(/^['"]|['"]$/g, '');
-      if (key && process.env[key] === undefined) process.env[key] = value;
-    }
-  } catch (error) {
-    if (error.code !== 'ENOENT') throw error;
-  }
-}
-
-function getApiKey() {
-  loadLocalEnv();
-  return String(process.env.DEEPSEEK_API_KEY || '').trim();
-}
+const modelProxyBaseUrl = String(process.env.MODEL_PROXY_BASE_URL || 'http://127.0.0.1:18800/v1').replace(/\/+$/, '');
 
 function describeDeepSeekError(statusCode, payload) {
   const message = payload?.error?.message || payload?.message || '';
@@ -41,17 +15,15 @@ function describeDeepSeekError(statusCode, payload) {
 }
 
 async function callDeepSeek({ model = 'deepseek-chat', messages, timeoutMs = 20000 }) {
-  const apiKey = getApiKey();
-  if (!apiKey) throw new Error('DeepSeek API Key 未配置');
-
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await fetch(`${deepSeekBaseUrl}/chat/completions`, {
+    const response = await fetch(`${modelProxyBaseUrl}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`
+        Authorization: 'Bearer aiw.deepseek.local',
+        'x-aiw-employee': 'deepseek'
       },
       body: JSON.stringify({ model, messages, stream: false }),
       signal: controller.signal

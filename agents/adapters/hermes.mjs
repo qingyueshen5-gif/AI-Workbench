@@ -1,7 +1,39 @@
 import { spawn } from 'node:child_process';
-import { copyFileSync, cpSync, existsSync, mkdirSync } from 'node:fs';
+import { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { createRunId, capabilityMatch } from '../adapter-contract.mjs';
+
+const modelProxyBaseUrl = String(process.env.MODEL_PROXY_BASE_URL || 'http://127.0.0.1:18800/v1').replace(/\/+$/, '');
+const hermesLocalToken = 'aiw.hermes.local';
+
+function patchHermesConfig(configPath) {
+  let config = '';
+  if (existsSync(configPath)) {
+    config = readFileSync(configPath, 'utf8');
+  }
+  const modelBlock = [
+    'model:',
+    '  provider: custom',
+    `  base_url: ${modelProxyBaseUrl}`,
+    '  default: deepseek-chat',
+    `  api_key: ${hermesLocalToken}`
+  ].join('\n');
+  if (/^model:\s*\r?\n(?:^[ \t].*\r?\n?)*/m.test(config)) {
+    config = config.replace(/^model:\s*\r?\n(?:^[ \t].*\r?\n?)*/m, `${modelBlock}\n`);
+  } else {
+    config = `${modelBlock}\n${config}`;
+  }
+  writeFileSync(configPath, config, 'utf8');
+}
+
+function writeHermesEnv(envPath) {
+  writeFileSync(envPath, [
+    `OPENAI_BASE_URL=${modelProxyBaseUrl}`,
+    `OPENAI_API_KEY=${hermesLocalToken}`,
+    `DEEPSEEK_API_KEY=${hermesLocalToken}`,
+    ''
+  ].join('\n'), 'utf8');
+}
 
 function prepareHermesHome(cwd) {
   const runtimeHome = join(cwd, '.hermes-runtime');
@@ -10,7 +42,7 @@ function prepareHermesHome(cwd) {
   for (const dir of ['logs', 'sessions', 'memories', 'skills', 'cache', 'sandboxes', 'cron']) {
     mkdirSync(join(runtimeHome, dir), { recursive: true });
   }
-  for (const fileName of ['config.yaml', '.env', 'auth.json', 'SOUL.md']) {
+  for (const fileName of ['config.yaml', 'auth.json', 'SOUL.md']) {
     const source = join(sourceHome, fileName);
     const target = join(runtimeHome, fileName);
     if (existsSync(source) && !existsSync(target)) {
@@ -25,6 +57,8 @@ function prepareHermesHome(cwd) {
       cpSync(source, target, { recursive: true, force: false });
     }
   }
+  patchHermesConfig(join(runtimeHome, 'config.yaml'));
+  writeHermesEnv(join(runtimeHome, '.env'));
   return runtimeHome;
 }
 
@@ -37,6 +71,9 @@ function runCommand(command, args, { timeoutMs = 30000, cwd = process.cwd(), onC
       env: {
         ...process.env,
         HERMES_HOME: hermesHome,
+        OPENAI_BASE_URL: modelProxyBaseUrl,
+        OPENAI_API_KEY: hermesLocalToken,
+        DEEPSEEK_API_KEY: hermesLocalToken,
         HERMES_GIT_BASH_PATH: process.env.HERMES_GIT_BASH_PATH || 'C:\\Program Files\\Git\\bin\\bash.exe'
       }
     });
@@ -276,11 +313,15 @@ export function createHermesAdapter(agent) {
     verify(result) {
       const output = result?.output || {};
       const evidence = output.evidence || result?.evidence || {};
+      const combinedOutput = `${evidence.stdout || ''}\n${evidence.stderr || ''}`;
       const hasContract = Boolean(output.result && evidence.commandRun && Number.isInteger(evidence.exitCode) && evidence.executedAt);
+      const hasModelFailure = /API call failed after \d+ retries|Final error:|HTTP 502: Error code/i.test(combinedOutput);
       return {
-        ok: Boolean(result?.status === 'done' && hasContract && evidence.exitCode === 0),
+        ok: Boolean(result?.status === 'done' && hasContract && evidence.exitCode === 0 && !hasModelFailure),
         evidence,
-        message: hasContract ? 'Hermes 返回了结构化结果和完整命令证据。' : 'Hermes 输出不符合结构化结果契约。'
+        message: hasModelFailure
+          ? 'Hermes 命令返回了模型调用失败信息。'
+          : (hasContract ? 'Hermes 返回了结构化结果和完整命令证据。' : 'Hermes 输出不符合结构化结果契约。')
       };
     },
 

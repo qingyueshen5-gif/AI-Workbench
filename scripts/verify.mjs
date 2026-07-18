@@ -8,16 +8,30 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dataFile = join(root, 'data', 'workbench.json');
 const envFile = join(root, '.env');
 const port = 18787;
+const modelProxyPort = 18880;
+const modelProxyBaseUrl = `http://127.0.0.1:${modelProxyPort}/v1`;
 const baseUrl = `http://127.0.0.1:${port}`;
 const api = `${baseUrl}/api/data`;
 
+const modelProxy = spawn(process.execPath, ['model-proxy.mjs'], {
+  cwd: root,
+  env: { ...process.env, MODEL_PROXY_PORT: String(modelProxyPort) },
+  stdio: ['ignore', 'pipe', 'pipe']
+});
+
 const server = spawn(process.execPath, ['server.mjs'], {
   cwd: root,
-  env: { ...process.env, PORT: String(port) },
+  env: { ...process.env, PORT: String(port), MODEL_PROXY_BASE_URL: modelProxyBaseUrl },
   stdio: ['ignore', 'pipe', 'pipe']
 });
 
 let output = '';
+modelProxy.stdout.on('data', (chunk) => {
+  output += chunk;
+});
+modelProxy.stderr.on('data', (chunk) => {
+  output += chunk;
+});
 server.stdout.on('data', (chunk) => {
   output += chunk;
 });
@@ -261,8 +275,8 @@ async function main() {
   });
   const apiKeyConfigured = await hasDeepSeekApiKey();
   if (!apiKeyConfigured) {
-    if (aiTest.response.status !== 400 || aiTest.body.error !== '等待用户提供API Key') {
-      throw new Error('Missing API key should be recorded as a system error');
+    if (aiTest.response.status !== 503 || !String(aiTest.body.error || '').includes('本机模型代理缺少')) {
+      throw new Error('Missing API key should be reported by the local model proxy');
     }
     if (!aiTest.body.data?.systemErrors?.some((error) => error.operation === '测试AI连接')) {
       throw new Error('AI connection errors should be visible in system error logs');
@@ -297,5 +311,6 @@ async function main() {
 try {
   await main();
 } finally {
+  modelProxy.kill();
   server.kill();
 }

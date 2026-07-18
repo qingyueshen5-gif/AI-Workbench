@@ -16,6 +16,11 @@ function stamp(message) {
 }
 
 const processes = [
+  spawn(process.execPath, ['model-proxy.mjs'], {
+    cwd: root,
+    stdio: ['ignore', logFd, errorLogFd],
+    windowsHide: true
+  }),
   spawn(process.execPath, ['server.mjs'], {
     cwd: root,
     stdio: ['ignore', logFd, errorLogFd],

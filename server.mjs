@@ -13,7 +13,7 @@ const root = dirname(fileURLToPath(import.meta.url));
 const dataFile = join(root, 'data', 'workbench.json');
 const envFile = join(root, '.env');
 const port = Number(process.env.PORT || 8787);
-const deepSeekBaseUrl = 'https://api.deepseek.com';
+const modelProxyBaseUrl = String(process.env.MODEL_PROXY_BASE_URL || 'http://127.0.0.1:18800/v1').replace(/\/+$/, '');
 
 const initialData = {
   dailyGoals: {},
@@ -904,7 +904,7 @@ async function executeToolCall(toolCall) {
   throw new Error(`未知工具：${name}`);
 }
 
-async function callDeepSeek(apiKey, model, messages, options = {}) {
+async function callDeepSeek(model, messages, options = {}) {
   const timeoutMs = options.timeoutMs || 20000;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
@@ -917,11 +917,12 @@ async function callDeepSeek(apiKey, model, messages, options = {}) {
     if (options.tools) body.tools = options.tools;
     if (options.tool_choice) body.tool_choice = options.tool_choice;
     if (options.response_format) body.response_format = options.response_format;
-    const deepSeekResponse = await fetch(`${deepSeekBaseUrl}/chat/completions`, {
+    const deepSeekResponse = await fetch(`${modelProxyBaseUrl}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`
+        Authorization: 'Bearer aiw.workbench.local',
+        'x-aiw-employee': options.employee || 'workbench'
       },
       body: JSON.stringify(body),
       signal: controller.signal
@@ -942,7 +943,7 @@ async function callDeepSeek(apiKey, model, messages, options = {}) {
   }
 }
 
-async function extractStructureFromMessage(apiKey, model, content, currentData) {
+async function extractStructureFromMessage(model, content, currentData) {
   const today = new Date().toISOString().slice(0, 10);
   const messages = [
     {
@@ -978,7 +979,7 @@ async function extractStructureFromMessage(apiKey, model, content, currentData) 
     }
   ];
   const jsonResponseFormat = { type: 'json_object' };
-  let result = await callDeepSeek(apiKey, model, messages, { tools: runtimeTools });
+  let result = await callDeepSeek(model, messages, { tools: runtimeTools, employee: 'deepseek' });
   const firstMessage = result.choices?.[0]?.message;
   const toolResults = [];
   if (firstMessage?.tool_calls?.length) {
@@ -1001,7 +1002,7 @@ async function extractStructureFromMessage(apiKey, model, content, currentData) 
         });
       }
     }
-    result = await callDeepSeek(apiKey, model, messages, { response_format: jsonResponseFormat });
+    result = await callDeepSeek(model, messages, { response_format: jsonResponseFormat, employee: 'deepseek' });
   } else if (firstMessage?.content) {
     result = { ...result, choices: [{ ...result.choices?.[0], message: firstMessage }] };
   }
@@ -1969,51 +1970,10 @@ const server = createServer(async (request, response) => {
         return;
       }
 
-      loadLocalEnv();
-      const apiKey = String(process.env.DEEPSEEK_API_KEY || '').trim();
       const model = String(nextData.preferences.deepSeekModel || initialData.preferences.deepSeekModel).trim();
-      if (!apiKey) {
-        const errorLog = createSystemError('等待用户提供API Key，聊天内容已保存但未自动提炼', '聊天自动提炼');
-        const assistantMessage = createAssistantMessage('我已收到消息，但当前还没有配置 DeepSeek API Key，所以暂时不能自动提炼。');
-        const finishedAt = new Date().toISOString();
-        nextData = {
-          ...nextData,
-          conversations: nextData.conversations.map((conversation) =>
-            conversation.id === activeConversation.id
-              ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...taskMessages, assistantMessage] }
-              : conversation
-          ),
-          messages: [...taskMessages, assistantMessage],
-          tasks: patchTask(nextData.tasks, task.id, {
-            status: 'blocked',
-            userVisibleSummary: '已收到消息，等待 AI 连接配置完成后处理。'
-          }),
-          runs: patchRun(nextData.runs, run.id, {
-            status: 'failed',
-            output: null,
-            evidence: {
-              sourceMessageId: message.id,
-              assistantMessageId: assistantMessage.id
-            },
-            errorRaw: { message: errorLog.description },
-            errorUserMessage: 'AI 连接还没配置好，消息已保存。',
-            finishedAt,
-            verified: false,
-            verificationResult: {
-              ok: false,
-              reason: '缺少 DeepSeek API Key'
-            }
-          }),
-          modelConnection: { status: '未连接', provider: '', model: '', checkedAt: new Date().toISOString() },
-          systemErrors: [errorLog, ...nextData.systemErrors]
-        };
-        await writeData(appendFailureMemories(currentData, nextData));
-        sendJson(response, 200, { data: await readDataWithMeta(), routedAgentId: 'deepseek', applied: [], suggestions: [], warning: errorLog.description });
-        return;
-      }
 
       try {
-        const extraction = await extractStructureFromMessage(apiKey, model, content, nextData);
+        const extraction = await extractStructureFromMessage(model, content, nextData);
         const appliedResult = applyExtraction(nextData, extraction, message.id);
         const assistantMessage = createAssistantMessage(extraction.reply);
         const finishedAt = new Date().toISOString();
@@ -2134,29 +2094,17 @@ const server = createServer(async (request, response) => {
       const body = await readBody(request);
       const payload = JSON.parse(body || '{}');
       const currentData = await readData();
-      loadLocalEnv();
-      const apiKey = String(process.env.DEEPSEEK_API_KEY || '').trim();
       const model = String(payload.model || currentData.preferences.deepSeekModel || initialData.preferences.deepSeekModel).trim();
-
-      if (!apiKey) {
-        const errorLog = createSystemError('等待用户提供API Key', '测试AI连接');
-        await writeData({
-          ...currentData,
-          modelConnection: { status: '未连接', provider: '', model: '', checkedAt: new Date().toISOString() },
-          systemErrors: [errorLog, ...currentData.systemErrors]
-        });
-        sendJson(response, 400, { error: errorLog.description, data: await readDataWithMeta() });
-        return;
-      }
 
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 20000);
       try {
-        const deepSeekResponse = await fetch(`${deepSeekBaseUrl}/chat/completions`, {
+        const deepSeekResponse = await fetch(`${modelProxyBaseUrl}/chat/completions`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiKey}`
+            Authorization: 'Bearer aiw.workbench.local',
+            'x-aiw-employee': 'workbench'
           },
           body: JSON.stringify({
             model,
