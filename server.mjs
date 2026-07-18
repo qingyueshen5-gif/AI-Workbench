@@ -426,6 +426,12 @@ function ownerFromAgentId(agentId) {
 
 function routeChatAgent(content) {
   const text = String(content || '').toLowerCase();
+  if (
+    text.includes('openclaw') ||
+    /浏览器|网页自动化|打开网页|点击|录屏|截图|手机|飞书|微信|telegram|discord|slack|频道|gateway|长任务|编排|多员工|多agent|多 agent/.test(content)
+  ) {
+    return 'openclaw';
+  }
   if (text.includes('hermes') || (text.includes('current_task.md') && /读|读取|总结|待办/.test(content))) {
     return 'hermes';
   }
@@ -1719,6 +1725,125 @@ const server = createServer(async (request, response) => {
       });
       await writeData(appendFailureMemories(currentData, nextData));
 
+      if (routedAgentId === 'openclaw') {
+        try {
+          const taskContext = buildTaskContextPackage(nextData, task);
+          const adapterResult = await agentRegistry.invoke('openclaw', task, {
+            ...taskContext,
+            timeoutMs: 120000,
+            cwd: root,
+            openClawAgent: 'main'
+          });
+          const output = adapterResult.output || {
+            result: { text: adapterResult.output || '' },
+            evidence: adapterResult.evidence || {},
+            suggestions: adapterResult.suggestions || []
+          };
+          let patchedRun = createRunRecord({
+            ...run,
+            status: adapterResult.status === 'done' ? 'done' : 'failed',
+            input: {
+              type: 'chat_message',
+              content,
+              conversationId: activeConversation.id,
+              task,
+              task_context: taskContext
+            },
+            output,
+            evidence: output.evidence || adapterResult.evidence || {},
+            errorRaw: adapterResult.error?.raw || null,
+            errorUserMessage: adapterResult.error?.message || '',
+            retryCount: 0,
+            costEstimate: { currency: 'USD', amount: 0, note: 'OpenClaw CLI 本地调用，MVP 暂不精算模型成本。' },
+            startedAt: output.evidence?.executedAt || run.startedAt,
+            finishedAt: output.evidence?.finishedAt || adapterResult.finishedAt || new Date().toISOString(),
+            verified: false,
+            verificationResult: null
+          });
+          const verification = agentRegistry.verify('openclaw', adapterResult);
+          const normalizedRunError = verification.ok ? null : normalizeError({
+            reason: verification.reason || verification.message,
+            type: verification.reason || 'openclaw_verification_failed',
+            details: verification,
+            rawError: adapterResult.error || null
+          });
+          patchedRun = {
+            ...patchedRun,
+            id: run.id,
+            status: verification.ok ? 'done' : 'failed',
+            verified: verification.ok,
+            verificationResult: verification,
+            errorRaw: verification.ok ? patchedRun.errorRaw : { adapterError: adapterResult.error || null, verification },
+            errorUserMessage: verification.ok ? '' : normalizedRunError.userMessage,
+            normalizedError: verification.ok ? null : normalizedRunError
+          };
+          const assistantText = verification.ok
+            ? (output.result?.text || output.result || 'OpenClaw 已完成执行。')
+            : (patchedRun.errorUserMessage || 'OpenClaw 这次没有处理成功，我已经记录原因。');
+          const assistantMessage = createAssistantMessage(assistantText);
+          nextData = {
+            ...nextData,
+            conversations: nextData.conversations.map((conversation) =>
+              conversation.id === activeConversation.id
+                ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...taskMessages, assistantMessage] }
+                : conversation
+            ),
+            messages: [...taskMessages, assistantMessage],
+            tasks: patchTask(nextData.tasks, task.id, {
+              status: patchedRun.status,
+              userVisibleSummary: verification.ok ? assistantText.slice(0, 180) : patchedRun.errorUserMessage
+            }),
+            runs: patchRun(nextData.runs, run.id, patchedRun),
+            modelConnection: {
+              status: verification.ok ? '已连接' : '未连接',
+              provider: 'OpenClaw',
+              model: 'main',
+              checkedAt: new Date().toISOString()
+            }
+          };
+          await writeData(appendFailureMemories(currentData, nextData));
+          sendJson(response, 200, {
+            data: await readDataWithMeta(),
+            routedAgentId: 'openclaw',
+            taskId: task.id,
+            runId: run.id,
+            verification
+          });
+        } catch (error) {
+          const normalized = agentRegistry.normalizeError('openclaw', error);
+          const userMessage = normalized.message || 'OpenClaw 暂时没有处理成功，我已经记录原因。';
+          const assistantMessage = createAssistantMessage(userMessage);
+          const finishedAt = new Date().toISOString();
+          nextData = {
+            ...nextData,
+            conversations: nextData.conversations.map((conversation) =>
+              conversation.id === activeConversation.id
+                ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...taskMessages, assistantMessage] }
+                : conversation
+            ),
+            messages: [...taskMessages, assistantMessage],
+            tasks: patchTask(nextData.tasks, task.id, {
+              status: 'failed',
+              userVisibleSummary: userMessage
+            }),
+            runs: patchRun(nextData.runs, run.id, {
+              status: 'failed',
+              output: null,
+              errorRaw: { message: error.message },
+              errorUserMessage: userMessage,
+              finishedAt,
+              verified: false,
+              verificationResult: { ok: false, reason: 'openclaw_invoke_failed' },
+              normalizedError: normalized
+            }),
+            systemErrors: [createSystemError(userMessage, 'OpenClaw 自动执行'), ...nextData.systemErrors]
+          };
+          await writeData(appendFailureMemories(currentData, nextData));
+          sendJson(response, 200, { data: await readDataWithMeta(), routedAgentId: 'openclaw', warning: userMessage });
+        }
+        return;
+      }
+
       if (routedAgentId === 'hermes') {
         try {
           const taskContext = buildTaskContextPackage(nextData, task);
@@ -1883,7 +2008,7 @@ const server = createServer(async (request, response) => {
           systemErrors: [errorLog, ...nextData.systemErrors]
         };
         await writeData(appendFailureMemories(currentData, nextData));
-        sendJson(response, 200, { data: await readDataWithMeta(), applied: [], suggestions: [], warning: errorLog.description });
+        sendJson(response, 200, { data: await readDataWithMeta(), routedAgentId: 'deepseek', applied: [], suggestions: [], warning: errorLog.description });
         return;
       }
 
@@ -1955,6 +2080,7 @@ const server = createServer(async (request, response) => {
         await writeData(appendFailureMemories(currentData, nextData));
         sendJson(response, 200, {
           data: await readDataWithMeta(),
+          routedAgentId: 'deepseek',
           applied: appliedResult.applied,
           suggestions: appliedResult.suggestions
         });
