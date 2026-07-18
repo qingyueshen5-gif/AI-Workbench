@@ -1,8 +1,7 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 
-const appVersion = '0.3.0';
 const statuses = ['待开始', '进行中', '已完成', '失败'];
 const ownerOptions = [
   { value: 'DeepSeek', label: 'DeepSeek', status: '已接入' },
@@ -252,7 +251,6 @@ function ConversationList({ data, updateData, className, onSelect }) {
           <h1 className="text-lg font-semibold">AI Workbench</h1>
           <div className="text-xs text-zinc-500">聊天工作台</div>
         </div>
-        <div className="rounded-md border border-zinc-300 px-2 py-1 text-xs text-zinc-500">v{appVersion}</div>
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto px-3 pb-4">
@@ -353,11 +351,11 @@ function ConversationList({ data, updateData, className, onSelect }) {
 
         {!!days.length && (
           <div className="mt-6">
-            <div className="mb-2 px-2 text-xs font-semibold text-zinc-500">历史记录</div>
+            <div className="mb-2 px-2 text-xs font-semibold text-zinc-500">过往目标</div>
             <div className="space-y-1">
               {days.map((day) => (
                 <button key={day} className="block w-full truncate rounded-md px-3 py-2 text-left text-sm text-zinc-600 hover:bg-zinc-200">
-                  {data.dailyGoals[day] || `${day} 的记录`}
+                  {data.dailyGoals[day] || `${day} 的目标`}
                 </button>
               ))}
             </div>
@@ -425,24 +423,14 @@ function RightDrawer({ open, setOpen, data, selectedTask, selectedTaskId, setSel
           <button onClick={() => setOpen(false)} className="rounded-md border border-zinc-200 px-2 py-1 text-sm hover:bg-zinc-100">关闭</button>
         </div>
         <div className="h-[calc(100vh-4rem)] overflow-y-auto px-4 py-4">
-          <section className="border-b border-zinc-200 pb-4">
-            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-500">今日和任务</h3>
-            <TodayPanel data={data} selectedTaskId={selectedTaskId} setSelectedTaskId={setSelectedTaskId} />
-            <div className="mt-4">
-              <TaskPanel
-                data={data}
-                selectedTask={selectedTask}
-                selectedTaskId={selectedTaskId}
-                setSelectedTaskId={setSelectedTaskId}
-                updateData={updateData}
-              />
-            </div>
-          </section>
-          <section className="py-4">
-            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-500">设置、历史和错误</h3>
-            <SettingsPanel data={data} />
-            <HistoryPanel data={data} />
-          </section>
+          <TodayPanel data={data} selectedTaskId={selectedTaskId} setSelectedTaskId={setSelectedTaskId} />
+          <TaskPanel
+            data={data}
+            selectedTask={selectedTask}
+            selectedTaskId={selectedTaskId}
+            setSelectedTaskId={setSelectedTaskId}
+            updateData={updateData}
+          />
         </div>
       </aside>
     </>
@@ -642,7 +630,6 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
 
       <div className="chat-input-area bg-white px-4 pb-5 pt-3">
         <div className="mx-auto flex max-w-3xl items-end gap-2 rounded-3xl border border-zinc-300 bg-white px-4 py-3 shadow-sm">
-          <button type="button" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-zinc-300 text-xl leading-none text-zinc-600">+</button>
           <textarea
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
@@ -705,7 +692,7 @@ function TodayPanel({ data, selectedTaskId, setSelectedTaskId }) {
                 <span className="min-w-0 text-sm font-medium text-zinc-900">{task.title}</span>
                 <span className={`shrink-0 rounded-md px-2 py-1 text-xs ${statusClass(task.status)}`}>{statusText(task.status)}</span>
               </div>
-              <div className="mt-2 text-xs text-zinc-500">负责人：{task.owner || '未指定'} · ID：{String(task.id).slice(-6)}</div>
+              <div className="mt-2 text-xs text-zinc-500">{task.userVisibleSummary || '等待处理结果'}</div>
             </button>
           ))}
           {!todayTasks.length && <div className="px-2 py-3 text-sm text-zinc-500">这个目标下还没有关联任务。</div>}
@@ -714,17 +701,13 @@ function TodayPanel({ data, selectedTaskId, setSelectedTaskId }) {
       <div className="mt-4 h-2 overflow-hidden rounded-full bg-zinc-200">
         <div className="h-full bg-emerald-600" style={{ width: `${progress}%` }} />
       </div>
-      <div className="mt-2 text-xs text-zinc-500">{doneCount} / {todayTasks.length} 已完成</div>
-      <div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs text-zinc-600">
-        <div className="rounded-md bg-zinc-100 p-2">任务 {data.storage.taskCount || data.tasks.length}</div>
-        <div className="rounded-md bg-zinc-100 p-2">消息 {data.storage.messageCount || data.messages.length}</div>
-        <div className="rounded-md bg-zinc-100 p-2">错误 {data.storage.systemErrorCount || data.systemErrors.length}</div>
-      </div>
+      <div className="mt-2 text-xs text-zinc-500">今日进度</div>
     </section>
   );
 }
 
 function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId, updateData }) {
+  const [detailTaskId, setDetailTaskId] = useState('');
   const [failureDraft, setFailureDraft] = useState('');
   const [statusError, setStatusError] = useState('');
   const selectedRun = selectedTask
@@ -764,142 +747,104 @@ function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId, upda
     updateTask(selectedTask.id, { status: '失败', failureReason });
   }
 
+  function taskSummary(task) {
+    if (task.status === '失败' || task.status === 'failed') {
+      return task.failureReason || task.userVisibleSummary || '这件事没有完成，原因已经记录。';
+    }
+    if (task.status === '已完成' || task.status === 'done') {
+      return task.userVisibleSummary || '这件事已经完成。';
+    }
+    if (task.status === '进行中' || task.status === 'running') {
+      return task.userVisibleSummary || '正在处理这件事。';
+    }
+    return task.userVisibleSummary || task.notes || '还没有开始处理。';
+  }
+
+  function toggleDetail(task) {
+    const nextId = detailTaskId === task.id ? '' : task.id;
+    setDetailTaskId(nextId);
+    setSelectedTaskId(task.id);
+  }
+
   return (
-    <section className="border-b border-zinc-200 py-4">
-      <div className="mb-3 flex items-center justify-between">
+    <section className="py-4">
+      <div className="mb-3">
         <h2 className="text-xs font-semibold uppercase tracking-wide text-zinc-500">任务</h2>
-        <span className="text-xs text-zinc-500">{data.tasks.length} 条</span>
       </div>
       <ul className="max-h-72 space-y-2 overflow-y-auto pr-1">
-        {data.tasks.map((task) => (
+        {data.tasks.map((task) => {
+          const isOpen = detailTaskId === task.id && selectedTaskId === task.id;
+          const run = (data.runs || []).find((item) => item.taskId === task.id);
+          return (
           <li key={task.id}>
-            <button onClick={() => setSelectedTaskId(task.id)} className={`task-list-item w-full text-left ${selectedTaskId === task.id ? 'task-list-item-active' : ''}`}>
+            <div className={`task-list-item w-full text-left ${isOpen ? 'task-list-item-active' : ''}`}>
               <div className="flex items-start justify-between gap-3">
                 <span className="min-w-0 text-sm font-medium text-zinc-900">{task.title}</span>
                 <span className={`shrink-0 rounded-md px-2 py-1 text-xs ${statusClass(task.status)}`}>{statusText(task.status)}</span>
               </div>
-              <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-zinc-500">
-                <span>负责人：{task.owner || '未指定'}</span>
-                <span>{dateKey(task.createdAt)}</span>
-                <span>ID：{String(task.id).slice(-6)}</span>
-              </div>
-            </button>
-          </li>
-        ))}
-        {!data.tasks.length && <li className="py-6 text-sm text-zinc-500">聊天后自动生成任务。</li>}
-      </ul>
-
-      {selectedTask && (
-        <div className="mt-4 border-t border-zinc-200 pt-4">
-          <div className="text-sm font-medium">{selectedTask.title}</div>
-          <label className="mt-3 block">
-            <span className="text-xs text-zinc-500">状态</span>
-            <select value={statusText(selectedTask.status)} onChange={(event) => changeStatus(event.target.value)} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm">
-              {statuses.map((status) => <option key={status}>{status}</option>)}
-            </select>
-          </label>
-          <label className="mt-3 block">
-            <span className="text-xs text-zinc-500">负责人</span>
-            <select value={selectedTask.owner} onChange={(event) => updateTask(selectedTask.id, { owner: event.target.value })} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm">
-              {ownerOptions.map((owner) => <option key={owner.value} value={owner.value}>{owner.label}（{owner.status}）</option>)}
-            </select>
-          </label>
-          <label className="mt-3 block">
-            <span className="text-xs text-zinc-500">备注</span>
-            <textarea value={selectedTask.notes || ''} onChange={(event) => updateTask(selectedTask.id, { notes: event.target.value })} className="mt-1 h-20 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm" />
-          </label>
-          <label className="mt-3 block">
-            <span className="text-xs text-zinc-500">失败原因</span>
-            <textarea value={failureDraft} onChange={(event) => setFailureDraft(event.target.value)} className="mt-1 h-20 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm" placeholder="选择失败状态时会自动生成，仍可按实际情况补充。" />
-          </label>
-          {statusError && <div className="mt-2 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{statusError}</div>}
-          <button onClick={saveFailure} className="mt-3 w-full rounded-md bg-red-700 px-4 py-2 text-sm text-white">
-            {selectedTask.status === '失败' ? '更新失败原因' : '标记失败并自动生成原因'}
-          </button>
-          {selectedRun && (
-            <div className="mt-4 rounded-md border border-zinc-200 bg-zinc-50 p-3 text-xs leading-5 text-zinc-700">
-              <div className="mb-2 font-medium text-zinc-900">执行记录</div>
-              <div>员工：{selectedRun.agentId || '未记录'}</div>
-              <div>状态：{statusText(selectedRun.status)} · 验证：{selectedRun.verified ? '已通过' : '未通过'}</div>
-              <div>耗时：{durationText(selectedRun.evidence?.durationMs || selectedRun.durationMs)}</div>
-              <div>成本：{selectedRun.costEstimate?.note || '暂无估算'}</div>
-              {selectedRun.evidence?.commandRun && (
-                <div className="mt-2 break-words rounded bg-white p-2 text-zinc-600">
-                  命令：{selectedRun.evidence.commandRun}
+              <div className="mt-2 text-sm leading-5 text-zinc-600">{taskSummary(task)}</div>
+              <button
+                type="button"
+                onClick={() => toggleDetail(task)}
+                className="mt-3 rounded-md border border-zinc-300 px-3 py-1.5 text-xs text-zinc-700 hover:bg-zinc-100"
+              >
+                {isOpen ? '收起详情' : '详情'}
+              </button>
+              {isOpen && (
+                <div className="mt-3 border-t border-zinc-200 pt-3">
+                  <div className="text-sm font-medium">{task.title}</div>
+                  <label className="mt-3 block">
+                    <span className="text-xs text-zinc-500">状态</span>
+                    <select value={statusText(task.status)} onChange={(event) => changeStatus(event.target.value)} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm">
+                      {statuses.map((status) => <option key={status}>{status}</option>)}
+                    </select>
+                  </label>
+                  <label className="mt-3 block">
+                    <span className="text-xs text-zinc-500">负责人</span>
+                    <select value={task.owner} onChange={(event) => updateTask(task.id, { owner: event.target.value })} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm">
+                      {ownerOptions.map((owner) => <option key={owner.value} value={owner.value}>{owner.label}（{owner.status}）</option>)}
+                    </select>
+                  </label>
+                  <label className="mt-3 block">
+                    <span className="text-xs text-zinc-500">备注</span>
+                    <textarea value={task.notes || ''} onChange={(event) => updateTask(task.id, { notes: event.target.value })} className="mt-1 h-20 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm" />
+                  </label>
+                  <label className="mt-3 block">
+                    <span className="text-xs text-zinc-500">失败原因</span>
+                    <textarea value={failureDraft} onChange={(event) => setFailureDraft(event.target.value)} className="mt-1 h-20 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm" placeholder="选择失败状态时会自动生成，仍可按实际情况补充。" />
+                  </label>
+                  {statusError && <div className="mt-2 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{statusError}</div>}
+                  <button onClick={saveFailure} className="mt-3 w-full rounded-md bg-red-700 px-4 py-2 text-sm text-white">
+                    {task.status === '失败' ? '更新失败原因' : '标记失败并自动生成原因'}
+                  </button>
+                  <div className="mt-4 rounded-md border border-zinc-200 bg-zinc-50 p-3 text-xs leading-5 text-zinc-700">
+                    <div className="mb-2 font-medium text-zinc-900">技术详情</div>
+                    <div>任务 ID：{String(task.id).slice(-8)}</div>
+                    <div>创建时间：{dateKey(task.createdAt)}</div>
+                    {run && (
+                      <>
+                        <div>执行员工：{run.agentId || '未记录'}</div>
+                        <div>执行状态：{statusText(run.status)}</div>
+                        <div>耗时：{durationText(run.evidence?.durationMs || run.durationMs)}</div>
+                        {run.evidence?.commandRun && (
+                          <div className="mt-2 break-words rounded bg-white p-2 text-zinc-600">
+                            命令：{run.evidence.commandRun}
+                          </div>
+                        )}
+                        {run.errorUserMessage && (
+                          <div className="mt-2 rounded bg-red-50 p-2 text-red-700">{run.errorUserMessage}</div>
+                        )}
+                      </>
+                    )}
+                  </div>
                 </div>
               )}
-              {selectedRun.errorUserMessage && (
-                <div className="mt-2 rounded bg-red-50 p-2 text-red-700">{selectedRun.errorUserMessage}</div>
-              )}
             </div>
-          )}
-        </div>
-      )}
-    </section>
-  );
-}
-
-function SettingsPanel({ data }) {
-  const connection = data.modelConnection || defaultData.modelConnection;
-  const connected = connection.status === '已连接';
-  return (
-    <section className="mb-4 rounded-lg border border-zinc-200 bg-white p-3 text-sm">
-      <div className="flex items-center justify-between gap-3">
-        <div className="font-medium text-zinc-900">AI 连接</div>
-        <span className={connected ? 'text-xs text-emerald-700' : 'text-xs text-zinc-500'}>{connected ? '已连接' : '未连接'}</span>
-      </div>
-      <div className="mt-2 text-xs leading-5 text-zinc-500">
-        {connected ? `${connection.provider || 'DeepSeek'} ${connection.model || data.preferences.deepSeekModel}` : 'DeepSeek 暂未连接'}
-        {connection.checkedAt ? ` · ${timeText(connection.checkedAt)}` : ''}
-      </div>
-      <div className="mt-2 text-xs leading-5 text-zinc-500">本地项目路径已隐藏，仅用于本机数据保存。</div>
-    </section>
-  );
-}
-
-function HistoryPanel({ data }) {
-  const [query, setQuery] = useState('');
-  const keyword = query.trim().toLowerCase();
-  const failedMatches = data.tasks.filter((task) =>
-    keyword && task.status === '失败' && task.failureReason?.toLowerCase().includes(keyword)
-  );
-  const systemErrorMatches = (data.systemErrors || []).filter((error) => {
-    const text = `${error.description || ''} ${error.operation || ''}`.toLowerCase();
-    return keyword && text.includes(keyword);
-  });
-  const days = useMemo(() => {
-    const keys = new Set(Object.keys(data.dailyGoals));
-    data.tasks.forEach((task) => keys.add(dateKey(task.createdAt)));
-    return [...keys].sort((a, b) => b.localeCompare(a)).slice(0, 8);
-  }, [data]);
-
-  return (
-    <section className="py-4">
-      <h2 className="text-xs font-semibold uppercase tracking-wide text-zinc-500">历史和错误</h2>
-      <input value={query} onChange={(event) => setQuery(event.target.value)} className="mt-3 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-800" placeholder="搜索失败原因或系统错误" />
-      {keyword && (
-        <div className="mt-3 space-y-2 text-sm">
-          {[...failedMatches.map((task) => ({ id: task.id, title: task.title, detail: task.failureReason })), ...systemErrorMatches.map((error) => ({ id: error.id, title: error.operation, detail: error.description }))].map((item) => (
-            <div key={item.id} className="rounded-md bg-zinc-100 p-2">
-              <div className="font-medium">{item.title}</div>
-              <div className="mt-1 text-zinc-600">{item.detail}</div>
-            </div>
-          ))}
-          {!failedMatches.length && !systemErrorMatches.length && <div className="text-zinc-500">没有匹配结果。</div>}
-        </div>
-      )}
-      <div className="mt-4 space-y-3">
-        {days.map((day) => {
-          const tasks = data.tasks.filter((task) => dateKey(task.createdAt) === day);
-          return (
-            <div key={day} className="border-t border-zinc-200 pt-3 text-sm">
-              <div className="font-medium">{day}</div>
-              <div className="mt-1 text-zinc-600">{data.dailyGoals[day] || '未填写目标'}</div>
-              <div className="mt-1 text-xs text-zinc-500">{tasks.length} 个任务</div>
-            </div>
+          </li>
           );
         })}
-      </div>
+        {!data.tasks.length && <li className="py-6 text-sm text-zinc-500">聊天后自动生成任务。</li>}
+      </ul>
     </section>
   );
 }
