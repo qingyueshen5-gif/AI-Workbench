@@ -569,7 +569,7 @@ function createAssistantMessage(content) {
 }
 
 function isCasualGreeting(content) {
-  return /^(你好|您好|hello|hi|hey|哈喽|在吗|嗨)[！!。.\s]*$/i.test(String(content || '').trim());
+  return /^(你好|您好|hello|hi|hey|哈喽|在吗|嗨|谢谢|多谢|感谢|哈哈|哈哈哈|呵呵|ok|好的|收到)[！!。.\s]*$/i.test(String(content || '').trim());
 }
 
 function isMuYuanStockQuestion(content) {
@@ -587,9 +587,49 @@ function isFuzzyStatusQuestion(content) {
   return /^(帮我)?看看那个东西(弄好没|好了没|做好没|完成没)$/.test(text);
 }
 
+function isAllClarificationAnswer(content) {
+  const text = String(content || '').replace(/\s+/g, '');
+  return /^(都是|两个都要|两个都看|都看|都查|全都|一起看)$/.test(text);
+}
+
+function lastAssistantAskedHermesOrDeploy(messages = []) {
+  const lastAssistant = [...messages].reverse().find((message) => message.role === 'assistant');
+  const text = String(lastAssistant?.content || '');
+  return /Hermes/.test(text) && /(网站部署|部署)/.test(text) && /(还是|或)/.test(text);
+}
+
 function isLotteryFutureQuestion(content) {
   const text = String(content || '').replace(/\s+/g, '');
   return /(明天|未来|下期).*(彩票|双色球|大乐透).*(开什么号|号码|开奖号)/.test(text);
+}
+
+function buildNamedProgressReply(data, names = []) {
+  const normalizedNames = names.map((name) => String(name || '').toLowerCase());
+  const tasks = normalizeTasks(data.tasks || []);
+  const matches = tasks.filter((task) => {
+    const haystack = `${task.title || ''} ${task.userGoal || ''} ${task.userVisibleSummary || ''} ${task.notes || ''}`.toLowerCase();
+    return normalizedNames.some((name) => haystack.includes(name));
+  });
+  const grouped = names.map((name) => {
+    const related = matches.filter((task) => {
+      const haystack = `${task.title || ''} ${task.userGoal || ''} ${task.userVisibleSummary || ''} ${task.notes || ''}`.toLowerCase();
+      return haystack.includes(String(name).toLowerCase());
+    });
+    if (!related.length) return `${name}：我没找到关联任务记录。`;
+    return `${name}：${related.slice(0, 3).map((task) => {
+      const summary = task.userVisibleSummary || task.failureReason || task.notes || '暂无一句话结果';
+      return `「${task.title}」${statusTextForServer(task.status)}，${summary}`;
+    }).join('；')}`;
+  });
+  return `两件事我都看了：\n${grouped.join('\n')}`;
+}
+
+function statusTextForServer(status) {
+  if (status === 'done') return '已完成';
+  if (status === 'running') return '进行中';
+  if (status === 'failed') return '失败';
+  if (status === 'blocked') return '受阻';
+  return status || '未记录';
 }
 
 function formatNumber(value) {
@@ -663,23 +703,40 @@ async function buildCurrentTaskReply() {
   return `我读了 CURRENT_TASK.md，当前未完成待办是：\n${todos.map((todo, index) => `${index + 1}. ${todo}`).join('\n')}`;
 }
 
-async function answerBuiltInChatIntent(content) {
+async function answerBuiltInChatIntent(content, currentData = initialData, previousMessages = []) {
+  if (isCasualGreeting(content)) {
+    return {
+      reply: /谢|感谢/.test(content) ? '不客气。' : (/哈/.test(content) ? '我在。' : '你好，我在。'),
+      evidence: { intent: 'casual_chat', verified: true },
+      createsTask: false
+    };
+  }
+  if (isAllClarificationAnswer(content) && lastAssistantAskedHermesOrDeploy(previousMessages)) {
+    return {
+      reply: buildNamedProgressReply(currentData, ['Hermes', '网站部署']),
+      evidence: { intent: 'clarification_all_status', verified: true },
+      createsTask: false
+    };
+  }
   if (isLotteryFutureQuestion(content)) {
     return {
       reply: '查不到明天彩票开奖号。彩票开奖号码是在开奖后才产生并公布，明天的号码现在不存在可查询的确定数据；我不会编造号码。',
-      evidence: { intent: 'future_lottery', verified: true }
+      evidence: { intent: 'future_lottery', verified: true },
+      createsTask: false
     };
   }
   if (isFuzzyStatusQuestion(content)) {
     return {
       reply: '你是想问 Hermes 的修复进度，还是网站部署的事？',
-      evidence: { intent: 'ambiguous_status_clarification', verified: true }
+      evidence: { intent: 'ambiguous_status_clarification', verified: true },
+      createsTask: false
     };
   }
   if (isCurrentTaskQuestion(content)) {
     return {
       reply: await buildCurrentTaskReply(),
-      evidence: { intent: 'current_task_file', filePath: 'CURRENT_TASK.md', verified: true }
+      evidence: { intent: 'current_task_file', filePath: 'CURRENT_TASK.md', verified: true },
+      createsTask: false
     };
   }
   if (isMuYuanStockQuestion(content)) {
@@ -689,7 +746,8 @@ async function answerBuiltInChatIntent(content) {
         const quote = await fetchMuYuanDailyQuote();
         return {
           reply: buildMuYuanQuoteReply(quote),
-          evidence: { intent: 'stock_quote', source: quote.source, latest: quote.latest, attempts: attempt + 1 }
+          evidence: { intent: 'stock_quote', source: quote.source, latest: quote.latest, attempts: attempt + 1 },
+          createsTask: false
         };
       } catch (error) {
         latestError = error;
@@ -701,7 +759,8 @@ async function answerBuiltInChatIntent(content) {
         `已拿到的最新数据：牧原股份（002714）${muYuanFallbackQuote.latest.date} 开盘价 ${muYuanFallbackQuote.latest.open} 元，收盘价 ${muYuanFallbackQuote.latest.close} 元。拿不到今天数据的原因：${latestError?.message || '行情源没有返回可解析数据'}；且 2026-07-18 是周六，A股通常不开市。`,
         '补救：我可以半小时后自动再查一次，或等下一个交易日更新后再给你最新开盘、收盘数据。'
       ].join('\n'),
-      evidence: { intent: 'stock_quote', attempts: 3, latest: muYuanFallbackQuote.latest, fallbackSource: muYuanFallbackQuote.source, error: latestError?.message || '' }
+      evidence: { intent: 'stock_quote', attempts: 3, latest: muYuanFallbackQuote.latest, fallbackSource: muYuanFallbackQuote.source, error: latestError?.message || '' },
+      createsTask: false
     };
   }
   return null;
@@ -1509,6 +1568,50 @@ const server = createServer(async (request, response) => {
         conversations = [activeConversation, ...conversations];
       }
       const messageId = createId('message');
+      const message = {
+        id: messageId,
+        content,
+        createdAt: new Date().toISOString(),
+        role: 'user',
+        isTask: false,
+        taskId: '',
+        runId: ''
+      };
+      const activeMessages = [...(activeConversation.messages || []), message];
+      conversations = conversations.map((conversation) =>
+        conversation.id === activeConversation.id
+          ? {
+              ...conversation,
+              title: conversation.title || content.slice(0, 32) || '新对话',
+              updatedAt: message.createdAt,
+              messages: activeMessages
+            }
+          : conversation
+      );
+
+      const builtInAnswer = await answerBuiltInChatIntent(content, currentData, activeConversation.messages || []);
+      if (builtInAnswer) {
+        const assistantMessage = createAssistantMessage(builtInAnswer.reply);
+        const nextData = normalizeData({
+          ...currentData,
+          conversations: conversations.map((conversation) =>
+            conversation.id === activeConversation.id
+              ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...activeMessages, assistantMessage] }
+              : conversation
+          ),
+          activeConversationId: activeConversation.id,
+          messages: [...activeMessages, assistantMessage]
+        });
+        await writeData(nextData);
+        sendJson(response, 200, {
+          data: await readDataWithMeta(),
+          routedAgentId: 'builtin',
+          applied: [],
+          suggestions: []
+        });
+        return;
+      }
+
       const routedAgentId = routeChatAgent(content);
       const task = createTaskRecord({
         userGoal: content,
@@ -1535,23 +1638,15 @@ const server = createServer(async (request, response) => {
         },
         startedAt: runStartedAt
       });
-      const message = {
-        id: messageId,
-        content,
-        createdAt: new Date().toISOString(),
-        role: 'user',
-        isTask: false,
-        taskId: task.id,
-        runId: run.id
-      };
-      const activeMessages = [...(activeConversation.messages || []), message];
+      const taskMessage = { ...message, taskId: task.id, runId: run.id };
+      const taskMessages = [...(activeConversation.messages || []), taskMessage];
       conversations = conversations.map((conversation) =>
         conversation.id === activeConversation.id
           ? {
               ...conversation,
               title: conversation.title || content.slice(0, 32) || '新对话',
-              updatedAt: message.createdAt,
-              messages: activeMessages
+              updatedAt: taskMessage.createdAt,
+              messages: taskMessages
             }
           : conversation
       );
@@ -1559,58 +1654,11 @@ const server = createServer(async (request, response) => {
         ...currentData,
         conversations,
         activeConversationId: activeConversation.id,
-        messages: activeMessages,
+        messages: taskMessages,
         tasks: [task, ...currentData.tasks],
         runs: [run, ...currentData.runs]
       });
       await writeData(nextData);
-
-      const builtInAnswer = await answerBuiltInChatIntent(content);
-      if (builtInAnswer) {
-        const assistantMessage = createAssistantMessage(builtInAnswer.reply);
-        const finishedAt = new Date().toISOString();
-        nextData = {
-          ...nextData,
-          conversations: nextData.conversations.map((conversation) =>
-            conversation.id === activeConversation.id
-              ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...activeMessages, assistantMessage] }
-              : conversation
-          ),
-          messages: [...activeMessages, assistantMessage],
-          tasks: patchTask(nextData.tasks, task.id, {
-            status: 'done',
-            userVisibleSummary: builtInAnswer.reply.slice(0, 180)
-          }),
-          runs: patchRun(nextData.runs, run.id, {
-            status: 'done',
-            output: {
-              reply: builtInAnswer.reply,
-              applied: [],
-              suggestions: []
-            },
-            evidence: {
-              sourceMessageId: message.id,
-              assistantMessageId: assistantMessage.id,
-              ...builtInAnswer.evidence
-            },
-            finishedAt,
-            verified: true,
-            verificationResult: {
-              ok: true,
-              method: 'built_in_intent_answer',
-              evidence: Object.keys(builtInAnswer.evidence || {})
-            }
-          })
-        };
-        await writeData(nextData);
-        sendJson(response, 200, {
-          data: await readDataWithMeta(),
-          routedAgentId: 'builtin',
-          applied: [],
-          suggestions: []
-        });
-        return;
-      }
 
       if (routedAgentId === 'hermes') {
         try {
@@ -1674,10 +1722,10 @@ const server = createServer(async (request, response) => {
             ...nextData,
             conversations: nextData.conversations.map((conversation) =>
               conversation.id === activeConversation.id
-                ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...activeMessages, assistantMessage] }
+                ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...taskMessages, assistantMessage] }
                 : conversation
             ),
-            messages: [...activeMessages, assistantMessage],
+            messages: [...taskMessages, assistantMessage],
             tasks: patchTask(nextData.tasks, task.id, {
               status: patchedRun.status,
               userVisibleSummary: verification.ok ? assistantText.slice(0, 180) : patchedRun.errorUserMessage
@@ -1711,10 +1759,10 @@ const server = createServer(async (request, response) => {
             ...nextData,
             conversations: nextData.conversations.map((conversation) =>
               conversation.id === activeConversation.id
-                ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...activeMessages, assistantMessage] }
+                ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...taskMessages, assistantMessage] }
                 : conversation
             ),
-            messages: [...activeMessages, assistantMessage],
+            messages: [...taskMessages, assistantMessage],
             tasks: patchTask(nextData.tasks, task.id, {
               status: 'failed',
               userVisibleSummary: userMessage
@@ -1748,10 +1796,10 @@ const server = createServer(async (request, response) => {
           ...nextData,
           conversations: nextData.conversations.map((conversation) =>
             conversation.id === activeConversation.id
-              ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...activeMessages, assistantMessage] }
+              ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...taskMessages, assistantMessage] }
               : conversation
           ),
-          messages: [...activeMessages, assistantMessage],
+          messages: [...taskMessages, assistantMessage],
           tasks: patchTask(nextData.tasks, task.id, {
             status: 'blocked',
             userVisibleSummary: '已收到消息，等待 AI 连接配置完成后处理。'
@@ -1859,10 +1907,10 @@ const server = createServer(async (request, response) => {
           ...nextData,
           conversations: nextData.conversations.map((conversation) =>
             conversation.id === activeConversation.id
-              ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...activeMessages, assistantMessage] }
+              ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...taskMessages, assistantMessage] }
               : conversation
           ),
-          messages: [...activeMessages, assistantMessage],
+          messages: [...taskMessages, assistantMessage],
           tasks: patchTask(nextData.tasks, task.id, {
             status: 'failed',
             userVisibleSummary: `这次没有处理成功：${error.message}`

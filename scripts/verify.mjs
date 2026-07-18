@@ -112,7 +112,7 @@ async function verifyUiSource() {
     [styles.includes('.conversation-row:hover .conversation-menu-button'), 'Conversation menu hover style is missing'],
     [main.includes('scrollTo({ top: container.scrollHeight'), 'Chat stream auto-scroll is missing'],
     [main.includes('查看关联任务') && main.includes('setSelectedTaskId(task.id)'), 'Today goal task expansion is missing'],
-    [main.includes('负责人') && main.includes('DeepSeek') && main.includes('未接入'), 'Owner connection state options are missing'],
+    [!main.includes('负责人') && !main.includes('ownerOptions'), 'User-facing owner selector should be removed'],
     [main.includes('createFailureReason') && main.includes('标记失败并自动生成原因'), 'Automatic failure reason UI is missing'],
     [main.includes('task-list-item') && styles.includes('.task-list-item-active'), 'Task visual separation styles are missing'],
     [main.includes('今天要推进什么？'), 'Empty conversation welcome state is missing'],

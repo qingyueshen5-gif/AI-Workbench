@@ -3,13 +3,6 @@ import { createRoot } from 'react-dom/client';
 import './styles.css';
 
 const statuses = ['待开始', '进行中', '已完成', '失败'];
-const ownerOptions = [
-  { value: 'DeepSeek', label: 'DeepSeek', status: '已接入' },
-  { value: '人工', label: '人工', status: '手动' },
-  { value: 'Codex', label: 'Codex', status: '未接入' },
-  { value: 'GPT', label: 'GPT', status: '未接入' },
-  { value: 'Claude', label: 'Claude', status: '未接入' }
-];
 const internalActionTexts = new Set(['把这条消息同步为任务']);
 const defaultData = {
   dailyGoals: {},
@@ -59,10 +52,9 @@ const createSystemError = (description, operation) => ({
 });
 const createFailureReason = (task) => {
   const title = String(task?.title || '未命名任务').trim();
-  const owner = String(task?.owner || '未指定负责人').trim();
   const notes = String(task?.notes || '').trim();
   const noteText = notes ? `；备注：${notes.slice(0, 80)}` : '';
-  return `系统自动记录：任务「${title}」被标记为失败。当前负责人：${owner}${noteText}。`;
+  return `系统自动记录：任务「${title}」被标记为失败${noteText}。`;
 };
 
 function App() {
@@ -238,6 +230,7 @@ function MobileConversationDrawer({ open, setOpen, data, updateData }) {
 
 function ConversationList({ data, updateData, className, onSelect }) {
   const [openMenuId, setOpenMenuId] = useState('');
+  const [openGoalDay, setOpenGoalDay] = useState('');
   const conversations = [...(data.conversations || [])].sort((a, b) => String(b.updatedAt || '').localeCompare(String(a.updatedAt || '')));
   const days = [...new Set([
     ...Object.keys(data.dailyGoals),
@@ -353,11 +346,32 @@ function ConversationList({ data, updateData, className, onSelect }) {
           <div className="mt-6">
             <div className="mb-2 px-2 text-xs font-semibold text-zinc-500">过往目标</div>
             <div className="space-y-1">
-              {days.map((day) => (
-                <button key={day} className="block w-full truncate rounded-md px-3 py-2 text-left text-sm text-zinc-600 hover:bg-zinc-200">
-                  {data.dailyGoals[day] || `${day} 的目标`}
-                </button>
-              ))}
+              {days.map((day) => {
+                const tasks = data.tasks.filter((task) => dateKey(task.createdAt) === day);
+                const isOpen = openGoalDay === day;
+                return (
+                  <div key={day}>
+                    <button
+                      type="button"
+                      onClick={() => setOpenGoalDay(isOpen ? '' : day)}
+                      className="block w-full truncate rounded-md px-3 py-2 text-left text-sm text-zinc-600 hover:bg-zinc-200"
+                    >
+                      {data.dailyGoals[day] || `${day} 的目标`}
+                    </button>
+                    {isOpen && (
+                      <div className="ml-3 mt-1 space-y-1 border-l border-zinc-200 pl-3">
+                        {tasks.map((task) => (
+                          <div key={task.id} className="rounded-md px-2 py-1.5 text-xs text-zinc-600">
+                            <div className="truncate text-zinc-800">{task.title}</div>
+                            <div className="mt-0.5">{statusText(task.status)}</div>
+                          </div>
+                        ))}
+                        {!tasks.length && <div className="px-2 py-2 text-xs text-zinc-500">这个目标下暂无关联任务。</div>}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
@@ -640,7 +654,7 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
               }
             }}
             className="max-h-32 min-h-8 flex-1 resize-none border-0 bg-transparent px-1 py-1 text-sm leading-6 outline-none"
-            placeholder="例如：我今天想把登录页面做完，默认负责人是Codex。"
+            placeholder="例如：我今天想把登录页面做完。"
           />
           <button onClick={sendMessage} disabled={!draft.trim()} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-sm text-white disabled:cursor-not-allowed disabled:bg-zinc-300">
             {pendingCount ? '↑' : '↑'}
@@ -669,7 +683,7 @@ function TodayPanel({ data, selectedTaskId, setSelectedTaskId }) {
   const doneCount = todayTasks.filter((task) => task.status === '已完成' || task.status === 'done').length;
   const progress = todayTasks.length ? Math.round((doneCount / todayTasks.length) * 100) : 0;
   return (
-    <section className="border-b border-zinc-200 pb-4">
+    <section className="border-b border-zinc-200 pb-3">
       <h2 className="text-xs font-semibold uppercase tracking-wide text-zinc-500">今日</h2>
       <button
         type="button"
@@ -698,21 +712,18 @@ function TodayPanel({ data, selectedTaskId, setSelectedTaskId }) {
           {!todayTasks.length && <div className="px-2 py-3 text-sm text-zinc-500">这个目标下还没有关联任务。</div>}
         </div>
       )}
-      <div className="mt-4 h-2 overflow-hidden rounded-full bg-zinc-200">
+      <div className="mt-3 h-1 overflow-hidden rounded-full bg-zinc-200">
         <div className="h-full bg-emerald-600" style={{ width: `${progress}%` }} />
       </div>
-      <div className="mt-2 text-xs text-zinc-500">今日进度</div>
     </section>
   );
 }
 
 function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId, updateData }) {
+  const [summaryTaskId, setSummaryTaskId] = useState('');
   const [detailTaskId, setDetailTaskId] = useState('');
   const [failureDraft, setFailureDraft] = useState('');
   const [statusError, setStatusError] = useState('');
-  const selectedRun = selectedTask
-    ? (data.runs || []).find((run) => run.taskId === selectedTask.id)
-    : null;
 
   useEffect(() => {
     setFailureDraft(selectedTask?.failureReason || '');
@@ -726,25 +737,25 @@ function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId, upda
     }));
   }
 
-  function changeStatus(status) {
-    if (!selectedTask) return;
+  function changeStatus(task, status) {
+    if (!task) return;
     if (status === '失败') {
-      const failureReason = selectedTask.failureReason?.trim() || createFailureReason(selectedTask);
+      const failureReason = task.failureReason?.trim() || createFailureReason(task);
       setFailureDraft(failureReason);
       setStatusError('');
-      updateTask(selectedTask.id, { status, failureReason });
+      updateTask(task.id, { status, failureReason });
       return;
     }
     setStatusError('');
-    updateTask(selectedTask.id, { status });
+    updateTask(task.id, { status });
   }
 
-  function saveFailure() {
-    if (!selectedTask) return;
-    const failureReason = failureDraft.trim() || createFailureReason(selectedTask);
+  function saveFailure(task) {
+    if (!task) return;
+    const failureReason = failureDraft.trim() || createFailureReason(task);
     setStatusError('');
     setFailureDraft(failureReason);
-    updateTask(selectedTask.id, { status: '失败', failureReason });
+    updateTask(task.id, { status: '失败', failureReason });
   }
 
   function taskSummary(task) {
@@ -760,6 +771,13 @@ function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId, upda
     return task.userVisibleSummary || task.notes || '还没有开始处理。';
   }
 
+  function toggleSummary(task) {
+    const nextId = summaryTaskId === task.id ? '' : task.id;
+    setSummaryTaskId(nextId);
+    setDetailTaskId('');
+    setSelectedTaskId(task.id);
+  }
+
   function toggleDetail(task) {
     const nextId = detailTaskId === task.id ? '' : task.id;
     setDetailTaskId(nextId);
@@ -773,36 +791,39 @@ function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId, upda
       </div>
       <ul className="max-h-72 space-y-2 overflow-y-auto pr-1">
         {data.tasks.map((task) => {
+          const summaryOpen = summaryTaskId === task.id && selectedTaskId === task.id;
           const isOpen = detailTaskId === task.id && selectedTaskId === task.id;
           const run = (data.runs || []).find((item) => item.taskId === task.id);
           return (
           <li key={task.id}>
             <div className={`task-list-item w-full text-left ${isOpen ? 'task-list-item-active' : ''}`}>
-              <div className="flex items-start justify-between gap-3">
-                <span className="min-w-0 text-sm font-medium text-zinc-900">{task.title}</span>
-                <span className={`shrink-0 rounded-md px-2 py-1 text-xs ${statusClass(task.status)}`}>{statusText(task.status)}</span>
-              </div>
-              <div className="mt-2 text-sm leading-5 text-zinc-600">{taskSummary(task)}</div>
               <button
                 type="button"
-                onClick={() => toggleDetail(task)}
-                className="mt-3 rounded-md border border-zinc-300 px-3 py-1.5 text-xs text-zinc-700 hover:bg-zinc-100"
+                onClick={() => toggleSummary(task)}
+                className="flex w-full items-center justify-between gap-3 text-left"
               >
-                {isOpen ? '收起详情' : '详情'}
+                <span className="min-w-0 text-sm font-medium text-zinc-900">{task.title}</span>
+                <span className={`shrink-0 rounded-md px-2 py-1 text-xs ${statusClass(task.status)}`}>{statusText(task.status)}</span>
               </button>
-              {isOpen && (
+              {summaryOpen && (
+                <>
+                  <div className="mt-2 text-sm leading-5 text-zinc-600">{taskSummary(task)}</div>
+                  <button
+                    type="button"
+                    onClick={() => toggleDetail(task)}
+                    className="mt-3 rounded-md border border-zinc-300 px-3 py-1.5 text-xs text-zinc-700 hover:bg-zinc-100"
+                  >
+                    {isOpen ? '收起详情' : '详情'}
+                  </button>
+                </>
+              )}
+              {summaryOpen && isOpen && (
                 <div className="mt-3 border-t border-zinc-200 pt-3">
                   <div className="text-sm font-medium">{task.title}</div>
                   <label className="mt-3 block">
                     <span className="text-xs text-zinc-500">状态</span>
-                    <select value={statusText(task.status)} onChange={(event) => changeStatus(event.target.value)} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm">
+                    <select value={statusText(task.status)} onChange={(event) => changeStatus(task, event.target.value)} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm">
                       {statuses.map((status) => <option key={status}>{status}</option>)}
-                    </select>
-                  </label>
-                  <label className="mt-3 block">
-                    <span className="text-xs text-zinc-500">负责人</span>
-                    <select value={task.owner} onChange={(event) => updateTask(task.id, { owner: event.target.value })} className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm">
-                      {ownerOptions.map((owner) => <option key={owner.value} value={owner.value}>{owner.label}（{owner.status}）</option>)}
                     </select>
                   </label>
                   <label className="mt-3 block">
@@ -814,16 +835,16 @@ function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId, upda
                     <textarea value={failureDraft} onChange={(event) => setFailureDraft(event.target.value)} className="mt-1 h-20 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm" placeholder="选择失败状态时会自动生成，仍可按实际情况补充。" />
                   </label>
                   {statusError && <div className="mt-2 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{statusError}</div>}
-                  <button onClick={saveFailure} className="mt-3 w-full rounded-md bg-red-700 px-4 py-2 text-sm text-white">
+                  <button onClick={() => saveFailure(task)} className="mt-3 w-full rounded-md bg-red-700 px-4 py-2 text-sm text-white">
                     {task.status === '失败' ? '更新失败原因' : '标记失败并自动生成原因'}
                   </button>
                   <div className="mt-4 rounded-md border border-zinc-200 bg-zinc-50 p-3 text-xs leading-5 text-zinc-700">
                     <div className="mb-2 font-medium text-zinc-900">技术详情</div>
                     <div>任务 ID：{String(task.id).slice(-8)}</div>
                     <div>创建时间：{dateKey(task.createdAt)}</div>
+                    <div>由谁执行：{task.assignedAgentId || task.owner || '未记录'}</div>
                     {run && (
                       <>
-                        <div>执行员工：{run.agentId || '未记录'}</div>
                         <div>执行状态：{statusText(run.status)}</div>
                         <div>耗时：{durationText(run.evidence?.durationMs || run.durationMs)}</div>
                         {run.evidence?.commandRun && (
