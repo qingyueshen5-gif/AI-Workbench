@@ -577,6 +577,46 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
     streamTimersRef.current.add(timer);
   }
 
+  function wait(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async function postChatWithRetry({ content, conversationId, assistantMessageId }) {
+    let attempt = 0;
+    while (attempt < 30) {
+      attempt += 1;
+      try {
+        const response = await fetch('/api/chat-message', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content, conversationId })
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || '聊天发送失败');
+        return payload;
+      } catch (error) {
+        const raw = String(error?.message || error || '');
+        if (!/Failed to fetch|NetworkError|Load failed|fetch|ECONNREFUSED|timeout|网络|连接|聊天发送失败/i.test(raw) && navigator.onLine) {
+          throw error;
+        }
+        patchMessagesLocally((items) =>
+          items.map((item) =>
+            item.id === assistantMessageId
+              ? {
+                  ...item,
+                  content: attempt === 1 ? '网络波动，正在重连…' : `网络波动，正在重连…第 ${attempt} 次尝试`,
+                  thinking: false,
+                  streaming: false
+                }
+              : item
+          )
+        );
+        await wait(Math.min(15000, 1200 + attempt * 800));
+      }
+    }
+    throw new Error('网络恢复前重试次数已用完，消息暂未送达。');
+  }
+
   async function sendMessage() {
     const content = draft.trim();
     if (!content) return;
@@ -594,13 +634,7 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
     setDraft('');
     setSaveError('');
     try {
-      const response = await fetch('/api/chat-message', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content, conversationId })
-      });
-      const payload = await response.json();
-      if (!response.ok) throw new Error(payload.error || '聊天提炼失败');
+      const payload = await postChatWithRetry({ content, conversationId, assistantMessageId: localAssistantMessage.id });
       streamAssistantMessage(localAssistantMessage.id, latestAssistantReply(payload) || payload.warning || '我处理完了。');
     } catch (error) {
       const message = localFailureMessage(error);
@@ -671,7 +705,7 @@ function localProgressText(content) {
   if (/浏览器|网页自动化|打开网页|点击|录屏|截图|手机|飞书|微信|telegram|discord|slack|频道|gateway|长任务|编排|多员工|多agent|多 agent/.test(value)) {
     return '好的，我让 OpenClaw 去操作电脑了。';
   }
-  if (/hermes|c盘|c 盘|磁盘|剩余空间|命令|终端|powershell|cmd|环境变量|端口|进程|服务|文件存在|安装成功|下载|安装|打开|启动|运行|执行|操作电脑|查看|修复环境|解决环境|清理|配置|卸载|创建文件|读取文件|移动文件|复制文件/.test(value.toLowerCase())) {
+  if (/hermes|电脑|本机|系统|c盘|c 盘|磁盘|文件|文件夹|目录|应用|软件|程序|浏览器|网页|页面|网站|网址|链接|端口|进程|服务|网络|代理|桌面|开始菜单|回收站|缓存|临时文件|github|https?:\/\/|[a-z0-9.-]+\.(com|cn|net|org|io|dev|app|ai|top|xyz)\b|下载|安装|打开|启动|运行|执行|查看|看看|清理|删除|创建|新建|访问|进入|修复|检测|体检|保存|导出/.test(value.toLowerCase())) {
     return '好的，我让 Hermes 去执行了。';
   }
   return '思考中';

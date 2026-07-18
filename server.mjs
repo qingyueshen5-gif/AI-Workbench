@@ -605,10 +605,27 @@ function extractJsonObject(text) {
   try {
     return JSON.parse(raw);
   } catch {
+    const fenced = raw.match(/```(?:json)?\s*([\s\S]*?)```/i)?.[1]?.trim();
+    if (fenced) return extractJsonObject(fenced);
     const match = raw.match(/\{[\s\S]*\}/);
     if (!match) throw new Error('DeepSeek返回结果不是JSON');
-    return JSON.parse(match[0]);
+    const candidate = match[0]
+      .replace(/,\s*([}\]])/g, '$1')
+      .replace(/[“”]/g, '"')
+      .replace(/[‘’]/g, "'");
+    return JSON.parse(candidate);
   }
+}
+
+function fallbackExtractionReply(content) {
+  const text = String(content || '').trim();
+  return {
+    reply: text ? `我收到你的问题了：${text}` : '我收到你的消息了。',
+    goal: { text: '', confidence: 0 },
+    tasks: [],
+    preferences: { defaultOwner: '', dailyTaskLimit: null, communicationStyle: '', confidence: 0 },
+    needsConfirmation: []
+  };
 }
 
 function createAssistantMessage(content) {
@@ -618,6 +635,33 @@ function createAssistantMessage(content) {
     createdAt: new Date().toISOString(),
     role: 'assistant'
   };
+}
+
+function buildFailureExplanation({ agentName = '员工', errorMessage = '', verification = null, evidence = null } = {}) {
+  const technical = String(
+    verification?.details?.stderr ||
+    verification?.details?.reason ||
+    verification?.reason ||
+    evidence?.stderr ||
+    evidence?.stdout ||
+    errorMessage ||
+    '执行没有返回有效结果'
+  ).trim();
+  const reason = technical
+    .replace(/DeepSeek返回结果不是JSON/gi, '模型返回格式异常，系统已自动重试但仍未拿到可用结果')
+    .replace(/Start-Process[\s\S]*?(The system cannot find the file specified|系统找不到指定的文件)[\s\S]*/gi, '没找到要打开的程序，系统里没有对应可执行文件或名称不对')
+    .replace(/The system cannot find the file specified/gi, '系统里没找到指定文件或程序')
+    .replace(/No such file or directory/gi, '目标文件或目录不存在')
+    .replace(/EPERM|permission denied|Access is denied/gi, '权限不足或文件正在被占用')
+    .replace(/ECONNREFUSED|ENOTFOUND|fetch failed|network|timeout|超时/gi, '网络或本地服务暂时不可用')
+    .replace(/\s+/g, ' ')
+    .slice(0, 220);
+  const suggestion = /权限|占用|permission|Access is denied|EPERM/i.test(technical)
+    ? '建议先关闭占用该功能的程序，或用管理员权限重新启动工作台后再试。'
+    : (/网络|ECONNREFUSED|ENOTFOUND|timeout|超时|fetch failed/i.test(technical)
+        ? '建议检查代理/网络，系统会在网络恢复后继续尝试发送。'
+        : '建议换一种执行路径重试；我已经把失败证据写入任务记录，方便下一轮自愈。');
+  return `${agentName} 这次没有完成。\n原因：${reason || '执行没有返回有效结果'}。\n建议：${suggestion}`;
 }
 
 function isCasualGreeting(content) {
@@ -946,6 +990,7 @@ async function extractStructureFromMessage(model, content, currentData) {
         '如果用户的问题需要当前信息但你没有调用web_search，不要猜测答案；请调用工具。',
         '搜索结果只作为依据，reply需要你整理后回答用户，不要原样倾倒搜索结果；涉及当前信息时简要说明来源名称或链接。',
         'reply必须始终填写，语气简洁，不要说自己已经执行了任务。',
+        '禁止回复“我是AI助手，无法在你电脑上操作”“我不能操作你的电脑”等话术；如果消息需要实际操作，应交给执行路由而不是口头拒绝。',
         'owner只能是DeepSeek、人工、Codex、GPT、Claude之一；当前真实接入的是DeepSeek，Codex/GPT/Claude暂未接入，无法判断则留空。',
         `今天日期是${today}。`
       ].join('\n')
@@ -994,8 +1039,39 @@ async function extractStructureFromMessage(model, content, currentData) {
   } else if (firstMessage?.content) {
     result = { ...result, choices: [{ ...result.choices?.[0], message: firstMessage }] };
   }
-  const text = result.choices?.[0]?.message?.content || '';
-  const extraction = extractJsonObject(text);
+  let latestText = result.choices?.[0]?.message?.content || '';
+  let extraction = null;
+  let parseError = null;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      extraction = extractJsonObject(latestText);
+      break;
+    } catch (error) {
+      parseError = error;
+      messages.push({
+        role: 'assistant',
+        content: latestText || ''
+      });
+      messages.push({
+        role: 'user',
+        content: '上一次输出不是合法 JSON。请只返回符合约定 schema 的 JSON，不要 Markdown，不要解释。'
+      });
+      try {
+        result = await callDeepSeek(model, messages, { response_format: jsonResponseFormat, employee: 'deepseek' });
+        latestText = result.choices?.[0]?.message?.content || '';
+      } catch (retryError) {
+        parseError = retryError;
+        break;
+      }
+    }
+  }
+  if (!extraction) {
+    extraction = fallbackExtractionReply(content);
+    extraction.parseRecovery = {
+      recovered: false,
+      internalError: parseError?.message || 'DeepSeek JSON parse failed'
+    };
+  }
   if (toolResults.length) extraction.toolResults = toolResults;
   if (isCasualGreeting(content)) {
     return {
@@ -1812,7 +1888,12 @@ const server = createServer(async (request, response) => {
           };
           const assistantText = verification.ok
             ? (output.result?.text || output.result || 'OpenClaw 已完成执行。')
-            : (patchedRun.errorUserMessage || 'OpenClaw 这次没有处理成功，我已经记录原因。');
+            : buildFailureExplanation({
+                agentName: 'OpenClaw',
+                errorMessage: patchedRun.errorUserMessage,
+                verification,
+                evidence: output.evidence || adapterResult.evidence || {}
+              });
           const assistantMessage = createAssistantMessage(assistantText);
           nextData = {
             ...nextData,
@@ -1844,7 +1925,10 @@ const server = createServer(async (request, response) => {
           });
         } catch (error) {
           const normalized = agentRegistry.normalizeError('openclaw', error);
-          const userMessage = normalized.message || 'OpenClaw 暂时没有处理成功，我已经记录原因。';
+          const userMessage = buildFailureExplanation({
+            agentName: 'OpenClaw',
+            errorMessage: normalized.message || error.message
+          });
           const assistantMessage = createAssistantMessage(userMessage);
           const finishedAt = new Date().toISOString();
           nextData = {
@@ -1933,7 +2017,12 @@ const server = createServer(async (request, response) => {
           };
           const assistantText = verification.ok
             ? cleanHermesUserReply(output.result?.text || output.result || output)
-            : (patchedRun.errorUserMessage || 'Hermes 这次没有处理成功，我已经记录原因。');
+            : buildFailureExplanation({
+                agentName: 'Hermes',
+                errorMessage: patchedRun.errorUserMessage,
+                verification,
+                evidence: output.evidence || adapterResult.evidence || {}
+              });
           const assistantMessage = createAssistantMessage(assistantText);
           nextData = {
             ...nextData,
@@ -1969,7 +2058,10 @@ const server = createServer(async (request, response) => {
             rawError: error.message
           }, { root, dataFile, envFile, defaultData: initialData });
           const normalized = normalizeError(error);
-          const userMessage = healed?.userMessage || normalized.userMessage || 'Hermes 暂时没有处理成功，我已经准备好下一步处理入口。';
+          const userMessage = buildFailureExplanation({
+            agentName: 'Hermes',
+            errorMessage: healed?.userMessage || normalized.userMessage || error.message
+          });
           const assistantMessage = createAssistantMessage(userMessage);
           const finishedAt = new Date().toISOString();
           nextData = {
@@ -2077,8 +2169,12 @@ const server = createServer(async (request, response) => {
           suggestions: appliedResult.suggestions
         });
       } catch (error) {
+        const userMessage = buildFailureExplanation({
+          agentName: 'DeepSeek',
+          errorMessage: error.message
+        });
         const errorLog = createSystemError(error.message, '聊天自动提炼');
-        const assistantMessage = createAssistantMessage(`这次没有处理成功：${error.message}`);
+        const assistantMessage = createAssistantMessage(userMessage);
         const finishedAt = new Date().toISOString();
         nextData = {
           ...nextData,
@@ -2090,7 +2186,7 @@ const server = createServer(async (request, response) => {
           messages: [...taskMessages, assistantMessage],
           tasks: patchTask(nextData.tasks, task.id, {
             status: 'failed',
-            userVisibleSummary: `这次没有处理成功：${error.message}`
+            userVisibleSummary: userMessage
           }),
           runs: patchRun(nextData.runs, run.id, {
             status: 'failed',
@@ -2105,7 +2201,7 @@ const server = createServer(async (request, response) => {
               message: error.message,
               statusCode: error.statusCode || null
             },
-            errorUserMessage: `这次没有处理成功：${error.message}`,
+            errorUserMessage: userMessage,
             finishedAt,
             verified: false,
             verificationResult: {
@@ -2117,7 +2213,7 @@ const server = createServer(async (request, response) => {
           systemErrors: [errorLog, ...nextData.systemErrors]
         };
         await writeData(appendFailureMemories(currentData, nextData));
-        sendJson(response, error.statusCode || 500, { error: error.message, data: await readDataWithMeta() });
+        sendJson(response, 200, { data: await readDataWithMeta(), routedAgentId: 'deepseek', warning: userMessage });
       }
       return;
     }

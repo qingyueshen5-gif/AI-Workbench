@@ -6,25 +6,31 @@ export function ownerFromAgentId(agentId) {
 }
 
 export function isActionIntent(content) {
-  return /下载|安装|打开|启动|运行|执行|操作电脑|帮我弄|帮我处理|修复环境|解决环境|看一下.*空间|看看.*空间|磁盘.*空间|剩余空间|查.*空间|清理|配置|卸载|创建文件|读取文件|移动文件|复制文件/.test(String(content || ''));
+  const raw = String(content || '').trim();
+  const text = raw.toLowerCase();
+  if (!raw) return false;
+  if (/^(什么是|为什么|怎么理解|解释一下|介绍一下|总结一下|翻译|写一段|生成一段|给我讲讲)/.test(raw)) return false;
+  if (/[a-z0-9.-]+\.(com|cn|net|org|io|dev|app|ai|top|xyz)\b/i.test(raw)) return true;
+  if (/https?:\/\//i.test(raw)) return true;
+  if (/帮我|替我|给我|请.*(打开|下载|安装|运行|执行|查看|看看|查|清理|删除|创建|新建|复制|移动|粘贴|启动|关闭|访问|进入|登录|点击|搜索|修复|配置|测试|检测|体检|截图|录屏|发送|保存|导出|解压|压缩)/.test(raw)) return true;
+  if (/(打开|下载|安装|运行|执行|查看|看看|查|清理|删除|创建|新建|复制|移动|粘贴|启动|关闭|访问|进入|登录|点击|搜索|修复|配置|测试|检测|体检|截图|录屏|发送|保存|导出|解压|压缩).*(电脑|本机|系统|C盘|c盘|磁盘|文件|文件夹|目录|应用|软件|程序|浏览器|网页|页面|网站|端口|进程|服务|网络|代理|桌面|开始菜单|回收站|缓存|临时文件)/i.test(raw)) return true;
+  if (/(电脑|本机|系统|C盘|c盘|磁盘|文件|文件夹|目录|应用|软件|程序|浏览器|网页|页面|网站|端口|进程|服务|网络|代理|桌面|开始菜单|回收站|缓存|临时文件).*(打开|下载|安装|运行|执行|查看|看看|查|清理|删除|创建|新建|复制|移动|粘贴|启动|关闭|访问|进入|登录|点击|搜索|修复|配置|测试|检测|体检|截图|录屏|发送|保存|导出|解压|压缩)/i.test(raw)) return true;
+  return /^(打开|下载|安装|运行|执行|查看|看看|清理|删除|创建|新建|启动|关闭|访问|进入|修复|检测|体检)\b/i.test(text);
+}
+
+export function isBrowserActionIntent(content) {
+  const raw = String(content || '').trim();
+  return isActionIntent(raw) && (/浏览器|网页|页面|网站|网址|链接|github|https?:\/\//i.test(raw) || /[a-z0-9.-]+\.(com|cn|net|org|io|dev|app|ai|top|xyz)\b/i.test(raw));
 }
 
 export function routeChatAgent(content) {
   const text = String(content || '').toLowerCase();
-  if (
-    text.includes('openclaw') ||
-    /浏览器|网页自动化|打开网页|点击|录屏|截图|手机|飞书|微信|telegram|discord|slack|频道|gateway|长任务|编排|多员工|多agent|多 agent/.test(content)
-  ) {
+  if (text.includes('openclaw') || /点击|录屏|截图|手机|飞书|微信|telegram|discord|slack|频道|gateway|长任务|编排|多员工|多agent|多 agent/.test(content)) {
     return 'openclaw';
   }
-  if (
-    text.includes('hermes') ||
-    (text.includes('current_task.md') && /读|读取|总结|待办/.test(content)) ||
-    /c盘|c 盘|磁盘|剩余空间|命令|终端|powershell|cmd|环境变量|端口|进程|服务|文件存在|安装成功|下载|安装|打开|启动|查看|清理|卸载/.test(content)
-  ) {
+  if (text.includes('hermes') || isActionIntent(content)) {
     return 'hermes';
   }
-  if (isActionIntent(content)) return 'hermes';
   return 'deepseek';
 }
 

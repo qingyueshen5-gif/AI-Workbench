@@ -25,6 +25,7 @@
     "verify:hermes-proxy": "node scripts/verify-hermes-proxy.mjs",
     "verify:acceptance": "node scripts/verify-acceptance.mjs",
     "verify:action-routing": "node scripts/verify-action-routing.mjs",
+    "capture:strict-acceptance": "node scripts/capture-strict-acceptance.mjs",
     "health:check": "node scripts/health-check.mjs",
     "health:repair": "node scripts/health-repair.mjs"
   },

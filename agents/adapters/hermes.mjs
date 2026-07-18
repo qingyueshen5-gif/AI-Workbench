@@ -264,6 +264,16 @@ function extractOpenTarget(goal) {
   return match?.[1]?.replace(/^帮我|请|一下/g, '').trim() || '';
 }
 
+function extractUrlTarget(goal) {
+  const raw = String(goal || '').trim();
+  const explicit = raw.match(/https?:\/\/[^\s，。]+/i)?.[0];
+  if (explicit) return explicit;
+  if (/github/i.test(raw)) return 'https://github.com';
+  const domain = raw.match(/[a-z0-9.-]+\.(com|cn|net|org|io|dev|app|ai|top|xyz)\b/i)?.[0];
+  if (domain) return `https://${domain}`;
+  return '';
+}
+
 function commandSucceeded(result) {
   return result.ok && Number(result.code) === 0;
 }
@@ -277,6 +287,56 @@ function combineResultText(...results) {
 
 async function tryDirectWindowsAction(task, context, runId, startedAt, onChild) {
   const goal = String(task?.userGoal || task?.goal || task?.prompt || task?.title || '').trim();
+  if (/清理.*c盘|清理.*C盘|C盘.*清理|c盘.*清理|清理.*磁盘|清理.*缓存|清理.*临时文件/i.test(goal)) {
+    const script = [
+      "$before=[System.IO.DriveInfo]::new('C:\\').AvailableFreeSpace",
+      "$paths=@($env:TEMP,$env:TMP,'C:\\Windows\\Temp') | Where-Object { $_ -and (Test-Path $_) } | Select-Object -Unique",
+      "$removed=0",
+      "$errors=@()",
+      "foreach($path in $paths){",
+      "  Get-ChildItem -LiteralPath $path -Force -ErrorAction SilentlyContinue | ForEach-Object {",
+      "    try { $size=0; if($_.PSIsContainer){ $size=(Get-ChildItem -LiteralPath $_.FullName -Recurse -Force -File -ErrorAction SilentlyContinue | Measure-Object Length -Sum).Sum } else { $size=$_.Length }; Remove-Item -LiteralPath $_.FullName -Recurse -Force -ErrorAction Stop; $removed += [int64]$size } catch { $errors += $_.Exception.Message }",
+      "  }",
+      "}",
+      "$cacheRoots=@($env:LOCALAPPDATA+'\\Microsoft\\Edge\\User Data\\Default\\Cache',$env:LOCALAPPDATA+'\\Google\\Chrome\\User Data\\Default\\Cache') | Where-Object { Test-Path $_ }",
+      "foreach($path in $cacheRoots){ Get-ChildItem -LiteralPath $path -Force -ErrorAction SilentlyContinue | ForEach-Object { try { $size=0; if($_.PSIsContainer){ $size=(Get-ChildItem -LiteralPath $_.FullName -Recurse -Force -File -ErrorAction SilentlyContinue | Measure-Object Length -Sum).Sum } else { $size=$_.Length }; Remove-Item -LiteralPath $_.FullName -Recurse -Force -ErrorAction Stop; $removed += [int64]$size } catch { $errors += $_.Exception.Message } } }",
+      "try { Clear-RecycleBin -DriveLetter C -Force -ErrorAction Stop } catch { $errors += $_.Exception.Message }",
+      "$after=[System.IO.DriveInfo]::new('C:\\').AvailableFreeSpace",
+      "$freed=$after-$before; if($freed -lt 0){ $freed=0 }",
+      "[pscustomobject]@{BeforeFreeGB=[math]::Round($before/1GB,2);AfterFreeGB=[math]::Round($after/1GB,2);FreedGB=[math]::Round($freed/1GB,2);EstimatedRemovedGB=[math]::Round($removed/1GB,2);Cleaned='用户临时目录、Windows临时目录、Edge/Chrome默认缓存、C盘回收站';SkippedErrors=@($errors | Select-Object -First 5)} | ConvertTo-Json -Depth 4 -Compress"
+    ].join('; ');
+    const args = ['-NoProfile', '-Command', script];
+    const commandRun = createNativeEvidence('powershell.exe', args);
+    const result = await runNativeCommand('powershell.exe', args, { timeoutMs: context.timeoutMs || 120000, cwd: context.cwd || process.cwd(), onChild });
+    const finishedAt = new Date();
+    const stdout = stripAnsi(result.stdout);
+    let parsed = null;
+    try {
+      parsed = JSON.parse(stdout);
+    } catch {}
+    const reply = parsed
+      ? `C盘安全清理完成。释放 ${parsed.FreedGB} GB；清理前剩余 ${parsed.BeforeFreeGB} GB，清理后剩余 ${parsed.AfterFreeGB} GB。范围：${parsed.Cleaned}。${parsed.SkippedErrors?.length ? `有 ${parsed.SkippedErrors.length} 个正在占用或无权限的缓存项已跳过，不影响安全清理。` : ''}`
+      : `C盘清理已执行，但结果解析失败：${stdout || stripAnsi(result.stderr)}`;
+    const evidence = {
+      commandRun,
+      stdout,
+      stderr: stripAnsi(result.stderr),
+      exitCode: result.code,
+      executedAt: startedAt.toISOString(),
+      finishedAt: finishedAt.toISOString(),
+      durationMs: Math.max(0, finishedAt.getTime() - startedAt.getTime())
+    };
+    return {
+      runId,
+      agentId: 'hermes',
+      status: commandSucceeded(result) && parsed ? 'done' : 'failed',
+      output: { result: { text: reply, taskId: task?.id || '' }, evidence, suggestions: [] },
+      evidence,
+      suggestions: [],
+      finishedAt: finishedAt.toISOString()
+    };
+  }
+
   if (/c盘|c 盘|磁盘|剩余空间/i.test(goal)) {
     const args = ['-NoProfile', '-Command', "$d=[System.IO.DriveInfo]::new('C:\\'); [pscustomobject]@{Drive='C'; FreeGB=[math]::Round($d.AvailableFreeSpace/1GB,2); TotalGB=[math]::Round($d.TotalSize/1GB,2); UsedGB=[math]::Round(($d.TotalSize-$d.AvailableFreeSpace)/1GB,2)} | ConvertTo-Json -Compress"];
     const commandRun = createNativeEvidence('powershell.exe', args);
@@ -323,6 +383,42 @@ async function tryDirectWindowsAction(task, context, runId, startedAt, onChild) 
 
   const openTarget = extractOpenTarget(goal);
   if (openTarget) {
+    const urlTarget = extractUrlTarget(goal);
+    if (urlTarget || /网页|页面|网站|浏览器/i.test(goal)) {
+      const target = urlTarget || openTarget;
+      const args = ['/d', '/s', '/c', 'start', '""', target];
+      const commandRun = createNativeEvidence('cmd.exe', args);
+      const result = await runNativeCommand('cmd.exe', args, { timeoutMs: context.timeoutMs || 30000, cwd: context.cwd || process.cwd(), onChild });
+      const finishedAt = new Date();
+      const stdout = commandSucceeded(result)
+        ? `opened_url=${target}`
+        : combineResultText(result);
+      const evidence = {
+        commandRun,
+        stdout,
+        stderr: stripAnsi(result.stderr),
+        exitCode: result.code,
+        executedAt: startedAt.toISOString(),
+        finishedAt: finishedAt.toISOString(),
+        durationMs: Math.max(0, finishedAt.getTime() - startedAt.getTime())
+      };
+      return {
+        runId,
+        agentId: 'hermes',
+        status: commandSucceeded(result) ? 'done' : 'failed',
+        output: {
+          result: {
+            text: commandSucceeded(result) ? `已在浏览器打开 ${target}。` : `浏览器打开失败：${combineResultText(result)}`,
+            taskId: task?.id || ''
+          },
+          evidence,
+          suggestions: []
+        },
+        evidence,
+        suggestions: [],
+        finishedAt: finishedAt.toISOString()
+      };
+    }
     const commandTarget = /记事本|notepad/i.test(openTarget) ? 'notepad.exe' : openTarget;
     const args = ['-NoProfile', '-Command', `Start-Process ${JSON.stringify(commandTarget)}`];
     const commandRun = createNativeEvidence('powershell.exe', args);

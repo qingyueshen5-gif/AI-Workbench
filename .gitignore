@@ -16,3 +16,9 @@ evidence/
 .tmp-acceptance-*/
 .tmp-server-*.log
 .verify-runtime/
+.strict-acceptance-runtime/
+.strict-chrome-profile/
+.strict-acceptance-runtime-*/
+.strict-chrome-profile-*/
+.tmp-strict-*/
+.tmp-strict-*.log
