@@ -2,8 +2,7 @@ $ErrorActionPreference = 'SilentlyContinue'
 
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 $url = 'http://127.0.0.1:5173'
-$node = 'node.exe'
-$devScript = Join-Path $root 'scripts\dev-background.mjs'
+$watchdogScript = Join-Path $root 'scripts\ai-workbench-watchdog.ps1'
 
 function Test-LocalPort([int]$Port) {
   try {
@@ -18,8 +17,12 @@ function Test-LocalPort([int]$Port) {
   }
 }
 
-if (-not (Test-LocalPort 5173)) {
-  Start-Process -FilePath $node -ArgumentList "`"$devScript`"" -WorkingDirectory $root -WindowStyle Hidden | Out-Null
+if ((-not (Test-LocalPort 18800)) -or (-not (Test-LocalPort 8787)) -or (-not (Test-LocalPort 5173))) {
+  Start-Process -FilePath 'powershell.exe' `
+    -ArgumentList "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$watchdogScript`"" `
+    -WorkingDirectory $root `
+    -WindowStyle Hidden `
+    -Wait | Out-Null
 }
 
 for ($i = 0; $i -lt 40; $i++) {
