@@ -1,10 +1,14 @@
 import { spawn } from 'node:child_process';
+import { rm } from 'node:fs/promises';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
 
 const port = 19787;
+const runtimeRoot = join(tmpdir(), `ai-workbench-acceptance-${process.pid}`);
 const baseUrl = `http://127.0.0.1:${port}`;
 const server = spawn(process.execPath, ['server.mjs'], {
   cwd: process.cwd(),
-  env: { ...process.env, PORT: String(port) },
+  env: { ...process.env, PORT: String(port), AI_WORKBENCH_RUNTIME_DIR: runtimeRoot },
   stdio: ['ignore', 'pipe', 'pipe']
 });
 
@@ -73,4 +77,5 @@ try {
   console.log('Acceptance verification passed');
 } finally {
   server.kill();
+  await rm(runtimeRoot, { recursive: true, force: true });
 }

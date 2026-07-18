@@ -1,12 +1,14 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { repairAll } from '../health/self-heal.mjs';
+import { migrateLegacyRuntimeData, runtimeDataFile } from '../runtime-paths.mjs';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
+migrateLegacyRuntimeData(root);
 
 const result = await repairAll({
   root,
-  dataFile: join(root, 'data', 'workbench.json'),
+  dataFile: runtimeDataFile,
   envFile: join(root, '.env'),
   defaultData: {
     dailyGoals: {},

@@ -1,12 +1,14 @@
 import { spawn } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { createAgentRegistry } from '../agents/registry.mjs';
+import { migrateLegacyRuntimeData, runtimeModelProxyLogFile } from '../runtime-paths.mjs';
 
 const root = process.cwd();
 const proxyBaseUrl = process.env.MODEL_PROXY_BASE_URL || 'http://127.0.0.1:18800/v1';
 const healthUrl = proxyBaseUrl.replace(/\/v1\/?$/, '/health');
-const logFile = join(root, 'data', 'model-proxy-calls.jsonl');
+const logFile = runtimeModelProxyLogFile;
+
+migrateLegacyRuntimeData(root);
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);

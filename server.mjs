@@ -8,12 +8,15 @@ import { agentRegistry } from './agents/registry.mjs';
 import { verificationRules, verifyRun } from './verification/rules.mjs';
 import { getRecoveryHint, normalizeError } from './errors/normalize.mjs';
 import { checkHealth, repairAll, selfHeal, setupEnv } from './health/self-heal.mjs';
+import { migrateLegacyRuntimeData, runtimeDataFile } from './runtime-paths.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
-const dataFile = join(root, 'data', 'workbench.json');
+const dataFile = runtimeDataFile;
 const envFile = join(root, '.env');
 const port = Number(process.env.PORT || 8787);
 const modelProxyBaseUrl = String(process.env.MODEL_PROXY_BASE_URL || 'http://127.0.0.1:18800/v1').replace(/\/+$/, '');
+
+migrateLegacyRuntimeData(root);
 
 const initialData = {
   dailyGoals: {},

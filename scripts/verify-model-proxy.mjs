@@ -1,11 +1,14 @@
 import { spawn } from 'node:child_process';
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { migrateLegacyRuntimeData, runtimeModelProxyLogFile } from '../runtime-paths.mjs';
 
 const root = process.cwd();
 const proxyUrl = process.env.MODEL_PROXY_BASE_URL || 'http://127.0.0.1:18800/v1';
 const healthUrl = proxyUrl.replace(/\/v1\/?$/, '/health');
-const logFile = join(root, 'data', 'model-proxy-calls.jsonl');
+const logFile = runtimeModelProxyLogFile;
+
+migrateLegacyRuntimeData(root);
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);

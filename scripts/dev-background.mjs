@@ -3,13 +3,15 @@ import { spawn } from 'node:child_process';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
+import { migrateLegacyRuntimeData, runtimeStartupErrorLogFile, runtimeStartupLogFile } from '../runtime-paths.mjs';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const viteCli = join(root, 'node_modules', 'vite', 'bin', 'vite.js');
-const log = createWriteStream(join(root, '.workbench-startup.log'), { flags: 'a' });
-const errorLog = createWriteStream(join(root, '.workbench-startup.err.log'), { flags: 'a' });
-const logFd = openSync(join(root, '.workbench-startup.log'), 'a');
-const errorLogFd = openSync(join(root, '.workbench-startup.err.log'), 'a');
+migrateLegacyRuntimeData(root);
+const log = createWriteStream(runtimeStartupLogFile, { flags: 'a' });
+const errorLog = createWriteStream(runtimeStartupErrorLogFile, { flags: 'a' });
+const logFd = openSync(runtimeStartupLogFile, 'a');
+const errorLogFd = openSync(runtimeStartupErrorLogFile, 'a');
 
 function stamp(message) {
   log.write(`[${new Date().toISOString()}] ${message}\n`);

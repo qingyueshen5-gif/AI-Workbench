@@ -2,13 +2,16 @@ import { createServer } from 'node:http';
 import { readFileSync, mkdirSync, appendFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { migrateLegacyRuntimeData, runtimeModelProxyLogFile } from './runtime-paths.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const envFile = join(root, '.env');
-const logFile = join(root, 'data', 'model-proxy-calls.jsonl');
+const logFile = runtimeModelProxyLogFile;
 const port = Number(process.env.MODEL_PROXY_PORT || 18800);
 const upstreamBaseUrl = String(process.env.MODEL_PROXY_UPSTREAM_BASE_URL || 'https://api.deepseek.com/v1').replace(/\/+$/, '');
 const maxRetries = Number(process.env.MODEL_PROXY_MAX_RETRIES || 3);
+
+migrateLegacyRuntimeData(root);
 
 function loadLocalEnv() {
   try {

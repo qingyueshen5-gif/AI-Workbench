@@ -3,15 +3,17 @@ import { copyFile, rm, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { tmpdir } from 'node:os';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const dataFile = join(root, 'data', 'workbench.json');
-const backupFile = join(root, 'data', `workbench.round3-backup-${Date.now()}.json`);
+const runtimeRoot = join(tmpdir(), `ai-workbench-round3-${process.pid}`);
+const dataFile = join(runtimeRoot, 'data', 'workbench.json');
+const backupFile = join(runtimeRoot, 'data', `workbench.round3-backup-${Date.now()}.json`);
 const port = 19988;
 const baseUrl = `http://127.0.0.1:${port}`;
 const server = spawn(process.execPath, ['server.mjs'], {
   cwd: root,
-  env: { ...process.env, PORT: String(port) },
+  env: { ...process.env, PORT: String(port), AI_WORKBENCH_RUNTIME_DIR: runtimeRoot },
   stdio: 'ignore'
 });
 
@@ -104,6 +106,7 @@ async function main() {
       await copyFile(backupFile, dataFile);
       await rm(backupFile, { force: true });
     }
+    await rm(runtimeRoot, { recursive: true, force: true });
   }
 }
 

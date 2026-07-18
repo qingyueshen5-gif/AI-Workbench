@@ -134,7 +134,7 @@ async function main() {
   assert(storedSuggestion?.status === 'accepted', 'Suggestion status was not marked accepted');
 
   console.log(JSON.stringify({
-    storage: 'local_json:data/workbench.json',
+    storage: 'local_json:%APPDATA%/ai-workbench/data/workbench.json',
     rule: 'memory_owner_is_workbench_not_agent',
     write_user_preference: preference.body.memory,
     task_context_contains_preference: includedPreference,

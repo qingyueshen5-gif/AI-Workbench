@@ -4,13 +4,15 @@ import { existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
+import { migrateLegacyRuntimeData, runtimeDataDir, runtimeDataFile, runtimeEvidenceDir } from '../runtime-paths.mjs';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const dataFile = join(root, 'data', 'workbench.json');
-const backupFile = join(root, 'data', `workbench.ui-backup-${Date.now()}.json`);
-const evidenceDir = join(root, 'evidence');
+const dataFile = runtimeDataFile;
+const backupFile = join(runtimeDataDir, `workbench.ui-backup-${Date.now()}.json`);
+const evidenceDir = runtimeEvidenceDir;
 const chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 const debugPort = 19225;
+migrateLegacyRuntimeData(root);
 
 function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -107,6 +109,7 @@ async function sendChat(cdp, text, expectedText) {
 async function main() {
   if (!existsSync(chromePath)) throw new Error('Chrome executable not found');
   await mkdir(evidenceDir, { recursive: true });
+  await mkdir(dirname(dataFile), { recursive: true });
   if (existsSync(dataFile)) await copyFile(dataFile, backupFile);
   const today = new Date().toISOString().slice(0, 10);
   const fixture = {

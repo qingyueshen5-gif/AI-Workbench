@@ -3,9 +3,11 @@ import { readFile, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
+import { tmpdir } from 'node:os';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const dataFile = join(root, 'data', 'workbench.json');
+const runtimeRoot = join(tmpdir(), `ai-workbench-verify-${process.pid}`);
+const dataFile = join(runtimeRoot, 'data', 'workbench.json');
 const envFile = join(root, '.env');
 const port = 18787;
 const modelProxyPort = 18880;
@@ -15,13 +17,13 @@ const api = `${baseUrl}/api/data`;
 
 const modelProxy = spawn(process.execPath, ['model-proxy.mjs'], {
   cwd: root,
-  env: { ...process.env, MODEL_PROXY_PORT: String(modelProxyPort) },
+  env: { ...process.env, MODEL_PROXY_PORT: String(modelProxyPort), AI_WORKBENCH_RUNTIME_DIR: runtimeRoot },
   stdio: ['ignore', 'pipe', 'pipe']
 });
 
 const server = spawn(process.execPath, ['server.mjs'], {
   cwd: root,
-  env: { ...process.env, PORT: String(port), MODEL_PROXY_BASE_URL: modelProxyBaseUrl },
+  env: { ...process.env, PORT: String(port), MODEL_PROXY_BASE_URL: modelProxyBaseUrl, AI_WORKBENCH_RUNTIME_DIR: runtimeRoot },
   stdio: ['ignore', 'pipe', 'pipe']
 });
 
@@ -313,4 +315,5 @@ try {
 } finally {
   modelProxy.kill();
   server.kill();
+  await rm(runtimeRoot, { recursive: true, force: true });
 }
