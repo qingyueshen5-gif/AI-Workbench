@@ -1,7 +1,7 @@
 import { createServer } from 'node:http';
 import { readFile, writeFile, mkdir, stat } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, extname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { agentDefinitions } from './agents/definitions.mjs';
 import { agentRegistry } from './agents/registry.mjs';
@@ -13,6 +13,7 @@ import { migrateLegacyRuntimeData, runtimeDataFile } from './runtime-paths.mjs';
 const root = dirname(fileURLToPath(import.meta.url));
 const dataFile = runtimeDataFile;
 const envFile = join(root, '.env');
+const distDir = join(root, 'dist');
 const port = Number(process.env.PORT || 8787);
 const modelProxyBaseUrl = String(process.env.MODEL_PROXY_BASE_URL || 'http://127.0.0.1:18800/v1').replace(/\/+$/, '');
 
@@ -1128,6 +1129,45 @@ function sendJson(response, statusCode, payload) {
   response.end(JSON.stringify(payload));
 }
 
+const staticMimeTypes = {
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.svg': 'image/svg+xml',
+  '.ico': 'image/x-icon'
+};
+
+async function sendStaticFile(request, response, pathname) {
+  if (request.method !== 'GET' && request.method !== 'HEAD') return false;
+  const decodedPath = decodeURIComponent(pathname);
+  const normalizedPath = decodedPath === '/' ? '/index.html' : decodedPath;
+  const candidate = resolve(distDir, `.${normalizedPath}`);
+  if (relative(distDir, candidate).startsWith('..')) return false;
+  let filePath = candidate;
+  try {
+    const fileStat = await stat(filePath);
+    if (fileStat.isDirectory()) filePath = join(filePath, 'index.html');
+  } catch {
+    filePath = join(distDir, 'index.html');
+  }
+  try {
+    const body = await readFile(filePath);
+    response.writeHead(200, {
+      'Content-Type': staticMimeTypes[extname(filePath).toLowerCase()] || 'application/octet-stream',
+      'Cache-Control': filePath.endsWith('index.html') ? 'no-store' : 'public, max-age=31536000, immutable'
+    });
+    if (request.method === 'HEAD') response.end();
+    else response.end(body);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 const server = createServer(async (request, response) => {
   if (request.method === 'OPTIONS') {
       response.writeHead(204, {
@@ -2156,6 +2196,9 @@ const server = createServer(async (request, response) => {
       return;
     }
 
+    if (!pathname.startsWith('/api/') && await sendStaticFile(request, response, pathname)) {
+      return;
+    }
     sendJson(response, 404, { error: 'Not found' });
   } catch (error) {
     sendJson(response, 500, { error: error.message });

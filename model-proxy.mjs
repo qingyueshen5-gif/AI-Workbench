@@ -2,10 +2,11 @@ import { createServer } from 'node:http';
 import { readFileSync, mkdirSync, appendFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { migrateLegacyRuntimeData, runtimeModelProxyLogFile } from './runtime-paths.mjs';
+import { migrateLegacyRuntimeData, runtimeModelProxyLogFile, runtimeRoot } from './runtime-paths.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const envFile = join(root, '.env');
+const runtimeEnvFile = join(runtimeRoot, '.env');
 const logFile = runtimeModelProxyLogFile;
 const port = Number(process.env.MODEL_PROXY_PORT || 18800);
 const upstreamBaseUrl = String(process.env.MODEL_PROXY_UPSTREAM_BASE_URL || 'https://api.deepseek.com/v1').replace(/\/+$/, '');
@@ -14,19 +15,21 @@ const maxRetries = Number(process.env.MODEL_PROXY_MAX_RETRIES || 3);
 migrateLegacyRuntimeData(root);
 
 function loadLocalEnv() {
-  try {
-    const raw = readFileSync(envFile, 'utf8');
-    for (const line of raw.split(/\r?\n/)) {
-      const trimmed = line.trim();
-      if (!trimmed || trimmed.startsWith('#')) continue;
-      const separator = trimmed.indexOf('=');
-      if (separator === -1) continue;
-      const key = trimmed.slice(0, separator).trim();
-      const value = trimmed.slice(separator + 1).trim().replace(/^['"]|['"]$/g, '');
-      if (key && process.env[key] === undefined) process.env[key] = value;
+  for (const file of [runtimeEnvFile, envFile]) {
+    try {
+      const raw = readFileSync(file, 'utf8');
+      for (const line of raw.split(/\r?\n/)) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+        const separator = trimmed.indexOf('=');
+        if (separator === -1) continue;
+        const key = trimmed.slice(0, separator).trim();
+        const value = trimmed.slice(separator + 1).trim().replace(/^['"]|['"]$/g, '');
+        if (key && process.env[key] === undefined) process.env[key] = value;
+      }
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
     }
-  } catch (error) {
-    if (error.code !== 'ENOENT') throw error;
   }
 }
 
