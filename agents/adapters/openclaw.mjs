@@ -101,7 +101,8 @@ function createOpenClawPrompt(task, context) {
   return [
     '你是 AI Workbench 的 OpenClaw 员工。',
     '定位：处理长任务编排、浏览器/网页自动化、手机聊天通道、Gateway/Agent/Channel 相关工作。',
-    '请用中文完成任务，回答要短，必须给出可验证结果；不要输出 JSON。',
+    '请真实操作，不要只给建议或链接；回答要短，必须给出可验证结果，例如安装路径、窗口状态、页面证据或失败卡点；不要输出 JSON。',
+    '如果失败，先重试一次可恢复步骤；仍失败时说清楚卡在哪、已尝试什么、下一步补救是什么。',
     `任务：${goal}`,
     `上下文摘要：${JSON.stringify(contextSummary)}`
   ].join('\n');

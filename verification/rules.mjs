@@ -59,8 +59,9 @@ function pass(type, evidence, details = {}) {
 function verifyHermes(run, evidence) {
   const required = ['commandRun', 'stdout', 'stderr', 'exitCode', 'durationMs'];
   const missingFields = required.filter((field) => !Object.prototype.hasOwnProperty.call(evidence, field));
+  const combinedOutput = `${evidence.stdout || ''}\n${evidence.stderr || ''}`;
   if (missingFields.length) return missing('missing_evidence', { type: 'hermes', missingFields });
-  if (!String(evidence.commandRun || '').includes('hermes chat')) {
+  if (!String(evidence.commandRun || '').includes('hermes chat') && !String(evidence.commandRun || '').startsWith('hermes-direct:')) {
     return missing('invalid_evidence', { type: 'hermes', field: 'commandRun' });
   }
   if (Number(evidence.exitCode) !== 0) {
@@ -72,6 +73,12 @@ function verifyHermes(run, evidence) {
   if (!hasValue(evidence.stdout)) return missing('missing_evidence', { type: 'hermes', missingFields: ['stdout'] });
   if (!Number.isFinite(Number(evidence.durationMs)) || Number(evidence.durationMs) < 0) {
     return missing('invalid_evidence', { type: 'hermes', field: 'durationMs' });
+  }
+  if (/下载失败|安装失败|没有处理成功|失败原因|HTTPS 下载失败|TLS 握手失败|SEC_E_NO_CREDENTIALS|被安全策略阻止|要我试试|你自己用浏览器下载|下一步补救方案|无法运行/i.test(combinedOutput)) {
+    return missing('execution_failed', { type: 'hermes', reason: 'assistant_reported_failure' });
+  }
+  if (/FreeGB"\s*:\s*0|TotalGB"\s*:\s*0/.test(combinedOutput)) {
+    return missing('invalid_evidence', { type: 'hermes', reason: 'zero_disk_size' });
   }
   return pass('hermes', evidence);
 }

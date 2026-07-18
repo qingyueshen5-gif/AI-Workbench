@@ -13,3 +13,6 @@ data/
 .hermes-runtime/
 evidence/
 .e2e-dev*.log
+.tmp-acceptance-*/
+.tmp-server-*.log
+.verify-runtime/

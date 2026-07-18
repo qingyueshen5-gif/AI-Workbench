@@ -5,6 +5,7 @@ import { dirname, extname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { agentDefinitions } from './agents/definitions.mjs';
 import { agentRegistry } from './agents/registry.mjs';
+import { ownerFromAgentId, progressReplyForAgent, routeChatAgent } from './agents/router.mjs';
 import { verificationRules, verifyRun } from './verification/rules.mjs';
 import { getRecoveryHint, normalizeError } from './errors/normalize.mjs';
 import { checkHealth, repairAll, selfHeal, setupEnv } from './health/self-heal.mjs';
@@ -419,27 +420,8 @@ function agentIdFromOwner(owner) {
   const value = String(owner || '').trim().toLowerCase();
   if (value === 'deepseek') return 'deepseek';
   if (value === 'hermes') return 'hermes';
+  if (value === 'openclaw') return 'openclaw';
   return '';
-}
-
-function ownerFromAgentId(agentId) {
-  if (agentId === 'deepseek') return 'DeepSeek';
-  if (agentId === 'hermes') return 'Hermes';
-  return '人工';
-}
-
-function routeChatAgent(content) {
-  const text = String(content || '').toLowerCase();
-  if (
-    text.includes('openclaw') ||
-    /浏览器|网页自动化|打开网页|点击|录屏|截图|手机|飞书|微信|telegram|discord|slack|频道|gateway|长任务|编排|多员工|多agent|多 agent/.test(content)
-  ) {
-    return 'openclaw';
-  }
-  if (text.includes('hermes') || (text.includes('current_task.md') && /读|读取|总结|待办/.test(content))) {
-    return 'hermes';
-  }
-  return 'deepseek';
 }
 
 function cleanHermesUserReply(text) {
@@ -448,9 +430,11 @@ function cleanHermesUserReply(text) {
     .replace(/memory_suggestions\s*:\s*\[[\s\S]*?\]/gi, '')
     .split(/\r?\n/)
     .map((line) => line.replace(/[┌┐└┘│─━╭╮╰╯┊⚕💻$]/g, '').trim())
-    .filter((line) => line && !/^(Query:|规则：|task_context_id:|memory_keys:|工作区路径:|任务:|请用terminal|Initializing agent|Resume this session with:|Session:|Duration:|Messages:)/i.test(line))
-    .filter((line) => !/^cat\s+/i.test(line));
-  const startIndex = lines.findIndex((line) => /当前待办|待办列表|文件读取成功|未完成/.test(line));
+    .filter((line) => line && !/^(Query:|规则：|完成后必须|如果失败|task_context_id:|memory_keys:|工作区路径:|任务:|请用terminal|Initializing agent|Resume this session with:|Session:|Duration:|Messages:)/i.test(line))
+    .filter((line) => !/project_context:|memory_suggestions|不能写长期记忆|可验证证据|进程\/窗口状态|下一步补救/.test(line))
+    .filter((line) => !/^(cat|df|wmic|powershell|cmd|dir|ls|echo|start)\s+/i.test(line))
+    .filter((line) => !/^[；。]?(如有记忆建议|什么。|例如命令输出)/.test(line));
+  const startIndex = lines.findIndex((line) => /当前待办|待办列表|文件读取成功|未完成|C盘|C 盘|结论|容量|剩余|安装完成|安装路径|已打开|窗口/.test(line));
   const visible = (startIndex >= 0 ? lines.slice(startIndex) : lines)
     .join('\n')
     .replace(/已完成的任务[\s\S]*$/i, '')
@@ -1748,7 +1732,12 @@ const server = createServer(async (request, response) => {
         startedAt: runStartedAt
       });
       const taskMessage = { ...message, taskId: task.id, runId: run.id };
-      const taskMessages = [...(activeConversation.messages || []), taskMessage];
+      const progressMessage = routedAgentId === 'hermes' || routedAgentId === 'openclaw'
+        ? createAssistantMessage(progressReplyForAgent(routedAgentId, content))
+        : null;
+      const taskMessages = progressMessage
+        ? [...(activeConversation.messages || []), taskMessage, progressMessage]
+        : [...(activeConversation.messages || []), taskMessage];
       conversations = conversations.map((conversation) =>
         conversation.id === activeConversation.id
           ? {

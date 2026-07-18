@@ -24,6 +24,7 @@
     "verify:chat-proxy": "node scripts/verify-chat-proxy.mjs",
     "verify:hermes-proxy": "node scripts/verify-hermes-proxy.mjs",
     "verify:acceptance": "node scripts/verify-acceptance.mjs",
+    "verify:action-routing": "node scripts/verify-action-routing.mjs",
     "health:check": "node scripts/health-check.mjs",
     "health:repair": "node scripts/health-repair.mjs"
   },
