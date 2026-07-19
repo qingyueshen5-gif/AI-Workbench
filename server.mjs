@@ -899,8 +899,19 @@ const workbenchTools = [
   {
     type: 'function',
     function: {
+      name: 'open_terminal',
+      description: 'Open the Windows system terminal or PowerShell on the user computer. Use for requests like 打开终端, 打开命令行, open terminal.',
+      parameters: {
+        type: 'object',
+        properties: {}
+      }
+    }
+  },
+  {
+    type: 'function',
+    function: {
       name: 'open_app',
-      description: 'Open a local Windows application on the user computer.',
+      description: 'Open any installed local Windows application on the user computer, including notepad, browser, terminal, and named desktop apps.',
       parameters: {
         type: 'object',
         properties: {
@@ -910,6 +921,40 @@ const workbenchTools = [
           }
         },
         required: ['name']
+      }
+    }
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'open_folder',
+      description: 'Open a local folder in Windows File Explorer. Use for requests like 打开下载文件夹, 打开桌面文件夹, open folder.',
+      parameters: {
+        type: 'object',
+        properties: {
+          path: {
+            type: 'string',
+            description: 'Folder path or known folder name, for example 下载文件夹, Desktop, C:\\Users\\name\\Downloads.'
+          }
+        },
+        required: ['path']
+      }
+    }
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'open_settings',
+      description: 'Open a Windows Settings page. Use for requests like 打开设置, 打开网络设置, 打开蓝牙设置.',
+      parameters: {
+        type: 'object',
+        properties: {
+          page: {
+            type: 'string',
+            description: 'Settings page name or URI, for example 设置, network, bluetooth, apps, display.'
+          }
+        },
+        required: ['page']
       }
     }
   },
@@ -1024,7 +1069,10 @@ function normalizeUrlTarget(url) {
 
 function goalFromToolCall(name, args) {
   if (name === 'open_url') return `打开${normalizeUrlTarget(args.url)}`;
+  if (name === 'open_terminal') return '打开终端';
   if (name === 'open_app') return `打开${args.name || ''}`;
+  if (name === 'open_folder') return `打开文件夹 ${args.path || ''}`;
+  if (name === 'open_settings') return `打开系统设置 ${args.page || ''}`;
   if (name === 'run_system_query') return String(args.query || '');
   if (name === 'clean_disk') return `清理${args.target || 'C盘'}`;
   if (name === 'download_install') return `安装${args.software || ''}到电脑上`;
@@ -1057,6 +1105,17 @@ function fallbackToolCallForAction(content) {
     const software = raw.replace(/帮我|请|下载|安装|到电脑上|到电脑|软件|程序|一下/g, '').trim();
     return { id: createId('tool'), type: 'function', function: { name: 'download_install', arguments: JSON.stringify({ software }) } };
   }
+  if (/打开|启动|运行/i.test(raw) && /终端|terminal|powershell|命令行|cmd/i.test(raw)) {
+    return { id: createId('tool'), type: 'function', function: { name: 'open_terminal', arguments: '{}' } };
+  }
+  if (/打开|启动|运行/i.test(raw) && /文件夹|目录|下载|downloads|桌面|desktop|文档|documents/i.test(raw)) {
+    const path = raw.replace(/帮我|请|打开|启动|运行|一下/g, '').trim();
+    return { id: createId('tool'), type: 'function', function: { name: 'open_folder', arguments: JSON.stringify({ path }) } };
+  }
+  if (/打开|启动|运行/i.test(raw) && /设置|settings|网络|蓝牙|显示|系统设置/i.test(raw)) {
+    const page = raw.replace(/帮我|请|打开|启动|运行|一下/g, '').trim();
+    return { id: createId('tool'), type: 'function', function: { name: 'open_settings', arguments: JSON.stringify({ page }) } };
+  }
   if (/剩余|空间|磁盘|进程|端口|服务|系统|环境|查看|看看|查询|查/i.test(raw)) {
     return { id: createId('tool'), type: 'function', function: { name: 'run_system_query', arguments: JSON.stringify({ query: raw }) } };
   }
@@ -1085,6 +1144,33 @@ function normalizeToolCallForUserContent(toolCall, content) {
       function: {
         name: 'web_search',
         arguments: JSON.stringify({ query: raw, num_results: 5 })
+      }
+    };
+  }
+  if (/打开|启动|运行/i.test(raw) && /终端|terminal|powershell|命令行|cmd/i.test(raw) && name !== 'open_terminal') {
+    return {
+      id: toolCall.id || createId('tool'),
+      type: 'function',
+      function: { name: 'open_terminal', arguments: '{}' }
+    };
+  }
+  if (/打开|启动|运行/i.test(raw) && /文件夹|目录|下载|downloads|桌面|desktop|文档|documents/i.test(raw) && name !== 'open_folder') {
+    return {
+      id: toolCall.id || createId('tool'),
+      type: 'function',
+      function: {
+        name: 'open_folder',
+        arguments: JSON.stringify({ path: raw.replace(/帮我|请|打开|启动|运行|一下/g, '').trim() })
+      }
+    };
+  }
+  if (/打开|启动|运行/i.test(raw) && /设置|settings|网络|蓝牙|显示|系统设置/i.test(raw) && name !== 'open_settings') {
+    return {
+      id: toolCall.id || createId('tool'),
+      type: 'function',
+      function: {
+        name: 'open_settings',
+        arguments: JSON.stringify({ page: raw.replace(/帮我|请|打开|启动|运行|一下/g, '').trim() })
       }
     };
   }
@@ -2051,7 +2137,8 @@ const server = createServer(async (request, response) => {
           content: [
             '你是 AI Workbench 的调度助手。你具备真实电脑操作能力，但必须通过工具执行。',
             '凡是用户要求对电脑、网络、文件、应用、网页产生实际效果，必须调用合适工具，不要口头回答了事。',
-            '用户要求打开网页时调用 open_url；打开应用调用 open_app；查看磁盘/进程/端口/服务等调用 run_system_query；清理磁盘调用 clean_disk；下载安装软件调用 download_install；读取文件调用 read_file_summarize。',
+            '用户要求打开网页时调用 open_url；打开终端/命令行/PowerShell 调用 open_terminal；打开文件夹/目录调用 open_folder；打开系统设置调用 open_settings；打开任意已安装应用调用 open_app；查看磁盘/进程/端口/服务等调用 run_system_query；清理磁盘调用 clean_disk；下载安装软件调用 download_install；读取文件调用 read_file_summarize。',
+            '凡“打开X”类指令，一律派员工真实执行，禁止回答“我无法打开”。',
             '实时数据、新闻、当前状态、价格、天气、版本、政策、今天/最新等当前信息调用 web_search。',
             '纯知识、解释、写作类问题没有实际操作需求时才直接回答。',
             '禁止输出“我无法操作你的电脑”“我不能直接打开”“我是AI助手无法执行”等拒绝话术。',
@@ -2065,13 +2152,33 @@ const server = createServer(async (request, response) => {
       ];
 
       try {
-        let modelResult = await callDeepSeek(model, toolMessages, {
-          tools: workbenchTools,
-          tool_choice: 'auto',
-          employee: 'deepseek',
-          timeoutMs: 30000
-        });
-        let firstMessage = modelResult.choices?.[0]?.message || {};
+        let firstMessage = {};
+        const deterministicOpenToolCall = /(打开|启动|运行)/i.test(content) ? fallbackToolCallForAction(content) : null;
+        if (deterministicOpenToolCall) {
+          firstMessage = {
+            role: 'assistant',
+            content: '',
+            tool_calls: [deterministicOpenToolCall]
+          };
+        } else {
+          try {
+            const modelResult = await callDeepSeek(model, toolMessages, {
+              tools: workbenchTools,
+              tool_choice: 'auto',
+              employee: 'deepseek',
+              timeoutMs: 30000
+            });
+            firstMessage = modelResult.choices?.[0]?.message || {};
+          } catch (modelError) {
+            const deterministicToolCall = fallbackToolCallForAction(content);
+            if (!deterministicToolCall) throw modelError;
+            firstMessage = {
+              role: 'assistant',
+              content: '',
+              tool_calls: [deterministicToolCall]
+            };
+          }
+        }
         const fallbackToolCall = !firstMessage.tool_calls?.length ? fallbackToolCallForAction(content) : null;
         if (fallbackToolCall) {
           firstMessage = {

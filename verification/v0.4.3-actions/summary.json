@@ -1,0 +1,26 @@
+{
+  "outDir": "F:\\AI-Workbench\\verification\\v0.4.3-actions",
+  "results": [
+    {
+      "text": "帮我打开终端",
+      "reply": "好的，我让 Hermes 去执行了。它会先跑命令拿证据，完成后我会把结果和关键数字直接告诉你。\n已为你成功打开终端，具体如下：\n\n1. 执行结果：终端已成功打开，类型为 **PowerShell**。\n2. 执行证据：系统已创建 **PowerShell 窗口** 进程，命令执行用时仅 **753 毫秒**。\n3. 终端状态：当前处于就绪状态，可以直接输入命令。",
+      "desktopShot": "F:\\AI-Workbench\\verification\\v0.4.3-actions\\01-open-terminal-desktop.png",
+      "processMatched": "/WindowsTerminal|powershell|pwsh|cmd/i",
+      "processSample": "[{\"ProcessName\":\"Adobe Crash Processor\",\"Id\":16444,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AggregatorHost\",\"Id\":9980,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AI Link\",\"Id\":1960,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AI Link\",\"Id\":21692,\"MainWindowTitle\":\"AI Link\"},{\"ProcessName\":\"AI Link\",\"Id\":21920,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AI Link\",\"Id\":22416,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AI Workbench\",\"Id\":4192,\"MainWindowTitle\":\"AI Workbench v0.4.3\"},{\"ProcessName\":\"AI Workbench\",\"Id\":19748,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AI Workbench\",\"Id\":32604,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AI Workbench\",\"Id\":32760,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AlibabaProtect\",\"Id\":5044,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AndrowsAssistant\",\"Id\":16500,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AndrowsDlSvr\",\"Id\":13672,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AndrowsStore\",\"Id\":12924,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AndrowsSvr\",\"Id\":3116,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AndrowsXyAcc\",\"Id\":204"
+    },
+    {
+      "text": "帮我打开记事本",
+      "reply": "好的，我让 Hermes 去执行了。它会先跑命令拿证据，完成后我会把结果和关键数字直接告诉你。\n好的，已为你完成操作！以下是执行结果汇报：\n\n1. 已成功打开 **记事本**（notepad.exe）。\n2. 系统返回的验证证据显示：程序已正常启动，未出现错误。\n3. 你现在可以直接在记事本中开始输入文字。",
+      "desktopShot": "F:\\AI-Workbench\\verification\\v0.4.3-actions\\02-open-notepad-desktop.png",
+      "processMatched": "/notepad/i",
+      "processSample": "[{\"ProcessName\":\"Adobe Crash Processor\",\"Id\":16444,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AggregatorHost\",\"Id\":9980,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AI Link\",\"Id\":1960,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AI Link\",\"Id\":21692,\"MainWindowTitle\":\"AI Link\"},{\"ProcessName\":\"AI Link\",\"Id\":21920,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AI Link\",\"Id\":22416,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AI Workbench\",\"Id\":4192,\"MainWindowTitle\":\"AI Workbench v0.4.3\"},{\"ProcessName\":\"AI Workbench\",\"Id\":19748,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AI Workbench\",\"Id\":32604,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AI Workbench\",\"Id\":32760,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AlibabaProtect\",\"Id\":5044,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AndrowsAssistant\",\"Id\":16500,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AndrowsDlSvr\",\"Id\":13672,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AndrowsStore\",\"Id\":12924,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AndrowsSvr\",\"Id\":3116,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AndrowsXyAcc\",\"Id\":204"
+    },
+    {
+      "text": "帮我打开下载文件夹",
+      "reply": "好的，我让 Hermes 去执行了。它会先跑命令拿证据，完成后我会把结果和关键数字直接告诉你。\n好的，已经为您打开了下载文件夹。以下是执行结果：\n\n1. 目标路径：`C:\\Users\\胖胖虎\\Downloads`\n2. 操作方式：通过系统文件管理器（explorer.exe）直接打开\n3. 执行结果：**成功打开**，窗口已弹出\n4. 验证证据：命令执行退出码为 **0**，无报错，系统已打开对应文件夹窗口\n\n现在您可以直接在下载文件夹中查看、操作其中的文件了。如果需要进一步操作（如清理、整理、移动文件等），随时告诉我。",
+      "desktopShot": "F:\\AI-Workbench\\verification\\v0.4.3-actions\\03-open-downloads-folder-desktop.png",
+      "processMatched": "/explorer/i",
+      "processSample": "[{\"ProcessName\":\"Adobe Crash Processor\",\"Id\":16444,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AggregatorHost\",\"Id\":9980,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AI Link\",\"Id\":1960,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AI Link\",\"Id\":21692,\"MainWindowTitle\":\"AI Link\"},{\"ProcessName\":\"AI Link\",\"Id\":21920,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AI Link\",\"Id\":22416,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AI Workbench\",\"Id\":4192,\"MainWindowTitle\":\"AI Workbench v0.4.3\"},{\"ProcessName\":\"AI Workbench\",\"Id\":19748,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AI Workbench\",\"Id\":32604,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AI Workbench\",\"Id\":32760,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AlibabaProtect\",\"Id\":5044,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AndrowsAssistant\",\"Id\":16500,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AndrowsDlSvr\",\"Id\":13672,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AndrowsStore\",\"Id\":12924,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AndrowsSvr\",\"Id\":3116,\"MainWindowTitle\":\"\"},{\"ProcessName\":\"AndrowsXyAcc\",\"Id\":204"
+    }
+  ]
+}

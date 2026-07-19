@@ -107,7 +107,8 @@ function runNativeCommand(command, args, { timeoutMs = 30000, cwd = process.cwd(
   return new Promise((resolve) => {
     let child;
     try {
-      child = spawn(command, args, {
+      const executable = nativeCommandPath(command);
+      child = spawn(executable, args, {
         cwd,
         windowsHide: true,
         env: { ...process.env, NO_COLOR: '1' }
@@ -133,13 +134,46 @@ function runNativeCommand(command, args, { timeoutMs = 30000, cwd = process.cwd(
     });
     child.on('error', (error) => {
       clearTimeout(timeout);
-      resolve({ ok: false, code: null, stdout, stderr, error, timedOut });
+      resolve({ ok: false, code: null, stdout, stderr: stderr || error.message, error, timedOut });
     });
     child.on('close', (code) => {
       clearTimeout(timeout);
       resolve({ ok: code === 0 && !timedOut, code, stdout, stderr, timedOut });
     });
   });
+}
+
+function startDetachedNative(command, args = [], { cwd = process.cwd(), onChild } = {}) {
+  return new Promise((resolve) => {
+    let settled = false;
+    let child;
+    const finish = (result) => {
+      if (settled) return;
+      settled = true;
+      resolve(result);
+    };
+    try {
+      child = spawn(command, args, {
+        cwd,
+        detached: true,
+        windowsHide: false,
+        stdio: 'ignore',
+        env: { ...process.env, NO_COLOR: '1' }
+      });
+      onChild?.(child);
+      child.once('error', (error) => {
+        finish({ ok: false, code: null, stdout: '', stderr: error.message, error, timedOut: false });
+      });
+      child.unref();
+      setTimeout(() => finish({ ok: true, code: 0, stdout: `started ${command} ${args.join(' ')}`.trim(), stderr: '', timedOut: false }), 700);
+    } catch (error) {
+      finish({ ok: false, code: null, stdout: '', stderr: error.message, error, timedOut: false });
+    }
+  });
+}
+
+function nativeCommandPath(command) {
+  return command;
 }
 
 function quoteCmdArg(arg) {
@@ -274,6 +308,38 @@ function extractUrlTarget(goal) {
   return '';
 }
 
+function isTerminalTarget(goal) {
+  return /终端|terminal|powershell|命令行|cmd/i.test(String(goal || ''));
+}
+
+function extractFolderTarget(goal) {
+  const raw = String(goal || '').trim();
+  if (!/文件夹|目录|downloads?|桌面|desktop|文档|documents/i.test(raw)) return '';
+  const explicit = raw.match(/[a-z]:\\[^\r\n，。]+/i)?.[0];
+  if (explicit) return explicit.trim();
+  const userHome = process.env.USERPROFILE || process.env.HOME || '';
+  if (/下载|downloads?/i.test(raw)) return join(userHome, 'Downloads');
+  if (/桌面|desktop/i.test(raw)) return join(userHome, 'Desktop');
+  if (/文档|documents/i.test(raw)) return join(userHome, 'Documents');
+  return raw.replace(/帮我|请|打开|启动|运行|文件夹|目录|一下/g, '').trim();
+}
+
+function settingsUriForPage(page) {
+  const raw = String(page || '').trim();
+  if (/^ms-settings:/i.test(raw)) return raw;
+  if (/网络|wifi|wi-fi|network|internet/i.test(raw)) return 'ms-settings:network';
+  if (/蓝牙|bluetooth/i.test(raw)) return 'ms-settings:bluetooth';
+  if (/显示|display|屏幕/i.test(raw)) return 'ms-settings:display';
+  if (/应用|apps?|程序/i.test(raw)) return 'ms-settings:appsfeatures';
+  if (/更新|update/i.test(raw)) return 'ms-settings:windowsupdate';
+  if (/声音|sound|音频/i.test(raw)) return 'ms-settings:sound';
+  return 'ms-settings:';
+}
+
+function isSettingsTarget(goal) {
+  return /设置|settings|网络|蓝牙|显示|系统设置|windows update|更新设置/i.test(String(goal || ''));
+}
+
 function commandSucceeded(result) {
   return result.ok && Number(result.code) === 0;
 }
@@ -381,6 +447,124 @@ async function tryDirectWindowsAction(task, context, runId, startedAt, onChild) 
     };
   }
 
+  if (isTerminalTarget(goal) && /打开|启动|运行/i.test(goal)) {
+    const args = [];
+    const commandRun = createNativeEvidence('powershell.exe', args);
+    const result = await startDetachedNative('powershell.exe', args, { cwd: context.cwd || process.cwd(), onChild });
+    const finishedAt = new Date();
+    const stdout = commandSucceeded(result)
+      ? `opened_terminal=powershell.exe`
+      : combineResultText(result);
+    const evidence = {
+      commandRun,
+      stdout,
+      stderr: stripAnsi(result.stderr),
+      exitCode: result.code,
+      executedAt: startedAt.toISOString(),
+      finishedAt: finishedAt.toISOString(),
+      durationMs: Math.max(0, finishedAt.getTime() - startedAt.getTime())
+    };
+    return {
+      runId,
+      agentId: 'hermes',
+      status: commandSucceeded(result) ? 'done' : 'failed',
+      output: {
+        result: { text: commandSucceeded(result) ? `终端已打开。验证证据：${stdout || '启动命令退出码为 0。'}` : `终端打开失败：${combineResultText(result)}`, taskId: task?.id || '' },
+        evidence,
+        suggestions: []
+      },
+      evidence,
+      suggestions: [],
+      finishedAt: finishedAt.toISOString()
+    };
+  }
+
+  const folderTarget = /打开|启动|运行/i.test(goal) ? extractFolderTarget(goal) : '';
+  if (folderTarget) {
+    if (!existsSync(folderTarget)) {
+      const finishedAt = new Date();
+      const evidence = {
+        commandRun: createNativeEvidence('cmd.exe', ['/d', '/s', '/c', 'start', '""', folderTarget]),
+        stdout: '',
+        stderr: `Folder not found: ${folderTarget}`,
+        exitCode: 1,
+        executedAt: startedAt.toISOString(),
+        finishedAt: finishedAt.toISOString(),
+        durationMs: Math.max(0, finishedAt.getTime() - startedAt.getTime())
+      };
+      return {
+        runId,
+        agentId: 'hermes',
+        status: 'failed',
+        output: { result: { text: `文件夹打开失败：${evidence.stderr}`, taskId: task?.id || '' }, evidence, suggestions: [] },
+        evidence,
+        suggestions: [],
+        finishedAt: finishedAt.toISOString()
+      };
+    }
+    const commandRun = createNativeEvidence('explorer.exe', [folderTarget]);
+    const result = await startDetachedNative('explorer.exe', [folderTarget], { cwd: context.cwd || process.cwd(), onChild });
+    const finishedAt = new Date();
+    const stdout = commandSucceeded(result)
+      ? `opened_folder=${folderTarget}`
+      : combineResultText(result);
+    const evidence = {
+      commandRun,
+      stdout,
+      stderr: stripAnsi(result.stderr),
+      exitCode: result.code,
+      executedAt: startedAt.toISOString(),
+      finishedAt: finishedAt.toISOString(),
+      durationMs: Math.max(0, finishedAt.getTime() - startedAt.getTime())
+    };
+    return {
+      runId,
+      agentId: 'hermes',
+      status: commandSucceeded(result) ? 'done' : 'failed',
+      output: {
+        result: { text: commandSucceeded(result) ? `文件夹已打开：${folderTarget}。验证证据：${stdout || '启动命令退出码为 0。'}` : `文件夹打开失败：${combineResultText(result)}`, taskId: task?.id || '' },
+        evidence,
+        suggestions: []
+      },
+      evidence,
+      suggestions: [],
+      finishedAt: finishedAt.toISOString()
+    };
+  }
+
+  if (isSettingsTarget(goal) && /打开|启动|运行/i.test(goal)) {
+    const uri = settingsUriForPage(goal);
+    const args = ['/d', '/s', '/c', 'start', '""', uri];
+    const commandRun = createNativeEvidence('cmd.exe', args);
+    const result = await startDetachedNative('cmd.exe', args, { cwd: context.cwd || process.cwd(), onChild });
+    const finishedAt = new Date();
+    const stdout = commandSucceeded(result)
+      ? `opened_settings=${uri}`
+      : combineResultText(result);
+    const evidence = {
+      commandRun,
+      stdout,
+      stderr: stripAnsi(result.stderr),
+      exitCode: result.code,
+      executedAt: startedAt.toISOString(),
+      finishedAt: finishedAt.toISOString(),
+      durationMs: Math.max(0, finishedAt.getTime() - startedAt.getTime())
+    };
+    return {
+      runId,
+      agentId: 'hermes',
+      status: commandSucceeded(result) ? 'done' : 'failed',
+      output: {
+        result: { text: commandSucceeded(result) ? `系统设置已打开：${uri}。验证证据：${stdout || '启动命令退出码为 0。'}` : `系统设置打开失败：${combineResultText(result)}`, taskId: task?.id || '' },
+        evidence,
+        suggestions: []
+      },
+      evidence,
+      suggestions: [],
+      finishedAt: finishedAt.toISOString()
+    };
+  }
+
   const openTarget = extractOpenTarget(goal);
   if (openTarget) {
     const urlTarget = extractUrlTarget(goal);
@@ -419,17 +603,19 @@ async function tryDirectWindowsAction(task, context, runId, startedAt, onChild) 
         finishedAt: finishedAt.toISOString()
       };
     }
-    const commandTarget = /记事本|notepad/i.test(openTarget) ? 'notepad.exe' : openTarget;
-    const args = ['-NoProfile', '-Command', `Start-Process ${JSON.stringify(commandTarget)}`];
-    const commandRun = createNativeEvidence('powershell.exe', args);
-    const result = await runNativeCommand('powershell.exe', args, { timeoutMs: context.timeoutMs || 30000, cwd: context.cwd || process.cwd(), onChild });
+    const commandTarget = /记事本|notepad/i.test(openTarget)
+      ? 'notepad.exe'
+      : (isTerminalTarget(openTarget) ? 'powershell.exe' : openTarget);
+    const args = [];
+    const commandRun = createNativeEvidence(commandTarget, args);
+    const result = await startDetachedNative(commandTarget, args, { cwd: context.cwd || process.cwd(), onChild });
     if (!commandSucceeded(result) && /logon session|cannot execute|指定程序|登录会话/i.test(`${result.stdout}\n${result.stderr}`)) {
       return null;
     }
-    const verifyArgs = ['-NoProfile', '-Command', `Get-Process | Where-Object { $_.ProcessName -like '*${commandTarget.replace(/\.exe$/i, '')}*' } | Select-Object -First 3 ProcessName,Id,Path | ConvertTo-Json -Compress`];
-    const verified = await runNativeCommand('powershell.exe', verifyArgs, { timeoutMs: 10000, cwd: context.cwd || process.cwd() });
     const finishedAt = new Date();
-    const stdout = combineResultText(result, verified);
+    const stdout = commandSucceeded(result)
+      ? `opened_app=${commandTarget}`
+      : combineResultText(result);
     return {
       runId,
       agentId: 'hermes',

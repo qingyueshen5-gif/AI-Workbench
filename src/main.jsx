@@ -726,7 +726,7 @@ function localProgressText(content) {
   if (/浏览器|网页自动化|打开网页|点击|录屏|截图|手机|飞书|微信|telegram|discord|slack|频道|gateway|长任务|编排|多员工|多agent|多 agent/.test(value)) {
     return '好的，我让 OpenClaw 去操作电脑了。';
   }
-  if (/hermes|电脑|本机|系统|c盘|c 盘|磁盘|文件|文件夹|目录|应用|软件|程序|浏览器|网页|页面|网站|网址|链接|端口|进程|服务|网络|代理|桌面|开始菜单|回收站|缓存|临时文件|github|https?:\/\/|[a-z0-9.-]+\.(com|cn|net|org|io|dev|app|ai|top|xyz)\b|下载|安装|打开|启动|运行|执行|查看|看看|清理|删除|创建|新建|访问|进入|修复|检测|体检|保存|导出/.test(value.toLowerCase())) {
+  if (/hermes|电脑|本机|系统|c盘|c 盘|磁盘|文件|文件夹|目录|应用|软件|程序|浏览器|网页|页面|网站|网址|链接|端口|进程|服务|网络|代理|桌面|开始菜单|回收站|缓存|临时文件|终端|命令行|powershell|cmd|设置|下载文件夹|github|https?:\/\/|[a-z0-9.-]+\.(com|cn|net|org|io|dev|app|ai|top|xyz)\b|下载|安装|打开|启动|运行|执行|查看|看看|清理|删除|创建|新建|访问|进入|修复|检测|体检|保存|导出/.test(value.toLowerCase())) {
     return '好的，我让 Hermes 去执行了。';
   }
   return '思考中';
