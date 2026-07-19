@@ -5,7 +5,7 @@ import { dirname, extname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { agentDefinitions } from './agents/definitions.mjs';
 import { agentRegistry } from './agents/registry.mjs';
-import { ownerFromAgentId, progressReplyForAgent, routeChatAgent } from './agents/router.mjs';
+import { ownerFromAgentId, progressReplyForAgent, isActionIntent } from './agents/router.mjs';
 import { verificationRules, verifyRun } from './verification/rules.mjs';
 import { getRecoveryHint, normalizeError } from './errors/normalize.mjs';
 import { checkHealth, repairAll, selfHeal, setupEnv } from './health/self-heal.mjs';
@@ -599,35 +599,6 @@ function describeDeepSeekError(statusCode, payload) {
   return message || `DeepSeek API返回错误 ${statusCode}`;
 }
 
-function extractJsonObject(text) {
-  const raw = String(text || '').trim();
-  if (!raw) throw new Error('DeepSeek未返回提炼结果');
-  try {
-    return JSON.parse(raw);
-  } catch {
-    const fenced = raw.match(/```(?:json)?\s*([\s\S]*?)```/i)?.[1]?.trim();
-    if (fenced) return extractJsonObject(fenced);
-    const match = raw.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('DeepSeek返回结果不是JSON');
-    const candidate = match[0]
-      .replace(/,\s*([}\]])/g, '$1')
-      .replace(/[“”]/g, '"')
-      .replace(/[‘’]/g, "'");
-    return JSON.parse(candidate);
-  }
-}
-
-function fallbackExtractionReply(content) {
-  const text = String(content || '').trim();
-  return {
-    reply: text ? `我收到你的问题了：${text}` : '我收到你的消息了。',
-    goal: { text: '', confidence: 0 },
-    tasks: [],
-    preferences: { defaultOwner: '', dailyTaskLimit: null, communicationStyle: '', confidence: 0 },
-    needsConfirmation: []
-  };
-}
-
 function createAssistantMessage(content) {
   return {
     id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
@@ -648,7 +619,6 @@ function buildFailureExplanation({ agentName = '员工', errorMessage = '', veri
     '执行没有返回有效结果'
   ).trim();
   const reason = technical
-    .replace(/DeepSeek返回结果不是JSON/gi, '模型返回格式异常，系统已自动重试但仍未拿到可用结果')
     .replace(/Start-Process[\s\S]*?(The system cannot find the file specified|系统找不到指定的文件)[\s\S]*/gi, '没找到要打开的程序，系统里没有对应可执行文件或名称不对')
     .replace(/The system cannot find the file specified/gi, '系统里没找到指定文件或程序')
     .replace(/No such file or directory/gi, '目标文件或目录不存在')
@@ -905,12 +875,114 @@ async function webSearch({ query, num_results = 5 }) {
   };
 }
 
-const runtimeTools = [
+const workbenchTools = [
+  {
+    type: 'function',
+    function: {
+      name: 'open_url',
+      description: 'Open a web page in the user computer default browser. Use for requests to open, visit, or show a website/page.',
+      parameters: {
+        type: 'object',
+        properties: {
+          url: {
+            type: 'string',
+            description: 'The URL or domain to open, for example https://github.com or tencent.com.'
+          }
+        },
+        required: ['url']
+      }
+    }
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'open_app',
+      description: 'Open a local Windows application on the user computer.',
+      parameters: {
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            description: 'Application name, for example notepad, 记事本, Chrome.'
+          }
+        },
+        required: ['name']
+      }
+    }
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'run_system_query',
+      description: 'Run a safe read-only system query through Hermes, such as disk space, processes, services, ports, or environment status.',
+      parameters: {
+        type: 'object',
+        properties: {
+          query: {
+            type: 'string',
+            description: 'Natural language query describing the system information to retrieve.'
+          }
+        },
+        required: ['query']
+      }
+    }
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'clean_disk',
+      description: 'Safely clean disk temporary files, recycle bin, and browser caches without touching user documents.',
+      parameters: {
+        type: 'object',
+        properties: {
+          target: {
+            type: 'string',
+            description: 'Target disk or scope, for example C盘 or C:.'
+          }
+        },
+        required: ['target']
+      }
+    }
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'download_install',
+      description: 'Download and install software on the user computer through Hermes and winget when possible.',
+      parameters: {
+        type: 'object',
+        properties: {
+          software: {
+            type: 'string',
+            description: 'Software name to install.'
+          }
+        },
+        required: ['software']
+      }
+    }
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'read_file_summarize',
+      description: 'Read a local file and summarize it through Hermes.',
+      parameters: {
+        type: 'object',
+        properties: {
+          path: {
+            type: 'string',
+            description: 'Local file path to read and summarize.'
+          }
+        },
+        required: ['path']
+      }
+    }
+  },
   {
     type: 'function',
     function: {
       name: 'web_search',
-      description: 'Search the web for current, time-sensitive, news, market, product price, policy, release, or factual status questions. Do not use for stable common knowledge.',
+      description: 'Search the web for current, time-sensitive, weather, news, market, product price, policy, release, or factual status questions.',
       parameters: {
         type: 'object',
         properties: {
@@ -929,11 +1001,111 @@ const runtimeTools = [
   }
 ];
 
-async function executeToolCall(toolCall) {
-  const name = toolCall?.function?.name;
-  const args = JSON.parse(toolCall?.function?.arguments || '{}');
-  if (name === 'web_search') return webSearch(args);
-  throw new Error(`未知工具：${name}`);
+function parseToolArguments(toolCall) {
+  try {
+    return JSON.parse(toolCall?.function?.arguments || '{}');
+  } catch {
+    return {};
+  }
+}
+
+function normalizeUrlTarget(url) {
+  const raw = String(url || '').trim();
+  if (!raw) return '';
+  if (/^https?:\/\//i.test(raw)) return raw;
+  if (/腾讯|tencent/i.test(raw)) return 'https://www.tencent.com';
+  if (/github/i.test(raw)) return 'https://github.com';
+  if (/^[a-z0-9.-]+\.[a-z]{2,}(?:\/.*)?$/i.test(raw)) return `https://${raw}`;
+  return raw;
+}
+
+function goalFromToolCall(name, args) {
+  if (name === 'open_url') return `打开${normalizeUrlTarget(args.url)}`;
+  if (name === 'open_app') return `打开${args.name || ''}`;
+  if (name === 'run_system_query') return String(args.query || '');
+  if (name === 'clean_disk') return `清理${args.target || 'C盘'}`;
+  if (name === 'download_install') return `安装${args.software || ''}到电脑上`;
+  if (name === 'read_file_summarize') return `读取并总结文件 ${args.path || ''}`;
+  return '';
+}
+
+function resultTextFromToolResult(toolResult) {
+  if (toolResult?.error) return `执行失败：${toolResult.error}`;
+  if (toolResult?.output?.result?.text) return String(toolResult.output.result.text);
+  if (toolResult?.text) return String(toolResult.text);
+  return JSON.stringify(toolResult || {});
+}
+
+function sanitizeAssistantReply(text, toolResults = []) {
+  const value = String(text || '').trim();
+  if (!/无法.*(操作|打开|执行)|不能.*(操作|打开|执行)|不能直接打开|无法直接打开/i.test(value)) return value;
+  const successful = toolResults.filter((item) => item?.ok).map(resultTextFromToolResult).filter(Boolean);
+  if (successful.length) return successful.join('\n');
+  return value.replace(/我是AI助手[，, ]*/g, '').replace(/无法直接打开/g, '这次没有打开成功').replace(/不能直接打开/g, '这次没有打开成功');
+}
+
+function fallbackToolCallForAction(content) {
+  if (!isActionIntent(content)) return null;
+  const raw = String(content || '').trim();
+  if (/清理|缓存|临时文件|回收站/i.test(raw)) {
+    return { id: createId('tool'), type: 'function', function: { name: 'clean_disk', arguments: JSON.stringify({ target: /[a-z]:|[a-z]盘/i.test(raw) ? raw.match(/[a-z]:|[a-z]盘/i)[0] : 'C盘' }) } };
+  }
+  if (/下载|安装/i.test(raw)) {
+    const software = raw.replace(/帮我|请|下载|安装|到电脑上|到电脑|软件|程序|一下/g, '').trim();
+    return { id: createId('tool'), type: 'function', function: { name: 'download_install', arguments: JSON.stringify({ software }) } };
+  }
+  if (/剩余|空间|磁盘|进程|端口|服务|系统|环境|查看|看看|查询|查/i.test(raw)) {
+    return { id: createId('tool'), type: 'function', function: { name: 'run_system_query', arguments: JSON.stringify({ query: raw }) } };
+  }
+  if (/https?:\/\/|网页|页面|网站|网址|github|腾讯|tencent|[a-z0-9.-]+\.[a-z]{2,}/i.test(raw)) {
+    const explicit = raw.match(/https?:\/\/[^\s，。]+/i)?.[0]
+      || raw.match(/[a-z0-9.-]+\.[a-z]{2,}(?:\/[^\s，。]*)?/i)?.[0]
+      || (/腾讯|tencent/i.test(raw) ? 'https://www.tencent.com' : '')
+      || (/github/i.test(raw) ? 'https://github.com' : '');
+    return { id: createId('tool'), type: 'function', function: { name: 'open_url', arguments: JSON.stringify({ url: explicit || raw }) } };
+  }
+  if (/打开|启动|运行/i.test(raw)) {
+    const name = raw.replace(/帮我|请|打开|启动|运行|一下/g, '').trim();
+    return { id: createId('tool'), type: 'function', function: { name: 'open_app', arguments: JSON.stringify({ name }) } };
+  }
+  return { id: createId('tool'), type: 'function', function: { name: 'run_system_query', arguments: JSON.stringify({ query: raw }) } };
+}
+
+function normalizeToolCallForUserContent(toolCall, content) {
+  const name = toolCall?.function?.name || '';
+  const args = parseToolArguments(toolCall);
+  const raw = String(content || '').trim();
+  if (/天气|气温|下雨|降雨|晴天|多云|weather/i.test(raw)) {
+    return {
+      id: toolCall.id || createId('tool'),
+      type: 'function',
+      function: {
+        name: 'web_search',
+        arguments: JSON.stringify({ query: raw, num_results: 5 })
+      }
+    };
+  }
+  if (name === 'open_url' && /腾讯|tencent/i.test(raw)) {
+    return {
+      ...toolCall,
+      function: {
+        ...toolCall.function,
+        name: 'open_url',
+        arguments: JSON.stringify({ ...args, url: 'https://www.tencent.com' })
+      }
+    };
+  }
+  if (/C盘|c盘|C 盘|c 盘/i.test(raw) && /(还剩|剩余|空间|容量|多少)/i.test(raw) && name !== 'run_system_query') {
+    return {
+      id: toolCall.id || createId('tool'),
+      type: 'function',
+      function: {
+        name: 'run_system_query',
+        arguments: JSON.stringify({ query: raw })
+      }
+    };
+  }
+  return toolCall;
 }
 
 async function callDeepSeek(model, messages, options = {}) {
@@ -975,114 +1147,201 @@ async function callDeepSeek(model, messages, options = {}) {
   }
 }
 
-async function extractStructureFromMessage(model, content, currentData) {
-  const today = new Date().toISOString().slice(0, 10);
-  const messages = [
-    {
-      role: 'system',
-      content: [
-        '你是AI Workbench的信息提炼器和简洁助手。',
-        '只返回JSON，不要Markdown，不要解释。',
-        'JSON格式：{"reply":"","goal":{"text":"","confidence":0},"tasks":[{"title":"","owner":"","confidence":0}],"preferences":{"defaultOwner":"","dailyTaskLimit":null,"communicationStyle":"","confidence":0},"needsConfirmation":[{"type":"goal|task|preference","text":"","reason":""}]}',
-        '只有明确表达今天目标、待办任务或偏好时才填写；不确定时不要自动写入，放到needsConfirmation。',
-        '如果只是寒暄、问候或闲聊，goal.text留空、tasks为空、preferences保持空值，reply给出简短自然回应。',
-        '你可以按需调用web_search工具。实时数据、新闻、当前状态、价格、版本、政策、公司人物等可能变化的问题必须先搜索；稳定常识或历史问题不要搜索。',
-        '如果用户的问题需要当前信息但你没有调用web_search，不要猜测答案；请调用工具。',
-        '搜索结果只作为依据，reply需要你整理后回答用户，不要原样倾倒搜索结果；涉及当前信息时简要说明来源名称或链接。',
-        'reply必须始终填写，语气简洁，不要说自己已经执行了任务。',
-        '禁止回复“我是AI助手，无法在你电脑上操作”“我不能操作你的电脑”等话术；如果消息需要实际操作，应交给执行路由而不是口头拒绝。',
-        'owner只能是DeepSeek、人工、Codex、GPT、Claude之一；当前真实接入的是DeepSeek，Codex/GPT/Claude暂未接入，无法判断则留空。',
-        `今天日期是${today}。`
-      ].join('\n')
-    },
-    {
-      role: 'user',
-      content: JSON.stringify({
-        message: content,
-        webSearchAvailable: Boolean(String(process.env.SERPER_API_KEY || '').trim()),
-        webSearchToolName: 'web_search',
-        currentGoal: currentData.dailyGoals[today] || '',
-        currentPreferences: currentData.preferences,
-        existingTasks: currentData.tasks.slice(0, 20).map((task) => ({
-          title: task.title,
-          status: task.status,
-          owner: task.owner
-        }))
-      })
-    }
-  ];
-  const jsonResponseFormat = { type: 'json_object' };
-  let result = await callDeepSeek(model, messages, { tools: runtimeTools, employee: 'deepseek' });
-  const firstMessage = result.choices?.[0]?.message;
-  const toolResults = [];
-  if (firstMessage?.tool_calls?.length) {
-    messages.push(firstMessage);
-    for (const toolCall of firstMessage.tool_calls) {
-      try {
-        const toolResult = await executeToolCall(toolCall);
-        toolResults.push({ name: toolCall.function?.name || '', result: toolResult });
-        messages.push({
-          role: 'tool',
-          tool_call_id: toolCall.id,
-          content: JSON.stringify(toolResult)
-        });
-      } catch (error) {
-        toolResults.push({ name: toolCall.function?.name || '', error: error.message });
-        messages.push({
-          role: 'tool',
-          tool_call_id: toolCall.id,
-          content: JSON.stringify({ error: error.message })
-        });
-      }
-    }
-    result = await callDeepSeek(model, messages, { response_format: jsonResponseFormat, employee: 'deepseek' });
-  } else if (firstMessage?.content) {
-    result = { ...result, choices: [{ ...result.choices?.[0], message: firstMessage }] };
-  }
-  let latestText = result.choices?.[0]?.message?.content || '';
-  let extraction = null;
-  let parseError = null;
-  for (let attempt = 0; attempt < 3; attempt += 1) {
-    try {
-      extraction = extractJsonObject(latestText);
-      break;
-    } catch (error) {
-      parseError = error;
-      messages.push({
-        role: 'assistant',
-        content: latestText || ''
-      });
-      messages.push({
-        role: 'user',
-        content: '上一次输出不是合法 JSON。请只返回符合约定 schema 的 JSON，不要 Markdown，不要解释。'
-      });
-      try {
-        result = await callDeepSeek(model, messages, { response_format: jsonResponseFormat, employee: 'deepseek' });
-        latestText = result.choices?.[0]?.message?.content || '';
-      } catch (retryError) {
-        parseError = retryError;
-        break;
-      }
-    }
-  }
-  if (!extraction) {
-    extraction = fallbackExtractionReply(content);
-    extraction.parseRecovery = {
-      recovered: false,
-      internalError: parseError?.message || 'DeepSeek JSON parse failed'
-    };
-  }
-  if (toolResults.length) extraction.toolResults = toolResults;
-  if (isCasualGreeting(content)) {
+function toolAgentId(name) {
+  if (name === 'web_search') return 'deepseek';
+  return 'hermes';
+}
+
+async function executeWorkbenchToolCall({
+  toolCall,
+  data,
+  activeConversationId,
+  sourceMessageId,
+  root,
+  runStartedAt = new Date().toISOString()
+}) {
+  const name = toolCall?.function?.name || '';
+  const args = parseToolArguments(toolCall);
+  if (name === 'web_search') {
+    const result = await webSearch(args);
     return {
-      ...extraction,
-      goal: { text: '', confidence: 0 },
-      tasks: [],
-      preferences: { defaultOwner: '', dailyTaskLimit: null, communicationStyle: '', confidence: 0 },
-      needsConfirmation: []
+      data,
+      toolResult: {
+        ok: true,
+        tool: name,
+        args,
+        result,
+        text: `联网搜索完成：${result.results?.slice(0, 3).map((item) => item.title).filter(Boolean).join('；') || result.query}`
+      },
+      taskId: '',
+      runId: ''
     };
   }
-  return extraction;
+
+  const agentId = toolAgentId(name);
+  const goal = goalFromToolCall(name, args);
+  if (!goal) throw new Error(`工具 ${name} 缺少可执行目标`);
+  const task = createTaskRecord({
+    userGoal: goal,
+    title: goal.slice(0, 48) || name,
+    assignedAgentId: agentId,
+    status: 'running',
+    sourceMessageId,
+    evidenceRequired: ['hermes_command', 'stdout', 'stderr', 'exitCode', 'durationMs']
+  });
+  const run = createRunRecord({
+    taskId: task.id,
+    agentId,
+    status: 'running',
+    input: {
+      type: 'function_call',
+      tool: name,
+      args,
+      goal,
+      conversationId: activeConversationId
+    },
+    evidence: { sourceMessageId, toolCallId: toolCall.id || '' },
+    startedAt: runStartedAt
+  });
+  let nextData = normalizeData({
+    ...data,
+    tasks: [task, ...data.tasks],
+    runs: [run, ...data.runs]
+  });
+
+  try {
+    const taskContext = buildTaskContextPackage(nextData, task);
+    const adapterResult = await agentRegistry.invoke(agentId, task, {
+      ...taskContext,
+      timeoutMs: 180000,
+      cwd: root,
+      provider: 'custom',
+      model: 'deepseek-chat',
+      toolsets: 'memory,terminal'
+    });
+    const output = adapterResult.output || {
+      result: { text: adapterResult.output || '' },
+      evidence: adapterResult.evidence || {},
+      suggestions: adapterResult.suggestions || []
+    };
+    let patchedRun = createRunRecord({
+      ...run,
+      status: adapterResult.status === 'done' ? 'done' : 'failed',
+      input: {
+        type: 'function_call',
+        tool: name,
+        args,
+        goal,
+        conversationId: activeConversationId,
+        task,
+        task_context: taskContext
+      },
+      output,
+      evidence: output.evidence || adapterResult.evidence || {},
+      errorRaw: adapterResult.error?.raw || null,
+      errorUserMessage: adapterResult.error?.message || '',
+      retryCount: 0,
+      costEstimate: { currency: 'USD', amount: 0, note: 'Hermes CLI 本地调用，MVP 暂不精算模型成本。' },
+      startedAt: output.evidence?.executedAt || run.startedAt,
+      finishedAt: output.evidence?.finishedAt || adapterResult.finishedAt || new Date().toISOString(),
+      verified: false,
+      verificationResult: null
+    });
+    const verification = verifyRun(patchedRun);
+    const normalizedRunError = verification.ok ? null : normalizeError({
+      reason: verification.reason,
+      type: verification.reason,
+      details: verification.details,
+      rawError: adapterResult.error || null
+    });
+    patchedRun = {
+      ...patchedRun,
+      id: run.id,
+      status: verification.ok ? 'done' : 'failed',
+      verified: verification.ok,
+      verificationResult: verification,
+      errorRaw: verification.ok ? patchedRun.errorRaw : { adapterError: adapterResult.error || null, verification },
+      errorUserMessage: verification.ok ? '' : normalizedRunError.userMessage,
+      normalizedError: verification.ok ? null : normalizedRunError
+    };
+    const text = verification.ok
+      ? cleanHermesUserReply(output.result?.text || output.result || output)
+      : buildFailureExplanation({
+          agentName: ownerFromAgentId(agentId),
+          errorMessage: patchedRun.errorUserMessage,
+          verification,
+          evidence: output.evidence || adapterResult.evidence || {}
+        });
+    nextData = {
+      ...nextData,
+      tasks: patchTask(nextData.tasks, task.id, {
+        status: patchedRun.status,
+        userVisibleSummary: text.slice(0, 180)
+      }),
+      runs: patchRun(nextData.runs, run.id, patchedRun),
+      modelConnection: {
+        status: verification.ok ? '已连接' : '未连接',
+        provider: ownerFromAgentId(agentId),
+        model: 'deepseek-chat',
+        checkedAt: new Date().toISOString()
+      }
+    };
+    return {
+      data: nextData,
+      taskId: task.id,
+      runId: run.id,
+      toolResult: {
+        ok: verification.ok,
+        tool: name,
+        args,
+        agentId,
+        taskId: task.id,
+        runId: run.id,
+        text,
+        verification,
+        evidence: output.evidence || adapterResult.evidence || {}
+      }
+    };
+  } catch (error) {
+    const normalized = agentRegistry.normalizeError(agentId, error);
+    const text = buildFailureExplanation({
+      agentName: ownerFromAgentId(agentId),
+      errorMessage: normalized.message || error.message
+    });
+    nextData = {
+      ...nextData,
+      tasks: patchTask(nextData.tasks, task.id, {
+        status: 'failed',
+        userVisibleSummary: text
+      }),
+      runs: patchRun(nextData.runs, run.id, {
+        status: 'failed',
+        output: null,
+        errorRaw: { message: error.message },
+        errorUserMessage: text,
+        finishedAt: new Date().toISOString(),
+        verified: false,
+        verificationResult: { ok: false, reason: `${agentId}_invoke_failed` },
+        normalizedError: normalized
+      }),
+      systemErrors: [createSystemError(text, `${ownerFromAgentId(agentId)} 工具执行`), ...nextData.systemErrors]
+    };
+    return {
+      data: nextData,
+      taskId: task.id,
+      runId: run.id,
+      toolResult: {
+        ok: false,
+        tool: name,
+        args,
+        agentId,
+        taskId: task.id,
+        runId: run.id,
+        text,
+        error: text
+      }
+    };
+  }
 }
 
 function applyExtraction(data, extraction, sourceMessageId) {
@@ -1781,441 +2040,188 @@ const server = createServer(async (request, response) => {
         return;
       }
 
-      const routedAgentId = routeChatAgent(content);
-      const task = createTaskRecord({
-        userGoal: content,
-        title: content.slice(0, 48) || '聊天消息处理',
-        assignedAgentId: routedAgentId,
-        status: 'running',
-        sourceMessageId: messageId,
-        evidenceRequired: routedAgentId === 'hermes'
-          ? ['hermes_command', 'stdout', 'stderr', 'exitCode', 'durationMs']
-          : ['assistant_reply', 'model_response']
-      });
-      const runStartedAt = new Date().toISOString();
-      const run = createRunRecord({
-        taskId: task.id,
-        agentId: task.assignedAgentId,
-        status: 'running',
-        input: {
-          type: 'chat_message',
-          content,
-          conversationId: activeConversation.id
+      const model = String(currentData.preferences.deepSeekModel || initialData.preferences.deepSeekModel).trim();
+      const today = new Date().toISOString().slice(0, 10);
+      const toolMessages = [
+        {
+          role: 'system',
+          content: [
+            '你是 AI Workbench 的调度助手。你具备真实电脑操作能力，但必须通过工具执行。',
+            '凡是用户要求对电脑、网络、文件、应用、网页产生实际效果，必须调用合适工具，不要口头回答了事。',
+            '用户要求打开网页时调用 open_url；打开应用调用 open_app；查看磁盘/进程/端口/服务等调用 run_system_query；清理磁盘调用 clean_disk；下载安装软件调用 download_install；读取文件调用 read_file_summarize。',
+            '天气、新闻、价格、版本、政策、今天/最新等当前信息调用 web_search。',
+            '纯知识、解释、写作类问题没有实际操作需求时才直接回答。',
+            '禁止输出“我无法操作你的电脑”“我不能直接打开”“我是AI助手无法执行”等拒绝话术。',
+            '工具执行完成后，根据工具结果用中文大白话汇报；不要编造工具没有返回的证据。',
+            `今天日期是 ${today}。`
+          ].join('\n')
         },
-        evidence: {
-          sourceMessageId: messageId
-        },
-        startedAt: runStartedAt
-      });
-      const taskMessage = { ...message, taskId: task.id, runId: run.id };
-      const progressMessage = routedAgentId === 'hermes' || routedAgentId === 'openclaw'
-        ? createAssistantMessage(progressReplyForAgent(routedAgentId, content))
-        : null;
-      const taskMessages = progressMessage
-        ? [...(activeConversation.messages || []), taskMessage, progressMessage]
-        : [...(activeConversation.messages || []), taskMessage];
-      conversations = conversations.map((conversation) =>
-        conversation.id === activeConversation.id
-          ? {
-              ...conversation,
-              title: conversation.title || content.slice(0, 32) || '新对话',
-              updatedAt: taskMessage.createdAt,
-              messages: taskMessages
-            }
-          : conversation
-      );
-      let nextData = normalizeData({
-        ...currentData,
-        conversations,
-        activeConversationId: activeConversation.id,
-        messages: taskMessages,
-        tasks: [task, ...currentData.tasks],
-        runs: [run, ...currentData.runs]
-      });
-      await writeData(appendFailureMemories(currentData, nextData));
-
-      if (routedAgentId === 'openclaw') {
-        try {
-          const taskContext = buildTaskContextPackage(nextData, task);
-          const adapterResult = await agentRegistry.invoke('openclaw', task, {
-            ...taskContext,
-            timeoutMs: 120000,
-            cwd: root,
-            openClawAgent: 'main'
-          });
-          const output = adapterResult.output || {
-            result: { text: adapterResult.output || '' },
-            evidence: adapterResult.evidence || {},
-            suggestions: adapterResult.suggestions || []
-          };
-          let patchedRun = createRunRecord({
-            ...run,
-            status: adapterResult.status === 'done' ? 'done' : 'failed',
-            input: {
-              type: 'chat_message',
-              content,
-              conversationId: activeConversation.id,
-              task,
-              task_context: taskContext
-            },
-            output,
-            evidence: output.evidence || adapterResult.evidence || {},
-            errorRaw: adapterResult.error?.raw || null,
-            errorUserMessage: adapterResult.error?.message || '',
-            retryCount: 0,
-            costEstimate: { currency: 'USD', amount: 0, note: 'OpenClaw CLI 本地调用，MVP 暂不精算模型成本。' },
-            startedAt: output.evidence?.executedAt || run.startedAt,
-            finishedAt: output.evidence?.finishedAt || adapterResult.finishedAt || new Date().toISOString(),
-            verified: false,
-            verificationResult: null
-          });
-          const verification = agentRegistry.verify('openclaw', adapterResult);
-          const normalizedRunError = verification.ok ? null : normalizeError({
-            reason: verification.reason || verification.message,
-            type: verification.reason || 'openclaw_verification_failed',
-            details: verification,
-            rawError: adapterResult.error || null
-          });
-          patchedRun = {
-            ...patchedRun,
-            id: run.id,
-            status: verification.ok ? 'done' : 'failed',
-            verified: verification.ok,
-            verificationResult: verification,
-            errorRaw: verification.ok ? patchedRun.errorRaw : { adapterError: adapterResult.error || null, verification },
-            errorUserMessage: verification.ok ? '' : normalizedRunError.userMessage,
-            normalizedError: verification.ok ? null : normalizedRunError
-          };
-          const assistantText = verification.ok
-            ? (output.result?.text || output.result || 'OpenClaw 已完成执行。')
-            : buildFailureExplanation({
-                agentName: 'OpenClaw',
-                errorMessage: patchedRun.errorUserMessage,
-                verification,
-                evidence: output.evidence || adapterResult.evidence || {}
-              });
-          const assistantMessage = createAssistantMessage(assistantText);
-          nextData = {
-            ...nextData,
-            conversations: nextData.conversations.map((conversation) =>
-              conversation.id === activeConversation.id
-                ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...taskMessages, assistantMessage] }
-                : conversation
-            ),
-            messages: [...taskMessages, assistantMessage],
-            tasks: patchTask(nextData.tasks, task.id, {
-              status: patchedRun.status,
-              userVisibleSummary: verification.ok ? assistantText.slice(0, 180) : patchedRun.errorUserMessage
-            }),
-            runs: patchRun(nextData.runs, run.id, patchedRun),
-            modelConnection: {
-              status: verification.ok ? '已连接' : '未连接',
-              provider: 'OpenClaw',
-              model: 'main',
-              checkedAt: new Date().toISOString()
-            }
-          };
-          await writeData(appendFailureMemories(currentData, nextData));
-          sendJson(response, 200, {
-            data: await readDataWithMeta(),
-            routedAgentId: 'openclaw',
-            taskId: task.id,
-            runId: run.id,
-            verification
-          });
-        } catch (error) {
-          const normalized = agentRegistry.normalizeError('openclaw', error);
-          const userMessage = buildFailureExplanation({
-            agentName: 'OpenClaw',
-            errorMessage: normalized.message || error.message
-          });
-          const assistantMessage = createAssistantMessage(userMessage);
-          const finishedAt = new Date().toISOString();
-          nextData = {
-            ...nextData,
-            conversations: nextData.conversations.map((conversation) =>
-              conversation.id === activeConversation.id
-                ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...taskMessages, assistantMessage] }
-                : conversation
-            ),
-            messages: [...taskMessages, assistantMessage],
-            tasks: patchTask(nextData.tasks, task.id, {
-              status: 'failed',
-              userVisibleSummary: userMessage
-            }),
-            runs: patchRun(nextData.runs, run.id, {
-              status: 'failed',
-              output: null,
-              errorRaw: { message: error.message },
-              errorUserMessage: userMessage,
-              finishedAt,
-              verified: false,
-              verificationResult: { ok: false, reason: 'openclaw_invoke_failed' },
-              normalizedError: normalized
-            }),
-            systemErrors: [createSystemError(userMessage, 'OpenClaw 自动执行'), ...nextData.systemErrors]
-          };
-          await writeData(appendFailureMemories(currentData, nextData));
-          sendJson(response, 200, { data: await readDataWithMeta(), routedAgentId: 'openclaw', warning: userMessage });
-        }
-        return;
-      }
-
-      if (routedAgentId === 'hermes') {
-        try {
-          const taskContext = buildTaskContextPackage(nextData, task);
-          const adapterResult = await agentRegistry.invoke('hermes', task, {
-            ...taskContext,
-            timeoutMs: 180000,
-            cwd: root,
-            provider: 'custom',
-            model: 'deepseek-chat',
-            toolsets: 'memory,terminal'
-          });
-          const output = adapterResult.output || {
-            result: { text: adapterResult.output || '' },
-            evidence: adapterResult.evidence || {},
-            suggestions: adapterResult.suggestions || []
-          };
-          let patchedRun = createRunRecord({
-            ...run,
-            status: adapterResult.status === 'done' ? 'done' : 'failed',
-            input: {
-              type: 'chat_message',
-              content,
-              conversationId: activeConversation.id,
-              task,
-              task_context: taskContext
-            },
-            output,
-            evidence: output.evidence || adapterResult.evidence || {},
-            errorRaw: adapterResult.error?.raw || null,
-            errorUserMessage: adapterResult.error?.message || '',
-            retryCount: 0,
-            costEstimate: { currency: 'USD', amount: 0, note: 'Hermes CLI 本地调用，MVP 暂不精算模型成本。' },
-            startedAt: output.evidence?.executedAt || run.startedAt,
-            finishedAt: output.evidence?.finishedAt || adapterResult.finishedAt || new Date().toISOString(),
-            verified: false,
-            verificationResult: null
-          });
-          const verification = verifyRun(patchedRun);
-          const normalizedRunError = verification.ok ? null : normalizeError({
-            reason: verification.reason,
-            type: verification.reason,
-            details: verification.details,
-            rawError: adapterResult.error || null
-          });
-          patchedRun = {
-            ...patchedRun,
-            id: run.id,
-            status: verification.ok ? 'done' : 'failed',
-            verified: verification.ok,
-            verificationResult: verification,
-            errorRaw: verification.ok ? patchedRun.errorRaw : { adapterError: adapterResult.error || null, verification },
-            errorUserMessage: verification.ok ? '' : normalizedRunError.userMessage,
-            normalizedError: verification.ok ? null : normalizedRunError
-          };
-          const assistantText = verification.ok
-            ? cleanHermesUserReply(output.result?.text || output.result || output)
-            : buildFailureExplanation({
-                agentName: 'Hermes',
-                errorMessage: patchedRun.errorUserMessage,
-                verification,
-                evidence: output.evidence || adapterResult.evidence || {}
-              });
-          const assistantMessage = createAssistantMessage(assistantText);
-          nextData = {
-            ...nextData,
-            conversations: nextData.conversations.map((conversation) =>
-              conversation.id === activeConversation.id
-                ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...taskMessages, assistantMessage] }
-                : conversation
-            ),
-            messages: [...taskMessages, assistantMessage],
-            tasks: patchTask(nextData.tasks, task.id, {
-              status: patchedRun.status,
-              userVisibleSummary: verification.ok ? assistantText.slice(0, 180) : patchedRun.errorUserMessage
-            }),
-            runs: patchRun(nextData.runs, run.id, patchedRun),
-            modelConnection: {
-              status: verification.ok ? '已连接' : '未连接',
-              provider: 'Hermes',
-              model: 'deepseek-chat',
-              checkedAt: new Date().toISOString()
-            }
-          };
-          await writeData(appendFailureMemories(currentData, nextData));
-          sendJson(response, 200, {
-            data: await readDataWithMeta(),
-            routedAgentId: 'hermes',
-            taskId: task.id,
-            runId: run.id,
-            verification
-          });
-        } catch (error) {
-          const healed = await selfHeal({
-            type: /401|invalid_api_key/i.test(error.message) ? 'api_key' : 'network',
-            rawError: error.message
-          }, { root, dataFile, envFile, defaultData: initialData });
-          const normalized = normalizeError(error);
-          const userMessage = buildFailureExplanation({
-            agentName: 'Hermes',
-            errorMessage: healed?.userMessage || normalized.userMessage || error.message
-          });
-          const assistantMessage = createAssistantMessage(userMessage);
-          const finishedAt = new Date().toISOString();
-          nextData = {
-            ...nextData,
-            conversations: nextData.conversations.map((conversation) =>
-              conversation.id === activeConversation.id
-                ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...taskMessages, assistantMessage] }
-                : conversation
-            ),
-            messages: [...taskMessages, assistantMessage],
-            tasks: patchTask(nextData.tasks, task.id, {
-              status: 'failed',
-              userVisibleSummary: userMessage
-            }),
-            runs: patchRun(nextData.runs, run.id, {
-              status: 'failed',
-              output: null,
-              errorRaw: { message: error.message, healed },
-              errorUserMessage: userMessage,
-              finishedAt,
-              verified: false,
-              verificationResult: { ok: false, reason: 'hermes_invoke_failed' },
-              normalizedError: normalized
-            }),
-            systemErrors: [createSystemError(userMessage, 'Hermes 自动执行'), ...nextData.systemErrors]
-          };
-          await writeData(appendFailureMemories(currentData, nextData));
-          sendJson(response, 200, { data: await readDataWithMeta(), routedAgentId: 'hermes', warning: userMessage });
-        }
-        return;
-      }
-
-      const model = String(nextData.preferences.deepSeekModel || initialData.preferences.deepSeekModel).trim();
+        { role: 'user', content }
+      ];
 
       try {
-        const extraction = await extractStructureFromMessage(model, content, nextData);
-        const appliedResult = applyExtraction(nextData, extraction, message.id);
-        const assistantMessage = createAssistantMessage(extraction.reply);
-        const finishedAt = new Date().toISOString();
-        const updatedMessages = appliedResult.data.messages.map((item) =>
-          item.id === message.id
-            ? {
-                ...item,
-                extraction: {
-                  applied: appliedResult.applied,
-                  suggestions: appliedResult.suggestions,
-                  raw: extraction
-                }
+        let modelResult = await callDeepSeek(model, toolMessages, {
+          tools: workbenchTools,
+          tool_choice: 'auto',
+          employee: 'deepseek',
+          timeoutMs: 30000
+        });
+        let firstMessage = modelResult.choices?.[0]?.message || {};
+        const fallbackToolCall = !firstMessage.tool_calls?.length ? fallbackToolCallForAction(content) : null;
+        if (fallbackToolCall) {
+          firstMessage = {
+            role: 'assistant',
+            content: '',
+            tool_calls: [fallbackToolCall]
+          };
+        }
+        if (firstMessage.tool_calls?.length) {
+          firstMessage = {
+            ...firstMessage,
+            tool_calls: firstMessage.tool_calls.map((toolCall) => normalizeToolCallForUserContent(toolCall, content))
+          };
+        }
+
+        if (firstMessage.tool_calls?.length) {
+          const firstAgentId = firstMessage.tool_calls.some((toolCall) => toolAgentId(toolCall.function?.name) === 'hermes') ? 'hermes' : 'deepseek';
+          const progressMessage = firstAgentId === 'hermes'
+            ? createAssistantMessage(progressReplyForAgent('hermes', content))
+            : createAssistantMessage('我先联网查一下，再把结果整理给你。');
+          const taskMessages = [...(activeConversation.messages || []), message, progressMessage];
+          let nextData = normalizeData({
+            ...currentData,
+            conversations: conversations.map((conversation) =>
+              conversation.id === activeConversation.id
+                ? { ...conversation, updatedAt: progressMessage.createdAt, messages: taskMessages }
+                : conversation
+            ),
+            activeConversationId: activeConversation.id,
+            messages: taskMessages
+          });
+          await writeData(appendFailureMemories(currentData, nextData));
+
+          const finalMessages = [...toolMessages, firstMessage];
+          const toolResults = [];
+          for (const toolCall of firstMessage.tool_calls) {
+            const execution = await executeWorkbenchToolCall({
+              toolCall,
+              data: nextData,
+              activeConversationId: activeConversation.id,
+              sourceMessageId: messageId,
+              root
+            });
+            nextData = execution.data;
+            toolResults.push(execution.toolResult);
+            finalMessages.push({
+              role: 'tool',
+              tool_call_id: toolCall.id,
+              content: JSON.stringify(execution.toolResult)
+            });
+            await writeData(appendFailureMemories(currentData, {
+              ...nextData,
+              conversations: nextData.conversations.map((conversation) =>
+                conversation.id === activeConversation.id
+                  ? { ...conversation, updatedAt: progressMessage.createdAt, messages: taskMessages }
+                  : conversation
+              ),
+              activeConversationId: activeConversation.id,
+              messages: taskMessages
+            }));
+          }
+
+          let finalText = toolResults.map(resultTextFromToolResult).filter(Boolean).join('\n');
+          try {
+            const finalResult = await callDeepSeek(model, [
+              ...finalMessages,
+              {
+                role: 'user',
+                content: '根据上面的工具执行结果，直接用中文给用户汇报结果。成功就说结果和证据；失败就说原因和建议。不要说你无法操作电脑。'
               }
-            : item
-        );
-        nextData = {
-          ...appliedResult.data,
-          conversations: appliedResult.data.conversations.map((conversation) =>
+            ], { employee: 'deepseek', timeoutMs: 30000 });
+            finalText = String(finalResult.choices?.[0]?.message?.content || '').trim() || finalText;
+          } catch {}
+          finalText = sanitizeAssistantReply(finalText, toolResults);
+          const assistantMessage = createAssistantMessage(finalText);
+          nextData = normalizeData({
+            ...nextData,
+            conversations: nextData.conversations.map((conversation) =>
+              conversation.id === activeConversation.id
+                ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...taskMessages, assistantMessage] }
+                : conversation
+            ),
+            activeConversationId: activeConversation.id,
+            messages: [...taskMessages, assistantMessage],
+            preferences: { ...nextData.preferences, deepSeekModel: model },
+            modelConnection: {
+              status: toolResults.every((item) => item.ok) ? '已连接' : '未连接',
+              provider: toolResults.some((item) => item.agentId === 'hermes') ? 'Hermes' : 'DeepSeek',
+              model,
+              checkedAt: new Date().toISOString()
+            }
+          });
+          await writeData(appendFailureMemories(currentData, nextData));
+          sendJson(response, 200, {
+            data: await readDataWithMeta(),
+            routedAgentId: toolResults.some((item) => item.agentId === 'hermes') ? 'hermes' : 'deepseek',
+            toolCalls: firstMessage.tool_calls.map((toolCall) => ({
+              id: toolCall.id,
+              name: toolCall.function?.name || '',
+              args: parseToolArguments(toolCall)
+            })),
+            toolResults
+          });
+          return;
+        }
+
+        const assistantText = sanitizeAssistantReply(String(firstMessage.content || '').trim() || '我收到你的消息了。');
+        const assistantMessage = createAssistantMessage(assistantText);
+        const nextData = normalizeData({
+          ...currentData,
+          conversations: conversations.map((conversation) =>
             conversation.id === activeConversation.id
-              ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...updatedMessages, assistantMessage] }
+              ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...activeMessages, assistantMessage] }
               : conversation
           ),
           activeConversationId: activeConversation.id,
-          messages: [...updatedMessages, assistantMessage],
-          tasks: patchTask(appliedResult.data.tasks, task.id, {
-            status: 'done',
-            userVisibleSummary: extraction.reply || '聊天消息已处理'
-          }),
-          runs: patchRun(appliedResult.data.runs, run.id, {
-            status: 'done',
-            output: {
-              reply: extraction.reply || '',
-              applied: appliedResult.applied,
-              suggestions: appliedResult.suggestions
-            },
-            evidence: {
-              sourceMessageId: message.id,
-              assistantMessageId: assistantMessage.id,
-              provider: 'DeepSeek',
-              model,
-              toolResults: extraction.toolResults || []
-            },
-            costEstimate: {
-              currency: 'USD',
-              amount: 0,
-              note: 'MVP 阶段暂不精算 token 成本，先记录为 0。'
-            },
-            finishedAt,
-            verified: Boolean(extraction.reply),
-            verificationResult: {
-              ok: Boolean(extraction.reply),
-              method: 'assistant_reply_present',
-              evidence: ['assistantMessageId', 'model']
-            }
-          }),
-          preferences: { ...appliedResult.data.preferences, deepSeekModel: model },
+          messages: [...activeMessages, assistantMessage],
+          preferences: { ...currentData.preferences, deepSeekModel: model },
           modelConnection: {
             status: '已连接',
             provider: 'DeepSeek',
             model,
             checkedAt: new Date().toISOString()
           }
-        };
+        });
         await writeData(appendFailureMemories(currentData, nextData));
         sendJson(response, 200, {
           data: await readDataWithMeta(),
           routedAgentId: 'deepseek',
-          applied: appliedResult.applied,
-          suggestions: appliedResult.suggestions
+          toolCalls: [],
+          toolResults: []
         });
       } catch (error) {
         const userMessage = buildFailureExplanation({
           agentName: 'DeepSeek',
           errorMessage: error.message
         });
-        const errorLog = createSystemError(error.message, '聊天自动提炼');
         const assistantMessage = createAssistantMessage(userMessage);
-        const finishedAt = new Date().toISOString();
-        nextData = {
-          ...nextData,
-          conversations: nextData.conversations.map((conversation) =>
+        const nextData = normalizeData({
+          ...currentData,
+          conversations: conversations.map((conversation) =>
             conversation.id === activeConversation.id
-              ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...taskMessages, assistantMessage] }
+              ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...activeMessages, assistantMessage] }
               : conversation
           ),
-          messages: [...taskMessages, assistantMessage],
-          tasks: patchTask(nextData.tasks, task.id, {
-            status: 'failed',
-            userVisibleSummary: userMessage
-          }),
-          runs: patchRun(nextData.runs, run.id, {
-            status: 'failed',
-            output: null,
-            evidence: {
-              sourceMessageId: message.id,
-              assistantMessageId: assistantMessage.id,
-              provider: 'DeepSeek',
-              model
-            },
-            errorRaw: {
-              message: error.message,
-              statusCode: error.statusCode || null
-            },
-            errorUserMessage: userMessage,
-            finishedAt,
-            verified: false,
-            verificationResult: {
-              ok: false,
-              reason: error.message
-            }
-          }),
+          activeConversationId: activeConversation.id,
+          messages: [...activeMessages, assistantMessage],
           modelConnection: { status: '未连接', provider: '', model: '', checkedAt: new Date().toISOString() },
-          systemErrors: [errorLog, ...nextData.systemErrors]
-        };
+          systemErrors: [createSystemError(error.message, 'Function Calling 调度'), ...currentData.systemErrors]
+        });
         await writeData(appendFailureMemories(currentData, nextData));
         sendJson(response, 200, { data: await readDataWithMeta(), routedAgentId: 'deepseek', warning: userMessage });
       }
       return;
+
     }
 
     if (pathname === '/api/test-ai-connection' && request.method === 'POST') {

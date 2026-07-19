@@ -1,6 +1,6 @@
 {
   "name": "ai-workbench",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "private": true,
   "type": "module",
   "main": "electron/main.cjs",
@@ -26,6 +26,7 @@
     "verify:acceptance": "node scripts/verify-acceptance.mjs",
     "verify:action-routing": "node scripts/verify-action-routing.mjs",
     "capture:strict-acceptance": "node scripts/capture-strict-acceptance.mjs",
+    "capture:v041-installed": "node scripts/capture-v041-installed.mjs",
     "health:check": "node scripts/health-check.mjs",
     "health:repair": "node scripts/health-repair.mjs"
   },
@@ -48,7 +49,7 @@
     "productName": "AI Workbench",
     "asar": true,
     "directories": {
-      "output": "release-v0.4.0-installer"
+      "output": "release-v0.4.1-installer-final"
     },
     "electronDist": "node_modules/electron/dist",
     "files": [
