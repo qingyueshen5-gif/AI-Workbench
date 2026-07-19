@@ -1,0 +1,120 @@
+{
+  "ok": true,
+  "matrix": {
+    "release": "v0.4.5-test",
+    "employees": {
+      "hermes": "0.17.0",
+      "openclaw": "1.2.3"
+    },
+    "models": {
+      "deepseek": "deepseek-chat"
+    }
+  },
+  "demo": {
+    "locked": {
+      "ok": true,
+      "release": "v0.4.5-test",
+      "checkedAt": "2026-07-19T14:48:33.878Z",
+      "checks": [
+        {
+          "type": "employee",
+          "id": "hermes",
+          "ok": true,
+          "lockedVersion": "0.17.0",
+          "currentVersion": "0.17.0",
+          "message": "hermes matches locked version"
+        },
+        {
+          "type": "employee",
+          "id": "openclaw",
+          "ok": true,
+          "lockedVersion": "1.2.3",
+          "currentVersion": "1.2.3",
+          "message": "openclaw matches locked version"
+        },
+        {
+          "type": "model",
+          "id": "deepseek",
+          "ok": true,
+          "lockedVersion": "deepseek-chat",
+          "currentVersion": "deepseek-chat",
+          "message": "deepseek matches locked model"
+        }
+      ]
+    },
+    "upgradedDrift": {
+      "ok": false,
+      "release": "v0.4.5-test",
+      "checkedAt": "2026-07-19T14:48:33.885Z",
+      "checks": [
+        {
+          "type": "employee",
+          "id": "hermes",
+          "ok": false,
+          "lockedVersion": "0.17.0",
+          "currentVersion": "0.18.0",
+          "message": "hermes version drift or unavailable"
+        },
+        {
+          "type": "employee",
+          "id": "openclaw",
+          "ok": true,
+          "lockedVersion": "1.2.3",
+          "currentVersion": "1.2.3",
+          "message": "openclaw matches locked version"
+        },
+        {
+          "type": "model",
+          "id": "deepseek",
+          "ok": true,
+          "lockedVersion": "deepseek-chat",
+          "currentVersion": "deepseek-chat",
+          "message": "deepseek matches locked model"
+        }
+      ]
+    },
+    "rollbackPlan": {
+      "release": "v0.4.5-test",
+      "createdAt": "2026-07-19T14:48:33.894Z",
+      "dryRun": true,
+      "commands": [
+        {
+          "id": "hermes",
+          "action": "install",
+          "manager": "pip",
+          "command": "pip",
+          "args": [
+            "install",
+            "hermes==0.17.0"
+          ]
+        },
+        {
+          "id": "openclaw",
+          "action": "install",
+          "manager": "npm",
+          "command": "npm.cmd",
+          "args": [
+            "install",
+            "-g",
+            "openclaw@1.2.3"
+          ]
+        }
+      ]
+    },
+    "modelUnavailable": {
+      "ok": false,
+      "checkedAt": "2026-07-19T14:48:33.895Z",
+      "results": [
+        {
+          "id": "deepseek",
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "ok": false,
+          "severity": "high",
+          "reason": "simulated_model_unavailable",
+          "message": "deepseek-chat 不可用：锁定模型疑似下线或无权限。请在候选模型通过验收后再切换，或保持旧模型并接受功能降级。"
+        }
+      ]
+    }
+  }
+}

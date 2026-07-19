@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## v0.4.5 - 全链版本管理落地
+
+### 新增
+
+- 员工注册表增加 `version` 字段，DeepSeek 固定到 `deepseek-chat`，Hermes/OpenClaw 由版本快照运行时采集。
+- 新增 `versions/current.json`、`versions/lock.json` 和 `versions/releases/v0.4.4.json`，记录工作台、员工和模型版本矩阵。
+- 新增 `versions:snapshot`、`versions:doctor`、`versions:restore`、`versions:check-models` 和 `verify:versions` 脚本。
+- 服务端新增 `/api/versions/current`、`/api/versions/doctor`、`/api/versions/models/check`，供工作台查询版本矩阵和下线检测结果。
+
+### 验收
+
+- `verify:versions` 演示锁定版本、模拟 Hermes 升级偏离、生成 pip/npm 指定版本回退计划、模拟 `deepseek-chat` 不可用并给出处置提示。
+
 ## v0.4.4 - 窗口前置与回复排版精修
 
 ### 修复

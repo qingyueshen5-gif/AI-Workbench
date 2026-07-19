@@ -25,3 +25,6 @@ evidence/
 .tmp-strict-*/
 .tmp-strict-*.log
 verification/**/user-data*/
+verification/version-management/fixture-versions/
+versions/backups/*.json
+.tmp-version-management/

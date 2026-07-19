@@ -1,6 +1,6 @@
 {
   "name": "ai-workbench",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "private": true,
   "type": "module",
   "main": "electron/main.cjs",
@@ -25,8 +25,13 @@
     "verify:hermes-proxy": "node scripts/verify-hermes-proxy.mjs",
     "verify:acceptance": "node scripts/verify-acceptance.mjs",
     "verify:action-routing": "node scripts/verify-action-routing.mjs",
+    "verify:versions": "node scripts/verify-version-management.mjs",
     "capture:strict-acceptance": "node scripts/capture-strict-acceptance.mjs",
     "capture:v041-installed": "node scripts/capture-v041-installed.mjs",
+    "versions:snapshot": "node scripts/versions-snapshot.mjs",
+    "versions:doctor": "node scripts/versions-doctor.mjs",
+    "versions:restore": "node scripts/versions-restore.mjs",
+    "versions:check-models": "node scripts/versions-check-models.mjs",
     "health:check": "node scripts/health-check.mjs",
     "health:repair": "node scripts/health-repair.mjs"
   },
@@ -49,7 +54,7 @@
     "productName": "AI Workbench",
     "asar": true,
     "directories": {
-      "output": "release-v0.4.4-installer-final16"
+      "output": "release-v0.4.5-installer"
     },
     "electronDist": "node_modules/electron/dist",
     "files": [
@@ -63,6 +68,7 @@
       "agents/**",
       "errors/**",
       "health/**",
+      "versions/**",
       "verification/**",
       "CURRENT_TASK.md",
       "CONTEXT.md",

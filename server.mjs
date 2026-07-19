@@ -10,6 +10,7 @@ import { verificationRules, verifyRun } from './verification/rules.mjs';
 import { getRecoveryHint, normalizeError } from './errors/normalize.mjs';
 import { checkHealth, repairAll, selfHeal, setupEnv } from './health/self-heal.mjs';
 import { migrateLegacyRuntimeData, runtimeDataFile } from './runtime-paths.mjs';
+import { checkModelAvailability, doctor as versionDoctor, loadMatrix } from './versions/manager.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const dataFile = runtimeDataFile;
@@ -1690,6 +1691,38 @@ const server = createServer(async (request, response) => {
 
     if (pathname === '/api/health/repair' && request.method === 'POST') {
       sendJson(response, 200, await repairAll({ root, dataFile, envFile, defaultData: initialData }));
+      return;
+    }
+
+    if (pathname === '/api/versions/current' && request.method === 'GET') {
+      try {
+        sendJson(response, 200, { matrix: loadMatrix('current') });
+      } catch (error) {
+        sendJson(response, 404, { error: error.message });
+      }
+      return;
+    }
+
+    if (pathname === '/api/versions/doctor' && request.method === 'GET') {
+      try {
+        const release = url.searchParams.get('release') || 'current';
+        const result = versionDoctor(release);
+        sendJson(response, result.ok ? 200 : 409, result);
+      } catch (error) {
+        sendJson(response, 404, { error: error.message });
+      }
+      return;
+    }
+
+    if (pathname === '/api/versions/models/check' && request.method === 'GET') {
+      try {
+        const release = url.searchParams.get('release') || 'current';
+        const simulateUnavailable = url.searchParams.get('simulateUnavailable') || '';
+        const result = await checkModelAvailability({ release, simulateUnavailable });
+        sendJson(response, result.ok ? 200 : 409, result);
+      } catch (error) {
+        sendJson(response, 404, { error: error.message });
+      }
       return;
     }
 
