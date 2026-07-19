@@ -24,3 +24,4 @@ evidence/
 .strict-chrome-profile-*/
 .tmp-strict-*/
 .tmp-strict-*.log
+verification/**/user-data*/

@@ -98,6 +98,74 @@ body,
   opacity: 1;
 }
 
+.message-markdown {
+  color: rgb(24 24 27);
+  line-height: 1.72;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.message-markdown > * + * {
+  margin-top: 0.78rem;
+}
+
+.message-markdown p {
+  margin: 0;
+}
+
+.message-markdown h2,
+.message-markdown h3 {
+  margin: 0 0 0.35rem;
+  color: rgb(9 9 11);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.message-markdown h2 {
+  font-size: 0.98rem;
+}
+
+.message-markdown h3 {
+  font-size: 0.92rem;
+}
+
+.message-markdown ol,
+.message-markdown ul {
+  margin: 0.35rem 0 0;
+  padding-left: 1.35rem;
+}
+
+.message-markdown ol {
+  list-style-type: decimal;
+}
+
+.message-markdown ul {
+  list-style-type: disc;
+}
+
+.message-markdown li {
+  padding-left: 0.2rem;
+  line-height: 1.72;
+}
+
+.message-markdown li + li {
+  margin-top: 0.38rem;
+}
+
+.message-markdown strong {
+  color: rgb(9 9 11);
+  font-weight: 700;
+}
+
+.message-markdown code {
+  border: 1px solid rgb(228 228 231);
+  border-radius: 0.35rem;
+  background: rgb(244 244 245);
+  padding: 0.08rem 0.3rem;
+  color: rgb(39 39 42);
+  font-size: 0.92em;
+}
+
 .thinking-indicator {
   display: inline-flex;
   align-items: center;

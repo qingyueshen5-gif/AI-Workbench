@@ -1,0 +1,38 @@
+{
+  "outDir": "F:\\AI-Workbench\\verification\\v0.4.4-polish",
+  "results": [
+    {
+      "text": "帮我打开终端",
+      "reply": "好的，我让 Hermes 去执行了。它会先跑命令拿证据，完成后我会把结果和关键数字直接告诉你。\n好的，已经成功为你打开了终端。\n\n1. **操作结果**：Windows 终端 (WindowsTerminal) 已经打开并前置到最前。\n2. **打开的应用**：PowerShell（处于 Windows 终端中）。\n3. **进程 ID**：**31056**。\n4. **终端标题**：`\\`（默认路径）。\n\n终端已经准备就绪，可以输入命令了。",
+      "foreground": {
+        "Focused": true,
+        "ProcessName": "WindowsTerminal",
+        "Id": 31056,
+        "Title": "\\\\"
+      },
+      "desktopShot": "F:\\AI-Workbench\\verification\\v0.4.4-polish\\02-terminal-foreground.png"
+    },
+    {
+      "text": "帮我打开记事本",
+      "reply": "好的，我让 Hermes 去执行了。它会先跑命令拿证据，完成后我会把结果和关键数字直接告诉你。\n记事本已经帮你成功打开了，现在正显示在最前面。具体结果如下：\n\n1. **应用名称**：记事本（Notepad）\n2. **进程**：`notepad.exe`，进程ID：**4360**\n3. **窗口标题**：**无标题 - Notepad**\n4. **窗口状态**：已获取焦点并前置到最前\n\n现在你可以在记事本里直接开始输入内容了。",
+      "foreground": {
+        "Focused": true,
+        "ProcessName": "Notepad",
+        "Id": 4360,
+        "Title": "无标题 - Notepad"
+      },
+      "desktopShot": "F:\\AI-Workbench\\verification\\v0.4.4-polish\\03-notepad-foreground.png"
+    },
+    {
+      "text": "帮我打开下载文件夹",
+      "reply": "好的，我让 Hermes 去执行了。它会先跑命令拿证据，完成后我会把结果和关键数字直接告诉你。\n好的，已经为你打开了下载文件夹，以下是执行结果：\n\n1. **位置**：`C:\\Users\\胖胖虎\\Downloads`\n2. **窗口标题**：下载 - 文件资源管理器\n3. **状态**：文件夹已打开并自动前置到最前，你可以在屏幕上直接看到内容。",
+      "foreground": {
+        "Focused": true,
+        "ProcessName": "explorer",
+        "Id": 27420,
+        "Title": "下载 - 文件资源管理器"
+      },
+      "desktopShot": "F:\\AI-Workbench\\verification\\v0.4.4-polish\\04-downloads-foreground.png"
+    }
+  ]
+}

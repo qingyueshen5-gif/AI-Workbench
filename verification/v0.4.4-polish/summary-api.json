@@ -1,0 +1,40 @@
+{
+  "outDir": "F:\\AI-Workbench\\verification\\v0.4.4-polish",
+  "apiBase": "http://127.0.0.1:8787",
+  "todoReply": "**当前未完成待办**：我读了 CURRENT_TASK.md，未完成项如下：\n1. **P1：聊天自愈/JSON崩溃消化/失败主动解释**\n2. **P4：版本管理落地，避免安装包输出、版本号和验收记录分散**\n3. **P5：动作路由补盲，覆盖终端、文件夹、设置页和任意已安装应用**",
+  "results": [
+    {
+      "text": "帮我打开终端",
+      "reply": "好的，我让 Hermes 去执行了。它会先跑命令拿证据，完成后我会把结果和关键数字直接告诉你。\n好的，终端已成功打开！以下是执行详情：\n\n1. 打开的应用程序是 **Windows Terminal**（PowerShell），已前置到最前显示。\n2. 终端进程 ID 为 **31056**，窗口标题为 **\\**（当前在根目录）。\n3. 执行命令为 `cmd.exe /d /s /c start \"\" powershell.exe`，**无错误**，退出码为 **0**。",
+      "foreground": {
+        "Focused": true,
+        "ProcessName": "WindowsTerminal",
+        "Id": 31056,
+        "Title": "\\\\"
+      },
+      "desktopShot": null
+    },
+    {
+      "text": "帮我打开记事本",
+      "reply": "好的，我让 Hermes 去执行了。它会先跑命令拿证据，完成后我会把结果和关键数字直接告诉你。\n好的，已经成功执行！\n\n1. **操作结果**：记事本已成功打开，并已自动置于屏幕最前方。\n2. **关键证据**：\n   - 打开的进程：**notepad.exe**（进程ID：**4360**）\n   - 当前窗口标题：**无标题 - Notepad**\n3. **状态**：窗口已获焦点，你可以直接开始输入文字了。",
+      "foreground": {
+        "Focused": true,
+        "ProcessName": "Notepad",
+        "Id": 4360,
+        "Title": "无标题 - Notepad"
+      },
+      "desktopShot": null
+    },
+    {
+      "text": "帮我打开下载文件夹",
+      "reply": "好的，我让 Hermes 去执行了。它会先跑命令拿证据，完成后我会把结果和关键数字直接告诉你。\n好的，已经帮你打开了下载文件夹，结果如下：\n\n1. **目标路径**：`C:\\Users\\胖胖虎\\Downloads`\n2. **窗口状态**：文件资源管理器已成功打开并**前置到最前面**，窗口标题显示为“下载 - 文件资源管理器”\n3. **进程信息**：资源管理器进程 ID 为 `23624`，当前处于**焦点状态**\n\n你现在可以直接在这个文件夹里操作文件了。",
+      "foreground": {
+        "Focused": true,
+        "ProcessName": "explorer",
+        "Id": 23624,
+        "Title": "下载 - 文件资源管理器"
+      },
+      "desktopShot": null
+    }
+  ]
+}

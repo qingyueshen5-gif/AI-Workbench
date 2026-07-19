@@ -701,24 +701,123 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
 }
 
 function renderInlineMarkdown(text) {
-  const parts = String(text || '').split(/(\*\*[^*]+\*\*)/g);
-  return parts.map((part, index) => {
-    const bold = part.match(/^\*\*([^*]+)\*\*$/);
-    return bold ? <strong key={index} className="font-semibold text-zinc-950">{bold[1]}</strong> : <React.Fragment key={index}>{part}</React.Fragment>;
+  const source = String(text || '');
+  const tokens = [];
+  const tokenPattern = /(`[^`]+`|\*\*[\s\S]+?\*\*)/g;
+  let cursor = 0;
+  let match;
+
+  while ((match = tokenPattern.exec(source)) !== null) {
+    if (match.index > cursor) tokens.push({ type: 'text', value: source.slice(cursor, match.index) });
+    const value = match[0];
+    if (value.startsWith('**')) tokens.push({ type: 'strong', value: value.slice(2, -2) });
+    else tokens.push({ type: 'code', value: value.slice(1, -1) });
+    cursor = match.index + value.length;
+  }
+
+  if (cursor < source.length) tokens.push({ type: 'text', value: source.slice(cursor) });
+
+  return tokens.map((token, index) => {
+    if (token.type === 'strong') return <strong key={index} className="font-semibold text-zinc-950">{token.value}</strong>;
+    if (token.type === 'code') return <code key={index}>{token.value}</code>;
+    return <React.Fragment key={index}>{token.value}</React.Fragment>;
   });
 }
 
 function MessageContent({ content }) {
-  const lines = String(content || '').split(/\r?\n/);
+  const blocks = parseMessageBlocks(content);
   return (
-    <div className="space-y-1 whitespace-pre-wrap break-words">
-      {lines.map((line, index) => (
-        <div key={`${index}-${line}`} className={/^\s*\d+\.\s+/.test(line) ? 'pl-0' : ''}>
-          {renderInlineMarkdown(line)}
-        </div>
-      ))}
+    <div className="message-markdown">
+      {blocks.map((block, index) => {
+        if (block.type === 'heading') {
+          const Tag = block.level === 1 ? 'h2' : 'h3';
+          return <Tag key={index}>{renderInlineMarkdown(block.text)}</Tag>;
+        }
+        if (block.type === 'ordered-list') {
+          return (
+            <ol key={index}>
+              {block.items.map((item, itemIndex) => <li key={itemIndex}>{renderInlineMarkdown(item)}</li>)}
+            </ol>
+          );
+        }
+        if (block.type === 'bullet-list') {
+          return (
+            <ul key={index}>
+              {block.items.map((item, itemIndex) => <li key={itemIndex}>{renderInlineMarkdown(item)}</li>)}
+            </ul>
+          );
+        }
+        return <p key={index}>{renderInlineMarkdown(block.text)}</p>;
+      })}
     </div>
   );
+}
+
+function parseMessageBlocks(content) {
+  const lines = String(content || '').split(/\r?\n/);
+  const blocks = [];
+  let paragraph = [];
+  let list = null;
+
+  const flushParagraph = () => {
+    const text = paragraph.join('\n').trim();
+    if (text) blocks.push({ type: 'paragraph', text });
+    paragraph = [];
+  };
+  const flushList = () => {
+    if (list?.items?.length) blocks.push(list);
+    list = null;
+  };
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) {
+      flushParagraph();
+      flushList();
+      continue;
+    }
+
+    const heading = line.match(/^(#{1,3})\s+(.+)$/);
+    if (heading) {
+      flushParagraph();
+      flushList();
+      blocks.push({ type: 'heading', level: Math.min(heading[1].length, 2), text: heading[2].trim() });
+      continue;
+    }
+
+    const plainHeading = line.match(/^\*\*([^*：:]+[：:]?)\*\*：?$/);
+    if (plainHeading) {
+      flushParagraph();
+      flushList();
+      blocks.push({ type: 'heading', level: 2, text: `**${plainHeading[1]}**` });
+      continue;
+    }
+
+    const ordered = line.match(/^\d+\.\s+(.+)$/);
+    if (ordered) {
+      flushParagraph();
+      if (list?.type !== 'ordered-list') flushList();
+      if (!list) list = { type: 'ordered-list', items: [] };
+      list.items.push(ordered[1].trim());
+      continue;
+    }
+
+    const bullet = line.match(/^[-*]\s+(.+)$/);
+    if (bullet) {
+      flushParagraph();
+      if (list?.type !== 'bullet-list') flushList();
+      if (!list) list = { type: 'bullet-list', items: [] };
+      list.items.push(bullet[1].trim());
+      continue;
+    }
+
+    flushList();
+    paragraph.push(line);
+  }
+
+  flushParagraph();
+  flushList();
+  return blocks;
 }
 
 function localProgressText(content) {

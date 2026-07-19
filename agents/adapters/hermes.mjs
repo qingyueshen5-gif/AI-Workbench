@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process';
 import { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { basename, dirname, join } from 'node:path';
 import { createRunId, capabilityMatch } from '../adapter-contract.mjs';
 
 const modelProxyBaseUrl = String(process.env.MODEL_PROXY_BASE_URL || 'http://127.0.0.1:18800/v1').replace(/\/+$/, '');
@@ -153,7 +153,8 @@ function startDetachedNative(command, args = [], { cwd = process.cwd(), onChild 
       resolve(result);
     };
     try {
-      child = spawn(command, args, {
+      const executable = nativeCommandPath(command);
+      child = spawn(executable, args, {
         cwd,
         detached: true,
         windowsHide: false,
@@ -164,8 +165,9 @@ function startDetachedNative(command, args = [], { cwd = process.cwd(), onChild 
       child.once('error', (error) => {
         finish({ ok: false, code: null, stdout: '', stderr: error.message, error, timedOut: false });
       });
+      const pid = child.pid;
       child.unref();
-      setTimeout(() => finish({ ok: true, code: 0, stdout: `started ${command} ${args.join(' ')}`.trim(), stderr: '', timedOut: false }), 700);
+      setTimeout(() => finish({ ok: true, code: 0, stdout: `started ${command} ${args.join(' ')}`.trim(), stderr: '', timedOut: false, pid }), 700);
     } catch (error) {
       finish({ ok: false, code: null, stdout: '', stderr: error.message, error, timedOut: false });
     }
@@ -173,7 +175,29 @@ function startDetachedNative(command, args = [], { cwd = process.cwd(), onChild 
 }
 
 function nativeCommandPath(command) {
+  if (/^cmd(?:\.exe)?$/i.test(command)) return process.env.ComSpec || command;
   return command;
+}
+
+async function focusNativeWindow({ processName, pid, titlePattern = '' } = {}, { cwd = process.cwd() } = {}) {
+  const script = [
+    '$code=\'using System; using System.Runtime.InteropServices; public class NativeWindow { [DllImport("user32.dll")] public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow); [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr hWnd); }\'',
+    'Add-Type $code -ErrorAction SilentlyContinue',
+    "$workbench=Get-Process | Where-Object { $_.ProcessName -eq 'AI Workbench' -and $_.MainWindowHandle -ne 0 } | Select-Object -First 1",
+    "if($workbench){ [NativeWindow]::ShowWindowAsync($workbench.MainWindowHandle, 6) | Out-Null }",
+    `$pidValue=${Number(pid || 0)}`,
+    `$processName=${quotePowerShellString(processName || '')}`,
+    `$titlePattern=${quotePowerShellString(titlePattern || '')}`,
+    '$target=$null',
+    'for($i=0; $i -lt 25 -and !$target; $i++){',
+    '  if($pidValue -gt 0){ $target=Get-Process -Id $pidValue -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowHandle -ne 0 } | Select-Object -First 1 }',
+    '  if(!$target -and $processName){ $items=Get-Process -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowHandle -ne 0 -and $_.ProcessName -match $processName }; if($titlePattern){ $items=$items | Where-Object { $_.MainWindowTitle -match $titlePattern } }; $target=$items | Sort-Object StartTime -Descending -ErrorAction SilentlyContinue | Select-Object -First 1 }',
+    '  if(!$target){ Start-Sleep -Milliseconds 200 }',
+    '}',
+    '$shell=New-Object -ComObject WScript.Shell',
+    'if($target){ [NativeWindow]::ShowWindowAsync($target.MainWindowHandle, 9) | Out-Null; Start-Sleep -Milliseconds 120; $shell.AppActivate($target.Id) | Out-Null; [NativeWindow]::SetForegroundWindow($target.MainWindowHandle) | Out-Null; Start-Sleep -Milliseconds 150; $shell.AppActivate($target.Id) | Out-Null; [NativeWindow]::SetForegroundWindow($target.MainWindowHandle) | Out-Null; [pscustomobject]@{Focused=$true;ProcessName=$target.ProcessName;Id=$target.Id;Title=$target.MainWindowTitle} | ConvertTo-Json -Compress } else { Write-Error "target window not found: $processName $pidValue $titlePattern"; exit 2 }'
+  ].join('; ');
+  return runNativeCommand('powershell.exe', ['-NoProfile', '-Command', script], { timeoutMs: 12000, cwd });
 }
 
 function quoteCmdArg(arg) {
@@ -183,6 +207,18 @@ function quoteCmdArg(arg) {
 
 function quotePowerShellString(value) {
   return `'${String(value).replace(/'/g, "''")}'`;
+}
+
+function escapeRegexLiteral(value) {
+  return String(value).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&');
+}
+
+function folderTitlePattern(folderTarget) {
+  const name = basename(folderTarget).trim();
+  const parts = [];
+  if (name) parts.push(escapeRegexLiteral(name));
+  if (/downloads/i.test(folderTarget) || /下载/.test(folderTarget)) parts.push('Downloads', '下载');
+  return [...new Set(parts)].join('|');
 }
 
 function runWinget(args, options = {}) {
@@ -448,13 +484,17 @@ async function tryDirectWindowsAction(task, context, runId, startedAt, onChild) 
   }
 
   if (isTerminalTarget(goal) && /打开|启动|运行/i.test(goal)) {
-    const args = [];
-    const commandRun = createNativeEvidence('powershell.exe', args);
-    const result = await startDetachedNative('powershell.exe', args, { cwd: context.cwd || process.cwd(), onChild });
+    const args = ['/d', '/s', '/c', 'start', '""', 'powershell.exe'];
+    const commandRun = createNativeEvidence('cmd.exe', args);
+    const result = await startDetachedNative('cmd.exe', args, { cwd: context.cwd || process.cwd(), onChild });
+    const focus = commandSucceeded(result)
+      ? await focusNativeWindow({ processName: 'powershell|pwsh|WindowsTerminal|cmd', pid: result.pid }, { cwd: context.cwd || process.cwd() })
+      : null;
     const finishedAt = new Date();
-    const stdout = commandSucceeded(result)
-      ? `opened_terminal=powershell.exe`
-      : combineResultText(result);
+    const ok = commandSucceeded(result) && commandSucceeded(focus);
+    const stdout = ok
+      ? `opened_terminal=powershell.exe\nforeground=${stripAnsi(focus?.stdout || '')}`
+      : combineResultText(result, focus || {});
     const evidence = {
       commandRun,
       stdout,
@@ -467,9 +507,9 @@ async function tryDirectWindowsAction(task, context, runId, startedAt, onChild) 
     return {
       runId,
       agentId: 'hermes',
-      status: commandSucceeded(result) ? 'done' : 'failed',
+      status: ok ? 'done' : 'failed',
       output: {
-        result: { text: commandSucceeded(result) ? `终端已打开。验证证据：${stdout || '启动命令退出码为 0。'}` : `终端打开失败：${combineResultText(result)}`, taskId: task?.id || '' },
+        result: { text: ok ? `终端已打开并已前置到最前。验证证据：${stdout || '启动命令退出码为 0。'}` : `终端打开或前置失败：${stdout}`, taskId: task?.id || '' },
         evidence,
         suggestions: []
       },
@@ -504,10 +544,14 @@ async function tryDirectWindowsAction(task, context, runId, startedAt, onChild) 
     }
     const commandRun = createNativeEvidence('explorer.exe', [folderTarget]);
     const result = await startDetachedNative('explorer.exe', [folderTarget], { cwd: context.cwd || process.cwd(), onChild });
+    const focus = commandSucceeded(result)
+      ? await focusNativeWindow({ processName: 'explorer', titlePattern: folderTitlePattern(folderTarget) }, { cwd: context.cwd || process.cwd() })
+      : null;
     const finishedAt = new Date();
-    const stdout = commandSucceeded(result)
-      ? `opened_folder=${folderTarget}`
-      : combineResultText(result);
+    const ok = commandSucceeded(result) && commandSucceeded(focus);
+    const stdout = ok
+      ? `opened_folder=${folderTarget}\nforeground=${stripAnsi(focus?.stdout || '')}`
+      : combineResultText(result, focus || {});
     const evidence = {
       commandRun,
       stdout,
@@ -520,9 +564,9 @@ async function tryDirectWindowsAction(task, context, runId, startedAt, onChild) 
     return {
       runId,
       agentId: 'hermes',
-      status: commandSucceeded(result) ? 'done' : 'failed',
+      status: ok ? 'done' : 'failed',
       output: {
-        result: { text: commandSucceeded(result) ? `文件夹已打开：${folderTarget}。验证证据：${stdout || '启动命令退出码为 0。'}` : `文件夹打开失败：${combineResultText(result)}`, taskId: task?.id || '' },
+        result: { text: ok ? `文件夹已打开并已前置到最前：${folderTarget}。验证证据：${stdout || '启动命令退出码为 0。'}` : `文件夹打开或前置失败：${stdout}`, taskId: task?.id || '' },
         evidence,
         suggestions: []
       },
@@ -537,10 +581,14 @@ async function tryDirectWindowsAction(task, context, runId, startedAt, onChild) 
     const args = ['/d', '/s', '/c', 'start', '""', uri];
     const commandRun = createNativeEvidence('cmd.exe', args);
     const result = await startDetachedNative('cmd.exe', args, { cwd: context.cwd || process.cwd(), onChild });
+    const focus = commandSucceeded(result)
+      ? await focusNativeWindow({ processName: 'SystemSettings|ApplicationFrameHost|cmd' }, { cwd: context.cwd || process.cwd() })
+      : null;
     const finishedAt = new Date();
-    const stdout = commandSucceeded(result)
-      ? `opened_settings=${uri}`
-      : combineResultText(result);
+    const ok = commandSucceeded(result) && commandSucceeded(focus);
+    const stdout = ok
+      ? `opened_settings=${uri}\nforeground=${stripAnsi(focus?.stdout || '')}`
+      : combineResultText(result, focus || {});
     const evidence = {
       commandRun,
       stdout,
@@ -553,9 +601,9 @@ async function tryDirectWindowsAction(task, context, runId, startedAt, onChild) 
     return {
       runId,
       agentId: 'hermes',
-      status: commandSucceeded(result) ? 'done' : 'failed',
+      status: ok ? 'done' : 'failed',
       output: {
-        result: { text: commandSucceeded(result) ? `系统设置已打开：${uri}。验证证据：${stdout || '启动命令退出码为 0。'}` : `系统设置打开失败：${combineResultText(result)}`, taskId: task?.id || '' },
+        result: { text: ok ? `系统设置已打开并已前置到最前：${uri}。验证证据：${stdout || '启动命令退出码为 0。'}` : `系统设置打开或前置失败：${stdout}`, taskId: task?.id || '' },
         evidence,
         suggestions: []
       },
@@ -609,19 +657,23 @@ async function tryDirectWindowsAction(task, context, runId, startedAt, onChild) 
     const args = [];
     const commandRun = createNativeEvidence(commandTarget, args);
     const result = await startDetachedNative(commandTarget, args, { cwd: context.cwd || process.cwd(), onChild });
+    const focus = commandSucceeded(result)
+      ? await focusNativeWindow({ processName: commandTarget.replace(/\.exe$/i, ''), pid: result.pid }, { cwd: context.cwd || process.cwd() })
+      : null;
     if (!commandSucceeded(result) && /logon session|cannot execute|指定程序|登录会话/i.test(`${result.stdout}\n${result.stderr}`)) {
       return null;
     }
     const finishedAt = new Date();
-    const stdout = commandSucceeded(result)
-      ? `opened_app=${commandTarget}`
-      : combineResultText(result);
+    const ok = commandSucceeded(result) && commandSucceeded(focus);
+    const stdout = ok
+      ? `opened_app=${commandTarget}\nforeground=${stripAnsi(focus?.stdout || '')}`
+      : combineResultText(result, focus || {});
     return {
       runId,
       agentId: 'hermes',
-      status: commandSucceeded(result) ? 'done' : 'failed',
+      status: ok ? 'done' : 'failed',
       output: {
-        result: { text: commandSucceeded(result) ? `${openTarget} 已打开。验证证据：${stdout || '启动命令退出码为 0。'}` : `${openTarget} 打开失败：${combineResultText(result)}`, taskId: task?.id || '' },
+        result: { text: ok ? `${openTarget} 已打开并已前置到最前。验证证据：${stdout || '启动命令退出码为 0。'}` : `${openTarget} 打开或前置失败：${stdout}`, taskId: task?.id || '' },
         evidence: {
           commandRun,
           stdout,
