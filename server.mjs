@@ -765,8 +765,11 @@ async function buildCurrentTaskReply() {
     .split(/\r?\n/)
     .map((line) => line.match(/^\s*-\s+\[\s\]\s+(.+?)\s*$/)?.[1]?.trim())
     .filter(Boolean);
-  if (!todos.length) return '我读了 CURRENT_TASK.md，当前没有未完成待办。';
-  return `我读了 CURRENT_TASK.md，当前未完成待办是：\n${todos.map((todo, index) => `${index + 1}. ${todo}`).join('\n')}`;
+  if (!todos.length) return '**结论**：我读了 CURRENT_TASK.md，当前没有未完成待办。';
+  return [
+    '**当前未完成待办**：我读了 CURRENT_TASK.md，未完成项如下：',
+    ...todos.map((todo, index) => `${index + 1}. **${todo}**`)
+  ].join('\n');
 }
 
 async function answerBuiltInChatIntent(content, currentData = initialData, previousMessages = []) {
@@ -2049,10 +2052,12 @@ const server = createServer(async (request, response) => {
             '你是 AI Workbench 的调度助手。你具备真实电脑操作能力，但必须通过工具执行。',
             '凡是用户要求对电脑、网络、文件、应用、网页产生实际效果，必须调用合适工具，不要口头回答了事。',
             '用户要求打开网页时调用 open_url；打开应用调用 open_app；查看磁盘/进程/端口/服务等调用 run_system_query；清理磁盘调用 clean_disk；下载安装软件调用 download_install；读取文件调用 read_file_summarize。',
-            '天气、新闻、价格、版本、政策、今天/最新等当前信息调用 web_search。',
+            '实时数据、新闻、当前状态、价格、天气、版本、政策、今天/最新等当前信息调用 web_search。',
             '纯知识、解释、写作类问题没有实际操作需求时才直接回答。',
             '禁止输出“我无法操作你的电脑”“我不能直接打开”“我是AI助手无法执行”等拒绝话术。',
             '工具执行完成后，根据工具结果用中文大白话汇报；不要编造工具没有返回的证据。',
+            '回复必须排版清楚：分行表达，列表使用 1. 2. 3. 编号，列表内容一行一条，关键结果和数字用 **加粗** 标出。',
+            '不要把多个事项糊成一整段；超过两个要点时必须用编号列表。',
             `今天日期是 ${today}。`
           ].join('\n')
         },
@@ -2135,7 +2140,7 @@ const server = createServer(async (request, response) => {
               ...finalMessages,
               {
                 role: 'user',
-                content: '根据上面的工具执行结果，直接用中文给用户汇报结果。成功就说结果和证据；失败就说原因和建议。不要说你无法操作电脑。'
+                content: '根据上面的工具执行结果，直接用中文给用户汇报结果。成功就说结果和证据；失败就说原因和建议。排版要求：分行表达，列表用 1. 2. 3. 编号，每条一行，关键结果和数字用 **加粗**。不要说你无法操作电脑。'
               }
             ], { employee: 'deepseek', timeoutMs: 30000 });
             finalText = String(finalResult.choices?.[0]?.message?.content || '').trim() || finalText;

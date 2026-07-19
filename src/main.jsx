@@ -663,7 +663,7 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
                 ? 'max-w-[78%] rounded-2xl bg-white px-1 py-2 text-sm leading-6 text-zinc-900'
                 : 'ml-auto max-w-[78%] rounded-2xl bg-zinc-100 px-4 py-3 text-sm leading-6 text-zinc-900'}
               >
-                {message.thinking ? <ThinkingDots /> : message.content}
+                {message.thinking ? <ThinkingDots /> : <MessageContent content={message.content} />}
               </div>
             </article>
           ))}
@@ -696,6 +696,27 @@ function ChatStream({ data, setData, setSaveError, updateData }) {
           </button>
         </div>
       </div>
+    </div>
+  );
+}
+
+function renderInlineMarkdown(text) {
+  const parts = String(text || '').split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, index) => {
+    const bold = part.match(/^\*\*([^*]+)\*\*$/);
+    return bold ? <strong key={index} className="font-semibold text-zinc-950">{bold[1]}</strong> : <React.Fragment key={index}>{part}</React.Fragment>;
+  });
+}
+
+function MessageContent({ content }) {
+  const lines = String(content || '').split(/\r?\n/);
+  return (
+    <div className="space-y-1 whitespace-pre-wrap break-words">
+      {lines.map((line, index) => (
+        <div key={`${index}-${line}`} className={/^\s*\d+\.\s+/.test(line) ? 'pl-0' : ''}>
+          {renderInlineMarkdown(line)}
+        </div>
+      ))}
     </div>
   );
 }

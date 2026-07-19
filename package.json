@@ -1,6 +1,6 @@
 {
   "name": "ai-workbench",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "private": true,
   "type": "module",
   "main": "electron/main.cjs",
@@ -49,7 +49,7 @@
     "productName": "AI Workbench",
     "asar": true,
     "directories": {
-      "output": "release-v0.4.1-installer-final"
+      "output": "release-v0.4.2-installer-final"
     },
     "electronDist": "node_modules/electron/dist",
     "files": [

@@ -63,7 +63,8 @@ try {
 
   const todos = await ask('我最近有什么事没办');
   assert(todos.includes('CURRENT_TASK.md'), 'todo reply must say it read CURRENT_TASK.md');
-  assert(todos.includes('hermes setup') || todos.includes('Hermes'), 'todo reply must include current unfinished tasks');
+  assert(todos.includes('P1') && todos.includes('P2'), 'todo reply must include current unfinished tasks');
+  assert(/\*\*当前未完成待办\*\*[\s\S]*\n1\.\s+\*\*/.test(todos), 'todo reply must be a numbered, multi-line, bold formatted list');
   assert(!/哪个文件|提供路径/.test(todos), 'todo reply must not ask for a file path');
 
   const fuzzy = await ask('帮我看看那个东西弄好没');

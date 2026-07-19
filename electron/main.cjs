@@ -1,4 +1,4 @@
-const { app, BrowserWindow, shell } = require('electron');
+const { app, BrowserWindow, Menu, shell } = require('electron');
 const { spawn } = require('node:child_process');
 const http = require('node:http');
 const path = require('node:path');
@@ -86,6 +86,7 @@ function stopOwnedServices() {
 
 async function createWindow() {
   await ensureInternalServices();
+  Menu.setApplicationMenu(null);
   const win = new BrowserWindow({
     width: 1280,
     height: 860,
@@ -93,6 +94,7 @@ async function createWindow() {
     minHeight: 720,
     title: windowTitle,
     icon: path.join(app.getAppPath(), 'assets', 'icon.ico'),
+    autoHideMenuBar: true,
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
@@ -104,9 +106,37 @@ async function createWindow() {
     event.preventDefault();
     win.setTitle(windowTitle);
   });
+  win.setMenuBarVisibility(false);
   win.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
     return { action: 'deny' };
+  });
+  win.webContents.on('before-input-event', (event, input) => {
+    if (!(input.control || input.meta) || input.type !== 'keyDown') return;
+    const key = String(input.key || '').toLowerCase();
+    if (key === 'x') {
+      win.webContents.cut();
+      event.preventDefault();
+    } else if (key === 'c') {
+      win.webContents.copy();
+      event.preventDefault();
+    } else if (key === 'v') {
+      win.webContents.paste();
+      event.preventDefault();
+    } else if (key === 'a') {
+      win.webContents.selectAll();
+      event.preventDefault();
+    }
+  });
+  win.webContents.on('context-menu', (event, params) => {
+    if (!params.isEditable) return;
+    Menu.buildFromTemplate([
+      { label: '剪切', role: 'cut', enabled: params.editFlags.canCut },
+      { label: '复制', role: 'copy', enabled: params.editFlags.canCopy },
+      { label: '粘贴', role: 'paste', enabled: true },
+      { type: 'separator' },
+      { label: '全选', role: 'selectAll', enabled: params.editFlags.canSelectAll }
+    ]).popup({ window: win });
   });
   await win.loadURL(endpoints.app);
 }
