@@ -12,6 +12,8 @@ const currentConfigPath = join(openclawHome, 'openclaw.json');
 const goodConfigPath = join(openclawHome, 'openclaw.json.bak.3');
 const candidatePath = join(openclawHome, 'openclaw.json.candidate');
 const gatewayCmd = join(openclawHome, 'gateway.cmd');
+const gatewayEntry = join(process.env.APPDATA || join(userProfile, 'AppData', 'Roaming'), 'npm', 'node_modules', 'openclaw', 'dist', 'index.js');
+const nodeExe = join(process.env.ProgramFiles || 'C:\\Program Files', 'nodejs', 'node.exe');
 const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
 const evidenceDir = join(root, 'evidence', 'openclaw-candidate', timestamp);
 const verificationDir = join(root, 'verification', 'openclaw-candidate');
@@ -136,15 +138,21 @@ async function withCandidateAsCurrent(fn) {
 async function runGatewayProbe() {
   mkdirSync(evidenceDir, { recursive: true });
   const before = await checkPort(18789);
-  if (!existsSync(gatewayCmd)) {
-    return { started: false, reason: 'gateway.cmd not found', before, after: before };
+  if (!existsSync(gatewayEntry)) {
+    return { started: false, reason: 'OpenClaw gateway Node entry not found', before, after: before };
   }
 
-  const child = spawn(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', gatewayCmd], {
+  const child = spawn(existsSync(nodeExe) ? nodeExe : process.execPath, [gatewayEntry, 'gateway', '--port', '18789'], {
     cwd: openclawHome,
     windowsHide: true,
     shell: false,
-    env: { ...process.env, NO_COLOR: '1' }
+    env: {
+      ...process.env,
+      NO_COLOR: '1',
+      LOG_LEVEL: process.env.LOG_LEVEL || 'trace',
+      OPENCLAW_LOG_LEVEL: process.env.OPENCLAW_LOG_LEVEL || 'trace',
+      NODE_OPTIONS: process.env.NODE_OPTIONS || '--trace-uncaught --trace-warnings'
+    }
   });
   let stdout = '';
   let stderr = '';
@@ -157,7 +165,7 @@ async function runGatewayProbe() {
 
   const portSamples = [];
   let after = await checkPort(18789);
-  for (let i = 0; i < 25; i += 1) {
+  for (let i = 0; i < 45; i += 1) {
     await wait(1000);
     after = await checkPort(18789);
     portSamples.push({
@@ -166,7 +174,7 @@ async function runGatewayProbe() {
       status: after.status,
       error: after.error || ''
     });
-    if (after.ok) break;
+    if (after.ok || child.exitCode !== null) break;
   }
   const stillRunning = child.exitCode === null && !child.killed;
   if (stillRunning && process.platform === 'win32' && child.pid) {
@@ -199,9 +207,10 @@ async function runGatewayProbe() {
     stderrFile,
     stdoutPreview: redactedStdout.slice(0, 1600),
     stderrPreview: redactedStderr.slice(0, 1600),
+    command: `${existsSync(nodeExe) ? nodeExe : process.execPath} ${gatewayEntry} gateway --port 18789`,
     conclusion: after.ok
-      ? 'candidate 配置下 gateway 能监听 18789。'
-      : `candidate 配置下 gateway 仍未监听 18789：${after.error || after.status}`
+      ? `candidate 配置下 gateway 在第 ${portSamples.find((sample) => sample.ok)?.second || '?'} 秒监听 18789。`
+      : `candidate 配置下 gateway 45 秒内仍未监听 18789：${after.error || after.status}`
   };
 }
 

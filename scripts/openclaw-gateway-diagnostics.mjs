@@ -10,6 +10,8 @@ const userProfile = process.env.USERPROFILE || process.env.HOME || '';
 const openclawHome = join(userProfile, '.openclaw');
 const configPath = join(openclawHome, 'openclaw.json');
 const gatewayCmd = join(openclawHome, 'gateway.cmd');
+const gatewayEntry = join(process.env.APPDATA || join(userProfile, 'AppData', 'Roaming'), 'npm', 'node_modules', 'openclaw', 'dist', 'index.js');
+const nodeExe = join(process.env.ProgramFiles || 'C:\\Program Files', 'nodejs', 'node.exe');
 const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
 const evidenceDir = join(root, 'evidence', 'openclaw-gateway', timestamp);
 const verificationDir = join(root, 'verification', 'openclaw-health');
@@ -128,10 +130,10 @@ async function backupCurrentConfig() {
 async function runGatewayProbe() {
   mkdirSync(evidenceDir, { recursive: true });
   const before = await checkPort(18789);
-  if (!existsSync(gatewayCmd)) {
+  if (!existsSync(gatewayEntry)) {
     return {
       started: false,
-      reason: 'gateway.cmd not found',
+      reason: 'OpenClaw gateway Node entry not found',
       before,
       after: before,
       stdoutFile,
@@ -140,11 +142,17 @@ async function runGatewayProbe() {
       stderrPreview: ''
     };
   }
-  const child = spawn(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', gatewayCmd], {
+  const child = spawn(existsSync(nodeExe) ? nodeExe : process.execPath, [gatewayEntry, 'gateway', '--port', '18789'], {
     cwd: openclawHome,
     windowsHide: true,
     shell: false,
-    env: { ...process.env, NO_COLOR: '1' }
+    env: {
+      ...process.env,
+      NO_COLOR: '1',
+      LOG_LEVEL: process.env.LOG_LEVEL || 'trace',
+      OPENCLAW_LOG_LEVEL: process.env.OPENCLAW_LOG_LEVEL || 'trace',
+      NODE_OPTIONS: process.env.NODE_OPTIONS || '--trace-uncaught --trace-warnings'
+    }
   });
   let stdout = '';
   let stderr = '';
@@ -155,8 +163,19 @@ async function runGatewayProbe() {
     stderr += chunk.toString('utf8');
   });
 
-  await wait(8000);
-  const after = await checkPort(18789);
+  const portSamples = [];
+  let after = await checkPort(18789);
+  for (let i = 0; i < 45; i += 1) {
+    await wait(1000);
+    after = await checkPort(18789);
+    portSamples.push({
+      second: i + 1,
+      ok: after.ok,
+      status: after.status,
+      error: after.error || ''
+    });
+    if (after.ok || child.exitCode !== null) break;
+  }
   const stillRunning = child.exitCode === null && !child.killed;
   if (stillRunning && process.platform === 'win32' && child.pid) {
     const killer = spawn('taskkill', ['/pid', String(child.pid), '/T', '/F'], { windowsHide: true, stdio: 'ignore' });
@@ -183,13 +202,15 @@ async function runGatewayProbe() {
     killedAfterProbe: stillRunning,
     before,
     after,
+    portSamples,
     stdoutFile,
     stderrFile,
     stdoutPreview: redactedStdout.slice(0, 1200),
     stderrPreview: redactedStderr.slice(0, 1200),
+    command: `${existsSync(nodeExe) ? nodeExe : process.execPath} ${gatewayEntry} gateway --port 18789`,
     conclusion: after.ok
-      ? 'gateway 在诊断窗口内曾监听 18789；若随后又不可达，需要继续观察运行期退出原因。'
-      : `gateway 诊断启动后 18789 仍不可达：${after.error || after.status}`
+      ? `gateway 在第 ${portSamples.find((sample) => sample.ok)?.second || '?'} 秒监听 18789。`
+      : `gateway 诊断启动后 45 秒内 18789 仍不可达：${after.error || after.status}`
   };
 }
 
