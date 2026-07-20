@@ -32,6 +32,7 @@
     "versions:doctor": "node scripts/versions-doctor.mjs",
     "versions:restore": "node scripts/versions-restore.mjs",
     "versions:check-models": "node scripts/versions-check-models.mjs",
+    "openclaw:gateway-diagnostics": "node scripts/openclaw-gateway-diagnostics.mjs",
     "health:check": "node scripts/health-check.mjs",
     "health:repair": "node scripts/health-repair.mjs"
   },

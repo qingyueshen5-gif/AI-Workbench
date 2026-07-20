@@ -61,8 +61,8 @@ export const agentDefinitions = [
     healthCheck: {
       type: 'command',
       command: 'openclaw',
-      args: ['status', '--json', '--timeout', '5000'],
-      description: 'Run OpenClaw CLI through the Windows npm .cmd shim and inspect gateway/channel/agent status.'
+      args: ['split-health'],
+      description: 'Run split OpenClaw checks for install, version, gateway port, gateway websocket, channels, and models without relying on openclaw status.'
     },
     invoke: {
       adapter: 'agents/adapters/openclaw.mjs',

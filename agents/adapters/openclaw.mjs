@@ -1,4 +1,5 @@
 import { spawn } from 'node:child_process';
+import { connect } from 'node:net';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { createRunId, capabilityMatch } from '../adapter-contract.mjs';
@@ -34,9 +35,28 @@ function runOpenClaw(args, { timeoutMs = 30000, cwd = process.cwd(), onChild } =
     let stdout = '';
     let stderr = '';
     let timedOut = false;
+    let settled = false;
+    const finish = (payload) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeout);
+      resolve(payload);
+    };
     const timeout = setTimeout(() => {
       timedOut = true;
-      child.kill();
+      if (process.platform === 'win32' && child.pid) {
+        const killer = spawn('taskkill', ['/pid', String(child.pid), '/T', '/F'], { windowsHide: true, stdio: 'ignore' });
+        killer.unref();
+      } else {
+        child.kill();
+      }
+      child.stdout?.destroy();
+      child.stderr?.destroy();
+      child.stdin?.destroy();
+      child.removeAllListeners('close');
+      child.removeAllListeners('error');
+      child.unref();
+      finish({ ok: false, code: null, stdout, stderr, timedOut, command });
     }, timeoutMs);
 
     child.stdout.on('data', (chunk) => {
@@ -46,14 +66,153 @@ function runOpenClaw(args, { timeoutMs = 30000, cwd = process.cwd(), onChild } =
       stderr += chunk.toString('utf8');
     });
     child.on('error', (error) => {
-      clearTimeout(timeout);
-      resolve({ ok: false, code: null, stdout, stderr, error, timedOut, command });
+      finish({ ok: false, code: null, stdout, stderr, error, timedOut, command });
     });
     child.on('close', (code) => {
-      clearTimeout(timeout);
-      resolve({ ok: code === 0 && !timedOut, code, stdout, stderr, timedOut, command });
+      finish({ ok: code === 0 && !timedOut, code, stdout, stderr, timedOut, command });
     });
   });
+}
+
+function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function checkTcpPort(port, host = '127.0.0.1', timeoutMs = 1200) {
+  return new Promise((resolve) => {
+    const started = Date.now();
+    const socket = connect({ host, port });
+    let settled = false;
+    const finish = (payload) => {
+      if (settled) return;
+      settled = true;
+      socket.destroy();
+      resolve({
+        durationMs: Date.now() - started,
+        ...payload
+      });
+    };
+    socket.setTimeout(timeoutMs);
+    socket.once('connect', () => finish({ ok: true, status: 'listening' }));
+    socket.once('timeout', () => finish({ ok: false, status: 'timeout', error: `tcp connect timed out after ${timeoutMs}ms` }));
+    socket.once('error', (error) => finish({ ok: false, status: 'closed', error: error.message }));
+  });
+}
+
+function checkGatewayWebSocket(port = 18789, host = '127.0.0.1', timeoutMs = 1500) {
+  return new Promise((resolve) => {
+    const started = Date.now();
+    const socket = connect({ host, port });
+    let settled = false;
+    let response = '';
+    const finish = (payload) => {
+      if (settled) return;
+      settled = true;
+      socket.destroy();
+      resolve({
+        durationMs: Date.now() - started,
+        ...payload
+      });
+    };
+    socket.setTimeout(timeoutMs);
+    socket.once('connect', () => {
+      socket.write([
+        'GET / HTTP/1.1',
+        `Host: ${host}:${port}`,
+        'Connection: Upgrade',
+        'Upgrade: websocket',
+        'Sec-WebSocket-Version: 13',
+        'Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==',
+        '',
+        ''
+      ].join('\r\n'));
+    });
+    socket.on('data', (chunk) => {
+      response += chunk.toString('utf8');
+      if (/\r?\n\r?\n/.test(response)) {
+        const statusLine = response.split(/\r?\n/)[0] || '';
+        finish({
+          ok: /^HTTP\/1\.[01]\s+101\b/i.test(statusLine),
+          status: /^HTTP\/1\.[01]\s+101\b/i.test(statusLine) ? 'connected' : 'rejected',
+          responseStatus: statusLine
+        });
+      }
+    });
+    socket.once('timeout', () => finish({ ok: false, status: 'timeout', error: `websocket probe timed out after ${timeoutMs}ms` }));
+    socket.once('error', (error) => finish({ ok: false, status: 'closed', error: error.message }));
+    socket.once('close', () => {
+      if (!settled) finish({ ok: false, status: 'closed', error: response ? 'connection closed before websocket upgrade completed' : 'gateway socket closed' });
+    });
+  });
+}
+
+function commandCheck(name, args, { timeoutMs = 5000, parser = null } = {}) {
+  return runOpenClaw(args, { timeoutMs }).then((result) => {
+    const stdout = stripAnsi(result.stdout);
+    const stderr = stripAnsi(result.stderr);
+    const parsed = parser ? parser(stdout, stderr, result) : null;
+    return {
+      name,
+      ok: result.ok,
+      status: result.ok ? 'available' : (result.timedOut ? 'timeout' : 'unavailable'),
+      command: commandEvidence(result.command || resolveOpenClawCommand(), args),
+      exitCode: result.code,
+      timedOut: result.timedOut,
+      stdout: truncateText(stdout, 1200),
+      stderr: truncateText(stderr, 800),
+      parsed,
+      error: result.ok ? '' : (result.error?.message || stderr || stdout || `${name} check failed`)
+    };
+  });
+}
+
+async function collectOpenClawHealthChecks() {
+  const command = resolveOpenClawCommand();
+  const gatewayPort = 18789;
+  const installed = {
+    name: 'installed',
+    ok: existsSync(command),
+    status: existsSync(command) ? 'available' : 'missing',
+    shimPath: command,
+    error: existsSync(command) ? '' : 'OpenClaw npm shim not found'
+  };
+  const versionPromise = commandCheck('version', ['--version'], { timeoutMs: 5000 });
+  const gatewayPortPromise = checkTcpPort(gatewayPort).then((result) => ({
+    name: 'gateway_port',
+    port: gatewayPort,
+    ...result
+  }));
+  const gatewayWsPromise = checkGatewayWebSocket(gatewayPort).then((result) => ({
+    name: 'gateway_ws',
+    port: gatewayPort,
+    ...result
+  }));
+  const channelsPromise = commandCheck('channels', ['channels', 'status', '--probe'], {
+    timeoutMs: 6000,
+    parser: (stdout) => ({
+      gatewayReachable: !/Gateway not reachable/i.test(stdout),
+      configOnly: /config-only/i.test(stdout)
+    })
+  });
+  const modelsPromise = commandCheck('models', ['models', 'status', '--probe'], { timeoutMs: 6000 });
+
+  const [version, gateway_port, gateway_ws, channels, models] = await Promise.all([
+    versionPromise,
+    gatewayPortPromise,
+    gatewayWsPromise,
+    channelsPromise,
+    modelsPromise
+  ]);
+
+  await wait(0);
+  return {
+    installed,
+    gateway_port,
+    gateway_ws,
+    channels,
+    models,
+    version
+  };
 }
 
 function parseJsonOutput(stdout) {
@@ -122,32 +281,34 @@ export function createOpenClawAdapter(agent) {
   return {
     async healthCheck() {
       const checkedAt = new Date().toISOString();
-      const version = await runOpenClaw(['--version'], { timeoutMs: 30000 });
-      if (!version.ok) {
-        return {
-          agentId: agent.id,
-          ok: false,
-          status: 'unavailable',
-          checkedAt,
-          error: this.normalizeError(version.error || new Error(version.stderr || version.stdout || 'OpenClaw version check failed'))
-        };
-      }
-      const status = await runOpenClaw(['status', '--json', '--timeout', '5000'], { timeoutMs: 20000 });
-      const parsedStatus = parseJsonOutput(status.stdout);
+      const checks = await collectOpenClawHealthChecks();
+      const versionText = stripAnsi(checks.version.stdout || checks.version.stderr);
+      const gatewayAvailable = Boolean(checks.gateway_port.ok && checks.gateway_ws.ok);
+      const installedAvailable = Boolean(checks.installed.ok && checks.version.ok);
+      const ok = Boolean(installedAvailable && gatewayAvailable);
+      const unavailableReasons = Object.values(checks)
+        .filter((check) => !check.ok)
+        .map((check) => `${check.name}:${check.status || 'failed'}`);
       return {
         agentId: agent.id,
-        ok: status.ok,
-        status: status.ok ? 'available' : 'unavailable',
+        ok,
+        status: ok ? 'available' : 'unavailable',
         checkedAt,
         evidence: {
-          command: 'openclaw --version && openclaw status --json --timeout 5000',
-          version: stripAnsi(version.stdout || version.stderr),
+          command: 'openclaw health split checks: installed, gateway_port, gateway_ws, channels, models, version',
+          version: versionText,
           installPath: resolveOpenClawCommand(),
-          gateway: parsedStatus?.gateway || null,
-          agents: parsedStatus?.agents || null,
-          channelSummary: parsedStatus?.channelSummary || []
+          gateway: {
+            port: 18789,
+            reachable: gatewayAvailable,
+            portStatus: checks.gateway_port.status,
+            websocketStatus: checks.gateway_ws.status
+          },
+          channelSummary: checks.channels.parsed ? [checks.channels.parsed] : [],
+          checks,
+          unavailableReasons
         },
-        error: status.ok ? null : this.normalizeError(status.error || new Error(status.stderr || status.stdout || 'OpenClaw status failed'))
+        error: ok ? null : this.normalizeError(new Error(gatewayAvailable ? unavailableReasons.join(', ') : 'OpenClaw gateway不可达'))
       };
     },
 

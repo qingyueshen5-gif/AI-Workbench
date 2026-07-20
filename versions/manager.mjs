@@ -32,7 +32,7 @@ const employeeSpecs = {
     id: 'openclaw',
     name: 'OpenClaw',
     packageName: 'openclaw',
-    versionCommand: ['openclaw', ['--version']],
+    versionCommand: [resolveOpenClawCommand(), ['--version']],
     pathCommand: process.platform === 'win32' ? ['where.exe', ['openclaw']] : ['which', ['openclaw']],
     managers: ['npm', 'binary']
   }
@@ -42,8 +42,18 @@ function nowIso() {
   return new Date().toISOString();
 }
 
+function resolveOpenClawCommand() {
+  if (process.platform !== 'win32') return 'openclaw';
+  const appData = process.env.APPDATA || join(process.env.USERPROFILE || '', 'AppData', 'Roaming');
+  const cmdPath = join(appData, 'npm', 'openclaw.cmd');
+  return existsSync(cmdPath) ? cmdPath : 'openclaw.cmd';
+}
+
 function run(command, args = [], options = {}) {
-  const result = spawnSync(command, args, {
+  const useCmdShim = process.platform === 'win32' && /\.(?:cmd|bat)$/i.test(command);
+  const executable = useCmdShim ? (process.env.ComSpec || 'cmd.exe') : command;
+  const executableArgs = useCmdShim ? ['/d', '/s', '/c', command, ...args] : args;
+  const result = spawnSync(executable, executableArgs, {
     cwd: options.cwd || root,
     encoding: 'utf8',
     windowsHide: true,
@@ -100,6 +110,7 @@ export function currentWorkbench() {
 
 function detectManager(employeeId, installPath) {
   if (employeeId === 'openclaw') {
+    if (/\\npm\\openclaw\.cmd$/i.test(String(installPath || ''))) return 'npm';
     const npm = run('npm.cmd', ['list', '-g', 'openclaw', '--depth=0', '--json'], { timeoutMs: 20000 });
     if (npm.ok && /openclaw/i.test(npm.stdout)) return 'npm';
   }
@@ -121,7 +132,9 @@ export function collectEmployeeVersion(employeeId) {
   const [pathCommand, pathArgs] = spec.pathCommand;
   const versionResult = run(versionCommand, versionArgs);
   const pathResult = run(pathCommand, pathArgs);
-  const installPath = pathResult.ok ? pathResult.stdout.split(/\r?\n/).filter(Boolean)[0] || '' : '';
+  const installPath = pathResult.ok
+    ? pathResult.stdout.split(/\r?\n/).filter(Boolean)[0] || ''
+    : (employeeId === 'openclaw' && existsSync(resolveOpenClawCommand()) ? resolveOpenClawCommand() : '');
   const manager = detectManager(employeeId, installPath);
   return {
     id: spec.id,
