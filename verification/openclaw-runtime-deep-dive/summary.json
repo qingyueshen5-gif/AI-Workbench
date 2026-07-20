@@ -1,0 +1,768 @@
+{
+  "ok": true,
+  "checkedAt": "2026-07-20T12:02:08.708Z",
+  "openclawHome": "C:\\Users\\胖胖虎\\.openclaw",
+  "gatewayEntry": "C:\\Users\\胖胖虎\\AppData\\Roaming\\npm\\node_modules\\openclaw\\dist\\index.js",
+  "evidenceDir": "F:\\AI-Workbench\\evidence\\openclaw-runtime-deep-dive\\2026-07-20T12-01-40-132Z",
+  "backupDir": "F:\\AI-Workbench\\evidence\\openclaw-runtime-deep-dive\\2026-07-20T12-01-40-132Z\\backups",
+  "probeMs": 90000,
+  "beforeScan": {
+    "openclawHome": "C:\\Users\\胖胖虎\\.openclaw",
+    "tempOpenclaw": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw",
+    "found": [
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\cron\\jobs.json.36308.2ba355fa7f52b585.tmp",
+        "relativePath": "cron\\jobs.json.36308.2ba355fa7f52b585.tmp",
+        "type": "file",
+        "bytes": 0,
+        "modifiedAt": "2026-07-20T11:59:40.364Z",
+        "kind": "tmp",
+        "json": null
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\devices\\paired.json",
+        "relativePath": "devices\\paired.json",
+        "type": "file",
+        "bytes": 3379,
+        "modifiedAt": "2026-07-19T11:13:57.964Z",
+        "kind": "device-state",
+        "json": {
+          "parseOk": true
+        }
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\devices\\pending.json",
+        "relativePath": "devices\\pending.json",
+        "type": "file",
+        "bytes": 2,
+        "modifiedAt": "2026-07-19T11:13:57.972Z",
+        "kind": "device-state",
+        "json": {
+          "parseOk": true
+        }
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\workspace\\.openclaw\\workspace-state.json",
+        "relativePath": "workspace\\.openclaw\\workspace-state.json",
+        "type": "file",
+        "bytes": 120,
+        "modifiedAt": "2026-05-30T05:07:20.156Z",
+        "kind": "state-json",
+        "json": {
+          "parseOk": true
+        }
+      }
+    ],
+    "temp": [
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-53-06-123Z",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-53-06-123Z",
+        "type": "file",
+        "bytes": 114,
+        "modifiedAt": "2026-07-20T10:52:55.363Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-59-14-519Z",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-59-14-519Z",
+        "type": "file",
+        "bytes": 114,
+        "modifiedAt": "2026-07-20T11:59:33.319Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-18.log",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-18.log",
+        "type": "file",
+        "bytes": 520796,
+        "modifiedAt": "2026-07-19T13:25:10.107Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-19.log",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-19.log",
+        "type": "file",
+        "bytes": 10883,
+        "modifiedAt": "2026-07-19T12:11:57.239Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-20.log",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-20.log",
+        "type": "file",
+        "bytes": 88801,
+        "modifiedAt": "2026-07-20T11:59:40.356Z",
+        "kind": "temp-openclaw"
+      }
+    ]
+  },
+  "beforeProbe": {
+    "label": "before-clean",
+    "started": true,
+    "pid": 38736,
+    "command": "C:\\Program Files\\nodejs\\node.exe --trace-uncaught --trace-warnings --trace-exit C:\\Users\\胖胖虎\\AppData\\Roaming\\npm\\node_modules\\openclaw\\dist\\index.js gateway --port 18789",
+    "exit": {
+      "code": 1,
+      "signal": null
+    },
+    "killedAfterProbe": true,
+    "before": {
+      "durationMs": 8,
+      "ok": false,
+      "status": "closed",
+      "error": "connect ECONNREFUSED 127.0.0.1:18789"
+    },
+    "after": {
+      "durationMs": 2,
+      "ok": true,
+      "status": "listening"
+    },
+    "samples": [
+      {
+        "second": 1,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 2,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 3,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 4,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 5,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 6,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 7,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 8,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 9,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 10,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 11,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 12,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 13,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 14,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 15,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 16,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 17,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 18,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 19,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 20,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 21,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 22,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 23,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 24,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 0,
+        "stderrBytes": 0
+      },
+      {
+        "second": 25,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789",
+        "stdoutBytes": 518,
+        "stderrBytes": 0
+      },
+      {
+        "second": 26,
+        "ok": true,
+        "status": "listening",
+        "error": "",
+        "stdoutBytes": 1312,
+        "stderrBytes": 163
+      }
+    ],
+    "stdoutFile": "F:\\AI-Workbench\\evidence\\openclaw-runtime-deep-dive\\2026-07-20T12-01-40-132Z\\before-clean\\gateway.stdout.log",
+    "stderrFile": "F:\\AI-Workbench\\evidence\\openclaw-runtime-deep-dive\\2026-07-20T12-01-40-132Z\\before-clean\\gateway.stderr.log",
+    "runtimeLogFile": "F:\\AI-Workbench\\evidence\\openclaw-runtime-deep-dive\\2026-07-20T12-01-40-132Z\\before-clean\\openclaw-runtime.log",
+    "stdoutPreview": "2026-07-20T20:02:05.107+08:00 [gateway] feishu_doc: Registered feishu_doc, feishu_app_scopes\n2026-07-20T20:02:05.117+08:00 [gateway] feishu_chat: Registered feishu_chat tool\n2026-07-20T20:02:05.126+08:00 [gateway] feishu_wiki: Registered feishu_wiki tool\n2026-07-20T20:02:05.132+08:00 [gateway] feishu_drive: Registered feishu_drive tool\n2026-07-20T20:02:05.141+08:00 [gateway] feishu_perm: perm tool disabled in config (default: false)\n2026-07-20T20:02:05.147+08:00 [gateway] feishu_bitable: Registered bitable tools\n2026-07-20T20:02:05.782+08:00 [canvas] host mounted at http://127.0.0.1:18789/__openclaw__/canvas/ (root C:\\Users\\胖胖虎\\.openclaw\\canvas)\n2026-07-20T20:02:06.217+08:00 [heartbeat] started\n2026-07-20T20:02:06.232+08:00 [health-monitor] started (interval: 300s, startup-grace: 60s, channel-connect-grace: 120s)\n2026-07-20T20:02:06.305+08:00 [gateway] agent model: custom-api-deepseek-com/deepseek-v4-pro\n2026-07-20T20:02:06.314+08:00 [gateway] listening on ws://127.0.0.1:18789, ws://[::1]:18789 (PID 38736)\n2026-07-20T20:02:06.328+08:00 [gateway] log file: C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-20.log\n2026-07-20T20:02:06.443+08:00 [telegram] autoSelectFamily=true (default-node22)\n2026-07-20T20:02:06.449+08:00 [telegram] dnsResultOrder=ipv4first (default-node22)\n",
+    "stderrPreview": "2026-07-20T20:02:06.334+08:00 [gateway] security warning: dangerous config flags enabled: gateway.controlUi.allowInsecureAuth=true. Run `openclaw security audit`.\n",
+    "runtimeLogTail": "",
+    "conclusion": "gateway listened on 127.0.0.1:18789 during before-clean"
+  },
+  "cleanup": {
+    "cleaned": [],
+    "skipped": [
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\cron\\jobs.json.36308.2ba355fa7f52b585.tmp",
+        "relativePath": "cron\\jobs.json.36308.2ba355fa7f52b585.tmp",
+        "type": "file",
+        "bytes": 0,
+        "modifiedAt": "2026-07-20T11:59:40.364Z",
+        "kind": "tmp",
+        "json": null
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\devices\\paired.json",
+        "relativePath": "devices\\paired.json",
+        "type": "file",
+        "bytes": 3379,
+        "modifiedAt": "2026-07-19T11:13:57.964Z",
+        "kind": "device-state",
+        "json": {
+          "parseOk": true
+        }
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\devices\\pending.json",
+        "relativePath": "devices\\pending.json",
+        "type": "file",
+        "bytes": 2,
+        "modifiedAt": "2026-07-19T11:13:57.972Z",
+        "kind": "device-state",
+        "json": {
+          "parseOk": true
+        }
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\workspace\\.openclaw\\workspace-state.json",
+        "relativePath": "workspace\\.openclaw\\workspace-state.json",
+        "type": "file",
+        "bytes": 120,
+        "modifiedAt": "2026-05-30T05:07:20.156Z",
+        "kind": "state-json",
+        "json": {
+          "parseOk": true
+        }
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-53-06-123Z",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-53-06-123Z",
+        "type": "file",
+        "bytes": 114,
+        "modifiedAt": "2026-07-20T10:52:55.363Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-59-14-519Z",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-59-14-519Z",
+        "type": "file",
+        "bytes": 114,
+        "modifiedAt": "2026-07-20T11:59:33.319Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-18.log",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-18.log",
+        "type": "file",
+        "bytes": 520796,
+        "modifiedAt": "2026-07-19T13:25:10.107Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-19.log",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-19.log",
+        "type": "file",
+        "bytes": 10883,
+        "modifiedAt": "2026-07-19T12:11:57.239Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-20.log",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-20.log",
+        "type": "file",
+        "bytes": 88801,
+        "modifiedAt": "2026-07-20T11:59:40.356Z",
+        "kind": "temp-openclaw"
+      }
+    ],
+    "reason": "gateway already started before cleanup"
+  },
+  "afterScan": {
+    "openclawHome": "C:\\Users\\胖胖虎\\.openclaw",
+    "tempOpenclaw": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw",
+    "found": [
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\cron\\jobs.json.36308.2ba355fa7f52b585.tmp",
+        "relativePath": "cron\\jobs.json.36308.2ba355fa7f52b585.tmp",
+        "type": "file",
+        "bytes": 0,
+        "modifiedAt": "2026-07-20T11:59:40.364Z",
+        "kind": "tmp",
+        "json": null
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\cron\\jobs.json.38736.2c10eb4246c9003b.tmp",
+        "relativePath": "cron\\jobs.json.38736.2c10eb4246c9003b.tmp",
+        "type": "file",
+        "bytes": 0,
+        "modifiedAt": "2026-07-20T12:02:06.598Z",
+        "kind": "tmp",
+        "json": null
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\devices\\paired.json",
+        "relativePath": "devices\\paired.json",
+        "type": "file",
+        "bytes": 3379,
+        "modifiedAt": "2026-07-19T11:13:57.964Z",
+        "kind": "device-state",
+        "json": {
+          "parseOk": true
+        }
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\devices\\pending.json",
+        "relativePath": "devices\\pending.json",
+        "type": "file",
+        "bytes": 2,
+        "modifiedAt": "2026-07-19T11:13:57.972Z",
+        "kind": "device-state",
+        "json": {
+          "parseOk": true
+        }
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\workspace\\.openclaw\\workspace-state.json",
+        "relativePath": "workspace\\.openclaw\\workspace-state.json",
+        "type": "file",
+        "bytes": 120,
+        "modifiedAt": "2026-05-30T05:07:20.156Z",
+        "kind": "state-json",
+        "json": {
+          "parseOk": true
+        }
+      }
+    ],
+    "temp": [
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock",
+        "type": "file",
+        "bytes": 114,
+        "modifiedAt": "2026-07-20T12:01:58.684Z",
+        "kind": "temp-lock"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-53-06-123Z",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-53-06-123Z",
+        "type": "file",
+        "bytes": 114,
+        "modifiedAt": "2026-07-20T10:52:55.363Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-59-14-519Z",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-59-14-519Z",
+        "type": "file",
+        "bytes": 114,
+        "modifiedAt": "2026-07-20T11:59:33.319Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-18.log",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-18.log",
+        "type": "file",
+        "bytes": 520796,
+        "modifiedAt": "2026-07-19T13:25:10.107Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-19.log",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-19.log",
+        "type": "file",
+        "bytes": 10883,
+        "modifiedAt": "2026-07-19T12:11:57.239Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-20.log",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-20.log",
+        "type": "file",
+        "bytes": 104687,
+        "modifiedAt": "2026-07-20T12:02:06.576Z",
+        "kind": "temp-openclaw"
+      }
+    ]
+  },
+  "afterProbe": null,
+  "postProbeScan": {
+    "openclawHome": "C:\\Users\\胖胖虎\\.openclaw",
+    "tempOpenclaw": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw",
+    "found": [
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\cron\\jobs.json.36308.2ba355fa7f52b585.tmp",
+        "relativePath": "cron\\jobs.json.36308.2ba355fa7f52b585.tmp",
+        "type": "file",
+        "bytes": 0,
+        "modifiedAt": "2026-07-20T11:59:40.364Z",
+        "kind": "tmp",
+        "json": null
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\cron\\jobs.json.38736.2c10eb4246c9003b.tmp",
+        "relativePath": "cron\\jobs.json.38736.2c10eb4246c9003b.tmp",
+        "type": "file",
+        "bytes": 0,
+        "modifiedAt": "2026-07-20T12:02:06.598Z",
+        "kind": "tmp",
+        "json": null
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\devices\\paired.json",
+        "relativePath": "devices\\paired.json",
+        "type": "file",
+        "bytes": 3379,
+        "modifiedAt": "2026-07-19T11:13:57.964Z",
+        "kind": "device-state",
+        "json": {
+          "parseOk": true
+        }
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\devices\\pending.json",
+        "relativePath": "devices\\pending.json",
+        "type": "file",
+        "bytes": 2,
+        "modifiedAt": "2026-07-19T11:13:57.972Z",
+        "kind": "device-state",
+        "json": {
+          "parseOk": true
+        }
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\workspace\\.openclaw\\workspace-state.json",
+        "relativePath": "workspace\\.openclaw\\workspace-state.json",
+        "type": "file",
+        "bytes": 120,
+        "modifiedAt": "2026-05-30T05:07:20.156Z",
+        "kind": "state-json",
+        "json": {
+          "parseOk": true
+        }
+      }
+    ],
+    "temp": [
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock",
+        "type": "file",
+        "bytes": 114,
+        "modifiedAt": "2026-07-20T12:01:58.684Z",
+        "kind": "temp-lock"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-53-06-123Z",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-53-06-123Z",
+        "type": "file",
+        "bytes": 114,
+        "modifiedAt": "2026-07-20T10:52:55.363Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-59-14-519Z",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-59-14-519Z",
+        "type": "file",
+        "bytes": 114,
+        "modifiedAt": "2026-07-20T11:59:33.319Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-18.log",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-18.log",
+        "type": "file",
+        "bytes": 520796,
+        "modifiedAt": "2026-07-19T13:25:10.107Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-19.log",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-19.log",
+        "type": "file",
+        "bytes": 10883,
+        "modifiedAt": "2026-07-19T12:11:57.239Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-20.log",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-20.log",
+        "type": "file",
+        "bytes": 104687,
+        "modifiedAt": "2026-07-20T12:02:06.576Z",
+        "kind": "temp-openclaw"
+      }
+    ]
+  },
+  "postProbeCleanup": {
+    "cleaned": [
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock",
+        "type": "file",
+        "bytes": 114,
+        "modifiedAt": "2026-07-20T12:01:58.684Z",
+        "kind": "temp-lock",
+        "backupPath": "F:\\AI-Workbench\\evidence\\openclaw-runtime-deep-dive\\2026-07-20T12-01-40-132Z\\backups\\temp-openclaw\\gateway.cb1a9935.lock",
+        "cleanedPath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T12-01-40-132Z"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\cron\\jobs.json.36308.2ba355fa7f52b585.tmp",
+        "relativePath": "cron\\jobs.json.36308.2ba355fa7f52b585.tmp",
+        "type": "file",
+        "bytes": 0,
+        "modifiedAt": "2026-07-20T11:59:40.364Z",
+        "kind": "tmp",
+        "json": null,
+        "backupPath": "F:\\AI-Workbench\\evidence\\openclaw-runtime-deep-dive\\2026-07-20T12-01-40-132Z\\backups\\.openclaw\\cron\\jobs.json.36308.2ba355fa7f52b585.tmp",
+        "cleanedPath": "C:\\Users\\胖胖虎\\.openclaw\\cron\\jobs.json.36308.2ba355fa7f52b585.tmp.cleaned.2026-07-20T12-01-40-132Z"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\cron\\jobs.json.38736.2c10eb4246c9003b.tmp",
+        "relativePath": "cron\\jobs.json.38736.2c10eb4246c9003b.tmp",
+        "type": "file",
+        "bytes": 0,
+        "modifiedAt": "2026-07-20T12:02:06.598Z",
+        "kind": "tmp",
+        "json": null,
+        "backupPath": "F:\\AI-Workbench\\evidence\\openclaw-runtime-deep-dive\\2026-07-20T12-01-40-132Z\\backups\\.openclaw\\cron\\jobs.json.38736.2c10eb4246c9003b.tmp",
+        "cleanedPath": "C:\\Users\\胖胖虎\\.openclaw\\cron\\jobs.json.38736.2c10eb4246c9003b.tmp.cleaned.2026-07-20T12-01-40-132Z"
+      }
+    ],
+    "skipped": []
+  },
+  "finalScan": {
+    "openclawHome": "C:\\Users\\胖胖虎\\.openclaw",
+    "tempOpenclaw": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw",
+    "found": [
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\devices\\paired.json",
+        "relativePath": "devices\\paired.json",
+        "type": "file",
+        "bytes": 3379,
+        "modifiedAt": "2026-07-19T11:13:57.964Z",
+        "kind": "device-state",
+        "json": {
+          "parseOk": true
+        }
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\devices\\pending.json",
+        "relativePath": "devices\\pending.json",
+        "type": "file",
+        "bytes": 2,
+        "modifiedAt": "2026-07-19T11:13:57.972Z",
+        "kind": "device-state",
+        "json": {
+          "parseOk": true
+        }
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\.openclaw\\workspace\\.openclaw\\workspace-state.json",
+        "relativePath": "workspace\\.openclaw\\workspace-state.json",
+        "type": "file",
+        "bytes": 120,
+        "modifiedAt": "2026-05-30T05:07:20.156Z",
+        "kind": "state-json",
+        "json": {
+          "parseOk": true
+        }
+      }
+    ],
+    "temp": [
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-53-06-123Z",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-53-06-123Z",
+        "type": "file",
+        "bytes": 114,
+        "modifiedAt": "2026-07-20T10:52:55.363Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-59-14-519Z",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T11-59-14-519Z",
+        "type": "file",
+        "bytes": 114,
+        "modifiedAt": "2026-07-20T11:59:33.319Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T12-01-40-132Z",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\gateway.cb1a9935.lock.cleaned.2026-07-20T12-01-40-132Z",
+        "type": "file",
+        "bytes": 114,
+        "modifiedAt": "2026-07-20T12:01:58.684Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-18.log",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-18.log",
+        "type": "file",
+        "bytes": 520796,
+        "modifiedAt": "2026-07-19T13:25:10.107Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-19.log",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-19.log",
+        "type": "file",
+        "bytes": 10883,
+        "modifiedAt": "2026-07-19T12:11:57.239Z",
+        "kind": "temp-openclaw"
+      },
+      {
+        "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-20.log",
+        "relativePath": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\openclaw\\openclaw-2026-07-20.log",
+        "type": "file",
+        "bytes": 104687,
+        "modifiedAt": "2026-07-20T12:02:06.576Z",
+        "kind": "temp-openclaw"
+      }
+    ]
+  },
+  "conclusion": "Gateway starts before cleanup; residual cleanup was not required."
+}

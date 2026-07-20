@@ -275,3 +275,40 @@ openclaw channels add --channel telegram ...
 原因：这次 11553→4120 并没有证明关键配置丢失，直接恢复方案 A 可能只是在回退格式，同时丢掉 Telegram。更稳的路径是先生成 candidate，做离线结构校验和 gateway 临时启动诊断。如果 candidate 仍然启动不了，就说明问题更可能在 OpenClaw gateway runtime、依赖、channel/model probe，而不是配置缩水本身。
 
 如果你只是想最快验证 last-known-good 能不能让 gateway 活过来，可以选方案 A，但执行前必须确认是否接受 Telegram 配置回退。
+
+## 7. runtime 深挖结果（2026-07-20）
+
+执行脚本：`npm.cmd run openclaw:runtime-deep-dive`
+
+做法：
+
+1. 不通过 shim，直接调用 Node 入口：
+   `C:\Program Files\nodejs\node.exe --trace-uncaught --trace-warnings --trace-exit C:\Users\胖胖虎\AppData\Roaming\npm\node_modules\openclaw\dist\index.js gateway --port 18789`
+2. 通过环境变量开启详细日志：`OPENCLAW_LOG_LEVEL=trace`、`OPENCLAW_CONSOLE_LOG_LEVEL=trace`、`DEBUG=openclaw*,gateway*,browser*,playwright*`。
+3. 扫描 `.openclaw` 与 `%TEMP%\openclaw` 下的 lock/pid/tmp/state/browser/devices/channel 运行残留。
+4. 对清理项先复制到 `evidence/openclaw-runtime-deep-dive/<timestamp>/backups/`，再把原文件改名为 `*.cleaned.<timestamp>`；不修改 `openclaw.json`。
+
+清理过的关键残留：
+
+- `.openclaw\browser\openclaw\user-data\...` 下 Chromium profile 的 `LOCK`、`*-journal`、`*-wal`、`.tmp` 文件。
+- `.openclaw\devices\paired.json.*.tmp`、`.openclaw\devices\pending.json.*.tmp`。
+- `.openclaw\cron\jobs.json.*.tmp`。
+- `.openclaw\workspace\.clawhub\lock.json`。
+- `%TEMP%\openclaw\gateway.cb1a9935.lock`。
+
+未清理项：
+
+- `.openclaw\devices\paired.json`、`.openclaw\devices\pending.json`、`.openclaw\workspace\.openclaw\workspace-state.json` 均可 JSON parse，保留。
+- `openclaw.json` 主配置未动。
+
+结论：
+
+- 清残留后，gateway 直启成功；最终验证在第 26 秒监听 `127.0.0.1:18789`。
+- 启动日志关键序列：Feishu tools 注册 -> canvas host mount -> heartbeat started -> health-monitor started -> agent model resolved -> `listening on ws://127.0.0.1:18789, ws://[::1]:18789`。
+- 当前问题更符合“运行态残留卡住/阻断启动”，不是主配置缺段。
+- 后续可把 `scripts/openclaw-runtime-deep-dive.mjs` 收敛成 health repair 自动化：只清理 lock/tmp 和 parse 失败的 state，不碰主配置。
+
+验证摘要：
+
+- `verification/openclaw-runtime-deep-dive/summary.json`
+- 完整日志：`evidence/openclaw-runtime-deep-dive/2026-07-20T12-01-40-132Z/`（本地忽略，不提交）

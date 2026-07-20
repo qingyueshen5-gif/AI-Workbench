@@ -35,6 +35,7 @@
     "openclaw:gateway-diagnostics": "node scripts/openclaw-gateway-diagnostics.mjs",
     "openclaw:candidate-diagnostics": "node scripts/openclaw-candidate-diagnostics.mjs",
     "openclaw:runtime-inventory": "node scripts/openclaw-runtime-inventory.mjs",
+    "openclaw:runtime-deep-dive": "node scripts/openclaw-runtime-deep-dive.mjs",
     "health:check": "node scripts/health-check.mjs",
     "health:repair": "node scripts/health-repair.mjs"
   },

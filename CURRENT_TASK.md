@@ -8,6 +8,7 @@
 
 - 战术优化：模型分层调用。理解、编排、关键决策用好模型；执行琐事、格式整理、重复查询用便宜模型，降低长期运行成本。
 - 待办：OpenClaw 稳定性体检。当前健康检查频繁不可用，需要确认安装路径、CLI 状态、gateway/channel 状态和最小执行链路。
+- 2026-07-20 结论：OpenClaw gateway 问题已定位到 runtime 残留状态。清理 `.openclaw`/`%TEMP%\openclaw` 下 lock/tmp/browser profile 残留后，直接 Node 入口启动 gateway 可在第 26 秒监听 `127.0.0.1:18789`；主配置未改。
 
 ### 路线图
 
@@ -100,6 +101,7 @@
 - [x] Hermes 文件执行测试：已修复 terminal backend 命中默认 WSL 的路径问题；Hermes 可读取 `F:\AI-Workbench\CURRENT_TASK.md` 并总结待办
 - [x] 开机自启动验证：Windows 登录启动项已创建，后台脚本可拉起 API 与 Vite，本地访问 `http://127.0.0.1:5173`
 - [x] 视觉细节验证：完成中文侧栏、版本徽标、正规图标、hover 时间戳和移动端对话入口
+- [x] OpenClaw runtime 深挖：`npm.cmd run openclaw:runtime-deep-dive` 直调 Node 入口，备份并清理 lock/tmp/browser/devices/cron 残留后，gateway 成功监听 `127.0.0.1:18789`
 
 ### 下一步
 1. 验收三条真实执行链路：下载爱奇艺、查看 C 盘剩余空间、打开记事本。（已完成）
