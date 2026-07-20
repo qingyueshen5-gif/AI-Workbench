@@ -1,0 +1,224 @@
+{
+  "ok": false,
+  "checkedAt": "2026-07-20T10:39:18.833Z",
+  "backupDir": "F:\\AI-Workbench\\evidence\\openclaw-candidate-backups\\2026-07-20T10-38-52-313Z",
+  "openclawHome": "C:\\Users\\胖胖虎\\.openclaw",
+  "candidate": {
+    "path": "C:\\Users\\胖胖虎\\.openclaw\\openclaw.json.candidate",
+    "info": {
+      "path": "C:\\Users\\胖胖虎\\.openclaw\\openclaw.json.candidate",
+      "exists": true,
+      "bytes": 4098,
+      "modifiedAt": "2026-07-20T10:38:52.654Z"
+    },
+    "summary": {
+      "hasTelegram": true,
+      "hasFeishu": true,
+      "gateway": {
+        "port": 18789,
+        "mode": "local",
+        "bind": "loopback",
+        "authMode": "token",
+        "hasAuthToken": true
+      },
+      "providers": {
+        "custom-token-sensenova-cn": {
+          "baseUrl": "https://token.sensenova.cn/v1",
+          "models": [
+            "sensenova-6.7-flash-lite"
+          ],
+          "hasApiKey": true
+        },
+        "custom-api-deepseek-com": {
+          "baseUrl": "https://api.deepseek.com/v1",
+          "models": [
+            "deepseek-v4-flash",
+            "deepseek-v4-pro"
+          ],
+          "hasApiKey": true
+        }
+      },
+      "agentPrimaryModel": "custom-api-deepseek-com/deepseek-v4-pro"
+    },
+    "validation": {
+      "ok": true,
+      "issues": []
+    }
+  },
+  "gateway": {
+    "started": true,
+    "pid": 30012,
+    "exitCode": null,
+    "killedAfterProbe": true,
+    "before": {
+      "durationMs": 10,
+      "ok": false,
+      "status": "closed",
+      "error": "connect ECONNREFUSED 127.0.0.1:18789"
+    },
+    "after": {
+      "durationMs": 1,
+      "ok": false,
+      "status": "closed",
+      "error": "connect ECONNREFUSED 127.0.0.1:18789"
+    },
+    "portSamples": [
+      {
+        "second": 1,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 2,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 3,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 4,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 5,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 6,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 7,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 8,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 9,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 10,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 11,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 12,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 13,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 14,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 15,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 16,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 17,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 18,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 19,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 20,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 21,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 22,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 23,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 24,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      },
+      {
+        "second": 25,
+        "ok": false,
+        "status": "closed",
+        "error": "connect ECONNREFUSED 127.0.0.1:18789"
+      }
+    ],
+    "stdoutFile": "F:\\AI-Workbench\\evidence\\openclaw-candidate\\2026-07-20T10-38-52-313Z\\gateway.stdout.log",
+    "stderrFile": "F:\\AI-Workbench\\evidence\\openclaw-candidate\\2026-07-20T10-38-52-313Z\\gateway.stderr.log",
+    "stdoutPreview": "",
+    "stderrPreview": "Config observe anomaly: C:\\Users\\胖胖虎\\.openclaw\\openclaw.json (size-drop-vs-last-good:11553->4098)\n",
+    "conclusion": "candidate 配置下 gateway 仍未监听 18789：connect ECONNREFUSED 127.0.0.1:18789"
+  },
+  "result": "gateway_failed_with_candidate"
+}
