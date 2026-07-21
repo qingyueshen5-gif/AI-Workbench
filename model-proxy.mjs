@@ -9,7 +9,6 @@ const envFile = join(root, '.env');
 const runtimeEnvFile = join(runtimeRoot, '.env');
 const logFile = runtimeModelProxyLogFile;
 const port = Number(process.env.MODEL_PROXY_PORT || 18800);
-const upstreamBaseUrl = String(process.env.MODEL_PROXY_UPSTREAM_BASE_URL || 'https://api.deepseek.com/v1').replace(/\/+$/, '');
 const maxRetries = Number(process.env.MODEL_PROXY_MAX_RETRIES || 3);
 
 migrateLegacyRuntimeData(root);
@@ -35,8 +34,45 @@ function loadLocalEnv() {
 
 loadLocalEnv();
 
-function apiKey() {
-  return String(process.env.DEEPSEEK_API_KEY || '').trim();
+const providers = {
+  deepseek: {
+    id: 'deepseek',
+    name: 'DeepSeek',
+    type: 'openai-compatible',
+    baseUrl: String(process.env.MODEL_PROXY_DEEPSEEK_BASE_URL || process.env.MODEL_PROXY_UPSTREAM_BASE_URL || 'https://api.deepseek.com/v1').replace(/\/+$/, ''),
+    apiKeyEnv: 'DEEPSEEK_API_KEY',
+    models: [
+      { id: 'deepseek-chat', ownedBy: 'deepseek', aliases: ['deepseek-v4-pro', 'deepseek-v4-flash'] },
+      { id: 'deepseek-reasoner', ownedBy: 'deepseek', aliases: [] }
+    ]
+  }
+};
+
+const defaultProviderId = String(process.env.MODEL_PROXY_DEFAULT_PROVIDER || 'deepseek').trim() || 'deepseek';
+
+function providerApiKey(provider) {
+  return String(process.env[provider.apiKeyEnv] || '').trim();
+}
+
+function resolveProvider(providerId = defaultProviderId) {
+  return providers[providerId] || providers[defaultProviderId] || providers.deepseek;
+}
+
+function allModelEntries() {
+  return Object.values(providers).flatMap((provider) => provider.models.map((model) => ({
+    id: model.id,
+    object: 'model',
+    created: 0,
+    owned_by: model.ownedBy || provider.id,
+    provider: provider.id
+  })));
+}
+
+function resolveModel(provider, modelId) {
+  const requested = String(modelId || '').trim();
+  const normalized = requested.includes('/') ? requested.split('/').pop() : requested;
+  const found = provider.models.find((model) => model.id === normalized || model.aliases?.includes(normalized));
+  return found?.id || normalized || provider.models[0]?.id || 'deepseek-chat';
 }
 
 function isLoopback(request) {
@@ -60,7 +96,7 @@ function sendJson(response, statusCode, payload) {
     'Content-Type': 'application/json; charset=utf-8',
     'Access-Control-Allow-Origin': 'http://127.0.0.1',
     'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-aiw-employee, x-aiw-simulate-network-fail-once'
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-aiw-employee, x-aiw-provider, x-aiw-simulate-network-fail-once'
   });
   response.end(JSON.stringify(payload));
 }
@@ -87,7 +123,7 @@ function shouldRetry(statusCode) {
   return statusCode === 408 || statusCode === 429 || statusCode >= 500;
 }
 
-async function fetchWithRetry(path, { method = 'GET', body = '', headers = {}, simulateFailOnce = false } = {}) {
+async function fetchWithRetry(provider, path, { method = 'GET', body = '', headers = {}, simulateFailOnce = false } = {}) {
   let lastError = null;
   let simulated = simulateFailOnce;
   for (let attempt = 1; attempt <= maxRetries; attempt += 1) {
@@ -97,7 +133,7 @@ async function fetchWithRetry(path, { method = 'GET', body = '', headers = {}, s
         simulated = false;
         throw new Error('simulated transient network failure');
       }
-      const response = await fetch(`${upstreamBaseUrl}${path}`, {
+      const response = await fetch(`${provider.baseUrl}${path}`, {
         method,
         headers,
         body: method === 'GET' ? undefined : body
@@ -128,15 +164,24 @@ async function forwardOpenAiCompatible(request, response, path) {
   const body = await readBody(request);
   const employee = employeeId(request, body);
   const started = Date.now();
-  const key = apiKey();
+  const provider = resolveProvider(request.headers['x-aiw-provider']);
+  const key = providerApiKey(provider);
   if (!key) {
-    sendJson(response, 503, { error: { message: '本机模型代理缺少 DEEPSEEK_API_KEY。' } });
+    sendJson(response, 503, { error: { message: `本机模型代理缺少 ${provider.apiKeyEnv}。` } });
     return;
   }
   try {
-    const result = await fetchWithRetry(path, {
+    let upstreamBody = body;
+    if (path === '/chat/completions') {
+      try {
+        const parsed = JSON.parse(body || '{}');
+        parsed.model = resolveModel(provider, parsed.model);
+        upstreamBody = JSON.stringify(parsed);
+      } catch {}
+    }
+    const result = await fetchWithRetry(provider, path, {
       method: request.method,
-      body,
+      body: upstreamBody,
       headers: {
         'Content-Type': request.headers['content-type'] || 'application/json',
         Authorization: `Bearer ${key}`
@@ -145,6 +190,7 @@ async function forwardOpenAiCompatible(request, response, path) {
     });
     appendCallLog({
       employee,
+      provider: provider.id,
       path,
       statusCode: result.response.status,
       attempts: result.attempts,
@@ -157,6 +203,7 @@ async function forwardOpenAiCompatible(request, response, path) {
   } catch (error) {
     appendCallLog({
       employee,
+      provider: provider.id,
       path,
       statusCode: 502,
       attempts: maxRetries,
@@ -184,17 +231,27 @@ const server = createServer(async (request, response) => {
     }
     const url = new URL(request.url, 'http://127.0.0.1');
     if (url.pathname === '/health' && request.method === 'GET') {
+      const provider = resolveProvider();
       sendJson(response, 200, {
-        ok: Boolean(apiKey()),
-        status: apiKey() ? 'available' : 'missing_key',
-        upstreamBaseUrl,
+        ok: Boolean(providerApiKey(provider)),
+        status: providerApiKey(provider) ? 'available' : 'missing_key',
+        defaultProvider: provider.id,
+        providers: Object.fromEntries(Object.values(providers).map((item) => [item.id, {
+          type: item.type,
+          baseUrl: item.baseUrl,
+          configured: Boolean(providerApiKey(item)),
+          models: item.models.map((model) => model.id)
+        }])),
         port,
         loopbackOnly: true
       });
       return;
     }
     if (url.pathname === '/v1/models' && request.method === 'GET') {
-      await forwardOpenAiCompatible(request, response, '/models');
+      sendJson(response, 200, {
+        object: 'list',
+        data: allModelEntries()
+      });
       return;
     }
     if (url.pathname === '/v1/chat/completions' && request.method === 'POST') {

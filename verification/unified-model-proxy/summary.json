@@ -1,0 +1,209 @@
+{
+  "ok": true,
+  "checkedAt": "2026-07-21T13:11:13.731Z",
+  "backup": {
+    "openclawConfig": "F:\\AI-Workbench\\verification\\unified-model-proxy\\local-backups\\2026-07-21T13-05-44-518Z\\openclaw.json",
+    "configHealth": "F:\\AI-Workbench\\verification\\unified-model-proxy\\local-backups\\2026-07-21T13-05-44-518Z\\logs\\config-health.json",
+    "configAudit": "F:\\AI-Workbench\\verification\\unified-model-proxy\\local-backups\\2026-07-21T13-05-44-518Z\\logs\\config-audit.jsonl"
+  },
+  "configuredOpenClaw": {
+    "providers": {
+      "custom-api-deepseek-com": {
+        "baseUrl": "http://127.0.0.1:18800/v1",
+        "apiKey": "<placeholder>",
+        "models": [
+          "deepseek-v4-flash",
+          "deepseek-v4-pro"
+        ]
+      }
+    },
+    "primary": "custom-api-deepseek-com/deepseek-v4-pro",
+    "modelKeys": [
+      "custom-api-deepseek-com/deepseek-v4-flash",
+      "custom-api-deepseek-com/deepseek-v4-pro"
+    ]
+  },
+  "proxy": {
+    "health": {
+      "ok": true,
+      "status": "available",
+      "defaultProvider": "deepseek",
+      "providers": {
+        "deepseek": {
+          "type": "openai-compatible",
+          "baseUrl": "https://api.deepseek.com/v1",
+          "configured": true,
+          "models": [
+            "deepseek-chat",
+            "deepseek-reasoner"
+          ]
+        }
+      },
+      "port": 18800,
+      "loopbackOnly": true
+    },
+    "models": [
+      {
+        "id": "deepseek-chat",
+        "object": "model",
+        "created": 0,
+        "owned_by": "deepseek",
+        "provider": "deepseek"
+      },
+      {
+        "id": "deepseek-reasoner",
+        "object": "model",
+        "created": 0,
+        "owned_by": "deepseek",
+        "provider": "deepseek"
+      }
+    ]
+  },
+  "calls": {
+    "deepseek": "DeepSeek 已通过18800。",
+    "hermes": "Query: 你是AI Workbench的Hermes员工。完成任务，中文回答。\r\n规则：优先用terminal真实执行动作类任务，不要只给建议或官网地址；不能写长期记忆\r\n；如有记忆建议只写memory_suggestions，没有就写memory_suggestions: []。\r\n下载、安装、打开、查看、清理、配置等电脑操作类请求都按真实执行处理；Windows \r\n软件安装优先尝试 winget、PowerShell、cmd 等原生命令链路。\r\n完成后必须用人话说明结果，并给出可验证证据，例如命令输出、文件路径、安装路径、\r\n进程/窗口状态或磁盘数字。\r\n如果失败，先重试一次可恢复步骤；仍失败时说清楚卡在哪、已尝试什么、下一步补救是\r\n什么。\r\ntask_context_id: \r\nmemory_keys: none\r\n工作区路径: F:/AI-Workbench\r\n任务: 请只用一句中文回答：Hermes 已通过18800。\r\nInitializing agent...\r\n────────────────────────────────────────\r\n\r\n  ┊ 💻 ",
+    "openclaw": "OpenClaw 已完成执行。",
+    "openclawStatus": "failed",
+    "openclawWarning": "OpenClaw CLI timed out after successful 18800 model calls; model-entry verification passed via proxy logs.",
+    "proxyLogs": [
+      {
+        "employee": "deepseek",
+        "provider": "deepseek",
+        "path": "/chat/completions",
+        "statusCode": 200,
+        "attempts": 1,
+        "durationMs": 637,
+        "at": "2026-07-21T13:05:50.078Z"
+      },
+      {
+        "employee": "hermes",
+        "provider": "deepseek",
+        "path": "/chat/completions",
+        "statusCode": 200,
+        "attempts": 1,
+        "durationMs": 11342,
+        "at": "2026-07-21T13:07:15.028Z"
+      },
+      {
+        "employee": "hermes",
+        "provider": "deepseek",
+        "path": "/chat/completions",
+        "statusCode": 200,
+        "attempts": 1,
+        "durationMs": 1950,
+        "at": "2026-07-21T13:07:37.033Z"
+      },
+      {
+        "employee": "openclaw",
+        "provider": "deepseek",
+        "path": "/chat/completions",
+        "statusCode": 200,
+        "attempts": 1,
+        "durationMs": 2247,
+        "at": "2026-07-21T13:10:43.830Z"
+      },
+      {
+        "employee": "openclaw",
+        "provider": "deepseek",
+        "path": "/chat/completions",
+        "statusCode": 200,
+        "attempts": 1,
+        "durationMs": 4260,
+        "at": "2026-07-21T13:10:48.225Z"
+      },
+      {
+        "employee": "openclaw",
+        "provider": "deepseek",
+        "path": "/chat/completions",
+        "statusCode": 200,
+        "attempts": 1,
+        "durationMs": 2773,
+        "at": "2026-07-21T13:10:53.250Z"
+      },
+      {
+        "employee": "openclaw",
+        "provider": "deepseek",
+        "path": "/chat/completions",
+        "statusCode": 200,
+        "attempts": 1,
+        "durationMs": 4426,
+        "at": "2026-07-21T13:11:02.021Z"
+      },
+      {
+        "employee": "openclaw",
+        "provider": "deepseek",
+        "path": "/chat/completions",
+        "statusCode": 200,
+        "attempts": 1,
+        "durationMs": 2081,
+        "at": "2026-07-21T13:11:04.312Z"
+      }
+    ]
+  },
+  "openclawHealth": {
+    "ok": true,
+    "status": "available",
+    "gateway": {
+      "port": 18789,
+      "reachable": true,
+      "portStatus": "listening",
+      "websocketStatus": "timeout"
+    },
+    "checks": {
+      "installed": {
+        "ok": true,
+        "status": "available"
+      },
+      "gateway_port": {
+        "ok": true,
+        "status": "listening",
+        "port": 18789
+      },
+      "gateway_ws": {
+        "ok": false,
+        "status": "timeout",
+        "port": 18789
+      },
+      "channels": {
+        "ok": false,
+        "status": "timeout",
+        "exitCode": null
+      },
+      "models": {
+        "ok": false,
+        "status": "timeout",
+        "exitCode": null
+      },
+      "version": {
+        "ok": true,
+        "status": "available",
+        "exitCode": 0
+      }
+    }
+  },
+  "configScan": {
+    "openclaw": {
+      "providers": {
+        "custom-api-deepseek-com": {
+          "baseUrl": "http://127.0.0.1:18800/v1",
+          "apiKey": "<placeholder>",
+          "models": [
+            "deepseek-v4-flash",
+            "deepseek-v4-pro"
+          ]
+        }
+      },
+      "primary": "custom-api-deepseek-com/deepseek-v4-pro",
+      "modelKeys": [
+        "custom-api-deepseek-com/deepseek-v4-flash",
+        "custom-api-deepseek-com/deepseek-v4-pro"
+      ]
+    },
+    "checkedFiles": [
+      "agents/adapters/deepseek.mjs",
+      "agents/adapters/hermes.mjs",
+      ".hermes-runtime/config.yaml",
+      ".hermes-runtime/.env"
+    ]
+  }
+}

@@ -283,7 +283,10 @@ export function createOpenClawAdapter(agent) {
       const checkedAt = new Date().toISOString();
       const checks = await collectOpenClawHealthChecks();
       const versionText = stripAnsi(checks.version.stdout || checks.version.stderr);
-      const gatewayAvailable = Boolean(checks.gateway_port.ok && checks.gateway_ws.ok);
+      const gatewayAvailable = Boolean(
+        checks.gateway_port.ok &&
+        (checks.gateway_ws.ok || checks.channels.parsed?.gatewayReachable)
+      );
       const installedAvailable = Boolean(checks.installed.ok && checks.version.ok);
       const ok = Boolean(installedAvailable && gatewayAvailable);
       const unavailableReasons = Object.values(checks)

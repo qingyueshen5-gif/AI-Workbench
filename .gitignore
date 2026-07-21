@@ -25,6 +25,8 @@ evidence/
 .tmp-strict-*/
 .tmp-strict-*.log
 verification/**/user-data*/
+verification/unified-model-proxy/local-backups/
+verification/unified-model-proxy/runs/
 verification/version-management/fixture-versions/
 versions/backups/*.json
 .tmp-version-management/

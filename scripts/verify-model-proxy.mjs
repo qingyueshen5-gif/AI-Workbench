@@ -74,6 +74,18 @@ async function chat(employee, content, headers = {}) {
   return { payload, text };
 }
 
+async function listModels() {
+  const response = await fetch(`${proxyUrl}/models`, {
+    headers: {
+      Authorization: 'Bearer aiw.verify.local',
+      'x-aiw-employee': 'verify'
+    }
+  });
+  const payload = await response.json().catch(() => ({}));
+  assert(response.ok, `models endpoint failed: ${payload?.error?.message || response.status}`);
+  return payload;
+}
+
 function latestLogs() {
   if (!existsSync(logFile)) return [];
   return readFileSync(logFile, 'utf8')
@@ -115,6 +127,12 @@ try {
 
   const health = await waitForHealth();
   assert(health.loopbackOnly === true, 'model proxy must be loopback-only');
+  assert(health.defaultProvider === 'deepseek', 'model proxy default provider should be deepseek');
+  assert(health.providers?.deepseek?.configured, 'deepseek provider should be configured');
+
+  const models = await listModels();
+  assert(Array.isArray(models.data), 'models endpoint did not return OpenAI-compatible model list');
+  assert(models.data.some((model) => model.id === 'deepseek-chat' && model.provider === 'deepseek'), 'models endpoint missing deepseek-chat');
 
   const chatResult = await chat('verify', '用中文回复：代理验收OK');
   const retryResult = await chat('retry-check', '用中文回复：重试验收OK', {
@@ -129,6 +147,7 @@ try {
   console.log(JSON.stringify({
     ok: true,
     health,
+    models: models.data,
     chat: chatResult.text.trim().slice(0, 120),
     retry: retryResult.text.trim().slice(0, 120),
     recentProxyLogs: logs.slice(-5)
