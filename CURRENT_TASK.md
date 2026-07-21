@@ -1,5 +1,7 @@
 # CURRENT_TASK.md — 当前任务
 
+> 【交接铁律】每完成一步，必须更新 `NEXT_STEP.md`、`DECISIONS.md`、`CURRENT_PROGRESS_AUDIT.md` 三个文件，再 commit + push。换对话框时，新对话框只需读这三个文件 + 桌面 Handoff 文件即可接手。
+
 > 最新更新：2026-07-19
 
 ## 当前阶段：让工作台从“只会指路”变成“真会干活”
