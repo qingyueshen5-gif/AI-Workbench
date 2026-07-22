@@ -1,0 +1,19 @@
+{
+  "task": "nsis-install-uninstall",
+  "version": "0.4.6",
+  "installer": "release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe",
+  "method": "silent",
+  "installCommand": "AI-Workbench-Setup-v0.4.6-x64.exe /S",
+  "installExitCode": 0,
+  "expectedInstallDir": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AI Workbench",
+  "expectedInstalledExeExists": false,
+  "expectedUninstallerExists": false,
+  "desktopShortcutExists": true,
+  "startMenuShortcutExists": true,
+  "desktopShortcutTarget": "C:\\Users\\胖胖虎\\Desktop\\AI-Workbench\\AI Workbench.exe",
+  "startMenuShortcutTarget": "C:\\Users\\胖胖虎\\Desktop\\AI-Workbench\\AI Workbench.exe",
+  "uninstallAttempted": false,
+  "uninstallExitCode": null,
+  "status": "failed",
+  "failureReason": "NSIS silent installer exited 0 but did not create the expected per-user Programs installation or uninstaller. Existing shortcuts still point to an old desktop install path, so 3A cannot be considered installable for strangers."
+}

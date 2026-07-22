@@ -20,4 +20,10 @@
 
 ## 上线判断
 最小集 = 上面 6 条,真正卡脖子的是前 3 条硬骨头。第 3/4/5 步都可为上线让路。
+
+## 当前 3A 状态
+
+- 2026-07-22：硬骨头3A 已生成 Windows 安装包候选版 `AI-Workbench-Setup-v0.4.6-x64.exe`，但发布前预验收未通过。
+- 失败证据：`verification/install-release/preflight-summary.json`。
+- 硬骨头3不能标记完成；不进入 GitHub Release 3B。
 ---

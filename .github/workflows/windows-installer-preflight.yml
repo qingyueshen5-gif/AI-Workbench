@@ -1,0 +1,56 @@
+name: Windows Installer Preflight
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'package.json'
+      - 'package-lock.json'
+      - 'electron/**'
+      - 'src/**'
+      - 'scripts/**'
+      - 'server.mjs'
+      - 'model-proxy.mjs'
+      - 'readiness.mjs'
+      - 'runtime-paths.mjs'
+      - '.github/workflows/windows-installer-preflight.yml'
+
+jobs:
+  preflight:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build installer candidate
+        run: npm run dist:win
+
+      - name: Run install-release preflight
+        id: preflight
+        shell: pwsh
+        continue-on-error: true
+        run: npm run verify:install-release
+
+      - name: Upload installer candidate and evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-workbench-v0.4.6-installer-preflight
+          path: |
+            release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe
+            release-v0.4.6-installer/latest.yml
+            verification/install-release/**
+
+      - name: Fail when preflight failed
+        if: steps.preflight.outcome != 'success'
+        run: exit 1

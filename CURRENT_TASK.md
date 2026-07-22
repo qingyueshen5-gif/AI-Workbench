@@ -1,6 +1,6 @@
 # CURRENT_TASK.md — 当前任务
 
-> 【交接铁律】每完成一步，必须更新 `TASKLOG.md`、`CHANGELOG.md`、`CURRENT_TASK.md`、`NEXT_STEP.md`、`DECISIONS.md`、`CURRENT_PROGRESS_AUDIT.md`，再 commit + push。换对话框时，新对话框先读这些文件 + 桌面 Handoff 文件即可接手。
+> 【交接铁律】每完成一步，必须更新 `TASKLOG.md`、`CHANGELOG.md`、`CURRENT_TASK.md`、`NEXT_STEP.md`、`DECISIONS.md`、`CURRENT_PROGRESS_AUDIT.md`，再 commit + push。换对话框时，新对话框先读 `EXECUTION_PROTOCOL.md` + 这些文件 + 桌面 Handoff 文件即可接手。
 
 > 最新更新：2026-07-22
 
@@ -10,14 +10,16 @@
 
 - [x] 硬骨头1：陌生机器不崩。启动路径改为缺依赖降级，config/data/logs/evidence 首次运行自动创建，18800/Hermes/OpenClaw/端口异常统一返回中文未就绪状态；自动验收证据见 `verification/clean-machine/summary.json`。
 - [x] 硬骨头2：共享 key 落地。18800 网关支持共享托管 key 兜底，员工和前端只使用本机占位 token；验收证据见 `verification/shared-key/summary.json`。
-- [ ] 硬骨头3：能下载能安装。打安装包挂 GitHub Release，只给用户一个下载链接。
+- [ ] 硬骨头3：能下载能安装。3A 已生成候选包但预验收未通过；修复后重跑 3A，3A 通过并经产品负责人批准后才进入 3B：GitHub Release 正式发布并生成唯一下载链接。
 
 ## 当前口径校准
 
 - `TASKLOG.md` 已作为任务总账本补齐，后续任务必须同步更新。
+- `EXECUTION_PROTOCOL.md` 已作为 GPT / Codex / Claude / 其他执行助手的强制必读协议补齐，所有大任务必须单一主线、分段执行、真实验收、失败也留痕。
 - `verification/model-router/summary.json` 当前不存在，也不应补假文件；它对应尚未执行的“模型分层/模型路由”任务。
 - 统一模型入口的真实验收产物是 `verification/unified-model-proxy/summary.json`。
 - 模型分层、手机端、情报流水线暂不抢跑，等上线最小集前三条稳定后继续。
+- 3A 当前阻塞：NSIS 静默安装未创建预期 per-user 安装目录/卸载器，packaged Electron smoke test 未完成，`shared_managed` 生产注入未验证；证据见 `verification/install-release/preflight-summary.json`。
 
 ## 明天路线图（2026-07-19）
 

@@ -90,6 +90,23 @@ SERPER_API_KEY=（可选；需要通用网络搜索能力时填写，去 serper.
 - `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`：发布/托管流程注入给 18800 服务端的共享 key，不写进前端、员工配置或仓库文件。
 - `SERPER_API_KEY`：用于 `web_search` 通用联网搜索工具。没有这个 key 时，模型仍可聊天和提炼，但不能执行实时搜索、新闻、当前价格等查询。
 
+## 安装包候选版状态
+
+2026-07-22 生成了 v0.4.6 Windows 安装包候选版：
+
+```text
+release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe
+```
+
+该候选版仅用于 3A 预验收，尚未发布到 GitHub Release。当前 3A 状态为 failed，证据见：
+
+```text
+verification/install-release/preflight-summary.json
+verification/install-release/preflight-report.md
+```
+
+不要把该候选包发给真实用户。只有 3A 修复并通过、产品负责人批准进入 3B、GitHub Release 下载链接验证完成后，才能对外分发。
+
 ## 启动项目
 
 ```bash

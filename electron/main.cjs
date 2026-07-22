@@ -19,16 +19,19 @@ function logMain(message) {
 
 const appVersion = packageInfo.version;
 const windowTitle = `AI Workbench v${appVersion}`;
+const smokeTestMode = process.argv.includes('--smoke-test') || process.env.AIW_SMOKE_TEST === '1';
 const remoteDebugArg = process.argv.find((arg) => arg.startsWith('--remote-debugging-port='));
 if (remoteDebugArg) {
   const [, port] = remoteDebugArg.split('=');
   if (port) app.commandLine.appendSwitch('remote-debugging-port', port);
 }
+const modelProxyPort = Number(process.env.MODEL_PROXY_PORT || 18800);
+const apiPort = Number(process.env.PORT || 8787);
 const endpoints = {
-  modelProxy: 'http://127.0.0.1:18800/health',
-  api: 'http://127.0.0.1:8787/api/data',
-  readiness: 'http://127.0.0.1:8787/api/readiness',
-  app: 'http://127.0.0.1:8787/'
+  modelProxy: `http://127.0.0.1:${modelProxyPort}/health`,
+  api: `http://127.0.0.1:${apiPort}/api/data`,
+  readiness: `http://127.0.0.1:${apiPort}/api/readiness`,
+  app: `http://127.0.0.1:${apiPort}/`
 };
 const ownedChildren = [];
 const serviceState = {
@@ -311,6 +314,68 @@ async function createWindow() {
   }
 }
 
+async function runSmokeTest() {
+  const outputFile = process.env.AIW_SMOKE_TEST_OUTPUT || path.join(app.getPath('userData'), 'logs', 'smoke-test.json');
+  const result = {
+    task: 'electron-smoke-test',
+    version: appVersion,
+    startedAt: new Date().toISOString(),
+    packaged: app.isPackaged,
+    userData: app.getPath('userData'),
+    services: {},
+    renderer: { ok: false },
+    readiness: null,
+    errors: []
+  };
+  try {
+    Menu.setApplicationMenu(null);
+    const services = await ensureInternalServices();
+    result.services = services;
+    if (services.apiReady) {
+      const win = new BrowserWindow({
+        width: 1024,
+        height: 720,
+        show: false,
+        title: windowTitle,
+        webPreferences: {
+          contextIsolation: true,
+          nodeIntegration: false,
+          sandbox: false
+        }
+      });
+      mainWindow = win;
+      await win.loadURL(endpoints.app);
+      const title = await win.webContents.executeJavaScript('document.title').catch(() => '');
+      const bodyText = await win.webContents.executeJavaScript('document.body ? document.body.innerText.slice(0, 400) : ""').catch(() => '');
+      result.renderer = {
+        ok: Boolean(bodyText && !/Cannot\s+GET|ERR_|Error:/i.test(bodyText)),
+        title,
+        bodyTextLength: bodyText.length
+      };
+      const readiness = await readJsonUrl(endpoints.readiness, 2500);
+      result.readiness = readiness.payload || null;
+      win.destroy();
+    } else {
+      result.renderer = { ok: false, reason: 'api_not_ready' };
+    }
+    result.ok = Boolean(result.services.apiReady && result.renderer.ok);
+  } catch (error) {
+    result.ok = false;
+    result.errors.push(friendlyError(error));
+    logMain(`smoke-test:error ${error?.stack || error}`);
+  } finally {
+    result.finishedAt = new Date().toISOString();
+    try {
+      fs.mkdirSync(path.dirname(outputFile), { recursive: true });
+      fs.writeFileSync(outputFile, JSON.stringify(result, null, 2), 'utf8');
+    } catch (error) {
+      logMain(`smoke-test:write-error ${error?.stack || error}`);
+    }
+    stopOwnedServices();
+    app.exit(result.ok ? 0 : 1);
+  }
+}
+
 function friendlyError(error) {
   const message = String(error?.message || error || '').trim();
   if (/EADDRINUSE|address already in use/i.test(message)) return '本机端口已被其他程序占用';
@@ -371,7 +436,7 @@ function escapeHtml(value) {
 }
 
 logMain(`startup argv=${JSON.stringify(process.argv)} packaged=${app.isPackaged}`);
-const gotLock = app.requestSingleInstanceLock();
+const gotLock = smokeTestMode || app.requestSingleInstanceLock();
 if (!gotLock) {
   logMain('single-instance-lock:failed');
   app.quit();
@@ -385,7 +450,7 @@ if (!gotLock) {
     }
   });
 
-  app.whenReady().then(createWindow).catch((error) => {
+  app.whenReady().then(smokeTestMode ? runSmokeTest : createWindow).catch((error) => {
     logMain(`createWindow:error ${error?.stack || error}`);
   });
   app.on('activate', () => {

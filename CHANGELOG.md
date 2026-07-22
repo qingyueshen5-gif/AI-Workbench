@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## Unreleased - 上线硬骨头3A：安装包候选版预验收
+
+### 新增
+
+- 新增 `EXECUTION_PROTOCOL.md`，固化 GPT / Codex / Claude / 其他执行助手的任务执行与验收协议。
+- 新增 `research/release-plan.md`，记录上线硬骨头3A/3B 拆分、安装包候选版预验收方案和四条现实约束。
+- 新增 `tasks/2026-07-22-固化分段执行与验收协议.md`，记录执行协议落档。
+
+### 文档
+
+- 将 `EXECUTION_PROTOCOL.md` 加入 `CURRENT_TASK.md`、`NEXT_STEP.md`、`CURRENT_PROGRESS_AUDIT.md` 和 `AI-Workbench-Handoff.md` 的交接必读清单。
+- 在 `DECISIONS.md` 中记录“单一主线、分段执行、逐段验证、失败也留痕、产品负责人批准后才能进入下一阶段”的正式决策。
+- 明确当前唯一主线仍是硬骨头3A，不创建 GitHub Release、不创建正式 tag、不进入 3B。
+
+### 验收
+
+- 生成本地候选安装包 `release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe`，SHA256 为 `90b9a6c30e015fe8a283eae0ae31909c330511f372660596f4905b52b735adf7`。
+- 新增 `verification/install-release/preflight-summary.json`、`verification/install-release/preflight-report.md` 和 `verification/install-release/nsis-install-uninstall.json`。
+- 3A 预验收状态为 failed：NSIS 静默安装未创建预期 per-user 安装目录/卸载器，packaged Electron smoke test 未完成，`shared_managed` 生产注入未验证。
+
 ## Unreleased - 任务账本与进度口径校准
 
 ### 新增

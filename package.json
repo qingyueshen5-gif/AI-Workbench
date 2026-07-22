@@ -1,6 +1,6 @@
 {
   "name": "ai-workbench",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "private": true,
   "type": "module",
   "main": "electron/main.cjs",
@@ -24,6 +24,7 @@
     "verify:unified-model-proxy": "node scripts/verify-unified-model-proxy.mjs",
     "verify:clean-machine": "node scripts/verify-clean-machine.mjs",
     "verify:shared-key": "node scripts/verify-shared-key.mjs",
+    "verify:install-release": "node scripts/verify-install-release.mjs",
     "verify:chat-proxy": "node scripts/verify-chat-proxy.mjs",
     "verify:hermes-proxy": "node scripts/verify-hermes-proxy.mjs",
     "verify:acceptance": "node scripts/verify-acceptance.mjs",
@@ -61,7 +62,7 @@
     "productName": "AI Workbench",
     "asar": true,
     "directories": {
-      "output": "release-v0.4.5-installer"
+      "output": "release-v0.4.6-installer"
     },
     "electronDist": "node_modules/electron/dist",
     "files": [
@@ -77,11 +78,7 @@
       "errors/**",
       "health/**",
       "versions/**",
-      "verification/**",
-      "CURRENT_TASK.md",
-      "CONTEXT.md",
-      "VISION.md",
-      "ARCHITECTURE.md"
+      "verification/rules.mjs"
     ],
     "win": {
       "target": [
@@ -90,6 +87,7 @@
       "icon": "assets/icon.ico"
     },
     "nsis": {
+      "artifactName": "AI-Workbench-Setup-v${version}-${arch}.exe",
       "oneClick": false,
       "perMachine": false,
       "allowElevation": false,

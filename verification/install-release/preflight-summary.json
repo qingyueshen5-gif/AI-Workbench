@@ -1,0 +1,142 @@
+{
+  "task": "install-release-preflight",
+  "status": "failed",
+  "version": "0.4.6",
+  "artifactName": "AI-Workbench-Setup-v0.4.6-x64.exe",
+  "artifactPath": "release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe",
+  "artifactSizeBytes": 111661558,
+  "sha256": "90b9a6c30e015fe8a283eae0ae31909c330511f372660596f4905b52b735adf7",
+  "build": {
+    "artifactExists": true,
+    "unpackedExists": true,
+    "releaseDir": "release-v0.4.6-installer"
+  },
+  "install": {
+    "status": "failed",
+    "method": "silent",
+    "command": "AI-Workbench-Setup-v0.4.6-x64.exe /S",
+    "exitCode": 0,
+    "installDir": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AI Workbench",
+    "installedExeExists": false,
+    "desktopShortcutExists": true,
+    "startMenuShortcutExists": true,
+    "failureReason": "NSIS silent installer exited 0 but did not create the expected per-user Programs installation or uninstaller. Existing shortcuts still point to an old desktop install path, so 3A cannot be considered installable for strangers."
+  },
+  "firstRun": {
+    "exitCode": 2147483651,
+    "signal": "",
+    "timedOut": false,
+    "startedAt": "2026-07-22T08:41:54.737Z",
+    "finishedAt": "2026-07-22T08:41:56.075Z",
+    "runtimeRoot": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp\\aiw-install-release-runtime-1224-1784709714697",
+    "smokeOutputFile": "verification/install-release/smoke-test.json",
+    "smoke": null,
+    "runtimeDirs": {
+      "config": true,
+      "data": true,
+      "logs": true,
+      "evidence": true
+    },
+    "mechanism_test": {
+      "type": "mock_upstream",
+      "sharedManagedConfigured": false,
+      "production_test": {
+        "status": "blocked",
+        "reason": "3A has no production shared key injection evidence; mock only verifies mechanism."
+      }
+    },
+    "production_test": {
+      "status": "blocked",
+      "reason": "3A has no production shared key injection evidence; mock only verifies mechanism."
+    }
+  },
+  "sharedKey": {
+    "type": "mock_upstream",
+    "sharedManagedConfigured": false,
+    "production_test": {
+      "status": "blocked",
+      "reason": "3A has no production shared key injection evidence; mock only verifies mechanism."
+    }
+  },
+  "dependencyFallback": {
+    "ok": true,
+    "port": 24224,
+    "status": "degraded",
+    "notReady": [
+      "model_proxy",
+      "hermes",
+      "openclaw"
+    ],
+    "hasChineseMessage": true
+  },
+  "portConflict": {
+    "modelPort": 25224,
+    "apiPort": 25225,
+    "occupiedModel": true,
+    "occupiedApi": true,
+    "proxyExitCode": 0,
+    "proxyExplainedConflict": true
+  },
+  "secretScan": {
+    "sourceRuntimeHits": [
+      {
+        "file": "agents/adapters/hermes.mjs",
+        "pattern": "DEEPSEEK_API_KEY="
+      },
+      {
+        "file": "scripts/verify.mjs",
+        "pattern": "SERPER_API_KEY="
+      }
+    ],
+    "packageHits": [],
+    "installerHits": [],
+    "packagePathHits": [],
+    "installerPathHits": [],
+    "ok": true,
+    "note": "sourceRuntimeHits are informational because runtime code may contain environment variable names or mock placeholders; package and installer hits are blocking."
+  },
+  "uninstall": {
+    "status": "failed",
+    "method": "silent",
+    "attempted": false,
+    "exitCode": null,
+    "failureReason": "Uninstall was not attempted because expected uninstaller was not created."
+  },
+  "actions": {
+    "status": "not_run",
+    "reason": "Workflow can be submitted by git push; no remote run result is available during local preflight."
+  },
+  "fiveCriteria": {
+    "a_noHardcodedPaths": true,
+    "b_firstRunCreatesFiles": true,
+    "c_missingDependenciesNoCrash": true,
+    "d_portConflictFallback": true,
+    "e_readinessReportComplete": true
+  },
+  "commands": [
+    {
+      "command": "C:\\Program Files\\nodejs\\node.exe F:\\AI-Workbench\\model-proxy.mjs",
+      "exitCode": 0,
+      "signal": "",
+      "startedAt": "2026-07-22T08:41:56.462Z",
+      "finishedAt": "2026-07-22T08:41:56.645Z",
+      "stdout": "",
+      "stderr": "{\"ok\":false,\"status\":\"not_ready\",\"service\":\"model_proxy\",\"port\":25224,\"userMessage\":\"模型代理 使用的本机端口 25224 当前不可用：端口已被其他程序占用。\",\"checkedAt\":\"2026-07-22T08:41:56.589Z\"}\n"
+    },
+    {
+      "command": "git ls-files",
+      "exitCode": 0,
+      "signal": "",
+      "startedAt": "2026-07-22T08:41:56.646Z",
+      "finishedAt": "2026-07-22T08:41:56.726Z",
+      "stdout": ".gitignore\nAI-Workbench-Handoff.md\nARCHITECTURE.md\nCHANGELOG.md\nCONTEXT.md\nCURRENT_PROGRESS_AUDIT.md\nCURRENT_TASK.md\n\"Codex\\344\\273\\273\\345\\212\\241\\345\\215\\241_MVP\\345\\267\\245\\344\\275\\234\\345\\217\\260.md\"\nDECISIONS.md\nLAUNCH.md\nNEXT_STEP.md\nPRINCIPLES.md\nPRODUCT.md\nREADME.md\nSETUP.md\nTASKLOG.md\nVISION.md\nagents/adapter-contract.mjs\nagents/adapters/deepseek.mjs\nagents/adapters/hermes.mjs\nagents/adapters/openclaw.mjs\nagents/definitions.mjs\nagents/registry.mjs\nagents/router.mjs\nassets/icon.ico\nelectron/main.cjs\nerrors/normalize.mjs\nhealth/self-heal.mjs\nhermes-doctor-2026-07-16.txt\nhermes-doctor-2026-07-17-fixed.txt\nhermes-doctor-2026-07-17.txt\nindex.html\nmodel-proxy.mjs\npackage-lock.json\npackage.json\npostcss.config.js\nreadiness.mjs\nresearch/ai-link-analysis.md\nresearch/channel-connection-plan.md\nresearch/hermes-one-ecosystem.md\nresearch/intel-pipeline-plan.md\nresearch/openclaw-candidate-gateway-test.md\nresearch/openclaw-config-diff.md\nresearch/openclaw-health.md\nresearch/openclaw-runtime-gateway-diagnosis.md\nresearch/pc-health-report.md\nresearch/self-hosting-plan.md\nresearch/unified-model-proxy-plan.md\nresearch/version-management-plan.md\nruntime-paths.mjs\nscripts/ai-workbench-watchdog.ps1\nscripts/capture-round2-ui.mjs\nscripts/capture-round3-ui.mjs\nscripts/capture-strict-acceptance.mjs\nscripts/capture-v041-installed.mjs\nscripts/capture-v042-experience.mjs\nscripts/capture-v043-actions.mjs\nscripts/capture-v044-polish-api.mjs\nscripts/capture-v044-polish.mjs\nscripts/dev-background.mjs\nscripts/dev.mjs\nscripts/generate-icon.mjs\nscripts/health-check.mjs\nscripts/health-repair.mjs\nscripts/install-watchdog.ps1\nscripts/open-workbench.ps1\nscripts/open-workbench.vbs\nscripts/openclaw-candidate-diagnostics.mjs\nscripts/openclaw-gateway-diagnostics.mjs\nscripts/openclaw-runtime-deep-dive.mjs\nscripts/openclaw-runtime-inventory.mjs\nscripts/start-workbench-dev.ps1\nscripts/verify-acceptance.mjs\nscripts/verify-action-routing.mjs\nscripts/verify-agents.mjs\nscripts/verify-chat-proxy.mjs\nscripts/verify-clean-machine.mjs\nscripts/verify-error-normalization.mjs\nscripts/verify-health-self-heal.mjs\nscripts/verify-hermes-adapter.mjs\nscripts/verify-hermes-proxy.mjs\nscripts/verify-memories.mjs\nscripts/verify-model-proxy.mjs\nscripts/verify-openclaw.mjs\nscripts/verify-round2-acceptance.mjs\nscripts/verify-round3-acceptance.mjs\nscripts/verify-shared-key.mjs\nscripts/verify-tasks-runs.mjs\nscripts/verify-unified-model-proxy.mjs\nscripts/verify-verification-layer.mjs\nscripts/verify-version-management.mjs\nscripts/verify.mjs\nscripts/versions-check-models.mjs\nscripts/versions-doctor.mjs\nscripts/versions-restore.mjs\nscripts/versions-snapshot.mjs\nserver.mjs\nsrc/main.jsx\nsrc/styles.css\ntailwind.config.js\ntasks/2026-07-15-phase-2-closeout.md\ntasks/2026-07-15-v0.1.1-display-panels.md\ntasks/2026-07-22-shared-key.md\nverification/clean-machine/readiness-report.md\nverification/clean-machine/summary.json\nverification/openclaw-candidate/summary.json\nverification/openclaw-health/summary.json\nverification/openclaw-runtime-deep-dive/summary.json\nverification/openclaw-runtime/inventory.json\nverification/rules.mjs\nverification/shared-key/summary.json\nverification/strict-acceptance/00-home.png\nverification/strict-acceptance/01-open-github.png\nverification/strict-acceptance/02-c-drive-1.png\nverification/strict-acceptance/02-c-drive-2.png\nverification/strict-acceptance/02-c-drive-3.png\nverification/strict-acceptance/03-clean-c-drive.png\nverification/strict-acceptance/04-failure-explained.png\nverification/strict-acceptance/05-network-reconnecting.png\nverification/strict-acceptance/06-network-delivered.png\nverification/unified-model-proxy/summary.json\nverification/v0.4.1-installed/00-installed-home.png\nverification/v0.4.1-installed/01-open-tencent.png\nverification/v0.4.1-installed/02-open-github.png\nverification/v0.4.1-installed/03-c-drive-1.png\nverification/v0.4.1-installed/03-c-drive-2.png\nverification/v0.4.1-installed/03-c-drive-3.png\nverification/v0.4.1-installed/04-clean-c-drive.png\nverification/v0.4.1-installed/05-weather.png\nverification/v0.4.2-experience/00-no-english-menu.png\nverification/v0.4.2-experience/01-ctrl-v-pasted.png\nverification/v0.4.2-experience/02-right-click-menu-triggered.png\nverification/v0.4.2-experience/03-formatted-todo-reply.png\nverification/v0.4.3-actions/00-installed-home.png\nverification/v0.4.3-actions/01-open-terminal-desktop.png\nverification/v0.4.3-actions/02-open-notepad-desktop.png\nverification/v0.4.3-actions/03-open-downloads-folder-desktop.png\nverification/v0.4.3-actions/summary.json\nverification/v0.4.4-polish/01-markdown-todo.png\nverification/v0.4.4-polish/02-terminal-foreground.png\nverification/v0.4.4-polish/03-notepad-foreground.png\nverification/v0.4.4-polish/04-downloads-foreground.png\nverification/v0.4.4-polish/summary-api.json\nverification/v0.4.4-polish/summary.json\nverification/version-management/summary.json\nversions/current.json\nversions/lock.json\nversions/manager.mjs\nversions/releases/v0.4.4.json\nversions/releases/v0.4.5.json\nvite.config.js\n",
+      "stderr": ""
+    }
+  ],
+  "knownIssues": [
+    "shared_managed production injection is not verified in 3A; mechanism test used mock upstream only.",
+    "NSIS silent install did not create the expected per-user installed exe/uninstaller.",
+    "Uninstall verification did not pass.",
+    "Packaged Electron smoke test did not complete successfully."
+  ]
+}

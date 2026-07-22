@@ -14,11 +14,12 @@
 | `ARCHITECTURE.md` | 存在 | 13686 bytes |
 | `CHANGELOG.md` | 存在 | 17978 bytes |
 | `TASKLOG.md` | 存在 | 任务总账本，记录任务状态、验收产物和缺失文件原因。 |
+| `EXECUTION_PROTOCOL.md` | 存在 | GPT / Codex / Claude / 其他执行助手的任务执行与验收协议。 |
 
 版本号：
 
 - `package.json` 当前版本：`0.4.5`
-- `CHANGELOG.md` 最新版本条目：`Unreleased - 任务账本与进度口径校准`
+- `CHANGELOG.md` 最新版本条目：`Unreleased - 上线硬骨头3A：安装包候选版预验收`
 
 ## 2. `research/` 真实存在文件
 
@@ -53,15 +54,16 @@
 
 - 产品版本：`v0.4.5`
 - 任务账本：`TASKLOG.md` 已补齐，后续每次任务都必须同步更新。
+- 执行协议：`EXECUTION_PROTOCOL.md` 已补齐，所有新 AI / Codex 接手前必须读取。
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；DeepSeek、Hermes、OpenClaw 三员工都已通过 `18800` 调用模型，验收摘要在 `verification/unified-model-proxy/summary.json`。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：当前没有执行器故障卡点。上线最小集下一块是下载安装包和 GitHub Release 下载链接，尚未实现。
+- 现在卡在什么：上线硬骨头3A 预验收未通过。候选包已生成，但 NSIS 静默安装未创建预期 per-user 安装目录/卸载器，packaged Electron smoke test 未完成，`shared_managed` 生产注入未验证；证据见 `verification/install-release/preflight-summary.json`。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
 ## 5. 下一步
 
-1. 进入上线硬骨头3：能下载能安装。
-2. 打安装包并挂 GitHub Release，只给用户一个下载链接。
+1. 修复上线硬骨头3A 失败项并重新跑预验收。
+2. 只有 3A passed 后，才由产品负责人判断是否进入 3B：GitHub Release 正式发布。
 3. 模型分层、手机端、情报流水线暂不抢跑，等上线最小集前三条稳定后继续。
