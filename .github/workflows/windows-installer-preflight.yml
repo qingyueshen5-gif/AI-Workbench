@@ -34,10 +34,17 @@ jobs:
         run: npm ci
 
       - name: Build installer candidate
-        run: npm run dist:win
+        id: build
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          New-Item -ItemType Directory -Force -Path verification/install-release | Out-Null
+          npm run dist:win *>&1 | Tee-Object -FilePath verification/install-release/actions-build.log
+          exit $LASTEXITCODE
 
       - name: Run install-release preflight
         id: preflight
+        if: steps.build.outcome == 'success'
         shell: pwsh
         continue-on-error: true
         run: npm run verify:install-release
@@ -55,5 +62,5 @@ jobs:
           if-no-files-found: warn
 
       - name: Fail when preflight failed
-        if: steps.preflight.outcome != 'success'
+        if: steps.build.outcome != 'success' || steps.preflight.outcome != 'success'
         run: exit 1

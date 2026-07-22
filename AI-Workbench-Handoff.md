@@ -62,13 +62,13 @@
 
 ## 4. 当前真实进度
 
-- 产品版本：`v0.4.6` 候选版，3A 尚未通过。
+- 产品版本：`v0.4.6` 候选版，3A-R1.2 本地预验收已通过，GitHub Actions 真实结果 failed。
 - 任务账本：`TASKLOG.md` 已补齐，后续每次任务都必须同步更新。
 - 执行协议：`EXECUTION_PROTOCOL.md` 已补齐，所有新 AI / Codex 接手前必须读取。
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；DeepSeek、Hermes、OpenClaw 三员工都已通过 `18800` 调用模型，验收摘要在 `verification/unified-model-proxy/summary.json`。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线硬骨头3A-R1.2 本地已修复 NSIS 安装器不落盘。根因是默认 per-user 安装目录在当前中文用户名环境下没有稳定落盘；修复为 `build/installer.nsh` 固定默认目录 `%LOCALAPPDATA%\Programs\AIWorkbench`。本地 `npm.cmd run verify:install-release` 通过，证据见 `verification/install-release/repair1-2-summary.json` 和 `verification/install-release/preflight-summary.json`。下一步只等 GitHub Actions 真实 run 结果；`shared_managed` 生产注入仍 blocked。
+- 现在卡在什么：上线硬骨头3A-R1.2 本地已修复 NSIS 安装器不落盘。本地 `npm.cmd run verify:install-release` 通过；但 GitHub Actions Run `29919498085` 真实结果 failure，失败在 `Build installer candidate`，preflight 未执行。当前 gh 日志权限 403、artifact 下载 401；已补 workflow 诊断让下一次 run 上传 `actions-build.log`。`shared_managed` 生产注入仍 blocked。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
@@ -80,13 +80,13 @@
 
 ## 交接重点
 
-- 产品版本：v0.4.6 候选版，3A-R1.2 本地预验收 passed，GitHub Actions pending，不能自动发布。
+- 产品版本：v0.4.6 候选版，3A-R1.2 本地预验收 passed，GitHub Actions failed，不能发布。
 - 当前形态：独立桌面应用，三个员工分别是 DeepSeek（理解/模型）、Hermes（终端/电脑执行）、OpenClaw（浏览器操作/长任务编排）。
 - OpenClaw gateway 掉线问题已经修好到可启动：清理 runtime 残留后可监听 `127.0.0.1:18789`。
 - Codex 执行器已经恢复，不再卡在 PowerShell/WSL spawn 超时。
 - 统一模型入口已经完成：Workbench、Hermes、OpenClaw 三员工模型调用已统一经过本机 `18800` 代理。
 - 共享 key 已落地在 18800 服务端边界内，前端和员工配置不保存真实 key。
-- 下一步不是继续修 OpenClaw，也不是情报流水线；下一步是等 3A GitHub Actions 真实结果，通过后由产品负责人判断是否进入 3B：GitHub Release 下载链接。
+- 下一步不是继续修 OpenClaw，也不是情报流水线；下一步是修 3A GitHub Actions 构建阶段失败，拿到 Actions passed 后再由产品负责人判断是否进入 3B：GitHub Release 下载链接。
 
 # 第二部分：产品战略（核心理解）
 
@@ -756,5 +756,5 @@ OpenClaw 保持它熟悉的模型命名：
 新对话框的任务：
 
 1. 确认能读这个综合文件。
-2. 用大白话讲出：产品现在在哪（v0.4.6 候选版，硬骨头1/2已过，3A-R1.2 本地预验收通过、Actions 待确认）、下一步要做什么（等 Actions 真实结果，再由产品负责人决定是否进 3B）。
+2. 用大白话讲出：产品现在在哪（v0.4.6 候选版，硬骨头1/2已过，3A-R1.2 本地预验收通过、Actions 构建失败）、下一步要做什么（修 Actions 构建失败，拿到 Actions passed 后再由产品负责人决定是否进 3B）。
 3. 不创建 Release；未获得产品负责人批准前不得进入 3B。

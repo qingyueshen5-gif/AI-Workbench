@@ -122,7 +122,7 @@ R1 结论：必须先查清 NSIS 为什么只写 updater 副本但不执行 `ins
 
 ## 3A-R1.2：NSIS 安装器修复
 
-3A-R1.2 状态：local passed / Actions pending。
+3A-R1.2 状态：local passed / Actions failed。
 
 根因：
 
@@ -146,7 +146,9 @@ R1 结论：必须先查清 NSIS 为什么只写 updater 副本但不执行 `ins
 
 待确认：
 
-- GitHub Actions 真实 run 结果。未取得真实 Actions passed 前，不能把 3A 云端预验收写成 passed。
+- GitHub Actions Run `29919498085` 真实结果 failure，失败在 `Build installer candidate`，preflight 未执行。
+- 当前 gh 日志权限 403、artifact 下载 401；已补 workflow 诊断让下一次 run 上传 `actions-build.log`。
+- 未取得真实 Actions passed 前，不能把 3A 云端预验收写成 passed。
 - `shared_managed` 生产注入仍为 blocked，本轮不处理、不冒充 passed。
 
 证据以 `verification/install-release/repair1-summary.json` 和 `verification/install-release/repair1-report.md` 为准。

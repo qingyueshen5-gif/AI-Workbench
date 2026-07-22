@@ -7,7 +7,7 @@
 - 更新 `scripts/verify-install-release.mjs`，主 preflight 改用 Node helper 验证安装链路。
 - 更新 Windows Installer Preflight workflow，失败时也 `always()` 上传安装包和 verification 证据。
 - 本地 `npm.cmd run verify:install-release` 已通过；安装、启动、smoke-test、卸载均通过，证据见 `verification/install-release/repair1-2-summary.json`。
-- GitHub Actions 真实结果待 push 后确认；未确认前不得进入 3B 正式 Release。
+- GitHub Actions Run `29919498085` 真实结果 failure，失败在 `Build installer candidate`；已补 workflow 诊断，后续失败也会上传 `actions-build.log`。未取得 Actions passed 前不得进入 3B 正式 Release。
 
 ## Unreleased - 上线硬骨头3A-R1：安装启动卸载修复
 

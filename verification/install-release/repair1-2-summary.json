@@ -294,8 +294,12 @@
     "note": "sourceRuntimeHits are informational because runtime code may contain environment variable names or mock placeholders; package and installer hits are blocking."
   },
   "actions": {
-    "status": "pending",
-    "reason": "Workflow changes require push before a real GitHub Actions result can be recorded."
+    "status": "failed",
+    "runId": "29919498085",
+    "url": "https://github.com/qingyueshen5-gif/AI-Workbench/actions/runs/29919498085",
+    "failedStep": "Build installer candidate",
+    "preflightStep": "skipped",
+    "reason": "GitHub Actions failed before install-release preflight. Current gh token cannot read logs (HTTP 403) or download artifacts (HTTP 401); workflow diagnostics were added for the next run."
   },
   "shared_managed": {
     "mechanism_test": "passed",

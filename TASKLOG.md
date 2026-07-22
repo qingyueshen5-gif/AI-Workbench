@@ -49,12 +49,12 @@ AI Workbench 已完成统一模型入口、上线硬骨头1“陌生机器不崩
 ## 最新 3A 结果
 
 - 任务：上线硬骨头3A：安装包候选版与发布前预验收。
-- 最新修复轮：3A-R1.2，状态 local passed / Actions pending。
+- 最新修复轮：3A-R1.2，状态 local passed / Actions failed。
 - 候选安装包：`release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe`。
 - 验收产物：`verification/install-release/preflight-summary.json`、`verification/install-release/preflight-report.md`、`verification/install-release/nsis-install-uninstall.json`、`verification/install-release/repair1-2-summary.json`、`verification/install-release/repair1-2-report.md`、`verification/install-release/repair1-2-install.log`、`verification/install-release/repair1-2-smoke.log`、`verification/install-release/repair1-2-uninstall.log`。
 - R1 已做：为 packaged smoke-test 禁用更多 GPU 路径并改为 HTTP renderer 探测；安装验证改为发现真实安装路径；尝试 assisted NSIS、默认 per-user、`/currentuser`、oneClick NSIS、`force-run` 和 60 秒等待。
 - R1.2 根因：安装包 payload 有效；默认 per-user 安装目录在当前中文用户名环境下没有稳定落盘，只留下 updater 缓存副本。显式 `/D=` 到 ASCII 路径可落盘。
 - R1.2 修复：新增 `build/installer.nsh`，将默认安装目录固定为 `%LOCALAPPDATA%\Programs\AIWorkbench`；新增 `scripts/verify-nsis-install.mjs`，主 preflight 改用 Node helper 真实执行安装、安装版 smoke-test 和卸载。
 - 本地结果：`npm.cmd run verify:install-release` 通过；NSIS `/S` 安装真实落盘，exe、卸载器、卸载注册表项、桌面/开始菜单快捷方式均存在；安装版 `--smoke-test` 退出码 0；卸载退出码 0。
-- GitHub Actions：workflow 已改为失败也 `always()` 上传证据；需 push 后取得真实 run 结果。本地通过不等于 Actions 通过。
-- 结论：本地具备进入 3A 云端预验收；3B 正式 Release 仍需产品负责人批准，且不得自动进入。
+- GitHub Actions：Run `29919498085` 真实结果 failure，失败在 `Build installer candidate`，preflight 未执行；当前 gh 日志权限 403、artifact 下载 401。已补 workflow 诊断，下一次 run 会把 build 输出写入 artifact。
+- 结论：本地安装链路已修复，但 3A-R1.2 总状态仍不能算 passed；不具备进入 3B 正式 GitHub Release 的条件。
