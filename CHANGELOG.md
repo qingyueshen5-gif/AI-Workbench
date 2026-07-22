@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## Unreleased - 任务账本与进度口径校准
+
+### 新增
+
+- 新增 `TASKLOG.md` 作为跨 GPT/Codex/其他 AI 协作的任务总账本，记录已完成任务、验收产物、未完成任务和缺失文件原因。
+
+### 文档
+
+- 更新 `CURRENT_TASK.md`、`CURRENT_PROGRESS_AUDIT.md` 和 `AI-Workbench-Handoff.md`，把 `TASKLOG.md` 纳入交接必读文件。
+- 明确 `verification/model-router/summary.json` 当前不存在，因为模型分层/模型路由任务尚未正式执行；已有 `verification/unified-model-proxy/summary.json` 只代表统一模型入口验收，不能冒充模型分层验收。
+- 明确下一步仍是上线硬骨头3：打安装包并挂 GitHub Release 下载链接。
+
+### 验收
+
+- 文档校准任务只改文档，未运行 npm 测试。
+
 ## Unreleased - 上线硬骨头2：共享 key 落地
 
 ### 新增

@@ -13,11 +13,12 @@
 | `CURRENT_TASK.md` | 存在 | 7898 bytes |
 | `ARCHITECTURE.md` | 存在 | 13686 bytes |
 | `CHANGELOG.md` | 存在 | 17978 bytes |
+| `TASKLOG.md` | 存在 | 任务总账本，记录任务状态、验收产物和缺失文件原因。 |
 
 版本号：
 
 - `package.json` 当前版本：`0.4.5`
-- `CHANGELOG.md` 最新版本条目：`Unreleased - 上线硬骨头2：共享 key 落地`
+- `CHANGELOG.md` 最新版本条目：`Unreleased - 任务账本与进度口径校准`
 
 ## 2. `research/` 真实存在文件
 
@@ -40,6 +41,7 @@
 
 | 缺失文件 | 为什么应该有 | 当前处理 |
 | --- | --- | --- |
+| `verification/model-router/summary.json` | 对话中曾用它指代“模型分层/模型路由”验收产物。 | 当前仓库不存在；模型分层任务尚未执行，不补假验收。已有 `verification/unified-model-proxy/summary.json` 只代表“统一模型入口”。 |
 | `research/market-intelligence.md` | 对话中提到它应记录“39 张小红书情报整理”，属于后续情报/市场材料。 | 当前仓库不存在；已明确 P3，不影响 P0/P1 和统一模型入口，不补内容、不猜。 |
 
 说明：
@@ -50,8 +52,10 @@
 ## 4. 当前真实进度
 
 - 产品版本：`v0.4.5`
+- 任务账本：`TASKLOG.md` 已补齐，后续每次任务都必须同步更新。
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；DeepSeek、Hermes、OpenClaw 三员工都已通过 `18800` 调用模型，验收摘要在 `verification/unified-model-proxy/summary.json`。
+- 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
 - 现在卡在什么：当前没有执行器故障卡点。上线最小集下一块是下载安装包和 GitHub Release 下载链接，尚未实现。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
