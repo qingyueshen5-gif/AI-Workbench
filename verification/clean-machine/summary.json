@@ -1,0 +1,46 @@
+{
+  "ok": true,
+  "checkedAt": "2026-07-22T06:36:25.580Z",
+  "results": {
+    "a": {
+      "ok": true,
+      "name": "全仓库无硬编码开发机用户名/用户绝对路径",
+      "hitCount": 0,
+      "hits": []
+    },
+    "b": {
+      "ok": true,
+      "name": "首次启动自动重建 config/data/logs/evidence",
+      "runtimeRoot": "<temp-runtime>",
+      "port": 54669,
+      "rebuilt": true,
+      "dataFileCreated": true
+    },
+    "c": {
+      "ok": true,
+      "name": "18800/Hermes/OpenClaw 全不可用时主入口降级可见",
+      "port": 54721,
+      "readinessStatus": "degraded",
+      "notReady": [
+        "model_proxy",
+        "hermes",
+        "openclaw"
+      ]
+    },
+    "d": {
+      "ok": true,
+      "name": "18800/5173 端口冲突中文状态",
+      "occupied18800": "already_occupied",
+      "occupied5173": "already_occupied",
+      "proxyExitCode": 0,
+      "modelProxyReadiness": "ready_existing_service",
+      "devServerReadiness": "ready_existing_service",
+      "readinessStatus": "ready"
+    },
+    "e": {
+      "ok": true,
+      "name": "readiness-report.md 覆盖所有外部环境假设",
+      "reportFile": "verification/clean-machine/readiness-report.md"
+    }
+  }
+}

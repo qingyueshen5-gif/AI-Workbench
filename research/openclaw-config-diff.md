@@ -2,7 +2,7 @@
 
 日期：2026-07-20
 
-范围：只读对比 `C:\Users\胖胖虎\.openclaw\openclaw.json` 与 last-known-good 备份；未恢复、未改写 OpenClaw 配置。所有密钥、token、secret 仅记录长度/存在性，不记录原值。
+范围：只读对比 `%USERPROFILE%\.openclaw\openclaw.json` 与 last-known-good 备份；未恢复、未改写 OpenClaw 配置。所有密钥、token、secret 仅记录长度/存在性，不记录原值。
 
 ## 1. 对比对象
 
@@ -177,7 +177,7 @@ openclaw channels add --channel telegram ...
 
 - AI Workbench 自己的 `scripts/ai-workbench-watchdog.ps1`：只检查/启动 `18800`、`8787`、`5173`，没有 `.openclaw` 或 `openclaw.json` 写入逻辑。
 - AI Link 安装目录和用户数据目录中，未搜到针对 `.openclaw`、`openclaw.json`、`18789` 的写入命中。
-- `C:\Users\胖胖虎\ai-workers` 下未发现 AI Link watchdog 脚本包含 `.openclaw`/`openclaw.json` 写入逻辑。
+- `%USERPROFILE%\ai-workers` 下未发现 AI Link watchdog 脚本包含 `.openclaw`/`openclaw.json` 写入逻辑。
 - OpenClaw `config-audit.jsonl` 记录的写入源均为 OpenClaw 自己的 CLI：`openclaw.mjs config set` 和 `openclaw.mjs channels add`。
 
 当前进程中可见 AI Link 和 AI Workbench 进程，但没有证据显示它们正在持续改写 OpenClaw 配置。
@@ -283,7 +283,7 @@ openclaw channels add --channel telegram ...
 做法：
 
 1. 不通过 shim，直接调用 Node 入口：
-   `C:\Program Files\nodejs\node.exe --trace-uncaught --trace-warnings --trace-exit C:\Users\胖胖虎\AppData\Roaming\npm\node_modules\openclaw\dist\index.js gateway --port 18789`
+   `C:\Program Files\nodejs\node.exe --trace-uncaught --trace-warnings --trace-exit %USERPROFILE%\AppData\Roaming\npm\node_modules\openclaw\dist\index.js gateway --port 18789`
 2. 通过环境变量开启详细日志：`OPENCLAW_LOG_LEVEL=trace`、`OPENCLAW_CONSOLE_LOG_LEVEL=trace`、`DEBUG=openclaw*,gateway*,browser*,playwright*`。
 3. 扫描 `.openclaw` 与 `%TEMP%\openclaw` 下的 lock/pid/tmp/state/browser/devices/channel 运行残留。
 4. 对清理项先复制到 `evidence/openclaw-runtime-deep-dive/<timestamp>/backups/`，再把原文件改名为 `*.cleaned.<timestamp>`；不修改 `openclaw.json`。

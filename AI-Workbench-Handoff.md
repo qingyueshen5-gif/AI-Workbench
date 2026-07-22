@@ -1,6 +1,6 @@
 # AI Workbench 新对话交接包
 
-生成时间：2026-07-21
+生成时间：2026-07-22
 
 用途：新对话框启动后，只读这一份文件即可快速理解当前真实状态、产品战略、当前任务和下一步动作。
 
@@ -8,7 +8,7 @@
 
 # 当前真实进度清单
 
-生成时间：2026-07-21
+生成时间：2026-07-22
 
 范围：只按当前仓库真实文件和已提交验收证据盘点；不按记忆猜测。
 
@@ -25,7 +25,7 @@
 版本号：
 
 - `package.json` 当前版本：`0.4.5`
-- `CHANGELOG.md` 最新版本条目：`v0.4.5 - 全链版本管理落地`
+- `CHANGELOG.md` 最新版本条目：`Unreleased - 上线硬骨头2：共享 key 落地`
 
 ## 2. `research/` 真实存在文件
 
@@ -58,18 +58,17 @@
 ## 4. 当前真实进度
 
 - 产品版本：`v0.4.5`
-- 上一步做完了什么：OpenClaw gateway 掉线问题已定位并修复到可启动状态；清理 lock/tmp/browser/devices/cron 等 runtime 残留后，gateway 可监听 `127.0.0.1:18789`。
+- 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；DeepSeek、Hermes、OpenClaw 三员工都已通过 `18800` 调用模型，验收摘要在 `verification/unified-model-proxy/summary.json`。
-- 现在卡在什么：当前仓库和执行器没有卡在“执行器故障”。执行器已经恢复，统一模型入口也已经 commit + push。仍需注意的是 OpenClaw CLI 在统一验收中会出现收尾超时 warning，但代理日志已证明模型入口经过 `18800`。
+- 现在卡在什么：当前没有执行器故障卡点。上线最小集下一块是下载安装包和 GitHub Release 下载链接，尚未实现。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
 ## 5. 下一步
 
-1. 进入第 3 步：模型分层调用。
-2. 在 `18800` provider registry 基础上设计模型用途分层：理解、编排、执行、摘要、去重、情报压缩分别走合适模型。
-3. 保持当前产品原则：界面不变复杂，员工和模型差异都折叠在内部。
-4. 情报流水线和多平台连接暂不抢跑，等 P0/P1 稳定后再推进。
+1. 进入上线硬骨头3：能下载能安装。
+2. 打安装包并挂 GitHub Release，只给用户一个下载链接。
+3. 模型分层、手机端、情报流水线暂不抢跑，等上线最小集前三条稳定后继续。
 
 ## 交接重点
 
@@ -78,7 +77,8 @@
 - OpenClaw gateway 掉线问题已经修好到可启动：清理 runtime 残留后可监听 `127.0.0.1:18789`。
 - Codex 执行器已经恢复，不再卡在 PowerShell/WSL spawn 超时。
 - 统一模型入口已经完成：Workbench、Hermes、OpenClaw 三员工模型调用已统一经过本机 `18800` 代理。
-- 下一步不是继续修 OpenClaw，也不是情报流水线；下一步是第 3 步：模型分层调用。
+- 共享 key 已落地在 18800 服务端边界内，前端和员工配置不保存真实 key。
+- 下一步不是继续修 OpenClaw，也不是情报流水线；下一步是上线硬骨头3：打安装包并挂 GitHub Release 下载链接。
 
 # 第二部分：产品战略（核心理解）
 
@@ -624,7 +624,7 @@ OpenClaw 保持它熟悉的模型命名：
 - `deepseek-v4-flash` -> `deepseek-chat`
 - `deepseek-v4-pro` -> `deepseek-chat`
 
-配置改动必须先备份，验证结束后恢复用户原始 `C:\Users\胖胖虎\.openclaw\openclaw.json`，避免验收脚本永久改写用户配置。
+配置改动必须先备份，验证结束后恢复用户原始 `%USERPROFILE%\.openclaw\openclaw.json`，避免验收脚本永久改写用户配置。
 
 ### 3.2 `18800` 升级成 provider registry
 
@@ -706,7 +706,7 @@ OpenClaw 保持它熟悉的模型命名：
 1. 运行最小语法检查。
 2. 运行 `npm.cmd run verify:model-proxy`。
 3. 运行 `npm.cmd run verify:unified-model-proxy`。
-4. 确认 `C:\Users\胖胖虎\.openclaw\openclaw.json` 已恢复用户原配置。
+4. 确认 `%USERPROFILE%\.openclaw\openclaw.json` 已恢复用户原配置。
 5. 提交统一模型入口相关代码、方案和验收摘要。
 6. `git push` 到当前分支。
 
@@ -733,21 +733,20 @@ OpenClaw 保持它熟悉的模型命名：
 
 # 第五部分：下一步指令
 
-## 下一步：第3步 模型分层调用
+## 下一步：上线硬骨头3 下载安装
 
-当前状态：Workbench/Hermes/OpenClaw 三个员工的模型调用已统一到 18800 代理。
+当前状态：上线硬骨头1“陌生机器不崩”和硬骨头2“共享 key 落地”已完成；Workbench/Hermes/OpenClaw 三个员工的模型调用已统一到 18800 代理，真实 key 只在 18800 服务端边界内读取。
 
-下一步：在 18800 这一层做"模型分层"——
+下一步：打安装包并挂 GitHub Release，只给用户一个下载链接。
 
-- reasoning 类任务（理解用户、规划）用好模型（DeepSeek）
-- execution 类任务（打开窗口、简单命令、格式整理）用便宜模型或规则
-- summarize 类任务（摘要、去重、分类）用便宜模型
+- 确认安装包包含 `dist/**`、Electron、`server.mjs`、`model-proxy.mjs`、`readiness.mjs`、`runtime-paths.mjs` 和必要运行目录。
+- 在发布流程里明确共享 key 注入方式，不能把真实 key 写进仓库、前端、员工配置或公开日志。
+- 产出 GitHub Release 下载链接，并保留安装版验收证据。
 
-目标：省成本，不掉质量。
+目标：普通用户只点一个链接下载、安装、打开，不需要配置 key，也不会因为缺依赖白屏。
 
 新对话框的任务：
 
 1. 确认能读这个综合文件。
-2. 用大白话讲出：产品现在在哪（v0.4.5 独立应用三员工）、下一步要做什么（模型分层）。
-3. 等用户发第3步的详细指令，开始写代码。
-
+2. 用大白话讲出：产品现在在哪（v0.4.5 独立应用三员工，硬骨头1/2已过）、下一步要做什么（下载安装包和 GitHub Release 下载链接）。
+3. 开始检查打包配置、生成安装包、创建/更新 Release，并记录验收证据。

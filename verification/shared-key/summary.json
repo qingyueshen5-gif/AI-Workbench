@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "checkedAt": "2026-07-22T06:33:15.026Z",
+  "proxy": {
+    "port": 18882,
+    "health": {
+      "ok": true,
+      "status": "available",
+      "defaultProvider": "deepseek",
+      "credentialSource": "shared_managed"
+    }
+  },
+  "upstream": {
+    "receivedCalls": 1,
+    "receivedSharedAuthorization": true
+  },
+  "leakageScan": {
+    "health": true,
+    "logs": true,
+    "processOutput": true
+  }
+}

@@ -1,15 +1,34 @@
 import { existsSync, mkdirSync, readdirSync, renameSync, statSync, copyFileSync, cpSync, rmSync } from 'node:fs';
+import { homedir } from 'node:os';
 import { dirname, join } from 'node:path';
+
+function canUseRuntimeRoot(path) {
+  try {
+    mkdirSync(path, { recursive: true });
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 export function getRuntimeRoot() {
   const explicit = String(process.env.AI_WORKBENCH_RUNTIME_DIR || '').trim();
   if (explicit) return explicit;
   const appData = String(process.env.APPDATA || '').trim();
-  if (appData) return join(appData, 'ai-workbench');
+  if (appData) {
+    const candidate = join(appData, 'ai-workbench');
+    if (canUseRuntimeRoot(candidate)) return candidate;
+  }
+  const home = String(process.env.USERPROFILE || homedir() || '').trim();
+  if (home) {
+    const candidate = join(home, '.ai-workbench');
+    if (canUseRuntimeRoot(candidate)) return candidate;
+  }
   return join(process.cwd(), '.ai-workbench-runtime');
 }
 
 export const runtimeRoot = getRuntimeRoot();
+export const runtimeConfigDir = join(runtimeRoot, 'config');
 export const runtimeDataDir = join(runtimeRoot, 'data');
 export const runtimeLogsDir = join(runtimeRoot, 'logs');
 export const runtimeEvidenceDir = join(runtimeRoot, 'evidence');
@@ -19,7 +38,7 @@ export const runtimeStartupLogFile = join(runtimeLogsDir, 'workbench-startup.log
 export const runtimeStartupErrorLogFile = join(runtimeLogsDir, 'workbench-startup.err.log');
 
 export function ensureRuntimeDirs() {
-  for (const dir of [runtimeRoot, runtimeDataDir, runtimeLogsDir, runtimeEvidenceDir]) {
+  for (const dir of [runtimeRoot, runtimeConfigDir, runtimeDataDir, runtimeLogsDir, runtimeEvidenceDir]) {
     mkdirSync(dir, { recursive: true });
   }
 }

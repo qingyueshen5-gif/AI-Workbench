@@ -90,7 +90,7 @@
 
 检查结果：
 - 端口监听：`127.0.0.1:8787` 工作台 API；`127.0.0.1:18800` 模型代理；`127.0.0.1:5173` Vite 前端；`127.0.0.1:5174` 另一个 Vite/Node 前端；`127.0.0.1:7890` 冰灵代理。
-- AI Workbench Electron 进程存在多个，主路径为 `C:\Users\胖胖虎\AppData\Local\Programs\AI Workbench\AI Workbench.exe`。
+- AI Workbench Electron 进程存在多个，主路径为 `%USERPROFILE%\AppData\Local\Programs\AI Workbench\AI Workbench.exe`。
 - Windows 事件日志：2026-07-18 20:00:24，`AI Workbench.exe` 崩溃，模块 `KERNELBASE.dll`，异常码 `0x80000003`。
 - 同日多次 `ElanIapService.exe` 崩溃，异常码 `0xc0000005`。
 - Hermes 日志：2026-07-18 17:58-17:59，经 `http://127.0.0.1:18800/v1` 调 DeepSeek 出现 3 次 HTTP 502，最终失败；18:01 后有成功调用记录。

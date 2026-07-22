@@ -1,87 +1,87 @@
 {
   "checkedAt": "2026-07-20T10:56:37.068Z",
-  "openclawHome": "C:\\Users\\胖胖虎\\.openclaw",
+  "openclawHome": "C:\\Users\\<USER>\\.openclaw",
   "residuals": [
     {
-      "path": "C:\\Users\\胖胖虎\\.openclaw\\browser\\openclaw\\user-data\\Default\\JumpListIconsMostVisited\\0a17d5e2-661b-4c7a-9a6b-32f04df8c999.tmp",
+      "path": "C:\\Users\\<USER>\\.openclaw\\browser\\openclaw\\user-data\\Default\\JumpListIconsMostVisited\\0a17d5e2-661b-4c7a-9a6b-32f04df8c999.tmp",
       "bytes": 28134,
       "modifiedAt": "2026-05-20T07:26:33.274Z",
       "type": "file"
     },
     {
-      "path": "C:\\Users\\胖胖虎\\.openclaw\\browser\\openclaw\\user-data\\Default\\JumpListIconsRecentClosed\\3a5f76c0-d8b4-4c9d-b71b-feef08ff19bc.tmp",
+      "path": "C:\\Users\\<USER>\\.openclaw\\browser\\openclaw\\user-data\\Default\\JumpListIconsRecentClosed\\3a5f76c0-d8b4-4c9d-b71b-feef08ff19bc.tmp",
       "bytes": 28134,
       "modifiedAt": "2026-05-20T07:44:36.393Z",
       "type": "file"
     },
     {
-      "path": "C:\\Users\\胖胖虎\\.openclaw\\browser\\openclaw\\user-data\\Default\\JumpListIconsRecentClosed\\a402fec7-141d-4ac4-8354-7b324095ad61.tmp",
+      "path": "C:\\Users\\<USER>\\.openclaw\\browser\\openclaw\\user-data\\Default\\JumpListIconsRecentClosed\\a402fec7-141d-4ac4-8354-7b324095ad61.tmp",
       "bytes": 28134,
       "modifiedAt": "2026-05-20T07:26:33.276Z",
       "type": "file"
     },
     {
-      "path": "C:\\Users\\胖胖虎\\.openclaw\\browser\\openclaw\\user-data\\Default\\JumpListIconsRecentClosed\\d067ca59-b648-4a14-a2fe-76c9ffaf8ee9.tmp",
+      "path": "C:\\Users\\<USER>\\.openclaw\\browser\\openclaw\\user-data\\Default\\JumpListIconsRecentClosed\\d067ca59-b648-4a14-a2fe-76c9ffaf8ee9.tmp",
       "bytes": 28134,
       "modifiedAt": "2026-05-20T07:44:39.538Z",
       "type": "file"
     },
     {
-      "path": "C:\\Users\\胖胖虎\\.openclaw\\browser\\openclaw\\user-data\\Default\\Network\\71ed2b6e-96b0-435c-8ffb-ca939c3fc91e.tmp",
+      "path": "C:\\Users\\<USER>\\.openclaw\\browser\\openclaw\\user-data\\Default\\Network\\71ed2b6e-96b0-435c-8ffb-ca939c3fc91e.tmp",
       "bytes": 0,
       "modifiedAt": "2026-05-20T06:36:26.003Z",
       "type": "file"
     },
     {
-      "path": "C:\\Users\\胖胖虎\\.openclaw\\cron\\jobs.json.20632.f7dcbca92b2a931b.tmp",
+      "path": "C:\\Users\\<USER>\\.openclaw\\cron\\jobs.json.20632.f7dcbca92b2a931b.tmp",
       "bytes": 21974,
       "modifiedAt": "2026-07-17T07:17:43.927Z",
       "type": "file"
     },
     {
-      "path": "C:\\Users\\胖胖虎\\.openclaw\\cron\\jobs.json.25880.b7450586704fda2e.tmp",
+      "path": "C:\\Users\\<USER>\\.openclaw\\cron\\jobs.json.25880.b7450586704fda2e.tmp",
       "bytes": 0,
       "modifiedAt": "2026-07-20T10:53:01.059Z",
       "type": "file"
     },
     {
-      "path": "C:\\Users\\胖胖虎\\.openclaw\\cron\\jobs.json.29284.0399c796d0a2cea2.tmp",
+      "path": "C:\\Users\\<USER>\\.openclaw\\cron\\jobs.json.29284.0399c796d0a2cea2.tmp",
       "bytes": 0,
       "modifiedAt": "2026-07-20T10:51:26.318Z",
       "type": "file"
     },
     {
-      "path": "C:\\Users\\胖胖虎\\.openclaw\\devices\\paired.json",
+      "path": "C:\\Users\\<USER>\\.openclaw\\devices\\paired.json",
       "bytes": 3379,
       "modifiedAt": "2026-07-19T11:13:57.964Z",
       "type": "file"
     },
     {
-      "path": "C:\\Users\\胖胖虎\\.openclaw\\devices\\paired.json.541d67fb-fad3-426e-8e27-61397f9cae4e.tmp",
+      "path": "C:\\Users\\<USER>\\.openclaw\\devices\\paired.json.541d67fb-fad3-426e-8e27-61397f9cae4e.tmp",
       "bytes": 0,
       "modifiedAt": "2026-05-18T07:46:53.428Z",
       "type": "file"
     },
     {
-      "path": "C:\\Users\\胖胖虎\\.openclaw\\devices\\pending.json",
+      "path": "C:\\Users\\<USER>\\.openclaw\\devices\\pending.json",
       "bytes": 2,
       "modifiedAt": "2026-07-19T11:13:57.972Z",
       "type": "file"
     },
     {
-      "path": "C:\\Users\\胖胖虎\\.openclaw\\devices\\pending.json.9734a697-e51e-44db-86dc-8d7982684c1d.tmp",
+      "path": "C:\\Users\\<USER>\\.openclaw\\devices\\pending.json.9734a697-e51e-44db-86dc-8d7982684c1d.tmp",
       "bytes": 517,
       "modifiedAt": "2026-05-18T07:46:53.428Z",
       "type": "file"
     },
     {
-      "path": "C:\\Users\\胖胖虎\\.openclaw\\workspace\\.clawhub\\lock.json",
+      "path": "C:\\Users\\<USER>\\.openclaw\\workspace\\.clawhub\\lock.json",
       "bytes": 327,
       "modifiedAt": "2026-06-04T15:15:34.088Z",
       "type": "file"
     },
     {
-      "path": "C:\\Users\\胖胖虎\\.openclaw\\workspace\\.openclaw\\workspace-state.json",
+      "path": "C:\\Users\\<USER>\\.openclaw\\workspace\\.openclaw\\workspace-state.json",
       "bytes": 120,
       "modifiedAt": "2026-05-30T05:07:20.156Z",
       "type": "file"
@@ -89,7 +89,7 @@
   ],
   "stateFiles": [
     {
-      "path": "C:\\Users\\胖胖虎\\.openclaw\\devices\\paired.json",
+      "path": "C:\\Users\\<USER>\\.openclaw\\devices\\paired.json",
       "parseOk": true,
       "keys": [
         "4ccda4ec27934ece40191149255d5c44087750695218c6216eed45dad12c9145",
@@ -99,13 +99,13 @@
       "arrayLength": null
     },
     {
-      "path": "C:\\Users\\胖胖虎\\.openclaw\\devices\\pending.json",
+      "path": "C:\\Users\\<USER>\\.openclaw\\devices\\pending.json",
       "parseOk": true,
       "keys": [],
       "arrayLength": null
     },
     {
-      "path": "C:\\Users\\胖胖虎\\.openclaw\\workspace\\.openclaw\\workspace-state.json",
+      "path": "C:\\Users\\<USER>\\.openclaw\\workspace\\.openclaw\\workspace-state.json",
       "parseOk": true,
       "keys": [
         "bootstrapSeededAt",
@@ -115,7 +115,7 @@
       "arrayLength": null
     },
     {
-      "path": "C:\\Users\\胖胖虎\\.openclaw\\workspace\\.clawhub\\lock.json",
+      "path": "C:\\Users\\<USER>\\.openclaw\\workspace\\.clawhub\\lock.json",
       "parseOk": true,
       "keys": [
         "skills",

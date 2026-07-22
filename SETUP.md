@@ -17,7 +17,7 @@
 | Codex CLI 入口 | `codex --version` | PowerShell 拦截 `codex.ps1`，报 running scripts is disabled |
 | Codex CLI 入口 | `codex.cmd --version` | `codex-cli 0.144.4` |
 | Codex CLI 包名 | 本地全局包 `package.json` | `@openai/codex`，版本 `0.144.4` |
-| Codex 登录方式 | `C:\Users\胖胖虎\.codex\auth.json` | `OPENAI_API_KEY` 为 `PROXY_MANAGED`，由 Codex/ChatGPT 登录环境托管，不在项目内保存密钥 |
+| Codex 登录方式 | `%USERPROFILE%\.codex\auth.json` | `OPENAI_API_KEY` 为 `PROXY_MANAGED`，由 Codex/ChatGPT 登录环境托管，不在项目内保存密钥 |
 
 ## 前置软件安装（按顺序）
 
@@ -37,7 +37,7 @@ npm i -g @openai/codex
 下面几条是今天踩坑之后才明确需要配置的地基项，原因见 `CONTEXT.md` 的“环境层已知问题”。
 
 ```bash
-git config --global user.name "胖胖虎"
+git config --global user.name "<USER>"
 git config --global user.email "qingyueshen5@gmail.com"
 git config --global credential.helper manager
 git config --global --add safe.directory F:/AI-Workbench
@@ -76,17 +76,18 @@ npm.cmd install
 
 ## 环境变量配置
 
-在项目根目录新建 `.env` 文件，填入：
+安装版默认由 18800 模型代理读取共享托管 key，用户不需要配置模型 key。开发态如需使用自己的 DeepSeek 账户，可以在项目根目录新建 `.env` 文件，填入：
 
 ```bash
-DEEPSEEK_API_KEY=（去DeepSeek官网自己的账户里获取，不要抄别人的）
+DEEPSEEK_API_KEY=（可选；使用自己的 DeepSeek 账户时填写）
 SERPER_API_KEY=（可选；需要通用网络搜索能力时填写，去 serper.dev 获取）
 ```
 
 注意：`.env` 只能留在本机，不能提交到 GitHub。
 
 说明：
-- `DEEPSEEK_API_KEY`：用于聊天提炼和模型回复。
+- `DEEPSEEK_API_KEY`：开发者本机模型 key，优先级高于共享托管 key；普通用户不需要填写。
+- `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`：发布/托管流程注入给 18800 服务端的共享 key，不写进前端、员工配置或仓库文件。
 - `SERPER_API_KEY`：用于 `web_search` 通用联网搜索工具。没有这个 key 时，模型仍可聊天和提炼，但不能执行实时搜索、新闻、当前价格等查询。
 
 ## 启动项目
@@ -118,7 +119,7 @@ http://127.0.0.1:5173
 实现方式：
 - 项目内脚本：`scripts/start-workbench-dev.ps1`
 - 后台服务脚本：`scripts/dev-background.mjs`
-- 用户启动项快捷方式：`C:\Users\胖胖虎\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\AI Workbench Dev Server.lnk`
+- 用户启动项快捷方式：`%USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\AI Workbench Dev Server.lnk`
 - 启动逻辑：脚本先检查 `5173` 端口是否已经在运行；如果没有，就隐藏启动 `scripts/dev-background.mjs`，由它拉起 API 和 Vite
 - 运行日志：`.workbench-startup.log` 和 `.workbench-startup.err.log`（已加入 `.gitignore`，不提交）
 

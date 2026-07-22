@@ -2,15 +2,22 @@
 
 > 【交接铁律】每完成一步，必须更新 `NEXT_STEP.md`、`DECISIONS.md`、`CURRENT_PROGRESS_AUDIT.md` 三个文件，再 commit + push。换对话框时，新对话框只需读这三个文件 + 桌面 Handoff 文件即可接手。
 
-> 最新更新：2026-07-19
+> 最新更新：2026-07-22
 
 ## 当前阶段：让工作台从“只会指路”变成“真会干活”
+
+## 上线硬骨头
+
+- [x] 硬骨头1：陌生机器不崩。启动路径改为缺依赖降级，config/data/logs/evidence 首次运行自动创建，18800/Hermes/OpenClaw/端口异常统一返回中文未就绪状态；自动验收证据见 `verification/clean-machine/summary.json`。
+- [x] 硬骨头2：共享 key 落地。18800 网关支持共享托管 key 兜底，员工和前端只使用本机占位 token；验收证据见 `verification/shared-key/summary.json`。
+- [ ] 硬骨头3：能下载能安装。打安装包挂 GitHub Release，只给用户一个下载链接。
 
 ## 明天路线图（2026-07-19）
 
 - 战术优化：模型分层调用。理解、编排、关键决策用好模型；执行琐事、格式整理、重复查询用便宜模型，降低长期运行成本。
 - 待办：OpenClaw 稳定性体检。当前健康检查频繁不可用，需要确认安装路径、CLI 状态、gateway/channel 状态和最小执行链路。
 - 2026-07-20 结论：OpenClaw gateway 问题已定位到 runtime 残留状态。清理 `.openclaw`/`%TEMP%\openclaw` 下 lock/tmp/browser profile 残留后，直接 Node 入口启动 gateway 可在第 26 秒监听 `127.0.0.1:18789`；主配置未改。
+- 2026-07-22 结论：共享 key 已收敛到 18800 服务端读取，优先使用用户本机 `DEEPSEEK_API_KEY`，缺失时使用 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；`/health` 只暴露来源类型，不暴露 key。
 
 ### 路线图
 
@@ -104,11 +111,12 @@
 - [x] 开机自启动验证：Windows 登录启动项已创建，后台脚本可拉起 API 与 Vite，本地访问 `http://127.0.0.1:5173`
 - [x] 视觉细节验证：完成中文侧栏、版本徽标、正规图标、hover 时间戳和移动端对话入口
 - [x] OpenClaw runtime 深挖：`npm.cmd run openclaw:runtime-deep-dive` 直调 Node 入口，备份并清理 lock/tmp/browser/devices/cron 残留后，gateway 成功监听 `127.0.0.1:18789`
+- [x] 共享 key 验收：`npm.cmd run verify:shared-key` 在无 `DEEPSEEK_API_KEY` 的临时环境下通过共享托管 key 调通 18800，确认 health、日志和进程输出不泄露 key
 
 ### 下一步
-1. 验收三条真实执行链路：下载爱奇艺、查看 C 盘剩余空间、打开记事本。（已完成）
+1. 上线硬骨头3：打安装包并挂 GitHub Release，只给用户一个下载链接。
 2. 对失败和卡壳场景补齐自愈、重试和人话解释。
-3. 收尾聊天回复排版、右键粘贴、菜单栏中文化或隐藏。
+3. 模型分层、手机端、情报流水线暂不抢跑。
 
 ## 任务记录规则
 

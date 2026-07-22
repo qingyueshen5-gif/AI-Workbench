@@ -2,15 +2,15 @@
 
 日期：2026-07-20
 
-范围：按方案 B 生成 candidate 配置并临时启动 OpenClaw gateway 验证。未正式替换 `C:\Users\胖胖虎\.openclaw\openclaw.json`；测试后已还原当前配置。
+范围：按方案 B 生成 candidate 配置并临时启动 OpenClaw gateway 验证。未正式替换 `%USERPROFILE%\.openclaw\openclaw.json`；测试后已还原当前配置。
 
 ## 1. Candidate 生成方式
 
 来源：
 
-- 基底：`C:\Users\胖胖虎\.openclaw\openclaw.json.bak.3`，即 OpenClaw health 记录的 11553 bytes last-known-good。
+- 基底：`%USERPROFILE%\.openclaw\openclaw.json.bak.3`，即 OpenClaw health 记录的 11553 bytes last-known-good。
 - 合并项：当前 `openclaw.json` 中新增的 `channels.telegram`。
-- 输出：`C:\Users\胖胖虎\.openclaw\openclaw.json.candidate`
+- 输出：`%USERPROFILE%\.openclaw\openclaw.json.candidate`
 
 candidate 不提交到 Git，因为其中含渠道和 provider 凭证。仓库只提交脱敏 summary。
 
@@ -92,7 +92,7 @@ stdout/stderr：
 - stderr 只有：
 
 ```text
-Config observe anomaly: C:\Users\胖胖虎\.openclaw\openclaw.json (size-drop-vs-last-good:11553->4098)
+Config observe anomaly: %USERPROFILE%\.openclaw\openclaw.json (size-drop-vs-last-good:11553->4098)
 ```
 
 没有出现 `Config invalid`，也没有 Node 崩溃栈。

@@ -2,11 +2,11 @@
   "ok": false,
   "checkedAt": "2026-07-20T10:39:18.833Z",
   "backupDir": "F:\\AI-Workbench\\evidence\\openclaw-candidate-backups\\2026-07-20T10-38-52-313Z",
-  "openclawHome": "C:\\Users\\胖胖虎\\.openclaw",
+  "openclawHome": "C:\\Users\\<USER>\\.openclaw",
   "candidate": {
-    "path": "C:\\Users\\胖胖虎\\.openclaw\\openclaw.json.candidate",
+    "path": "C:\\Users\\<USER>\\.openclaw\\openclaw.json.candidate",
     "info": {
-      "path": "C:\\Users\\胖胖虎\\.openclaw\\openclaw.json.candidate",
+      "path": "C:\\Users\\<USER>\\.openclaw\\openclaw.json.candidate",
       "exists": true,
       "bytes": 4098,
       "modifiedAt": "2026-07-20T10:38:52.654Z"
@@ -217,7 +217,7 @@
     "stdoutFile": "F:\\AI-Workbench\\evidence\\openclaw-candidate\\2026-07-20T10-38-52-313Z\\gateway.stdout.log",
     "stderrFile": "F:\\AI-Workbench\\evidence\\openclaw-candidate\\2026-07-20T10-38-52-313Z\\gateway.stderr.log",
     "stdoutPreview": "",
-    "stderrPreview": "Config observe anomaly: C:\\Users\\胖胖虎\\.openclaw\\openclaw.json (size-drop-vs-last-good:11553->4098)\n",
+    "stderrPreview": "Config observe anomaly: C:\\Users\\<USER>\\.openclaw\\openclaw.json (size-drop-vs-last-good:11553->4098)\n",
     "conclusion": "candidate 配置下 gateway 仍未监听 18789：connect ECONNREFUSED 127.0.0.1:18789"
   },
   "result": "gateway_failed_with_candidate"

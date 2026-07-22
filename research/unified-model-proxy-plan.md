@@ -64,7 +64,7 @@ OpenClaw 保持它熟悉的模型命名：
 - `deepseek-v4-flash` -> `deepseek-chat`
 - `deepseek-v4-pro` -> `deepseek-chat`
 
-配置改动必须先备份，验证结束后恢复用户原始 `C:\Users\胖胖虎\.openclaw\openclaw.json`，避免验收脚本永久改写用户配置。
+配置改动必须先备份，验证结束后恢复用户原始 `%USERPROFILE%\.openclaw\openclaw.json`，避免验收脚本永久改写用户配置。
 
 ### 3.2 `18800` 升级成 provider registry
 
@@ -146,7 +146,7 @@ OpenClaw 保持它熟悉的模型命名：
 1. 运行最小语法检查。
 2. 运行 `npm.cmd run verify:model-proxy`。
 3. 运行 `npm.cmd run verify:unified-model-proxy`。
-4. 确认 `C:\Users\胖胖虎\.openclaw\openclaw.json` 已恢复用户原配置。
+4. 确认 `%USERPROFILE%\.openclaw\openclaw.json` 已恢复用户原配置。
 5. 提交统一模型入口相关代码、方案和验收摘要。
 6. `git push` 到当前分支。
 

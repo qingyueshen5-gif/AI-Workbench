@@ -1,14 +1,14 @@
 # AI Link 本机实现调研报告
 
-调研范围：只读检查本机 AI Link 安装目录、用户数据目录和 `C:\Users\胖胖虎\ai-workers\` 运行目录。未修改 AI Link 文件，也未修改 AI-Workbench 代码。
+调研范围：只读检查本机 AI Link 安装目录、用户数据目录和 `%USERPROFILE%\ai-workers\` 运行目录。未修改 AI Link 文件，也未修改 AI-Workbench 代码。
 
 主要证据路径：
 
-- 安装目录：`C:\Users\胖胖虎\AppData\Local\Programs\ai-link-desktop`
-- Electron 用户数据：`C:\Users\胖胖虎\AppData\Roaming\ai-link-desktop`
-- 员工运行目录：`C:\Users\胖胖虎\ai-workers\employees\worker-1d00`
-- 关键包：`C:\Users\胖胖虎\AppData\Local\Programs\ai-link-desktop\resources\app.asar`
-- 员工模板资产：`C:\Users\胖胖虎\AppData\Local\Programs\ai-link-desktop\resources\worker-assets`
+- 安装目录：`%USERPROFILE%\AppData\Local\Programs\ai-link-desktop`
+- Electron 用户数据：`%USERPROFILE%\AppData\Roaming\ai-link-desktop`
+- 员工运行目录：`%USERPROFILE%\ai-workers\employees\worker-1d00`
+- 关键包：`%USERPROFILE%\AppData\Local\Programs\ai-link-desktop\resources\app.asar`
+- 员工模板资产：`%USERPROFILE%\AppData\Local\Programs\ai-link-desktop\resources\worker-assets`
 
 ## 1. 它用什么打包成桌面独立产品？
 
@@ -39,7 +39,7 @@ AI Link 把“程序文件”“Electron 用户态数据”“数字员工运行
 
 ### 程序安装目录
 
-路径：`C:\Users\胖胖虎\AppData\Local\Programs\ai-link-desktop`
+路径：`%USERPROFILE%\AppData\Local\Programs\ai-link-desktop`
 
 主要内容：
 
@@ -53,7 +53,7 @@ AI Link 把“程序文件”“Electron 用户态数据”“数字员工运行
 
 ### Electron 用户数据目录
 
-路径：`C:\Users\胖胖虎\AppData\Roaming\ai-link-desktop`
+路径：`%USERPROFILE%\AppData\Roaming\ai-link-desktop`
 
 观察到的内容：
 
@@ -67,7 +67,7 @@ AI Link 把“程序文件”“Electron 用户态数据”“数字员工运行
 
 ### 员工运行目录
 
-路径：`C:\Users\胖胖虎\ai-workers\employees\worker-1d00`
+路径：`%USERPROFILE%\ai-workers\employees\worker-1d00`
 
 典型结构：
 
@@ -375,12 +375,12 @@ AI Link 的自动更新不是用 `electron-updater`。`electron/auto-update.js` 
 
 更新包下载到：
 
-`C:\Users\胖胖虎\AppData\Roaming\ai-link-desktop\updates\<version>\`
+`%USERPROFILE%\AppData\Roaming\ai-link-desktop\updates\<version>\`
 
 当前本机可见：
 
 - `updates\0.2.10\AI-Link-Setup.exe`
-- `C:\Users\胖胖虎\AppData\Local\ai-link-desktop-updater\installer.exe`
+- `%USERPROFILE%\AppData\Local\ai-link-desktop-updater\installer.exe`
 
 下载流程：
 

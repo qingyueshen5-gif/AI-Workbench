@@ -3,6 +3,7 @@ import { readFileSync, mkdirSync, appendFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { migrateLegacyRuntimeData, runtimeModelProxyLogFile, runtimeRoot } from './runtime-paths.mjs';
+import { explainPortStatus } from './readiness.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const envFile = join(root, '.env');
@@ -14,6 +15,7 @@ const maxRetries = Number(process.env.MODEL_PROXY_MAX_RETRIES || 3);
 migrateLegacyRuntimeData(root);
 
 function loadLocalEnv() {
+  if (process.env.MODEL_PROXY_DISABLE_LOCAL_ENV === '1') return;
   for (const file of [runtimeEnvFile, envFile]) {
     try {
       const raw = readFileSync(file, 'utf8');
@@ -41,6 +43,7 @@ const providers = {
     type: 'openai-compatible',
     baseUrl: String(process.env.MODEL_PROXY_DEEPSEEK_BASE_URL || process.env.MODEL_PROXY_UPSTREAM_BASE_URL || 'https://api.deepseek.com/v1').replace(/\/+$/, ''),
     apiKeyEnv: 'DEEPSEEK_API_KEY',
+    sharedApiKeyEnv: 'AIW_SHARED_DEEPSEEK_API_KEY',
     models: [
       { id: 'deepseek-chat', ownedBy: 'deepseek', aliases: ['deepseek-v4-pro', 'deepseek-v4-flash'] },
       { id: 'deepseek-reasoner', ownedBy: 'deepseek', aliases: [] }
@@ -51,7 +54,11 @@ const providers = {
 const defaultProviderId = String(process.env.MODEL_PROXY_DEFAULT_PROVIDER || 'deepseek').trim() || 'deepseek';
 
 function providerApiKey(provider) {
-  return String(process.env[provider.apiKeyEnv] || '').trim();
+  const localKey = String(process.env[provider.apiKeyEnv] || '').trim();
+  if (localKey) return { value: localKey, source: 'local_env', configured: true };
+  const sharedKey = String(process.env[provider.sharedApiKeyEnv] || process.env.MODEL_PROXY_SHARED_API_KEY || '').trim();
+  if (sharedKey) return { value: sharedKey, source: 'shared_managed', configured: true };
+  return { value: '', source: 'missing', configured: false };
 }
 
 function resolveProvider(providerId = defaultProviderId) {
@@ -165,8 +172,8 @@ async function forwardOpenAiCompatible(request, response, path) {
   const employee = employeeId(request, body);
   const started = Date.now();
   const provider = resolveProvider(request.headers['x-aiw-provider']);
-  const key = providerApiKey(provider);
-  if (!key) {
+  const credential = providerApiKey(provider);
+  if (!credential.configured) {
     sendJson(response, 503, { error: { message: `本机模型代理缺少 ${provider.apiKeyEnv}。` } });
     return;
   }
@@ -184,7 +191,7 @@ async function forwardOpenAiCompatible(request, response, path) {
       body: upstreamBody,
       headers: {
         'Content-Type': request.headers['content-type'] || 'application/json',
-        Authorization: `Bearer ${key}`
+        Authorization: `Bearer ${credential.value}`
       },
       simulateFailOnce: request.headers['x-aiw-simulate-network-fail-once'] === '1'
     });
@@ -232,14 +239,16 @@ const server = createServer(async (request, response) => {
     const url = new URL(request.url, 'http://127.0.0.1');
     if (url.pathname === '/health' && request.method === 'GET') {
       const provider = resolveProvider();
+      const defaultCredential = providerApiKey(provider);
       sendJson(response, 200, {
-        ok: Boolean(providerApiKey(provider)),
-        status: providerApiKey(provider) ? 'available' : 'missing_key',
+        ok: defaultCredential.configured,
+        status: defaultCredential.configured ? 'available' : 'missing_key',
         defaultProvider: provider.id,
         providers: Object.fromEntries(Object.values(providers).map((item) => [item.id, {
           type: item.type,
           baseUrl: item.baseUrl,
-          configured: Boolean(providerApiKey(item)),
+          configured: providerApiKey(item).configured,
+          credentialSource: providerApiKey(item).source,
           models: item.models.map((model) => model.id)
         }])),
         port,
@@ -262,6 +271,32 @@ const server = createServer(async (request, response) => {
   } catch (error) {
     sendJson(response, 500, { error: { message: error.message || 'model proxy failed' } });
   }
+});
+
+server.on('error', (error) => {
+  if (error.code === 'EADDRINUSE') {
+    const payload = {
+      ok: false,
+      status: 'not_ready',
+      service: 'model_proxy',
+      port,
+      userMessage: explainPortStatus(port, '模型代理', error),
+      checkedAt: new Date().toISOString()
+    };
+    console.error(JSON.stringify(payload));
+    process.exitCode = 0;
+    setTimeout(() => process.exit(0), 30);
+    return;
+  }
+  console.error(JSON.stringify({
+    ok: false,
+    status: 'not_ready',
+    service: 'model_proxy',
+    port,
+    userMessage: `模型代理启动失败：${error.message || '未知错误'}。`,
+    checkedAt: new Date().toISOString()
+  }));
+  process.exitCode = 1;
 });
 
 server.listen(port, '127.0.0.1', () => {

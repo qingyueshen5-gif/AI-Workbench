@@ -4,7 +4,7 @@ import { join } from 'node:path';
 
 const outDir = join(process.cwd(), 'verification', 'v0.4.4-polish');
 const cdpPort = Number(process.env.AIW_ELECTRON_CDP_PORT || 9244);
-const exePath = process.env.AIW_INSTALLED_EXE || 'C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AI Workbench\\AI Workbench.exe';
+const exePath = process.env.AIW_INSTALLED_EXE || 'C:\\Users\\<USER>\\AppData\\Local\\Programs\\AI Workbench\\AI Workbench.exe';
 const userDataDir = join(outDir, `user-data-${Date.now()}`);
 const dataFile = join(process.env.APPDATA || '', 'ai-workbench', 'data', 'workbench.json');
 

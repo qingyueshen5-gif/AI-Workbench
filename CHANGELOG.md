@@ -1,5 +1,37 @@
 # CHANGELOG
 
+## Unreleased - 上线硬骨头2：共享 key 落地
+
+### 新增
+
+- `model-proxy.mjs` 支持共享托管 key 兜底：用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`，统一由 18800 转发到上游。
+- `/health` 新增 `credentialSource`，只暴露 `local_env` / `shared_managed` / `missing` 来源类型，不返回任何 key 内容。
+- 新增 `verify:shared-key`，用本地 mock 上游验证无用户 key 时仍可通过共享 key 调通 18800，并扫描 health、日志、进程输出不泄露 key。
+- 新增 `verification/shared-key/summary.json` 作为共享 key 验收证据。
+
+### 验收
+
+- `npm.cmd run verify:shared-key`
+
+## Unreleased - 上线硬骨头1：陌生机器不崩
+
+### 新增
+
+- 新增 `readiness.mjs` 和 `/api/readiness`，统一检查本机路径、模型代理、Hermes、OpenClaw 和端口状态，并输出中文未就绪说明。
+- 新增 `verify:clean-machine`，自动验收开发机路径清理、首次启动目录重建、依赖缺失降级、端口冲突兜底和 readiness 报告完整性。
+- 新增 `verification/clean-machine/summary.json` 和 `verification/clean-machine/readiness-report.md` 作为上线硬骨头1验收证据。
+
+### 修复
+
+- Electron 启动不再强等 18800/8787 成功；内部服务启动失败、脚本缺失、端口不可达时加载中文降级页，保留核心对话入口，不白屏、不崩栈。
+- 前端首屏接入 readiness 提示，18800/Hermes/OpenClaw 未就绪时显示中文说明，聊天输入框仍可见。
+- `server.mjs` 和 `model-proxy.mjs` 对端口占用输出中文可解释状态，避免把 Node 堆栈甩给用户。
+- 历史文档和验收证据中的开发机用户路径已脱敏为 `%USERPROFILE%` / `<USER>`。
+
+### 验收
+
+- `npm.cmd run verify:clean-machine`
+
 ## v0.4.5 - 全链版本管理落地
 
 ### 新增

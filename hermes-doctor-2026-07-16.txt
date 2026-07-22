@@ -37,7 +37,7 @@
 
 ◆ Auth Providers
   ⚠ Nous Portal auth (not logged in)
-  ⚠ Auth provider status (could not check: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\auth.lock')
+  ⚠ Auth provider status (could not check: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\auth.lock')
 
 ◆ Directory Structure
   ✓ ~/AppData\Local\hermes directory exists
@@ -80,7 +80,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -140,7 +140,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -200,7 +200,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -260,7 +260,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -320,7 +320,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -380,7 +380,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -440,7 +440,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -500,7 +500,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -560,7 +560,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -620,7 +620,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -680,7 +680,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -740,7 +740,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -800,7 +800,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -860,7 +860,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -920,7 +920,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -980,7 +980,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -1040,7 +1040,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -1100,7 +1100,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -1160,7 +1160,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -1214,7 +1214,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -1265,7 +1265,7 @@ Traceback (most recent call last):
                        ~~~~~~~~~~~~~~~~^^^^^^^^^^^
   File "D:\Anaconda\Lib\site-packages\concurrent_log_handler\__init__.py", line 356, in atomic_open
     file = _open(file_path, "r+", encoding=self.encoding, newline=self.newline)
-PermissionError: [Errno 13] Permission denied: 'C:\\Users\\胖胖虎\\AppData\\Local\\hermes\\logs\\.__agent.lock'
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\<USER>\\AppData\\Local\\hermes\\logs\\.__agent.lock'
 Call stack:
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code

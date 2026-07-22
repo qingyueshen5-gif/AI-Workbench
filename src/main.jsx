@@ -47,16 +47,23 @@ function App() {
   const [data, setData] = useState(defaultData);
   const [loading, setLoading] = useState(true);
   const [saveError, setSaveError] = useState('');
+  const [readiness, setReadiness] = useState(null);
   const [selectedTaskId, setSelectedTaskId] = useState('');
   const [panelOpen, setPanelOpen] = useState(false);
   const [conversationPanelOpen, setConversationPanelOpen] = useState(false);
 
   useEffect(() => {
-    fetch('/api/data')
-      .then((response) => response.json())
-      .then((payload) => setData(mergeData(payload)))
-      .catch((error) => setSaveError(error.message))
-      .finally(() => setLoading(false));
+    Promise.allSettled([
+      fetch('/api/data').then((response) => response.json()),
+      fetch('/api/readiness').then((response) => response.json())
+    ]).then(([dataResult, readinessResult]) => {
+      if (dataResult.status === 'fulfilled') {
+        setData(mergeData(dataResult.value));
+      } else {
+        setSaveError('本地数据暂时没读到：工作台会先用空白对话打开。');
+      }
+      if (readinessResult.status === 'fulfilled') setReadiness(readinessResult.value);
+    }).finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -124,6 +131,7 @@ function App() {
               </button>
             </div>
           )}
+          <ReadinessNotice readiness={readiness} />
           <ChatStream data={data} setData={setData} setSaveError={setSaveError} updateData={updateData} />
         </section>
 
@@ -197,6 +205,21 @@ function ConversationSidebar({ data, updateData }) {
       updateData={updateData}
       className="history-sidebar hidden border-r border-zinc-200 bg-zinc-50 md:flex"
     />
+  );
+}
+
+function ReadinessNotice({ readiness }) {
+  const notReady = (readiness?.checks || []).filter((check) => !check.ok);
+  if (!notReady.length) return null;
+  return (
+    <div className="mx-5 mt-4 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+      <div className="font-medium">{readiness.userMessage || '有部分能力未就绪，但核心对话入口可以先打开。'}</div>
+      <div className="mt-1 space-y-1">
+        {notReady.slice(0, 4).map((check) => (
+          <div key={check.id}>{check.userMessage || `${check.title || check.id} 未就绪。`}</div>
+        ))}
+      </div>
+    </div>
   );
 }
 

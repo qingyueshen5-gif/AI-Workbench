@@ -27,15 +27,22 @@ if (remoteDebugArg) {
 const endpoints = {
   modelProxy: 'http://127.0.0.1:18800/health',
   api: 'http://127.0.0.1:8787/api/data',
+  readiness: 'http://127.0.0.1:8787/api/readiness',
   app: 'http://127.0.0.1:8787/'
 };
 const ownedChildren = [];
+const serviceState = {
+  modelProxy: { ok: false, userMessage: '模型代理还没有完成检查。' },
+  api: { ok: false, userMessage: '工作台核心服务还没有完成检查。' }
+};
 let shuttingDown = false;
 let mainWindow = null;
 
 process.on('uncaughtException', (error) => {
   logMain(`uncaughtException ${error?.stack || error}`);
-  throw error;
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    loadFallbackPage(mainWindow, [`工作台遇到启动问题：${friendlyError(error)}。`]).catch(() => {});
+  }
 });
 process.on('unhandledRejection', (error) => {
   logMain(`unhandledRejection ${error?.stack || error}`);
@@ -66,6 +73,47 @@ function checkUrl(url, timeoutMs = 1200) {
   });
 }
 
+function readJsonUrl(url, timeoutMs = 1200) {
+  return new Promise((resolve) => {
+    let settled = false;
+    let body = '';
+    const finish = (value) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve(value);
+    };
+    const request = http.get(url, { timeout: timeoutMs }, (response) => {
+      response.setEncoding('utf8');
+      response.on('data', (chunk) => {
+        body += chunk;
+      });
+      response.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          finish({ ok: response.statusCode >= 200 && response.statusCode < 300, statusCode: response.statusCode, payload });
+        } catch (error) {
+          finish({ ok: false, statusCode: response.statusCode, error });
+        }
+      });
+    });
+    const timer = setTimeout(() => {
+      request.destroy();
+      finish({ ok: false, error: new Error('timeout') });
+    }, timeoutMs);
+    request.on('timeout', () => {
+      request.destroy();
+      finish({ ok: false, error: new Error('timeout') });
+    });
+    request.on('error', (error) => finish({ ok: false, error }));
+  });
+}
+
+async function checkApiReady(timeoutMs = 1200) {
+  const result = await readJsonUrl(endpoints.api, timeoutMs);
+  return Boolean(result.ok && result.payload && Array.isArray(result.payload.conversations));
+}
+
 async function waitForUrl(url, timeoutMs = 20000) {
   const started = Date.now();
   while (Date.now() - started < timeoutMs) {
@@ -77,7 +125,17 @@ async function waitForUrl(url, timeoutMs = 20000) {
 
 function startNodeScript(name, scriptPath) {
   const serviceCwd = app.isPackaged ? path.dirname(process.execPath) : app.getAppPath();
-  const child = spawn(process.execPath, [scriptPath], {
+  if (!fs.existsSync(scriptPath)) {
+    serviceState[name === 'model-proxy' ? 'modelProxy' : 'api'] = {
+      ok: false,
+      userMessage: `${name === 'model-proxy' ? '模型代理' : '工作台核心服务'}未就绪：启动文件不存在。`
+    };
+    logMain(`${name}:script-missing ${scriptPath}`);
+    return null;
+  }
+  let child = null;
+  try {
+    child = spawn(process.execPath, [scriptPath], {
     cwd: serviceCwd,
     windowsHide: true,
     env: {
@@ -85,6 +143,21 @@ function startNodeScript(name, scriptPath) {
       ELECTRON_RUN_AS_NODE: '1'
     },
     stdio: 'ignore'
+    });
+  } catch (error) {
+    serviceState[name === 'model-proxy' ? 'modelProxy' : 'api'] = {
+      ok: false,
+      userMessage: `${name === 'model-proxy' ? '模型代理' : '工作台核心服务'}未就绪：${friendlyError(error)}。`
+    };
+    logMain(`${name}:spawn-error ${error?.stack || error}`);
+    return null;
+  }
+  child.on('error', (error) => {
+    serviceState[name === 'model-proxy' ? 'modelProxy' : 'api'] = {
+      ok: false,
+      userMessage: `${name === 'model-proxy' ? '模型代理' : '工作台核心服务'}未就绪：${friendlyError(error)}。`
+    };
+    logMain(`${name}:child-error ${error?.stack || error}`);
   });
   child.on('exit', (code, signal) => {
     if (code && code !== 0) {
@@ -100,6 +173,7 @@ function startNodeScript(name, scriptPath) {
     }
   });
   ownedChildren.push(child);
+  return child;
 }
 
 async function ensureInternalServices() {
@@ -107,13 +181,29 @@ async function ensureInternalServices() {
   if (!await checkUrl(endpoints.modelProxy)) {
     startNodeScript('model-proxy', path.join(appPath, 'model-proxy.mjs'));
   }
-  if (!await checkUrl(endpoints.api)) {
+  if (!await checkApiReady()) {
     startNodeScript('api', path.join(appPath, 'server.mjs'));
   }
-  await Promise.all([
-    waitForUrl(endpoints.modelProxy),
-    waitForUrl(endpoints.api)
+  const [modelProxyReady, apiReady] = await Promise.all([
+    waitForUrl(endpoints.modelProxy, 8000),
+    (async () => {
+      const started = Date.now();
+      while (Date.now() - started < 8000) {
+        if (await checkApiReady(1000)) return true;
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+      return false;
+    })()
   ]);
+  serviceState.modelProxy = {
+    ok: modelProxyReady,
+    userMessage: modelProxyReady ? '模型代理已就绪。' : '模型代理未就绪：18800 暂时不可用，聊天会显示中文原因。'
+  };
+  serviceState.api = {
+    ok: apiReady,
+    userMessage: apiReady ? '工作台核心服务已就绪。' : '工作台核心服务未就绪：8787 暂时不可用，已切换到本地说明页。'
+  };
+  return { modelProxyReady, apiReady };
 }
 
 function stopOwnedServices() {
@@ -197,11 +287,87 @@ async function createWindow() {
     ]).popup({ window: win });
   });
 
-  await ensureInternalServices();
-  logMain('createWindow:services-ready');
-  logMain(`loadURL:start ${endpoints.app}`);
-  await win.loadURL(endpoints.app);
-  logMain('createWindow:loaded');
+  const services = await ensureInternalServices();
+  logMain(`createWindow:services ${JSON.stringify(services)}`);
+  if (!services.apiReady) {
+    await loadFallbackPage(win, [
+      serviceState.api.userMessage,
+      serviceState.modelProxy.userMessage,
+      '核心对话入口已保留；等本机服务恢复后重新打开工作台即可继续使用。'
+    ]);
+    return;
+  }
+  try {
+    logMain(`loadURL:start ${endpoints.app}`);
+    await win.loadURL(endpoints.app);
+    logMain('createWindow:loaded');
+  } catch (error) {
+    logMain(`loadURL:error ${error?.stack || error}`);
+    await loadFallbackPage(win, [
+      `工作台页面暂时打不开：${friendlyError(error)}。`,
+      serviceState.modelProxy.userMessage,
+      '主程序没有崩溃；请关闭占用端口的程序或稍后重试。'
+    ]);
+  }
+}
+
+function friendlyError(error) {
+  const message = String(error?.message || error || '').trim();
+  if (/EADDRINUSE|address already in use/i.test(message)) return '本机端口已被其他程序占用';
+  if (/ECONNREFUSED|ERR_CONNECTION_REFUSED|connect/i.test(message)) return '本机服务还没启动或端口不可达';
+  if (/timeout|timed out/i.test(message)) return '连接超时';
+  if (/ENOENT|not found|找不到/i.test(message)) return '启动文件或员工程序不存在';
+  return message || '未知错误';
+}
+
+async function loadFallbackPage(win, reasons = []) {
+  const items = reasons.filter(Boolean).map((item) => `<li>${escapeHtml(item)}</li>`).join('');
+  const html = `<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${escapeHtml(windowTitle)}</title>
+  <style>
+    html,body{height:100%;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#18181b;background:#fff}
+    .shell{display:flex;min-height:100%;flex-direction:column}
+    header{height:64px;border-bottom:1px solid #eee;display:flex;align-items:center;padding:0 24px;font-weight:700}
+    main{flex:1;display:flex;align-items:center;justify-content:center;padding:32px}
+    .panel{width:min(760px,100%);}
+    h1{font-size:24px;margin:0 0 12px}
+    p,li{font-size:15px;line-height:1.8;color:#3f3f46}
+    ul{padding-left:20px;margin:12px 0 24px}
+    textarea{box-sizing:border-box;width:100%;min-height:92px;border:1px solid #d4d4d8;border-radius:18px;padding:14px 16px;font:inherit;resize:vertical;outline:none}
+    button{margin-top:10px;border:0;border-radius:999px;background:#18181b;color:#fff;padding:9px 16px;font:inherit}
+    .hint{margin-top:12px;color:#71717a;font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>AI Workbench</header>
+    <main>
+      <section class="panel">
+        <h1>核心对话入口暂时离线，但主程序已正常打开</h1>
+        <p>下面这些环境项未就绪，工作台已经降级处理，没有白屏、没有崩溃：</p>
+        <ul>${items || '<li>本机服务正在检查中。</li>'}</ul>
+        <textarea placeholder="核心对话入口：服务恢复后可在这里继续输入目标。"></textarea>
+        <button type="button">等待服务恢复</button>
+        <div class="hint">如果一直不可用，请先关闭占用 18800 / 8787 / 5173 的程序，再重新打开工作台。</div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>`;
+  await win.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`);
+  logMain('fallback-page:loaded');
+}
+
+function escapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 logMain(`startup argv=${JSON.stringify(process.argv)} packaged=${app.isPackaged}`);

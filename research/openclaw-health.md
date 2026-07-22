@@ -11,7 +11,7 @@
 证据：
 
 - 全局 npm 安装可见：`openclaw@2026.3.28`。
-- 显式 shim 可执行：`C:\Users\胖胖虎\AppData\Roaming\npm\openclaw.cmd --version` 返回 `OpenClaw 2026.3.28 (f9b1079)`。
+- 显式 shim 可执行：`%USERPROFILE%\AppData\Roaming\npm\openclaw.cmd --version` 返回 `OpenClaw 2026.3.28 (f9b1079)`。
 - `where.exe openclaw` 找不到命令，说明 PATH 里未暴露 `openclaw`，当前工作台 adapter 依赖显式 shim 才可靠。
 - `openclaw status --json --timeout 5000` 在外层 20-30 秒限制下仍超时。
 - `openclaw channels status --probe` 返回：
@@ -43,9 +43,9 @@
 证据：
 
 - OpenClaw 版本命令正常：`OpenClaw 2026.3.28 (f9b1079)`。
-- gateway 启动脚本存在：`C:\Users\胖胖虎\.openclaw\gateway.cmd`，内容指向 Node 运行 `openclaw\dist\index.js gateway --port 18789`。
+- gateway 启动脚本存在：`%USERPROFILE%\.openclaw\gateway.cmd`，内容指向 Node 运行 `openclaw\dist\index.js gateway --port 18789`。
 - 当前没有观察到 `18789` 监听。
-- `C:\Users\胖胖虎\.openclaw\logs` 中仅发现：
+- `%USERPROFILE%\.openclaw\logs` 中仅发现：
   - `config-health.json`
   - `config-audit.jsonl`
 - `openclaw logs --tail 200` 不支持 `--tail`，返回 unknown option。

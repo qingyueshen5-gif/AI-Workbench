@@ -1,6 +1,6 @@
 # 当前真实进度清单
 
-生成时间：2026-07-21
+生成时间：2026-07-22
 
 范围：只按当前仓库真实文件和已提交验收证据盘点；不按记忆猜测。
 
@@ -17,7 +17,7 @@
 版本号：
 
 - `package.json` 当前版本：`0.4.5`
-- `CHANGELOG.md` 最新版本条目：`v0.4.5 - 全链版本管理落地`
+- `CHANGELOG.md` 最新版本条目：`Unreleased - 上线硬骨头2：共享 key 落地`
 
 ## 2. `research/` 真实存在文件
 
@@ -50,15 +50,14 @@
 ## 4. 当前真实进度
 
 - 产品版本：`v0.4.5`
-- 上一步做完了什么：OpenClaw gateway 掉线问题已定位并修复到可启动状态；清理 lock/tmp/browser/devices/cron 等 runtime 残留后，gateway 可监听 `127.0.0.1:18789`。
+- 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；DeepSeek、Hermes、OpenClaw 三员工都已通过 `18800` 调用模型，验收摘要在 `verification/unified-model-proxy/summary.json`。
-- 现在卡在什么：当前仓库和执行器没有卡在“执行器故障”。执行器已经恢复，统一模型入口也已经 commit + push。仍需注意的是 OpenClaw CLI 在统一验收中会出现收尾超时 warning，但代理日志已证明模型入口经过 `18800`。
+- 现在卡在什么：当前没有执行器故障卡点。上线最小集下一块是下载安装包和 GitHub Release 下载链接，尚未实现。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
 ## 5. 下一步
 
-1. 进入第 3 步：模型分层调用。
-2. 在 `18800` provider registry 基础上设计模型用途分层：理解、编排、执行、摘要、去重、情报压缩分别走合适模型。
-3. 保持当前产品原则：界面不变复杂，员工和模型差异都折叠在内部。
-4. 情报流水线和多平台连接暂不抢跑，等 P0/P1 稳定后再推进。
+1. 进入上线硬骨头3：能下载能安装。
+2. 打安装包并挂 GitHub Release，只给用户一个下载链接。
+3. 模型分层、手机端、情报流水线暂不抢跑，等上线最小集前三条稳定后继续。

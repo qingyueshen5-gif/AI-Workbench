@@ -9,8 +9,9 @@ import { ownerFromAgentId, progressReplyForAgent, isActionIntent } from './agent
 import { verificationRules, verifyRun } from './verification/rules.mjs';
 import { getRecoveryHint, normalizeError } from './errors/normalize.mjs';
 import { checkHealth, repairAll, selfHeal, setupEnv } from './health/self-heal.mjs';
-import { migrateLegacyRuntimeData, runtimeDataFile } from './runtime-paths.mjs';
+import { ensureRuntimeDirs, migrateLegacyRuntimeData, runtimeDataFile, runtimeStartupErrorLogFile } from './runtime-paths.mjs';
 import { checkModelAvailability, doctor as versionDoctor, loadMatrix } from './versions/manager.mjs';
+import { collectReadiness, explainPortStatus } from './readiness.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const dataFile = runtimeDataFile;
@@ -19,6 +20,7 @@ const distDir = join(root, 'dist');
 const port = Number(process.env.PORT || 8787);
 const modelProxyBaseUrl = String(process.env.MODEL_PROXY_BASE_URL || 'http://127.0.0.1:18800/v1').replace(/\/+$/, '');
 
+ensureRuntimeDirs();
 migrateLegacyRuntimeData(root);
 
 const initialData = {
@@ -1597,6 +1599,13 @@ const server = createServer(async (request, response) => {
       return;
     }
 
+    if (pathname === '/api/readiness' && request.method === 'GET') {
+      sendJson(response, 200, await collectReadiness({
+        simulateDown: requestUrl.searchParams.get('simulateDown') === '1'
+      }));
+      return;
+    }
+
     if (pathname === '/api/agents' && request.method === 'GET') {
       sendJson(response, 200, { agents: agentRegistry.listAgents() });
       return;
@@ -2437,16 +2446,39 @@ const server = createServer(async (request, response) => {
     }
     sendJson(response, 404, { error: 'Not found' });
   } catch (error) {
-    sendJson(response, 500, { error: error.message });
+    sendJson(response, 500, { error: buildFailureExplanation({ agentName: '工作台', errorMessage: error.message }) });
   }
 });
 
 server.on('error', (error) => {
   if (error.code === 'EADDRINUSE') {
-    console.error(`API server port ${port} is already in use. Stop the existing process or set PORT to another value.`);
-    process.exit(1);
+    const payload = {
+      ok: false,
+      status: 'not_ready',
+      service: 'api',
+      port,
+      userMessage: explainPortStatus(port, '工作台核心服务', error),
+      checkedAt: new Date().toISOString()
+    };
+    const line = JSON.stringify(payload);
+    console.error(line);
+    try {
+      writeFile(runtimeStartupErrorLogFile, `${line}\n`, 'utf8').catch(() => {});
+    } catch {}
+    process.exitCode = 0;
+    setTimeout(() => process.exit(0), 30);
+    return;
   }
-  throw error;
+  const payload = {
+    ok: false,
+    status: 'not_ready',
+    service: 'api',
+    port,
+    userMessage: `工作台核心服务启动失败：${error.message || '未知错误'}。`,
+    checkedAt: new Date().toISOString()
+  };
+  console.error(JSON.stringify(payload));
+  process.exitCode = 1;
 });
 
 server.listen(port, '127.0.0.1', () => {
