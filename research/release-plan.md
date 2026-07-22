@@ -116,6 +116,7 @@ R1 真实结果：
 - 桌面和开始菜单快捷方式仍指向历史坏路径。
 - packaged smoke-test 未运行，卸载未实际执行。
 - `shared_managed` 生产验证继续 blocked，本轮不处理、不冒充 passed。
+- GitHub Actions Run `29912255523` 已完成，结论 failure；失败日志读取受 GitHub 权限限制返回 HTTP 403。
 
 下一轮必须先查清 NSIS 为什么只写 updater 副本但不执行 `installApplicationFiles`，优先在 GitHub Actions 干净 Windows 环境复现，排除本机旧快捷方式和旧 updater 状态干扰。3A 通过前不得进入 3B。
 

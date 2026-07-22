@@ -144,8 +144,15 @@
     "failureReason": "Uninstall was not attempted because expected uninstaller was not created."
   },
   "actions": {
-    "status": "not_run",
-    "reason": "Workflow can be submitted by git push; no remote run result is available during local preflight."
+    "status": "failed",
+    "runId": "29912255523",
+    "workflow": "Windows Installer Preflight",
+    "event": "push",
+    "conclusion": "failure",
+    "logFetch": {
+      "status": "failed",
+      "error": "HTTP 403: Must have admin rights to Repository when running gh run view 29912255523 --log-failed"
+    }
   },
   "fiveCriteria": {
     "a_noHardcodedPaths": true,

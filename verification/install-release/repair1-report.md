@@ -37,6 +37,12 @@
 - 解包目录命中：0
 - 安装包命中：0
 
+## GitHub Actions
+
+- 状态：failed
+- Run ID：29912255523
+- 日志读取：failed，`gh run view 29912255523 --log-failed` 返回 HTTP 403，提示需要仓库 admin 权限。
+
 ## 已知问题
 
 - shared_managed production injection is not verified in 3A; mechanism test used mock upstream only.
