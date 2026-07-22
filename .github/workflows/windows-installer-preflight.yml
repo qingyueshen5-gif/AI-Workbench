@@ -43,13 +43,16 @@ jobs:
         run: npm run verify:install-release
 
       - name: Upload installer candidate and evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ai-workbench-v0.4.6-installer-preflight
           path: |
             release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe
+            release-v0.4.6-installer/builder-debug.yml
             release-v0.4.6-installer/latest.yml
             verification/install-release/**
+          if-no-files-found: warn
 
       - name: Fail when preflight failed
         if: steps.preflight.outcome != 'success'

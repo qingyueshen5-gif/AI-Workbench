@@ -19,8 +19,9 @@
 - `verification/model-router/summary.json` 当前不存在，也不应补假文件；它对应尚未执行的“模型分层/模型路由”任务。
 - 统一模型入口的真实验收产物是 `verification/unified-model-proxy/summary.json`。
 - 模型分层、手机端、情报流水线暂不抢跑，等上线最小集前三条稳定后继续。
-- 3A 当前阻塞：NSIS 静默安装未创建预期 per-user 安装目录/卸载器，packaged Electron smoke test 未完成，`shared_managed` 生产注入未验证；证据见 `verification/install-release/preflight-summary.json`。
-- 3A-R1 最新结论：failed。已尝试修复 packaged smoke-test GPU 崩溃、改用 HTTP renderer smoke、改造安装验证为真实路径发现，并把 NSIS 改为 oneClick per-user；但安装器 `/S /currentuser` 仍只复制自身到 `%LOCALAPPDATA%\ai-workbench-updater\installer.exe`，没有创建真实安装目录、卸载器或卸载注册表项。证据见 `verification/install-release/repair1-summary.json`。
+- 3A-R1 最新结论：failed。安装器 `/S /currentuser` 只复制自身到 `%LOCALAPPDATA%\ai-workbench-updater\installer.exe`，没有创建真实安装目录、卸载器或卸载注册表项。
+- 3A-R1.2 最新结论：local passed / Actions pending。已确认安装包 payload 有效，根因是默认 per-user 安装目录在当前中文用户名环境下没有稳定落盘；已通过 `build/installer.nsh` 固定默认安装目录为 `%LOCALAPPDATA%\Programs\AIWorkbench`，并新增 `scripts/verify-nsis-install.mjs`。本地 `npm.cmd run verify:install-release` 已通过，证据见 `verification/install-release/repair1-2-summary.json` 和 `verification/install-release/preflight-summary.json`。
+- `shared_managed` 生产注入仍为 blocked，本轮不处理、不冒充 passed。
 
 ## 明天路线图（2026-07-19）
 

@@ -118,6 +118,35 @@ R1 真实结果：
 - `shared_managed` 生产验证继续 blocked，本轮不处理、不冒充 passed。
 - GitHub Actions Run `29912255523` 已完成，结论 failure；失败日志读取受 GitHub 权限限制返回 HTTP 403。
 
-下一轮必须先查清 NSIS 为什么只写 updater 副本但不执行 `installApplicationFiles`，优先在 GitHub Actions 干净 Windows 环境复现，排除本机旧快捷方式和旧 updater 状态干扰。3A 通过前不得进入 3B。
+R1 结论：必须先查清 NSIS 为什么只写 updater 副本但不执行 `installApplicationFiles`，优先在 GitHub Actions 干净 Windows 环境复现，排除本机旧快捷方式和旧 updater 状态干扰。3A 通过前不得进入 3B。
+
+## 3A-R1.2：NSIS 安装器修复
+
+3A-R1.2 状态：local passed / Actions pending。
+
+根因：
+
+- 安装包 payload 有效，`win-unpacked` 可运行，显式 `/D=` 到 ASCII 路径可真实落盘。
+- 默认 per-user 安装目录在当前中文用户名环境下没有稳定落盘，表现为只留下 `%LOCALAPPDATA%\ai-workbench-updater\installer.exe`。
+
+修复：
+
+- 新增 `build/installer.nsh`，通过 electron-builder 的 NSIS include 将默认安装目录固定为 `%LOCALAPPDATA%\Programs\AIWorkbench`。
+- 新增 `scripts/verify-nsis-install.mjs`，真实执行 NSIS `/S` 安装、安装版 `--smoke-test` 和卸载。
+- 主 preflight `scripts/verify-install-release.mjs` 改为调用 Node helper，避免 PowerShell 大脚本超时导致假失败。
+- GitHub Actions preflight workflow 改为失败时也 `always()` 上传 installer、builder-debug 和 verification 证据。
+
+本地验收：
+
+- `npm.cmd run verify:install-release` 已通过。
+- NSIS `/S` 安装真实落盘到 `%LOCALAPPDATA%\Programs\AIWorkbench`。
+- `AI Workbench.exe`、`Uninstall AI Workbench.exe`、卸载注册表项、桌面快捷方式、开始菜单快捷方式均真实存在。
+- 安装版 `--smoke-test` 退出码 0，未复现 `0x80000003`。
+- 真实卸载退出码 0，安装目录和快捷方式清除。
+
+待确认：
+
+- GitHub Actions 真实 run 结果。未取得真实 Actions passed 前，不能把 3A 云端预验收写成 passed。
+- `shared_managed` 生产注入仍为 blocked，本轮不处理、不冒充 passed。
 
 证据以 `verification/install-release/repair1-summary.json` 和 `verification/install-release/repair1-report.md` 为准。

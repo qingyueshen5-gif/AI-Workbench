@@ -10,4 +10,4 @@
 - 五步走：①修 OpenClaw ✓ ②统一模型入口 ✓ ③模型分层（待继续）④手机端 ⑤情报流水线。
 - 执行协议：所有大任务采用单一主线、分段执行、逐段验证、失败也留痕；产品负责人批准后才能进入下一阶段。固定规范见 `EXECUTION_PROTOCOL.md`。
 - 发布分段：硬骨头3拆成 3A 候选安装包预验收和 3B GitHub Release 正式发布。3A 未通过时禁止 Release、禁止 tag、禁止把 LAUNCH 硬骨头3标记完成。
-- 安装器策略：3A-R1 允许将 NSIS 从 assisted installer 调整为 oneClick per-user installer，以贴合“用户少操作、不要求管理员权限”的产品目标；但该调整尚未通过真实安装验收，不能视为发布决策完成。
+- 安装器策略：3A-R1.2 保持 NSIS oneClick per-user installer，不要求管理员权限；默认安装目录固定为 `%LOCALAPPDATA%\Programs\AIWorkbench`，避免中文用户名环境下默认 per-user 安装目录不稳定落盘。该策略已通过本地 `npm.cmd run verify:install-release`，仍需 GitHub Actions 真实结果确认。

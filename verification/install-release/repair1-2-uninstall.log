@@ -1,0 +1,10 @@
+{
+  "task": "repair1-2-uninstall",
+  "uninstallAttempted": true,
+  "uninstallCommand": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\Uninstall AI Workbench.exe /S",
+  "uninstallExitCode": 0,
+  "installDirExistsAfterUninstall": false,
+  "installedExeExistsAfterUninstall": false,
+  "afterUninstallShortcuts": [],
+  "afterReg": []
+}

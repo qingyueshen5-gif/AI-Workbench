@@ -30,3 +30,4 @@ verification/unified-model-proxy/runs/
 verification/version-management/fixture-versions/
 versions/backups/*.json
 .tmp-version-management/
+.tmp-install-r1/

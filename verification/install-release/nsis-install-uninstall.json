@@ -1,111 +1,65 @@
 {
   "task": "nsis-install-uninstall",
   "version": "0.4.6",
-  "installer": "release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe",
-  "status": "failed",
+  "installer": "F:\\AI-Workbench\\release-v0.4.6-installer\\AI-Workbench-Setup-v0.4.6-x64.exe",
+  "status": "passed",
   "method": "silent",
-  "installCommand": "F:\\AI-Workbench\\release-v0.4.6-installer\\AI-Workbench-Setup-v0.4.6-x64.exe /S /currentuser",
-  "nsisLog": "F:\\AI-Workbench\\.tmp-install-r1\\31748-1784715834201\\smoke\\nsis-installer.log",
-  "nsisLogExists": false,
-  "nsisLogText": "",
-  "userContext": {
-    "roamingAppData": "C:\\Users\\胖胖虎\\AppData\\Roaming",
-    "envUsername": "胖胖虎",
-    "userProfile": "C:\\Users\\胖胖虎",
-    "localAppData": "C:\\Users\\胖胖虎\\AppData\\Local",
-    "desktop": "C:\\Users\\胖胖虎\\Desktop",
-    "environmentUserName": "胖胖虎"
-  },
-  "updaterInstaller": {
-    "path": "C:\\Users\\胖胖虎\\AppData\\Local\\ai-workbench-updater\\installer.exe",
-    "sha256": "7AEF266DB879F5F912B5EB806CD85347690AB033201736E39F59541C8617ACCD",
-    "exists": true
-  },
+  "installCommand": "F:\\AI-Workbench\\release-v0.4.6-installer\\AI-Workbench-Setup-v0.4.6-x64.exe /S",
   "installExitCode": 0,
-  "installTarget": "",
-  "installedExe": "",
-  "installedExeExists": false,
-  "uninstaller": "",
-  "uninstallerExists": false,
-  "installedExeExistsAfterUninstall": false,
-  "fileVersion": "",
-  "uninstallRegistry": [],
-  "shortcutsPointToInstalledExe": false,
-  "installedSmoke": {
-    "runtimeDirs": {
-      "config": false,
-      "logs": false,
-      "evidence": false,
-      "data": false
-    },
-    "stdout": "F:\\AI-Workbench\\.tmp-install-r1\\31748-1784715834201\\smoke\\stdout.log",
-    "outputExists": false,
-    "root": "F:\\AI-Workbench\\.tmp-install-r1\\31748-1784715834201\\smoke",
-    "runtimeRoot": "F:\\AI-Workbench\\.tmp-install-r1\\31748-1784715834201\\smoke\\runtime",
-    "output": "F:\\AI-Workbench\\.tmp-install-r1\\31748-1784715834201\\smoke\\smoke.json",
-    "stderr": "F:\\AI-Workbench\\.tmp-install-r1\\31748-1784715834201\\smoke\\stderr.log",
-    "outputJson": null,
-    "timedOut": false,
-    "exitCode": null
-  },
-  "beforeShortcuts": [
-    {
-      "path": "C:\\Users\\胖胖虎\\Desktop\\AI Workbench.lnk",
-      "target": "C:\\ F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install\\AI Workbench.exe",
-      "workingDirectory": " F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install"
-    },
-    {
-      "path": "C:\\Users\\胖胖虎\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\AI Workbench.lnk",
-      "target": "C:\\ F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install\\AI Workbench.exe",
-      "workingDirectory": " F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install"
-    }
-  ],
-  "movedShortcuts": [
-    {
-      "original": "C:\\Users\\胖胖虎\\Desktop\\AI Workbench.lnk",
-      "backup": "F:\\AI-Workbench\\.tmp-install-r1\\31748-1784715834201\\shortcut-backup\\AI Workbench.lnk.13885c2caf91402b998b8215fe4b2303.bak"
-    },
-    {
-      "original": "C:\\Users\\胖胖虎\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\AI Workbench.lnk",
-      "backup": "F:\\AI-Workbench\\.tmp-install-r1\\31748-1784715834201\\shortcut-backup\\AI Workbench.lnk.95c1234f44aa4c4d9e8e7b658d579161.bak"
-    }
-  ],
+  "installTarget": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench",
+  "installedExe": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\AI Workbench.exe",
+  "installedExeExists": true,
+  "uninstaller": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\Uninstall AI Workbench.exe",
+  "uninstallerExists": true,
+  "fileVersion": "0.4.6",
+  "shortcutsPointToInstalledExe": true,
   "afterInstallShortcuts": [
     {
       "path": "C:\\Users\\胖胖虎\\Desktop\\AI Workbench.lnk",
-      "target": "C:\\ F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install\\AI Workbench.exe",
-      "workingDirectory": " F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install"
+      "target": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\AI Workbench.exe",
+      "workingDirectory": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench"
     },
     {
       "path": "C:\\Users\\胖胖虎\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\AI Workbench.lnk",
-      "target": "C:\\ F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install\\AI Workbench.exe",
-      "workingDirectory": " F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install"
+      "target": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\AI Workbench.exe",
+      "workingDirectory": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench"
     }
   ],
-  "uninstallAttempted": false,
-  "uninstallCommand": " /S",
-  "uninstallExitCode": null,
+  "uninstallRegistry": [
+    {
+      "key": "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\bb4acaa9-99d0-5390-9d1a-038d599d7094",
+      "displayName": "AI Workbench 0.4.6",
+      "displayVersion": "0.4.6",
+      "installLocation": null,
+      "uninstallString": "\"C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\Uninstall AI Workbench.exe\" /currentuser",
+      "quietUninstallString": "\"C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\Uninstall AI Workbench.exe\" /currentuser /S",
+      "displayIcon": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\AI Workbench.exe,0"
+    }
+  ],
+  "installedSmoke": {
+    "command": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\AI Workbench.exe --smoke-test",
+    "startedAt": "2026-07-22T12:09:55.800Z",
+    "finishedAt": "2026-07-22T12:09:57.236Z",
+    "exitCode": 0,
+    "signal": "",
+    "timedOut": false,
+    "output": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-smoke.json",
+    "stdout": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-stdout.log",
+    "stderr": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-stderr.log",
+    "outputExists": true,
+    "outputJson": "{\n  \"task\": \"electron-smoke-test\",\n  \"version\": \"0.4.6\",\n  \"startedAt\": \"2026-07-22T12:09:56.175Z\",\n  \"packaged\": true,\n  \"userData\": \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Roaming\\\\ai-workbench\",\n  \"services\": {\n    \"modelProxyReady\": true,\n    \"apiReady\": true\n  },\n  \"renderer\": {\n    \"ok\": true,\n    \"statusCode\": 200,\n    \"bodyTextLength\": 400,\n    \"error\": \"\"\n  },\n  \"readiness\": {\n    \"ok\": true,\n    \"status\": \"ready\",\n    \"checkedAt\": \"2026-07-22T12:09:57.132Z\",\n    \"userMessage\": \"工作台已就绪。\",\n    \"ports\": {\n      \"modelProxy\": 29870,\n      \"api\": 29871,\n      \"vite\": 5173,\n      \"openclawGateway\": 18789\n    },\n    \"checks\": [\n      {\n        \"id\": \"paths\",\n        \"ok\": true,\n        \"status\": \"ready\",\n        \"title\": \"本机目录\",\n        \"userMessage\": \"本机配置、数据、日志和验收目录会自动创建。\",\n        \"details\": {\n          \"runtimeRoot\": \"F:\\\\AI-Workbench\\\\verification\\\\install-release\\\\repair1-2-installed-smoke-runtime\",\n          \"configDir\": \"F:\\\\AI-Workbench\\\\verification\\\\install-release\\\\repair1-2-installed-smoke-runtime\\\\config\",\n          \"dataDir\": \"F:\\\\AI-Workbench\\\\verification\\\\install-release\\\\repair1-2-installed-smoke-runtime\\\\data\",\n          \"logsDir\": \"F:\\\\AI-Workbench\\\\verification\\\\install-release\\\\repair1-2-installed-smoke-runtime\\\\logs\",\n          \"evidenceDir\": \"F:\\\\AI-Workbench\\\\verification\\\\install-release\\\\repair1-2-installed-smoke-runtime\\\\evidence\"\n        }\n      },\n      {\n        \"id\": \"model_proxy\",\n        \"ok\": true,\n        \"status\": \"ready\",\n        \"title\": \"模型代理\",\n        \"userMessage\": \"模型代理已就绪。\",\n        \"details\": {\n          \"port\": 29870,\n          \"health\": {\n            \"ok\": true,\n            \"status\": \"available\",\n            \"defaultProvider\": \"deepseek\",\n            \"providers\": {\n              \"deepseek\": {\n                \"type\": \"openai-compatible\",\n                \"baseUrl\": \"https://api.deepseek.com/v1\",\n                \"configured\": true,\n                \"credentialSource\": \"shared_managed\",\n                \"models\": [\n                  \"deepseek-chat\",\n                  \"deepseek-reasoner\"\n                ]\n              }\n            },\n            \"port\": 29870,\n            \"loopbackOnly\": true\n          },\n          \"statusCode\": 200\n        }\n      },\n      {\n        \"id\": \"hermes\",\n        \"ok\": true,\n        \"status\": \"ready\",\n        \"title\": \"Hermes 员工\",\n        \"userMessage\": \"Hermes 员工入口已找到。\",\n        \"details\": {\n          \"command\": \"hermes\"\n        }\n      },\n      {\n        \"id\": \"openclaw\",\n        \"ok\": true,\n        \"status\": \"ready\",\n        \"title\": \"OpenClaw 员工\",\n        \"userMessage\": \"OpenClaw 员工入口已找到。\",\n        \"details\": {\n          \"command\": \"openclaw\",\n          \"shimPath\": \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Roaming\\\\npm\\\\openclaw.cmd\"\n        }\n      }\n    ]\n  },\n  \"errors\": [],\n  \"ok\": true,\n  \"finishedAt\": \"2026-07-22T12:09:57.153Z\"\n}",
+    "runtimeRoot": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-smoke-runtime",
+    "runtimeDirs": {
+      "config": true,
+      "data": true,
+      "logs": true,
+      "evidence": true
+    }
+  },
+  "uninstallAttempted": true,
+  "uninstallCommand": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\Uninstall AI Workbench.exe /S",
+  "uninstallExitCode": 0,
   "installDirExistsAfterUninstall": false,
-  "afterUninstallShortcuts": [
-    {
-      "path": "C:\\Users\\胖胖虎\\Desktop\\AI Workbench.lnk",
-      "target": "C:\\ F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install\\AI Workbench.exe",
-      "workingDirectory": " F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install"
-    },
-    {
-      "path": "C:\\Users\\胖胖虎\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\AI Workbench.lnk",
-      "target": "C:\\ F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install\\AI Workbench.exe",
-      "workingDirectory": " F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install"
-    }
-  ],
-  "restoredShortcuts": [
-    {
-      "original": "C:\\Users\\胖胖虎\\Desktop\\AI Workbench.lnk",
-      "backup": "F:\\AI-Workbench\\.tmp-install-r1\\31748-1784715834201\\shortcut-backup\\AI Workbench.lnk.13885c2caf91402b998b8215fe4b2303.bak"
-    },
-    {
-      "original": "C:\\Users\\胖胖虎\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\AI Workbench.lnk",
-      "backup": "F:\\AI-Workbench\\.tmp-install-r1\\31748-1784715834201\\shortcut-backup\\AI Workbench.lnk.95c1234f44aa4c4d9e8e7b658d579161.bak"
-    }
-  ]
+  "installedExeExistsAfterUninstall": false,
+  "afterUninstallShortcuts": []
 }

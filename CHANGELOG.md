@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Unreleased - 上线硬骨头3A-R1.2：NSIS安装器修复
+
+- 新增 `build/installer.nsh`，将 NSIS 默认 per-user 安装目录固定为 `%LOCALAPPDATA%\Programs\AIWorkbench`，修复中文用户名环境下默认安装不稳定落盘问题。
+- 新增 `scripts/verify-nsis-install.mjs`，用真实 NSIS `/S` 安装、安装版 `--smoke-test` 和真实卸载生成证据。
+- 更新 `scripts/verify-install-release.mjs`，主 preflight 改用 Node helper 验证安装链路。
+- 更新 Windows Installer Preflight workflow，失败时也 `always()` 上传安装包和 verification 证据。
+- 本地 `npm.cmd run verify:install-release` 已通过；安装、启动、smoke-test、卸载均通过，证据见 `verification/install-release/repair1-2-summary.json`。
+- GitHub Actions 真实结果待 push 后确认；未确认前不得进入 3B 正式 Release。
+
 ## Unreleased - 上线硬骨头3A-R1：安装启动卸载修复
 
 ### 修复尝试

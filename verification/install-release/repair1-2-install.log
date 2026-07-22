@@ -1,0 +1,50 @@
+{
+  "task": "repair1-2-install",
+  "cleanupBefore": [
+    {
+      "path": "C:\\Users\\胖胖虎\\Desktop\\AI Workbench.lnk",
+      "existed": false
+    },
+    {
+      "path": "C:\\Users\\胖胖虎\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\AI Workbench.lnk",
+      "existed": false
+    },
+    {
+      "path": "C:\\Users\\胖胖虎\\AppData\\Local\\ai-workbench-updater",
+      "existed": true
+    },
+    {
+      "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench",
+      "existed": false
+    }
+  ],
+  "installCommand": "F:\\AI-Workbench\\release-v0.4.6-installer\\AI-Workbench-Setup-v0.4.6-x64.exe /S",
+  "installExitCode": 0,
+  "installTarget": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench",
+  "installedExe": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\AI Workbench.exe",
+  "installedExeExists": true,
+  "uninstaller": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\Uninstall AI Workbench.exe",
+  "uninstallerExists": true,
+  "fileVersion": "0.4.6",
+  "desktopShortcut": {
+    "path": "C:\\Users\\胖胖虎\\Desktop\\AI Workbench.lnk",
+    "target": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\AI Workbench.exe",
+    "workingDirectory": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench"
+  },
+  "startShortcut": {
+    "path": "C:\\Users\\胖胖虎\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\AI Workbench.lnk",
+    "target": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\AI Workbench.exe",
+    "workingDirectory": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench"
+  },
+  "uninstallRegistry": [
+    {
+      "key": "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\bb4acaa9-99d0-5390-9d1a-038d599d7094",
+      "displayName": "AI Workbench 0.4.6",
+      "displayVersion": "0.4.6",
+      "installLocation": null,
+      "uninstallString": "\"C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\Uninstall AI Workbench.exe\" /currentuser",
+      "quietUninstallString": "\"C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\Uninstall AI Workbench.exe\" /currentuser /S",
+      "displayIcon": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\AI Workbench.exe,0"
+    }
+  ]
+}

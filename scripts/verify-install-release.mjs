@@ -317,6 +317,26 @@ function powershellString(value) {
 }
 
 function runNsisInstallUninstall() {
+  const helper = runCommand(process.execPath, [join(root, 'scripts', 'verify-nsis-install.mjs'), artifactPath, verificationDir], {
+    timeoutMs: 240000
+  });
+  let helperPayload = null;
+  try {
+    helperPayload = JSON.parse(helper.rawStdout || '{}');
+  } catch (error) {
+    helperPayload = {
+      task: 'nsis-install-uninstall',
+      version,
+      installer: relative(root, artifactPath).replace(/\\/g, '/'),
+      status: 'failed',
+      parseError: error.message,
+      stdout: helper.stdout,
+      stderr: helper.stderr
+    };
+  }
+  writeFileSync(nsisEvidenceFile, `${JSON.stringify(helperPayload, null, 2)}\n`, 'utf8');
+  return helperPayload;
+
   const r1TempRoot = join(root, '.tmp-install-r1', `${process.pid}-${Date.now()}`);
   const shortcutBackupDir = join(r1TempRoot, 'shortcut-backup');
   const smokeRoot = join(r1TempRoot, 'smoke');
@@ -345,7 +365,7 @@ foreach ($lnk in @($desktopShortcut, $startMenuShortcut)) {
     $movedShortcuts += [pscustomobject]@{ original = $lnk; backup = $dest }
   }
 }
-$install = Start-Process -FilePath $installer -ArgumentList @('/S', '/currentuser', '/LOG=' + $nsisLog) -PassThru -Wait -WindowStyle Hidden
+$install = Start-Process -FilePath $installer -ArgumentList @('/S') -PassThru -Wait -WindowStyle Hidden
 Start-Sleep -Seconds 3
 $uninstallRegistry = @()
 foreach ($rootKey in @('HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall', 'HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall', 'HKLM:\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall')) {
@@ -385,6 +405,7 @@ foreach ($entry in $uninstallRegistry) {
   }
 }
 $candidateExePaths += (Join-Path $env:LOCALAPPDATA 'Programs\\AI Workbench\\AI Workbench.exe')
+$candidateExePaths += (Join-Path $env:LOCALAPPDATA 'Programs\\AIWorkbench\\AI Workbench.exe')
 $candidateExePaths += (Join-Path $env:LOCALAPPDATA 'AI Workbench\\AI Workbench.exe')
 $installedExe = ''
 $waitStarted = Get-Date
@@ -490,7 +511,7 @@ foreach ($entry in $movedShortcuts) {
 }
 [pscustomobject]@{
   method = 'silent'
-  installCommand = "$installer /S /currentuser"
+  installCommand = "$installer /S"
   nsisLog = $nsisLog
   nsisLogExists = (Test-Path -LiteralPath $nsisLog)
   nsisLogText = $(if (Test-Path -LiteralPath $nsisLog) { Get-Content -LiteralPath $nsisLog -Raw } else { '' })

@@ -1,56 +1,165 @@
 {
   "task": "install-release-repair1",
-  "status": "failed",
+  "status": "passed",
   "version": "0.4.6",
   "artifactName": "AI-Workbench-Setup-v0.4.6-x64.exe",
   "artifactPath": "release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe",
-  "artifactSizeBytes": 111605900,
-  "sha256": "7aef266db879f5f912b5eb806cd85347690ab033201736e39f59541c8617accd",
+  "artifactSizeBytes": 111605899,
+  "sha256": "857fd37521fa6cf8a01306d165e4cf3b5123013ca8392f1acf92807214976992",
   "build": {
     "artifactExists": true,
     "unpackedExists": true,
     "releaseDir": "release-v0.4.6-installer"
   },
   "install": {
-    "status": "failed",
+    "status": "passed",
     "method": "silent",
-    "command": "F:\\AI-Workbench\\release-v0.4.6-installer\\AI-Workbench-Setup-v0.4.6-x64.exe /S /currentuser",
+    "command": "F:\\AI-Workbench\\release-v0.4.6-installer\\AI-Workbench-Setup-v0.4.6-x64.exe /S",
     "exitCode": 0,
-    "installedExeExists": false,
-    "uninstallerExists": false,
-    "installedExe": "",
-    "uninstaller": "",
-    "shortcutsPointToInstalledExe": false,
+    "installDir": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench",
+    "installedExeExists": true,
+    "uninstallerExists": true,
+    "installedExe": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\AI Workbench.exe",
+    "uninstaller": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\Uninstall AI Workbench.exe",
+    "shortcutsPointToInstalledExe": true,
     "afterInstallShortcuts": [
       {
         "path": "C:\\Users\\胖胖虎\\Desktop\\AI Workbench.lnk",
-        "target": "C:\\ F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install\\AI Workbench.exe",
-        "workingDirectory": " F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install"
+        "target": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\AI Workbench.exe",
+        "workingDirectory": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench"
       },
       {
         "path": "C:\\Users\\胖胖虎\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\AI Workbench.lnk",
-        "target": "C:\\ F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install\\AI Workbench.exe",
-        "workingDirectory": " F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install"
+        "target": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\AI Workbench.exe",
+        "workingDirectory": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench"
       }
     ],
-    "uninstallRegistry": [],
+    "uninstallRegistry": [
+      {
+        "key": "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\bb4acaa9-99d0-5390-9d1a-038d599d7094",
+        "displayName": "AI Workbench 0.4.6",
+        "displayVersion": "0.4.6",
+        "installLocation": null,
+        "uninstallString": "\"C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\Uninstall AI Workbench.exe\" /currentuser",
+        "quietUninstallString": "\"C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\Uninstall AI Workbench.exe\" /currentuser /S",
+        "displayIcon": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\AI Workbench.exe,0"
+      }
+    ],
     "failureReason": ""
   },
   "firstRun": {
-    "exitCode": null,
+    "exitCode": 0,
     "timedOut": false,
-    "runtimeRoot": "F:\\AI-Workbench\\.tmp-install-r1\\31748-1784715834201\\smoke\\runtime",
-    "smokeOutputFile": "F:\\AI-Workbench\\.tmp-install-r1\\31748-1784715834201\\smoke\\smoke.json",
-    "smoke": null,
+    "runtimeRoot": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-smoke-runtime",
+    "smokeOutputFile": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-smoke.json",
+    "smoke": {
+      "task": "electron-smoke-test",
+      "version": "0.4.6",
+      "startedAt": "2026-07-22T12:09:56.175Z",
+      "packaged": true,
+      "userData": "C:\\Users\\胖胖虎\\AppData\\Roaming\\ai-workbench",
+      "services": {
+        "modelProxyReady": true,
+        "apiReady": true
+      },
+      "renderer": {
+        "ok": true,
+        "statusCode": 200,
+        "bodyTextLength": 400,
+        "error": ""
+      },
+      "readiness": {
+        "ok": true,
+        "status": "ready",
+        "checkedAt": "2026-07-22T12:09:57.132Z",
+        "userMessage": "工作台已就绪。",
+        "ports": {
+          "modelProxy": 29870,
+          "api": 29871,
+          "vite": 5173,
+          "openclawGateway": 18789
+        },
+        "checks": [
+          {
+            "id": "paths",
+            "ok": true,
+            "status": "ready",
+            "title": "本机目录",
+            "userMessage": "本机配置、数据、日志和验收目录会自动创建。",
+            "details": {
+              "runtimeRoot": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-smoke-runtime",
+              "configDir": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-smoke-runtime\\config",
+              "dataDir": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-smoke-runtime\\data",
+              "logsDir": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-smoke-runtime\\logs",
+              "evidenceDir": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-smoke-runtime\\evidence"
+            }
+          },
+          {
+            "id": "model_proxy",
+            "ok": true,
+            "status": "ready",
+            "title": "模型代理",
+            "userMessage": "模型代理已就绪。",
+            "details": {
+              "port": 29870,
+              "health": {
+                "ok": true,
+                "status": "available",
+                "defaultProvider": "deepseek",
+                "providers": {
+                  "deepseek": {
+                    "type": "openai-compatible",
+                    "baseUrl": "https://api.deepseek.com/v1",
+                    "configured": true,
+                    "credentialSource": "shared_managed",
+                    "models": [
+                      "deepseek-chat",
+                      "deepseek-reasoner"
+                    ]
+                  }
+                },
+                "port": 29870,
+                "loopbackOnly": true
+              },
+              "statusCode": 200
+            }
+          },
+          {
+            "id": "hermes",
+            "ok": true,
+            "status": "ready",
+            "title": "Hermes 员工",
+            "userMessage": "Hermes 员工入口已找到。",
+            "details": {
+              "command": "hermes"
+            }
+          },
+          {
+            "id": "openclaw",
+            "ok": true,
+            "status": "ready",
+            "title": "OpenClaw 员工",
+            "userMessage": "OpenClaw 员工入口已找到。",
+            "details": {
+              "command": "openclaw",
+              "shimPath": "C:\\Users\\胖胖虎\\AppData\\Roaming\\npm\\openclaw.cmd"
+            }
+          }
+        ]
+      },
+      "errors": [],
+      "ok": true,
+      "finishedAt": "2026-07-22T12:09:57.153Z"
+    },
     "runtimeDirs": {
-      "config": false,
-      "logs": false,
-      "evidence": false,
-      "data": false
+      "config": true,
+      "data": true,
+      "logs": true,
+      "evidence": true
     },
     "mechanism_test": {
       "type": "installed_smoke",
-      "sharedManagedConfigured": false,
+      "sharedManagedConfigured": true,
       "production_test": {
         "status": "blocked",
         "reason": "3A-R1 does not implement production shared key injection; smoke validates installed app mechanics only."
@@ -63,7 +172,7 @@
   },
   "sharedKey": {
     "type": "installed_smoke",
-    "sharedManagedConfigured": false,
+    "sharedManagedConfigured": true,
     "production_test": {
       "status": "blocked",
       "reason": "3A-R1 does not implement production shared key injection; smoke validates installed app mechanics only."
@@ -71,7 +180,7 @@
   },
   "dependencyFallback": {
     "ok": true,
-    "port": 24748,
+    "port": 24240,
     "status": "degraded",
     "notReady": [
       "model_proxy",
@@ -81,8 +190,8 @@
     "hasChineseMessage": true
   },
   "portConflict": {
-    "modelPort": 25748,
-    "apiPort": 25749,
+    "modelPort": 25240,
+    "apiPort": 25241,
     "occupiedModel": true,
     "occupiedApi": true,
     "proxyExitCode": 0,
@@ -123,78 +232,56 @@
     "note": "sourceRuntimeHits are informational because runtime code may contain environment variable names or mock placeholders; package and installer hits are blocking."
   },
   "uninstall": {
-    "status": "failed",
+    "status": "passed",
     "method": "silent",
-    "attempted": false,
-    "exitCode": null,
+    "attempted": true,
+    "exitCode": 0,
     "installDirExistsAfterUninstall": false,
     "installedExeExistsAfterUninstall": false,
-    "afterUninstallShortcuts": [
-      {
-        "path": "C:\\Users\\胖胖虎\\Desktop\\AI Workbench.lnk",
-        "target": "C:\\ F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install\\AI Workbench.exe",
-        "workingDirectory": " F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install"
-      },
-      {
-        "path": "C:\\Users\\胖胖虎\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\AI Workbench.lnk",
-        "target": "C:\\ F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install\\AI Workbench.exe",
-        "workingDirectory": " F\\AI-Workbench\\.tmp-install-r1\\30768-1784713326376\\install"
-      }
-    ],
-    "failureReason": "Uninstall was not attempted because expected uninstaller was not created."
+    "afterUninstallShortcuts": [],
+    "failureReason": ""
   },
   "actions": {
-    "status": "failed",
-    "runId": "29912255523",
-    "workflow": "Windows Installer Preflight",
-    "event": "push",
-    "conclusion": "failure",
-    "logFetch": {
-      "status": "failed",
-      "error": "HTTP 403: Must have admin rights to Repository when running gh run view 29912255523 --log-failed"
-    }
+    "status": "not_run",
+    "reason": "Workflow can be submitted by git push; no remote run result is available during local preflight."
   },
   "fiveCriteria": {
     "a_noHardcodedPaths": true,
-    "b_firstRunCreatesFiles": false,
+    "b_firstRunCreatesFiles": true,
     "c_missingDependenciesNoCrash": true,
     "d_portConflictFallback": true,
     "e_readinessReportComplete": true
   },
   "commands": [
     {
-      "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \n$ErrorActionPreference = 'Continue'\n$installer = 'F:\\AI-Workbench\\release-v0.4.6-installer\\AI-Workbench-Setup-v0.4.6-x64.exe'\n$backup = 'F:\\AI-Workbench\\.tmp-install-r1\\31748-1784715834201\\shortcut-backup'\n$smokeRoot = 'F:\\AI-Workbench\\.tmp-install-r1\\31748-1784715834201\\smoke'\n$nsisLog = Join-Path $smokeRoot 'nsis-installer.log'\n$updaterInstaller = Join-Path $env:LOCALAPPDATA 'ai-workbench-updater\\installer.exe'\n$desktop = [Environment]::GetFolderPath('Desktop')\n$desktopShortcut = Join-Path $desktop 'AI Workbench.lnk'\n$startMenuShortcut = Join-Path $env:APPDATA 'Microsoft\\Windows\\Start Menu\\Programs\\AI Workbench.lnk'\nNew-Item -ItemType Directory -Force -Path $backup | Out-Null\nNew-Item -ItemType Directory -Force -Path $smokeRoot | Out-Null\n$beforeShortcuts = @()\n$movedShortcuts = @()\n$shell = New-Object -ComObject WScript.Shell\nforeach ($lnk in @($desktopShortcut, $startMenuShortcut)) {\n  if (Test-Path -LiteralPath $lnk) {\n    $s = $shell.CreateShortcut($lnk)\n    $beforeShortcuts += [pscustomobject]@{ path = $lnk; target = $s.TargetPath; workingDirectory = $s.WorkingDirectory }\n    $dest = Join-Path $backup ([IO.Path]::GetFileName($lnk) + '.' + ([guid]::NewGuid().ToString('N')) + '.bak')\n    Move-Item -LiteralPath $lnk -Destination $dest -Force\n    $movedShortcuts += [pscustomobject]@{ original = $lnk; backup = $dest }\n  }\n}\n$install = Start-Process -FilePath $installer -ArgumentList @('/S', '/currentuser', '/LOG=' + $nsisLog) -PassThru -Wait -WindowStyle Hidden\nStart-Sleep -Seconds 3\n$uninstallRegistry = @()\nforeach ($rootKey in @('HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall', 'HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall', 'HKLM:\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall')) {\n  if (Test-Path -LiteralPath $rootKey) {\n    Get-ChildItem -LiteralPath $rootKey -ErrorAction SilentlyContinue | ForEach-Object {\n      $item = Get-ItemProperty -LiteralPath $_.PSPath -ErrorAction SilentlyContinue\n      if ($item.DisplayName -eq 'AI Workbench') {\n        $uninstallRegistry += [pscustomobject]@{\n          key = $_.Name\n          displayName = $item.DisplayName\n          displayVersion = $item.DisplayVersion\n          installLocation = $item.InstallLocation\n          displayIcon = $item.DisplayIcon\n          uninstallString = $item.UninstallString\n          quietUninstallString = $item.QuietUninstallString\n        }\n      }\n    }\n  }\n}\n$afterInstallShortcuts = @()\nforeach ($lnk in @($desktopShortcut, $startMenuShortcut)) {\n  if (Test-Path -LiteralPath $lnk) {\n    $s = $shell.CreateShortcut($lnk)\n    $afterInstallShortcuts += [pscustomobject]@{ path = $lnk; target = $s.TargetPath; workingDirectory = $s.WorkingDirectory }\n  }\n}\n$candidateExePaths = @()\nforeach ($shortcut in $afterInstallShortcuts) {\n  if ($shortcut.target) { $candidateExePaths += $shortcut.target }\n}\nforeach ($entry in $uninstallRegistry) {\n  if ($entry.installLocation) { $candidateExePaths += (Join-Path $entry.installLocation 'AI Workbench.exe') }\n  if ($entry.displayIcon) {\n    $iconPath = ($entry.displayIcon -replace '^\"', '') -replace '\",.*$', ''\n    if ($iconPath -like '*.exe') { $candidateExePaths += $iconPath }\n  }\n}\n$candidateExePaths += (Join-Path $env:LOCALAPPDATA 'Programs\\AI Workbench\\AI Workbench.exe')\n$candidateExePaths += (Join-Path $env:LOCALAPPDATA 'AI Workbench\\AI Workbench.exe')\n$installedExe = ''\n$waitStarted = Get-Date\nwhile (-not $installedExe -and ((Get-Date) - $waitStarted).TotalSeconds -lt 60) {\n  foreach ($candidate in $candidateExePaths | Select-Object -Unique) {\n    if ($candidate -and (Test-Path -LiteralPath $candidate)) {\n      $installedExe = $candidate\n      break\n    }\n  }\n  if (-not $installedExe) { Start-Sleep -Seconds 2 }\n}\n$target = ''\nif ($installedExe) { $target = Split-Path -Parent $installedExe }\n$candidateUninstallers = @()\nforeach ($entry in $uninstallRegistry) {\n  if ($entry.uninstallString) {\n    $candidateUninstallers += (($entry.uninstallString -replace '^\"', '') -replace '\"\\s.*$', '')\n  }\n  if ($entry.quietUninstallString) {\n    $candidateUninstallers += (($entry.quietUninstallString -replace '^\"', '') -replace '\"\\s.*$', '')\n  }\n}\nif ($target) {\n  $candidateUninstallers += (Join-Path $target 'Uninstall AI Workbench.exe')\n}\n$uninstaller = ''\nforeach ($candidate in $candidateUninstallers | Select-Object -Unique) {\n  if ($candidate -and (Test-Path -LiteralPath $candidate)) {\n    $uninstaller = $candidate\n    break\n  }\n}\n$fileVersion = ''\nif ($installedExe -and (Test-Path -LiteralPath $installedExe)) {\n  $fileVersion = (Get-Item -LiteralPath $installedExe).VersionInfo.FileVersion\n}\n$installedExeExistsAfterInstall = ($installedExe -and (Test-Path -LiteralPath $installedExe))\n$uninstallerExistsAfterInstall = ($uninstaller -and (Test-Path -LiteralPath $uninstaller))\n$shortcutsPointToInstalledExe = $false\nif ($installedExe -and $afterInstallShortcuts.Count -gt 0) {\n  $shortcutsPointToInstalledExe = (($afterInstallShortcuts | Where-Object { $_.target -eq $installedExe }).Count -eq $afterInstallShortcuts.Count)\n}\n$smokeOutput = Join-Path $smokeRoot 'smoke.json'\n$smokeStdout = Join-Path $smokeRoot 'stdout.log'\n$smokeStderr = Join-Path $smokeRoot 'stderr.log'\n$smokeExit = $null\n$smokeTimedOut = $false\nif ($installedExe -and (Test-Path -LiteralPath $installedExe)) {\n  $oldRuntime = $env:AI_WORKBENCH_RUNTIME_DIR\n  $oldSmoke = $env:AIW_SMOKE_TEST\n  $oldSmokeOut = $env:AIW_SMOKE_TEST_OUTPUT\n  $oldPort = $env:PORT\n  $oldProxyPort = $env:MODEL_PROXY_PORT\n  $oldDisableEnv = $env:MODEL_PROXY_DISABLE_LOCAL_ENV\n  $env:AI_WORKBENCH_RUNTIME_DIR = Join-Path $smokeRoot 'runtime'\n  $env:AIW_SMOKE_TEST = '1'\n  $env:AIW_SMOKE_TEST_OUTPUT = $smokeOutput\n  $env:PORT = '29871'\n  $env:MODEL_PROXY_PORT = '29870'\n  $env:MODEL_PROXY_DISABLE_LOCAL_ENV = '1'\n  $sp = Start-Process -FilePath $installedExe -ArgumentList @('--smoke-test') -PassThru -WindowStyle Hidden -RedirectStandardOutput $smokeStdout -RedirectStandardError $smokeStderr\n  $finished = $sp.WaitForExit(45000)\n  if ($finished) { $smokeExit = $sp.ExitCode } else { $smokeTimedOut = $true; Stop-Process -Id $sp.Id -Force }\n  $env:AI_WORKBENCH_RUNTIME_DIR = $oldRuntime\n  $env:AIW_SMOKE_TEST = $oldSmoke\n  $env:AIW_SMOKE_TEST_OUTPUT = $oldSmokeOut\n  $env:PORT = $oldPort\n  $env:MODEL_PROXY_PORT = $oldProxyPort\n  $env:MODEL_PROXY_DISABLE_LOCAL_ENV = $oldDisableEnv\n}\n$smokeJson = $null\nif (Test-Path -LiteralPath $smokeOutput) {\n  $smokeJson = Get-Content -LiteralPath $smokeOutput -Raw\n}\n$smokeRuntime = Join-Path $smokeRoot 'runtime'\n$smokeRuntimeDirs = @{\n  config = (Test-Path -LiteralPath (Join-Path $smokeRuntime 'config'))\n  data = (Test-Path -LiteralPath (Join-Path $smokeRuntime 'data'))\n  logs = (Test-Path -LiteralPath (Join-Path $smokeRuntime 'logs'))\n  evidence = (Test-Path -LiteralPath (Join-Path $smokeRuntime 'evidence'))\n}\n$uninstallExit = $null\n$uninstallAttempted = $false\nif ($uninstaller -and (Test-Path -LiteralPath $uninstaller)) {\n  $uninstallAttempted = $true\n  $u = Start-Process -FilePath $uninstaller -ArgumentList '/S' -PassThru -Wait -WindowStyle Hidden\n  $uninstallExit = $u.ExitCode\n  Start-Sleep -Seconds 3\n}\n$afterUninstallShortcuts = @()\nforeach ($lnk in @($desktopShortcut, $startMenuShortcut)) {\n  if (Test-Path -LiteralPath $lnk) {\n    $s = $shell.CreateShortcut($lnk)\n    $afterUninstallShortcuts += [pscustomobject]@{ path = $lnk; target = $s.TargetPath; workingDirectory = $s.WorkingDirectory }\n    Remove-Item -LiteralPath $lnk -Force\n  }\n}\nforeach ($entry in $movedShortcuts) {\n  if (Test-Path -LiteralPath $entry.backup) {\n    Move-Item -LiteralPath $entry.backup -Destination $entry.original -Force\n  }\n}\n[pscustomobject]@{\n  method = 'silent'\n  installCommand = \"$installer /S /currentuser\"\n  nsisLog = $nsisLog\n  nsisLogExists = (Test-Path -LiteralPath $nsisLog)\n  nsisLogText = $(if (Test-Path -LiteralPath $nsisLog) { Get-Content -LiteralPath $nsisLog -Raw } else { '' })\n  userContext = @{\n    envUsername = $env:USERNAME\n    environmentUserName = [Environment]::UserName\n    userProfile = $env:USERPROFILE\n    desktop = $desktop\n    localAppData = $env:LOCALAPPDATA\n    roamingAppData = $env:APPDATA\n  }\n  updaterInstaller = @{\n    path = $updaterInstaller\n    exists = (Test-Path -LiteralPath $updaterInstaller)\n    sha256 = $(if (Test-Path -LiteralPath $updaterInstaller) { (Get-FileHash -LiteralPath $updaterInstaller -Algorithm SHA256).Hash } else { '' })\n  }\n  installExitCode = $install.ExitCode\n  installTarget = $target\n  installedExe = $installedExe\n  installedExeExists = $installedExeExistsAfterInstall\n  uninstaller = $uninstaller\n  uninstallerExists = $uninstallerExistsAfterInstall\n  installedExeExistsAfterUninstall = ($installedExe -and (Test-Path -LiteralPath $installedExe))\n  fileVersion = $fileVersion\n  uninstallRegistry = $uninstallRegistry\n  shortcutsPointToInstalledExe = $shortcutsPointToInstalledExe\n  installedSmoke = @{\n    root = $smokeRoot\n    output = $smokeOutput\n    stdout = $smokeStdout\n    stderr = $smokeStderr\n    exitCode = $smokeExit\n    timedOut = $smokeTimedOut\n    outputExists = (Test-Path -LiteralPath $smokeOutput)\n    outputJson = $smokeJson\n    runtimeRoot = $smokeRuntime\n    runtimeDirs = $smokeRuntimeDirs\n  }\n  beforeShortcuts = $beforeShortcuts\n  movedShortcuts = $movedShortcuts\n  afterInstallShortcuts = $afterInstallShortcuts\n  uninstallAttempted = $uninstallAttempted\n  uninstallCommand = \"$uninstaller /S\"\n  uninstallExitCode = $uninstallExit\n  installDirExistsAfterUninstall = ($target -and (Test-Path -LiteralPath $target))\n  afterUninstallShortcuts = $afterUninstallShortcuts\n  restoredShortcuts = $movedShortcuts\n} | ConvertTo-Json -Depth 8\n",
+      "command": "C:\\Program Files\\nodejs\\node.exe F:\\AI-Workbench\\scripts\\verify-nsis-install.mjs F:\\AI-Workbench\\release-v0.4.6-installer\\AI-Workbench-Setup-v0.4.6-x64.exe F:\\AI-Workbench\\verification\\install-release",
       "exitCode": 0,
       "signal": "",
-      "startedAt": "2026-07-22T10:23:54.364Z",
-      "finishedAt": "2026-07-22T10:25:30.150Z",
-      "stdout": "{\r\n    \"method\":  \"silent\",\r\n    \"installCommand\":  \"F:\\\\AI-Workbench\\\\release-v0.4.6-installer\\\\AI-Workbench-Setup-v0.4.6-x64.exe /S /currentuser\",\r\n    \"nsisLog\":  \"F:\\\\AI-Workbench\\\\.tmp-install-r1\\\\31748-1784715834201\\\\smoke\\\\nsis-installer.log\",\r\n    \"nsisLogExists\":  false,\r\n    \"nsisLogText\":  \"\",\r\n    \"userContext\":  {\r\n                        \"roamingAppData\":  \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Roaming\",\r\n                        \"envUsername\":  \"胖胖虎\",\r\n                        \"userProfile\":  \"C:\\\\Users\\\\胖胖虎\",\r\n                        \"localAppData\":  \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Local\",\r\n                        \"desktop\":  \"C:\\\\Users\\\\胖胖虎\\\\Desktop\",\r\n                        \"environmentUserName\":  \"胖胖虎\"\r\n                    },\r\n    \"updaterInstaller\":  {\r\n                             \"path\":  \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Local\\\\ai-workbench-updater\\\\installer.exe\",\r\n                             \"sha256\":  \"7AEF266DB879F5F912B5EB806CD85347690AB033201736E39F59541C8617ACCD\",\r\n                             \"exists\":  true\r\n                         },\r\n    \"installExitCode\":  0,\r\n    \"installTarget\":  \"\",\r\n    \"installedExe\":  \"\",\r\n    \"installedExeExists\":  false,\r\n    \"uninstaller\":  \"\",\r\n    \"uninstallerExists\":  false,\r\n    \"installedExeExistsAfterUninstall\":  false,\r\n    \"fileVersion\":  \"\",\r\n    \"uninstallRegistry\":  [\r\n\r\n                          ],\r\n    \"shortcutsPointToInstalledExe\":  false,\r\n    \"installedSmoke\":  {\r\n                           \"runtimeDirs\":  {\r\n                                               \"config\":  false,\r\n                                               \"logs\":  false,\r\n                                               \"evidence\":  false,\r\n                                               \"data\":  false\r\n                                           },\r\n                           \"stdout\":  \"F:\\\\AI-Workbench\\\\.tmp-install-r1\\\\31748-1784715834201\\\\smoke\\\\stdout.log\",\r\n                           \"outputExists\":  false,\r\n                           \"root\":  \"F:\\\\AI-Workbench\\\\.tmp-install-r1\\\\31748-1784715834201\\\\smoke\",\r\n                           \"runtimeRoot\":  \"F:\\\\AI-Workbench\\\\.tmp-install-r1\\\\31748-1784715834201\\\\smoke\\\\runtime\",\r\n                           \"output\":  \"F:\\\\AI-Workbench\\\\.tmp-install-r1\\\\31748-1784715834201\\\\smoke\\\\smoke.json\",\r\n                           \"stderr\":  \"F:\\\\AI-Workbench\\\\.tmp-install-r1\\\\31748-1784715834201\\\\smoke\\\\stderr.log\",\r\n                           \"outputJson\":  null,\r\n                           \"timedOut\":  false,\r\n                           \"exitCode\":  null\r\n                       },\r\n    \"beforeShortcuts\":  [\r\n                            {\r\n                                \"path\":  \"C:\\\\Users\\\\胖胖虎\\\\Desktop\\\\AI Workbench.lnk\",\r\n                                \"target\":  \"C:\\\\ F\\\\AI-Workbench\\\\.tmp-install-r1\\\\30768-1784713326376\\\\install\\\\AI Workbench.exe\",\r\n                                \"workingDirectory\":  \" F\\\\AI-Workbench\\\\.tmp-install-r1\\\\30768-1784713326376\\\\install\"\r\n                            },\r\n                            {\r\n                                \"path\":  \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Roaming\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\AI Workbench.lnk\",\r\n                                \"target\":  \"C:\\\\ F\\\\AI-Workbench\\\\.tmp-install-r1\\\\30768-1784713326376\\\\install\\\\AI Workbench.exe\",\r\n                                \"workingDirectory\":  \" F\\\\AI-Workbench\\\\.tmp-install-r1\\\\30768-1784713326376\\\\install\"\r\n                            }\r\n                        ],\r\n    \"movedShortcuts\":  [\r\n                           {\r\n                               \"original\":  \"C:\\\\Users\\\\胖胖虎\\\\Desktop\\\\AI Workbench.lnk\",\r\n                               \"backup\":  \"F:\\\\AI-Workbench\\\\.tmp-install-r1\\\\31748-1784715834201\\\\shortcut-backup\\\\AI Workbench.lnk.13885c2caf91402b998b8215fe4b2303.bak\"\r\n                           },\r\n                           {\r\n                               \"original\":  \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Roaming\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\AI Workbench.lnk\",\r\n                               \"backup\":  \"F:\\\\AI-Workbench\\\\.tmp-install-r1\\\\31748-1784715834201\\\\shortcut-backup\\\\AI Workbench.lnk.95c1234f44aa4c4d9e8e7b658d579161.bak\"\r\n                           }\r\n                       ],\r\n    \"afterInstallShortcuts\":  [\r\n                                  {\r\n                                      \"path\":  \"C:\\\\Users\\\\胖胖虎\\\\Desktop\\\\AI Workbench.lnk\",\r\n                                      \"target\":  \"C:\\\\ F\\\\AI-Workbench\\\\.tmp-install-r1\\\\30768-1784713326376\\\\install\\\\AI Workbench.exe\",\r\n                                      \"workingDirectory\":  \" F\\\\AI-Workbench\\\\.tmp-install-r1\\\\30768-1784713326376\\\\install\"\r\n                                  },\r\n                                  {\r\n                                      \"path\":  \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Roaming\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\AI Workbench.lnk\",\r\n                                      \"target\":  \"C:\\\\ F\\\\AI-Workbench\\\\.tmp-install-r1\\\\30768-1784713326376\\\\install\\\\AI Workbench.exe\",\r\n                                      \"workingDirectory\":  \" F\\\\AI-Workbench\\\\.tmp-install-r1\\\\30768-1784713326376\\\\install\"\r\n                                  }\r\n                              ],\r\n    \"uninstallAttempted\":  false,\r\n    \"uninstallCommand\":  \" /S\",\r\n    \"uninstallExitCode\":  null,\r\n    \"installDirExistsAfterUninstall\":  false,\r\n    \"afterUninstallShortcuts\":  [\r\n                                    {\r\n                                        \"path\":  \"C:\\\\Users\\\\胖胖虎\\\\Desktop\\\\AI Workbench.lnk\",\r\n                                        \"target\":  \"C:\\\\ F\\\\AI-Workbench\\\\.tmp-install-r1\\\\30768-1784713326376\\\\install\\\\AI Workbench.exe\",\r\n                                        \"workingDirectory\":  \" F\\\\AI-Workbench\\\\.tmp-install-r1\\\\30768-1784713326376\\\\install\"\r\n                                    },\r\n                                    {\r\n                                        \"path\":  \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Roaming\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\AI Workbench.lnk\",\r\n                                        \"target\":  \"C:\\\\ F\\\\AI-Workbench\\\\.tmp-install-r1\\\\30768-1784713326376\\\\install\\\\AI Workbench.exe\",\r\n                                        \"workingDirectory\":  \" F\\\\AI-Workbench\\\\.tmp-install-r1\\\\30768-1784713326376\\\\install\"\r\n                                    }\r\n                                ],\r\n    \"restoredShortcuts\":  [\r\n                              {\r\n                                  \"original\":  \"C:\\\\Users\\\\胖胖虎\\\\Desktop\\\\AI Workbench.lnk\",\r\n                                  \"backup\":  \"F:\\\\AI-Workbench\\\\.tmp-install-r1\\\\31748-1784715834201\\\\shortcut-backup\\\\AI Workbench.lnk.13885c2caf91402b998b8215fe4b2303.bak\"\r\n                              },\r\n                              {\r\n                                  \"original\":  \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Roaming\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\AI Workbench.lnk\",\r\n                                  \"backup\":  \"F:\\\\AI-Workbench\\\\.tmp-install-r1\\\\31748-1784715834201\\\\shortcut-backup\\\\AI Workbench.lnk.95c1234f44aa4c4d9e8e7b658d579161.bak\"\r\n                              }\r\n                          ]\r\n}\r\n",
+      "startedAt": "2026-07-22T12:09:22.479Z",
+      "finishedAt": "2026-07-22T12:10:25.680Z",
+      "stdout": "{\n  \"task\": \"nsis-install-uninstall\",\n  \"version\": \"0.4.6\",\n  \"installer\": \"F:\\\\AI-Workbench\\\\release-v0.4.6-installer\\\\AI-Workbench-Setup-v0.4.6-x64.exe\",\n  \"status\": \"passed\",\n  \"method\": \"silent\",\n  \"installCommand\": \"F:\\\\AI-Workbench\\\\release-v0.4.6-installer\\\\AI-Workbench-Setup-v0.4.6-x64.exe /S\",\n  \"installExitCode\": 0,\n  \"installTarget\": \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Local\\\\Programs\\\\AIWorkbench\",\n  \"installedExe\": \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Local\\\\Programs\\\\AIWorkbench\\\\AI Workbench.exe\",\n  \"installedExeExists\": true,\n  \"uninstaller\": \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Local\\\\Programs\\\\AIWorkbench\\\\Uninstall AI Workbench.exe\",\n  \"uninstallerExists\": true,\n  \"fileVersion\": \"0.4.6\",\n  \"shortcutsPointToInstalledExe\": true,\n  \"afterInstallShortcuts\": [\n    {\n      \"path\": \"C:\\\\Users\\\\胖胖虎\\\\Desktop\\\\AI Workbench.lnk\",\n      \"target\": \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Local\\\\Programs\\\\AIWorkbench\\\\AI Workbench.exe\",\n      \"workingDirectory\": \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Local\\\\Programs\\\\AIWorkbench\"\n    },\n    {\n      \"path\": \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Roaming\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\AI Workbench.lnk\",\n      \"target\": \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Local\\\\Programs\\\\AIWorkbench\\\\AI Workbench.exe\",\n      \"workingDirectory\": \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Local\\\\Programs\\\\AIWorkbench\"\n    }\n  ],\n  \"uninstallRegistry\": [\n    {\n      \"key\": \"HKEY_CURRENT_USER\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Uninstall\\\\bb4acaa9-99d0-5390-9d1a-038d599d7094\",\n      \"displayName\": \"AI Workbench 0.4.6\",\n      \"displayVersion\": \"0.4.6\",\n      \"installLocation\": null,\n      \"uninstallString\": \"\\\"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Local\\\\Programs\\\\AIWorkbench\\\\Uninstall AI Workbench.exe\\\" /currentuser\",\n      \"quietUninstallString\": \"\\\"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Local\\\\Programs\\\\AIWorkbench\\\\Uninstall AI Workbench.exe\\\" /currentuser /S\",\n      \"displayIcon\": \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Local\\\\Programs\\\\AIWorkbench\\\\AI Workbench.exe,0\"\n    }\n  ],\n  \"installedSmoke\": {\n    \"command\": \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Local\\\\Programs\\\\AIWorkbench\\\\AI Workbench.exe --smoke-test\",\n    \"startedAt\": \"2026-07-22T12:09:55.800Z\",\n    \"finishedAt\": \"2026-07-22T12:09:57.236Z\",\n    \"exitCode\": 0,\n    \"signal\": \"\",\n    \"timedOut\": false,\n    \"output\": \"F:\\\\AI-Workbench\\\\verification\\\\install-release\\\\repair1-2-installed-smoke.json\",\n    \"stdout\": \"F:\\\\AI-Workbench\\\\verification\\\\install-release\\\\repair1-2-installed-stdout.log\",\n    \"stderr\": \"F:\\\\AI-Workbench\\\\verification\\\\install-release\\\\repair1-2-installed-stderr.log\",\n    \"outputExists\": true,\n    \"outputJson\": \"{\\n  \\\"task\\\": \\\"electron-smoke-test\\\",\\n  \\\"version\\\": \\\"0.4.6\\\",\\n  \\\"startedAt\\\": \\\"2026-07-22T12:09:56.175Z\\\",\\n  \\\"packaged\\\": true,\\n  \\\"userData\\\": \\\"C:\\\\\\\\Users\\\\\\\\胖胖虎\\\\\\\\AppData\\\\\\\\Roaming\\\\\\\\ai-workbench\\\",\\n  \\\"services\\\": {\\n    \\\"modelProxyReady\\\": true,\\n    \\\"apiReady\\\": true\\n  },\\n  \\\"renderer\\\": {\\n    \\\"ok\\\": true,\\n    \\\"statusCode\\\": 200,\\n    \\\"bodyTextLength\\\": 400,\\n    \\\"error\\\": \\\"\\\"\\n  },\\n  \\\"readiness\\\": {\\n    \\\"ok\\\": true,\\n    \\\"status\\\": \\\"ready\\\",\\n    \\\"checkedAt\\\": \\\"2026-07-22T12:09:57.132Z\\\",\\n    \\\"userMessage\\\": \\\"工作台已就绪。\\\",\\n    \\\"ports\\\": {\\n      \\\"modelProxy\\\": 29870,\\n      \\\"api\\\": 29871,\\n      \\\"vite\\\": 5173,\\n      \\\"openclawGateway\\\": 18789\\n    },\\n    \\\"checks\\\": [\\n      {\\n        \\\"id\\\": \\\"paths\\\",\\n        \\\"ok\\\": true,\\n        \\\"status\\\": \\\"ready\\\",\\n        \\\"title\\\": \\\"本机目录\\\",\\n        \\\"userMessage\\\": \\\"本机配置、数据、日志和验收目录会自动创建。\\\",\\n        \\\"details\\\": {\\n          \\\"runtimeRoot\\\": \\\"F:\\\\\\\\AI-Workbench\\\\\\\\verification\\\\\\\\install-release\\\\\\\\repair1-2-installed-smoke-runtime\\\",\\n          \\\"configDir\\\": \\\"F:\\\\\\\\AI-Workbench\\\\\\\\verification\\\\\\\\install-release\\\\\\\\repair1-2-installed-smoke-runtime\\\\\\\\config\\\",\\n          \\\"dataDir\\\": \\\"F:\\\\\\\\AI-Workbench\\\\\\\\verification\\\\\\\\install-release\\\\\\\\repair1-2-installed-smoke-runtime\\\\\\\\data\\\",\\n          \\\"logsDir\\\": \\\"F:\\\\\\\\AI-Workbench\\\\\\\\verification\\\\\\\\install-release\\\\\\\\repair1-2-installed-smoke-runtime\\\\\\\\logs\\\",\\n          \\\"evidenceDir\\\": \\\"F:\\\\\\\\AI-Workbench\\\\\\\\verification\\\\\\\\install-release\\\\\\\\repair1-2-installed-smoke-runtime\\\\\\\\evidence\\\"\\n        }\\n      },\\n      {\\n        \\\"id\\\": \\\"model_proxy\\\",\\n        \\\"ok\\\": true,\\n        \\\"status\\\": \\\"ready\\\",\\n        \\\"title\\\": \\\"模型代理\\\",\\n        \\\"userMessage\\\": \\\"模型代理已就绪。\\\",\\n        \\\"details\\\": {\\n          \\\"port\\\": 29870,\\n          \\\"health\\\": {\\n            \\\"ok\\\": true,\\n            \\\"status\\\": \\\"available\\\",\\n            \\\"defaultProvider\\\": \\\"deepseek\\\",\\n            \\\"providers\\\": {\\n              \\\"deepseek\\\": {\\n                \\\"type\\\": \\\"openai-compatible\\\",\\n                \\\"baseUrl\\\": \\\"https://api.deepseek.com/v1\\\",\\n                \\\"configured\\\": true,\\n                \\\"credentialSource\\\": \\\"shared_managed\\\",\\n                \\\"models\\\": [\\n                  \\\"deepseek-chat\\\",\\n                  \\\"deepseek-reasoner\\\"\\n                ]\\n              }\\n            },\\n            \\\"port\\\": 29870,\\n            \\\"loopbackOnly\\\": true\\n          },\\n          \\\"statusCode\\\": 200\\n        }\\n      },\\n      {\\n        \\\"id\\\": \\\"hermes\\\",\\n        \\\"ok\\\": true,\\n        \\\"status\\\": \\\"ready\\\",\\n        \\\"title\\\": \\\"Hermes 员工\\\",\\n        \\\"userMessage\\\": \\\"Hermes 员工入口已找到。\\\",\\n        \\\"details\\\": {\\n          \\\"command\\\": \\\"hermes\\\"\\n        }\\n      },\\n      {\\n        \\\"id\\\": \\\"openclaw\\\",\\n        \\\"ok\\\": true,\\n        \\\"status\\\": \\\"ready\\\",\\n        \\\"title\\\": \\\"OpenClaw 员工\\\",\\n        \\\"userMessage\\\": \\\"OpenClaw 员工入口已找到。\\\",\\n        \\\"details\\\": {\\n          \\\"command\\\": \\\"openclaw\\\",\\n          \\\"shimPath\\\": \\\"C:\\\\\\\\Users\\\\\\\\胖胖虎\\\\\\\\AppData\\\\\\\\Roaming\\\\\\\\npm\\\\\\\\openclaw.cmd\\\"\\n        }\\n      }\\n    ]\\n  },\\n  \\\"errors\\\": [],\\n  \\\"ok\\\": true,\\n  \\\"finishedAt\\\": \\\"2026-07-22T12:09:57.153Z\\\"\\n}\",\n    \"runtimeRoot\": \"F:\\\\AI-Workbench\\\\verification\\\\install-release\\\\repair1-2-installed-smoke-runtime\",\n    \"runtimeDirs\": {\n      \"config\": true,\n      \"data\": true,\n      \"logs\": true,\n      \"evidence\": true\n    }\n  },\n  \"uninstallAttempted\": true,\n  \"uninstallCommand\": \"C:\\\\Users\\\\胖胖虎\\\\AppData\\\\Local\\\\Programs\\\\AIWorkbench\\\\Uninstall AI Workbench.exe /S\",\n  \"uninstallExitCode\": 0,\n  \"installDirExistsAfterUninstall\": false,\n  \"installedExeExistsAfterUninstall\": false,\n  \"afterUninstallShortcuts\": []\n}\n",
       "stderr": ""
     },
     {
       "command": "C:\\Program Files\\nodejs\\node.exe F:\\AI-Workbench\\model-proxy.mjs",
       "exitCode": 0,
       "signal": "",
-      "startedAt": "2026-07-22T10:25:30.537Z",
-      "finishedAt": "2026-07-22T10:25:30.712Z",
+      "startedAt": "2026-07-22T12:10:26.086Z",
+      "finishedAt": "2026-07-22T12:10:26.349Z",
       "stdout": "",
-      "stderr": "{\"ok\":false,\"status\":\"not_ready\",\"service\":\"model_proxy\",\"port\":25748,\"userMessage\":\"模型代理 使用的本机端口 25748 当前不可用：端口已被其他程序占用。\",\"checkedAt\":\"2026-07-22T10:25:30.657Z\"}\n"
+      "stderr": "{\"ok\":false,\"status\":\"not_ready\",\"service\":\"model_proxy\",\"port\":25240,\"userMessage\":\"模型代理 使用的本机端口 25240 当前不可用：端口已被其他程序占用。\",\"checkedAt\":\"2026-07-22T12:10:26.294Z\"}\n"
     },
     {
       "command": "git ls-files",
       "exitCode": 0,
       "signal": "",
-      "startedAt": "2026-07-22T10:25:30.713Z",
-      "finishedAt": "2026-07-22T10:25:30.804Z",
-      "stdout": ".github/workflows/windows-installer-preflight.yml\n.gitignore\nAI-Workbench-Handoff.md\nARCHITECTURE.md\nCHANGELOG.md\nCONTEXT.md\nCURRENT_PROGRESS_AUDIT.md\nCURRENT_TASK.md\n\"Codex\\344\\273\\273\\345\\212\\241\\345\\215\\241_MVP\\345\\267\\245\\344\\275\\234\\345\\217\\260.md\"\nDECISIONS.md\nEXECUTION_PROTOCOL.md\nLAUNCH.md\nNEXT_STEP.md\nPRINCIPLES.md\nPRODUCT.md\nREADME.md\nSETUP.md\nTASKLOG.md\nVISION.md\nagents/adapter-contract.mjs\nagents/adapters/deepseek.mjs\nagents/adapters/hermes.mjs\nagents/adapters/openclaw.mjs\nagents/definitions.mjs\nagents/registry.mjs\nagents/router.mjs\nassets/icon.ico\nelectron/main.cjs\nerrors/normalize.mjs\nhealth/self-heal.mjs\nhermes-doctor-2026-07-16.txt\nhermes-doctor-2026-07-17-fixed.txt\nhermes-doctor-2026-07-17.txt\nindex.html\nmodel-proxy.mjs\npackage-lock.json\npackage.json\npostcss.config.js\nreadiness.mjs\nresearch/ai-link-analysis.md\nresearch/channel-connection-plan.md\nresearch/hermes-one-ecosystem.md\nresearch/intel-pipeline-plan.md\nresearch/openclaw-candidate-gateway-test.md\nresearch/openclaw-config-diff.md\nresearch/openclaw-health.md\nresearch/openclaw-runtime-gateway-diagnosis.md\nresearch/pc-health-report.md\nresearch/release-plan.md\nresearch/self-hosting-plan.md\nresearch/unified-model-proxy-plan.md\nresearch/version-management-plan.md\nruntime-paths.mjs\nscripts/ai-workbench-watchdog.ps1\nscripts/capture-round2-ui.mjs\nscripts/capture-round3-ui.mjs\nscripts/capture-strict-acceptance.mjs\nscripts/capture-v041-installed.mjs\nscripts/capture-v042-experience.mjs\nscripts/capture-v043-actions.mjs\nscripts/capture-v044-polish-api.mjs\nscripts/capture-v044-polish.mjs\nscripts/dev-background.mjs\nscripts/dev.mjs\nscripts/generate-icon.mjs\nscripts/health-check.mjs\nscripts/health-repair.mjs\nscripts/install-watchdog.ps1\nscripts/open-workbench.ps1\nscripts/open-workbench.vbs\nscripts/openclaw-candidate-diagnostics.mjs\nscripts/openclaw-gateway-diagnostics.mjs\nscripts/openclaw-runtime-deep-dive.mjs\nscripts/openclaw-runtime-inventory.mjs\nscripts/start-workbench-dev.ps1\nscripts/verify-acceptance.mjs\nscripts/verify-action-routing.mjs\nscripts/verify-agents.mjs\nscripts/verify-chat-proxy.mjs\nscripts/verify-clean-machine.mjs\nscripts/verify-error-normalization.mjs\nscripts/verify-health-self-heal.mjs\nscripts/verify-hermes-adapter.mjs\nscripts/verify-hermes-proxy.mjs\nscripts/verify-install-release.mjs\nscripts/verify-memories.mjs\nscripts/verify-model-proxy.mjs\nscripts/verify-openclaw.mjs\nscripts/verify-round2-acceptance.mjs\nscripts/verify-round3-acceptance.mjs\nscripts/verify-shared-key.mjs\nscripts/verify-tasks-runs.mjs\nscripts/verify-unified-model-proxy.mjs\nscripts/verify-verification-layer.mjs\nscripts/verify-version-management.mjs\nscripts/verify.mjs\nscripts/versions-check-models.mjs\nscripts/versions-doctor.mjs\nscripts/versions-restore.mjs\nscripts/versions-snapshot.mjs\nserver.mjs\nsrc/main.jsx\nsrc/styles.css\ntailwind.config.js\ntasks/2026-07-15-phase-2-closeout.md\ntasks/2026-07-15-v0.1.1-display-panels.md\ntasks/2026-07-22-shared-key.md\n\"tasks/2026-07-22-\\344\\270\\212\\347\\272\\277\\347\\241\\254\\351\\252\\250\\345\\244\\2643A-\\345\\256\\211\\350\\243\\205\\345\\214\\205\\345\\200\\231\\351\\200\\211\\347\\211\\210.md\"\n\"tasks/2026-07-22-\\345\\233\\272\\345\\214\\226\\345\\210\\206\\346\\256\\265\\346\\211\\247\\350\\241\\214\\344\\270\\216\\351\\252\\214\\346\\224\\266\\345\\215\\217\\350\\256\\256.md\"\nverification/clean-machine/readiness-report.md\nverification/clean-machine/summary.json\nverification/install-release/nsis-install-uninstall.json\nverification/install-release/preflight-report.md\nverification/install-release/preflight-summary.json\nverification/openclaw-candidate/summary.json\nverification/openclaw-health/summary.json\nverification/openclaw-runtime-deep-dive/summary.json\nverification/openclaw-runtime/inventory.json\nverification/rules.mjs\nverification/shared-key/summary.json\nverification/strict-acceptance/00-home.png\nverification/strict-acceptance/01-open-github.png\nverification/strict-acceptance/02-c-drive-1.png\nverification/strict-acceptance/02-c-drive-2.png\nverification/strict-acceptance/02-c-drive-3.png\nverification/strict-acceptance/03-clean-c-drive.png\nverification/strict-acceptance/04-failure-explained.png\nverification/strict-acceptance/05-network-reconnecting.png\nverification/strict-acceptance/06-network-delivered.png\nverification/unified-model-proxy/summary.json\nverification/v0.4.1-installed/00-installed-home.png\nverification/v0.4.1-installed/01-open-tencent.png\nverification/v0.4.1-installed/02-open-github.png\nverification/v0.4.1-installed/03-c-drive-1.png\nverification/v0.4.1-installed/03-c-drive-2.png\nverification/v0.4.1-installed/03-c-drive-3.png\nverification/v0.4.1-installed/04-clean-c-drive.png\nverification/v0.4.1-installed/05-weather.png\nverification/v0.4.2-experience/00-no-english-menu.png\nverification/v0.4.2-experience/01-ctrl-v-pasted.png\nverification/v0.4.2-experience/02-right-click-menu-triggered.png\nverification/v0.4.2-experience/03-formatted-todo-reply.png\nverification/v0.4.3-actions/00-installed-home.png\nverification/v0.4.3-actions/01-open-terminal-desktop.png\nverification/v0.4.3-actions/02-open-notepad-desktop.png\nverification/v0.4.3-actions/03-open-downloads-folder-desktop.png\nverification/v0.4.3-actions/summary.json\nverification/v0.4.4-polish/01-markdown-todo.png\nverification/v0.4.4-polish/02-terminal-foreground.png\nverification/v0.4.4-polish/03-notepad-foreground.png\nverification/v0.4.4-polish/04-downloads-foreground.png\nverification/v0.4.4-polish/summary-api.json\nverification/v0.4.4-polish/summary.json\nverification/version-management/summary.json\nversions/current.json\nversions/lock.json\nversions/manager.mjs\nversions/releases/v0.4.4.json\nversions/releases/v0.4.5.json\nvite.config.js\n",
+      "startedAt": "2026-07-22T12:10:26.350Z",
+      "finishedAt": "2026-07-22T12:10:26.491Z",
+      "stdout": ".github/workflows/windows-installer-preflight.yml\n.gitignore\nAI-Workbench-Handoff.md\nARCHITECTURE.md\nCHANGELOG.md\nCONTEXT.md\nCURRENT_PROGRESS_AUDIT.md\nCURRENT_TASK.md\n\"Codex\\344\\273\\273\\345\\212\\241\\345\\215\\241_MVP\\345\\267\\245\\344\\275\\234\\345\\217\\260.md\"\nDECISIONS.md\nEXECUTION_PROTOCOL.md\nLAUNCH.md\nNEXT_STEP.md\nPRINCIPLES.md\nPRODUCT.md\nREADME.md\nSETUP.md\nTASKLOG.md\nVISION.md\nagents/adapter-contract.mjs\nagents/adapters/deepseek.mjs\nagents/adapters/hermes.mjs\nagents/adapters/openclaw.mjs\nagents/definitions.mjs\nagents/registry.mjs\nagents/router.mjs\nassets/icon.ico\nelectron/main.cjs\nerrors/normalize.mjs\nhealth/self-heal.mjs\nhermes-doctor-2026-07-16.txt\nhermes-doctor-2026-07-17-fixed.txt\nhermes-doctor-2026-07-17.txt\nindex.html\nmodel-proxy.mjs\npackage-lock.json\npackage.json\npostcss.config.js\nreadiness.mjs\nresearch/ai-link-analysis.md\nresearch/channel-connection-plan.md\nresearch/hermes-one-ecosystem.md\nresearch/intel-pipeline-plan.md\nresearch/openclaw-candidate-gateway-test.md\nresearch/openclaw-config-diff.md\nresearch/openclaw-health.md\nresearch/openclaw-runtime-gateway-diagnosis.md\nresearch/pc-health-report.md\nresearch/release-plan.md\nresearch/self-hosting-plan.md\nresearch/unified-model-proxy-plan.md\nresearch/version-management-plan.md\nruntime-paths.mjs\nscripts/ai-workbench-watchdog.ps1\nscripts/capture-round2-ui.mjs\nscripts/capture-round3-ui.mjs\nscripts/capture-strict-acceptance.mjs\nscripts/capture-v041-installed.mjs\nscripts/capture-v042-experience.mjs\nscripts/capture-v043-actions.mjs\nscripts/capture-v044-polish-api.mjs\nscripts/capture-v044-polish.mjs\nscripts/dev-background.mjs\nscripts/dev.mjs\nscripts/generate-icon.mjs\nscripts/health-check.mjs\nscripts/health-repair.mjs\nscripts/install-watchdog.ps1\nscripts/open-workbench.ps1\nscripts/open-workbench.vbs\nscripts/openclaw-candidate-diagnostics.mjs\nscripts/openclaw-gateway-diagnostics.mjs\nscripts/openclaw-runtime-deep-dive.mjs\nscripts/openclaw-runtime-inventory.mjs\nscripts/start-workbench-dev.ps1\nscripts/verify-acceptance.mjs\nscripts/verify-action-routing.mjs\nscripts/verify-agents.mjs\nscripts/verify-chat-proxy.mjs\nscripts/verify-clean-machine.mjs\nscripts/verify-error-normalization.mjs\nscripts/verify-health-self-heal.mjs\nscripts/verify-hermes-adapter.mjs\nscripts/verify-hermes-proxy.mjs\nscripts/verify-install-release.mjs\nscripts/verify-memories.mjs\nscripts/verify-model-proxy.mjs\nscripts/verify-openclaw.mjs\nscripts/verify-round2-acceptance.mjs\nscripts/verify-round3-acceptance.mjs\nscripts/verify-shared-key.mjs\nscripts/verify-tasks-runs.mjs\nscripts/verify-unified-model-proxy.mjs\nscripts/verify-verification-layer.mjs\nscripts/verify-version-management.mjs\nscripts/verify.mjs\nscripts/versions-check-models.mjs\nscripts/versions-doctor.mjs\nscripts/versions-restore.mjs\nscripts/versions-snapshot.mjs\nserver.mjs\nsrc/main.jsx\nsrc/styles.css\ntailwind.config.js\ntasks/2026-07-15-phase-2-closeout.md\ntasks/2026-07-15-v0.1.1-display-panels.md\ntasks/2026-07-22-shared-key.md\n\"tasks/2026-07-22-\\344\\270\\212\\347\\272\\277\\347\\241\\254\\351\\252\\250\\345\\244\\2643A-R1-\\345\\256\\211\\350\\243\\205\\345\\220\\257\\345\\212\\250\\345\\215\\270\\350\\275\\275\\344\\277\\256\\345\\244\\215.md\"\n\"tasks/2026-07-22-\\344\\270\\212\\347\\272\\277\\347\\241\\254\\351\\252\\250\\345\\244\\2643A-\\345\\256\\211\\350\\243\\205\\345\\214\\205\\345\\200\\231\\351\\200\\211\\347\\211\\210.md\"\n\"tasks/2026-07-22-\\345\\233\\272\\345\\214\\226\\345\\210\\206\\346\\256\\265\\346\\211\\247\\350\\241\\214\\344\\270\\216\\351\\252\\214\\346\\224\\266\\345\\215\\217\\350\\256\\256.md\"\nverification/clean-machine/readiness-report.md\nverification/clean-machine/summary.json\nverification/install-release/nsis-install-uninstall.json\nverification/install-release/preflight-report.md\nverification/install-release/preflight-summary.json\nverification/install-release/repair1-install.log\nverification/install-release/repair1-report.md\nverification/install-release/repair1-smoke.log\nverification/install-release/repair1-summary.json\nverification/install-release/repair1-uninstall.log\nverification/openclaw-candidate/summary.json\nverification/openclaw-health/summary.json\nverification/openclaw-runtime-deep-dive/summary.json\nverification/openclaw-runtime/inventory.json\nverification/rules.mjs\nverification/shared-key/summary.json\nverification/strict-acceptance/00-home.png\nverification/strict-acceptance/01-open-github.png\nverification/strict-acceptance/02-c-drive-1.png\nverification/strict-acceptance/02-c-drive-2.png\nverification/strict-acceptance/02-c-drive-3.png\nverification/strict-acceptance/03-clean-c-drive.png\nverification/strict-acceptance/04-failure-explained.png\nverification/strict-acceptance/05-network-reconnecting.png\nverification/strict-acceptance/06-network-delivered.png\nverification/unified-model-proxy/summary.json\nverification/v0.4.1-installed/00-installed-home.png\nverification/v0.4.1-installed/01-open-tencent.png\nverification/v0.4.1-installed/02-open-github.png\nverification/v0.4.1-installed/03-c-drive-1.png\nverification/v0.4.1-installed/03-c-drive-2.png\nverification/v0.4.1-installed/03-c-drive-3.png\nverification/v0.4.1-installed/04-clean-c-drive.png\nverification/v0.4.1-installed/05-weather.png\nverification/v0.4.2-experience/00-no-english-menu.png\nverification/v0.4.2-experience/01-ctrl-v-pasted.png\nverification/v0.4.2-experience/02-right-click-menu-triggered.png\nverification/v0.4.2-experience/03-formatted-todo-reply.png\nverification/v0.4.3-actions/00-installed-home.png\nverification/v0.4.3-actions/01-open-terminal-desktop.png\nverification/v0.4.3-actions/02-open-notepad-desktop.png\nverification/v0.4.3-actions/03-open-downloads-folder-desktop.png\nverification/v0.4.3-actions/summary.json\nverification/v0.4.4-polish/01-markdown-todo.png\nverification/v0.4.4-polish/02-terminal-foreground.png\nverification/v0.4.4-polish/03-notepad-foreground.png\nverification/v0.4.4-polish/04-downloads-foreground.png\nverification/v0.4.4-polish/summary-api.json\nverification/v0.4.4-polish/summary.json\nverification/version-management/summary.json\nversions/current.json\nversions/lock.json\nversions/manager.mjs\nversions/releases/v0.4.4.json\nversions/releases/v0.4.5.json\nvite.config.js\n",
       "stderr": ""
     }
   ],
   "knownIssues": [
-    "shared_managed production injection is not verified in 3A; mechanism test used mock upstream only.",
-    "NSIS silent install did not create the expected per-user installed exe/uninstaller.",
-    "Uninstall verification did not pass.",
-    "Installed shortcuts did not point to the discovered installed executable.",
-    "Packaged Electron smoke test did not complete successfully."
+    "shared_managed production injection is not verified in 3A; mechanism test used mock upstream only."
   ]
 }
