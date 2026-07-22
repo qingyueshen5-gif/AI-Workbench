@@ -1,64 +1,58 @@
 # 上线硬骨头3A-R1.3：Actions 云端预验收可观测性
 
-生成时间：2026-07-22 21:05 +08:00
+生成时间：2026-07-22 23:20 +08:00
 
 ## 状态
 
-- 本轮状态：blocked
-- 是否修复云端 preflight：否
-- 是否取得新 Actions success：否
+- 本轮状态：pending
+- Run `29920336923` 失败根因：已定位
+- 修复：已在本地完成，等待提交后重跑 Actions
 - 是否进入 3B：否
 - `shared_managed` 生产验证：blocked，本轮未处理
 
-## 已确认事实
+## Run 29920336923 真实根因
 
-- 3A-R1.2 本地安装链路已通过。
-- 候选安装包路径仍为 `release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe`。
-- 本地安装目录策略仍为 `%LOCALAPPDATA%\Programs\AIWorkbench`。
-- 待定位的云端失败仍是 Run `29920336923`。
+已成功下载 artifact `ai-workbench-v0.4.6-installer-preflight`，Artifact ID `8529650090`。
 
-## 本轮执行记录
-
-| 阶段 | 状态 | 证据 |
-| --- | --- | --- |
-| 仓库状态审计 | partial | `git status --short --branch` 为 `## main...origin/main`；`HEAD` 与 `origin/main` 均为 `c08ddae0c7b7aee4a895be18051d0eb9d14255f2`。 |
-| GitHub CLI 认证 | blocked | `gh auth status` 先显示 token invalid；移除失效账号后仍显示未登录。 |
-| GitHub Actions 日志读取 | blocked | `gh run view 29920336923` 和 `--log-failed` 均要求先登录 `gh auth login`。 |
-| artifact 下载 | blocked | 未执行成功，原因同上。 |
-| 云端失败修复 | not_run | 没有真实日志，不能猜根因。 |
-| Actions 重跑 | not_run | 没有云端修复，也没有 gh 权限。 |
-
-## 阻塞原因
-
-GitHub CLI 授权没有完成。已尝试：
-
-- `gh auth status`：失败，旧 token invalid。
-- `gh auth logout --hostname github.com --user qingyueshen5-gif`：成功移除失效登录。
-- `gh auth login --hostname github.com --git-protocol https --web --clipboard --scopes "repo,workflow"`：等待浏览器/设备授权超时。
-- 打开可见 PowerShell 窗口执行同一登录命令：窗口已启动，但授权尚未完成。
-- 再次 `gh auth status`：仍未登录。
-
-移除失效凭证后，`git fetch origin` 失败：
+`actions-build.log` 显示 GitHub Actions 构建失败：
 
 ```text
-schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS
+The specified electronDist does not exist: D:\a\AI-Workbench\AI-Workbench\node_modules\electron\dist
 ```
 
-随后本轮阻塞记录已成功提交并 push：
+根因是 `package.json` 写死了 `build.electronDist = node_modules/electron/dist`。在 `windows-latest` 的 `npm ci` 后该目录不存在，electron-builder 直接失败，没有产出安装包或 `win-unpacked`。
 
-- commit：以最终 `git log` 为准
-- push：成功
-- `git status --short --branch`：`## main...origin/main`
-- 本地 `HEAD` 与 `origin/main`：推送后检查时一致
+artifact 中的 `preflight-summary.json` 同步证明：
 
-但 `git fetch origin` 仍失败，`gh auth status` 仍未登录。因此 GitHub Actions 日志读取能力没有恢复。
+- `artifactExists: false`
+- `unpackedExists: false`
+- `artifactPath: ""`
+- `sha256: ""`
+- `fiveCriteria.e_readinessReportComplete: false`
+
+另一个次要问题：`scripts/verify-install-release.mjs` 在 artifact 缺失时仍读取仓库旧的 `nsis-install-uninstall.json`，导致报告里出现“安装/卸载 passed 但安装包 missing”的混乱证据。
+
+## 本轮最小修复
+
+- `package.json`：删除 `build.electronDist`，让 electron-builder 在 CI 中自行解析/下载 Electron runtime。
+- `scripts/verify-install-release.mjs`：预验收开始先删除旧 `nsis-install-uninstall.json`；只有本轮 NSIS helper 真实运行后才读取该证据；扫描解包目录遇到不可读目录时跳过而不是崩溃。
+- `scripts/verify-nsis-install.mjs`：每次使用唯一 installed smoke runtime 目录，避免旧 runtime 清理失败。
+- `scripts/clean-release-output.mjs`：新增当前版本候选输出清理脚本，并接入 `npm run dist:win`。
+- `.github/workflows/windows-installer-preflight.yml`：增加 Step Summary；final gate 同时检查 build、preflight 和 installer 是否存在。
+- `.gitignore`：忽略临时下载的 Actions artifact inspection 目录。
+
+## 本地验证
+
+| 验证 | 状态 | 说明 |
+| --- | --- | --- |
+| `node --check scripts/verify-install-release.mjs` | passed | 语法通过 |
+| `node --check scripts/clean-release-output.mjs` | passed | 语法通过 |
+| `npm.cmd run build` | passed | Vite 构建通过 |
+| `npm.cmd run dist:win` | failed | 本机旧 `release-v0.4.6-installer\win-unpacked` 残留被文件系统拒绝删除；CI 干净环境需以新 run 为准 |
+| `npm.cmd run verify:install-release` | failed | 已真实完成 NSIS 安装、安装版 smoke-test、卸载、依赖降级、端口兜底和扫描；失败项是本机 `win-unpacked` 已被前序清理破坏，`unpackedExists=false` |
 
 ## 下一步
 
-1. 在本机完成 `gh auth login --hostname github.com --git-protocol https --web --clipboard --scopes "repo,workflow"` 浏览器授权。
-2. 验证 `gh auth status` 和 `gh api user --jq .login`。
-3. 执行 `git fetch origin`，确认 GitHub 凭证恢复。
-4. 读取 Run `29920336923` 日志和 artifact。
-5. 按真实云端失败原因继续修 3A-R1.3。
+提交并 push 后触发新的 `Windows Installer Preflight`。只有新 run conclusion 为 `success`，并下载 artifact 确认云端 build/install/smoke/uninstall/扫描通过后，R1.3 才能写 `passed`。
 
-未取得真实 Actions success 前，不得把 3A 判绿，不得进入 3B，不得创建 Release/tag。
+未取得 Actions success 前，不进入 R2，不进入 3B，不创建 Release/tag。

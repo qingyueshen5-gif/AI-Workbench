@@ -19,7 +19,7 @@ const uninstaller = join(installTarget, 'Uninstall AI Workbench.exe');
 const desktopShortcut = join(process.env.USERPROFILE || '', 'Desktop', 'AI Workbench.lnk');
 const startShortcut = join(appData, 'Microsoft', 'Windows', 'Start Menu', 'Programs', 'AI Workbench.lnk');
 const updaterDir = join(localAppData, 'ai-workbench-updater');
-const smokeRoot = join(verificationDir, 'repair1-2-installed-smoke-runtime');
+const smokeRoot = join(verificationDir, `repair1-2-installed-smoke-runtime-${process.pid}-${Date.now()}`);
 const smokeOutput = join(verificationDir, 'repair1-2-installed-smoke.json');
 const smokeStdout = join(verificationDir, 'repair1-2-installed-stdout.log');
 const smokeStderr = join(verificationDir, 'repair1-2-installed-stderr.log');
@@ -107,7 +107,7 @@ $p = Start-Process -FilePath '${file.replace(/'/g, "''")}' -ArgumentList @(${psA
 }
 
 function runSmoke() {
-  cleanup([smokeRoot, smokeOutput, smokeStdout, smokeStderr]);
+  cleanup([smokeOutput, smokeStdout, smokeStderr]);
   if (!existsSync(installedExe)) return Promise.resolve({ exitCode: null, skipped: true, reason: 'installed exe missing' });
   return new Promise((resolve) => {
     const startedAt = new Date().toISOString();

@@ -33,12 +33,12 @@ AI Workbench 已完成统一模型入口、上线硬骨头1“陌生机器不崩
 ## 最新 3A-R1.3 结果
 
 - 任务：上线硬骨头3A-R1.3：恢复 GitHub Actions 可观测性并完成云端预验收。
-- 状态：blocked。
-- 本轮确认：本地 R1.2 安装链路仍以 `verification/install-release/repair1-2-summary.json` 为准，状态 passed；但 Actions Run `29920336923` 仍未取得可读失败日志。
-- 执行过的关键命令：`gh auth status`、`gh auth logout --hostname github.com --user qingyueshen5-gif`、`gh auth login --hostname github.com --git-protocol https --web --clipboard --scopes "repo,workflow"`、`gh run view 29920336923 --repo qingyueshen5-gif/AI-Workbench`、`git fetch origin`。
-- 阻塞原因：GitHub CLI 浏览器/设备授权未完成；当前 `gh` 未登录，`gh run view` 要求先登录；移除失效凭证后 `git fetch origin` 仍因 Windows GitHub 凭证缺失失败。R1.3 阻塞记录已成功 push，commit 以最终 `git log` 为准。
+- 状态：pending。
+- 本轮确认：GitHub CLI 已恢复，Run `29920336923` 的 artifact 已下载读取；`actions-build.log` 显示云端构建失败根因是 `package.json` 写死 `build.electronDist=node_modules/electron/dist`，而 Actions `npm ci` 后该目录不存在。
+- 已做最小修复：删除 `electronDist`；预验收脚本不再读取旧 NSIS 证据；NSIS smoke runtime 改为唯一目录；workflow 增加 Step Summary 和 build/preflight/artifact gate；临时 Actions 下载目录加入 `.gitignore`。
+- 本地验证：`node --check` 和 `npm.cmd run build` 通过；`npm.cmd run verify:install-release` 完成安装、smoke、卸载和扫描，但因本机旧 `win-unpacked` 被文件锁清理破坏仍为 failed。最终以新 Actions 干净环境 run 为准。
 - 验收产物：`verification/install-release/repair1-3-summary.json`、`verification/install-release/repair1-3-report.md`。
-- 结论：R1.3 没有判绿，没有修云端失败，没有进入 3B。下一步必须先恢复 GitHub 凭证，再读取 Run `29920336923` 日志和 artifact。
+- 结论：R1.3 尚未判绿，需 push 后取得新的 Actions success；不进入 R2，不进入 3B。
 
 ## 缺失文件说明
 

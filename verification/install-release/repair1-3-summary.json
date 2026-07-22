@@ -1,143 +1,93 @@
 {
   "task": "install-release-repair1-3-actions-observability",
-  "status": "blocked",
+  "status": "pending",
   "version": "0.4.6",
-  "startedAt": "2026-07-22T21:05:21.9165094+08:00",
+  "updatedAt": "2026-07-22T23:20:00+08:00",
   "goal": "恢复 GitHub Actions 运行结果可读性，定位 Run 29920336923 云端 preflight 失败步骤，最小修复并取得一次真实 success 运行。",
   "currentFacts": {
     "localR12": "passed",
     "installerPath": "release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe",
     "installDir": "%LOCALAPPDATA%\\Programs\\AIWorkbench",
-    "actionsRunToInspect": "29920336923",
-    "actionsRunUrl": "https://github.com/qingyueshen5-gif/AI-Workbench/actions/runs/29920336923",
+    "failedRunInspected": "29920336923",
+    "failedRunUrl": "https://github.com/qingyueshen5-gif/AI-Workbench/actions/runs/29920336923",
+    "failedRunArtifactId": "8529650090",
+    "failedRunArtifactName": "ai-workbench-v0.4.6-installer-preflight",
     "sharedManagedProduction": "blocked"
   },
-  "stageStatus": {
-    "0_repoAudit": {
-      "status": "partial",
-      "commands": [
-        {
-          "command": "git status --short --branch",
-          "exitCode": 0,
-          "stdout": "## main...origin/main"
-        },
-        {
-          "command": "git rev-parse HEAD",
-          "exitCode": 0,
-          "stdout": "c08ddae0c7b7aee4a895be18051d0eb9d14255f2"
-        },
-        {
-          "command": "git rev-parse origin/main",
-          "exitCode": 0,
-          "stdout": "c08ddae0c7b7aee4a895be18051d0eb9d14255f2"
-        },
-        {
-          "command": "git remote -v",
-          "exitCode": 0,
-          "stdout": "origin https://github.com/qingyueshen5-gif/AI-Workbench.git"
-        },
-        {
-          "command": "git fetch origin",
-          "exitCode": 1,
-          "stderr": "schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS"
-        }
-      ],
-      "note": "git fetch failed after removing the invalid gh credential because no GitHub credential is available in Windows credential storage."
+  "rootCause": {
+    "status": "identified",
+    "summary": "GitHub Actions build did not produce the installer because package.json explicitly set build.electronDist to node_modules/electron/dist, but that directory did not exist after npm ci on windows-latest.",
+    "evidence": [
+      "Run 29920336923 artifact downloaded successfully.",
+      "actions-build.log: The specified electronDist does not exist: D:\\a\\AI-Workbench\\AI-Workbench\\node_modules\\electron\\dist.",
+      "preflight-summary.json: artifactExists=false, unpackedExists=false, artifactPath empty, sha256 empty.",
+      "preflight-summary.json: fiveCriteria.e_readinessReportComplete=false."
+    ],
+    "secondaryIssue": "scripts/verify-install-release.mjs read stale nsis-install-uninstall.json when artifact was missing, creating confusing evidence where install/uninstall appeared passed despite missing installer."
+  },
+  "fixes": [
+    {
+      "file": "package.json",
+      "change": "Removed build.electronDist so electron-builder can resolve/download Electron runtime in CI instead of failing on a missing explicit path."
     },
-    "1_restoreGhAuth": {
-      "status": "blocked",
-      "commands": [
-        {
-          "command": "gh auth status",
-          "exitCode": 1,
-          "stdout": "token invalid / not logged in"
-        },
-        {
-          "command": "gh auth logout --hostname github.com --user qingyueshen5-gif",
-          "exitCode": 0,
-          "stdout": "Logged out of github.com account qingyueshen5-gif"
-        },
-        {
-          "command": "gh auth login --hostname github.com --git-protocol https --web --clipboard --scopes repo,workflow",
-          "exitCode": 124,
-          "stdout": "timed out waiting for browser/device authorization"
-        },
-        {
-          "command": "Start-Process powershell.exe ... gh auth login --web --clipboard --scopes repo,workflow",
-          "exitCode": 0,
-          "stdout": "visible authorization window launched"
-        },
-        {
-          "command": "gh auth status",
-          "exitCode": 1,
-          "stdout": "not logged into any GitHub hosts"
-        }
-      ],
-      "blockingReason": "GitHub browser/device authorization has not completed. Without gh auth, Actions logs and artifacts cannot be read or downloaded."
+    {
+      "file": "scripts/verify-install-release.mjs",
+      "change": "Deletes stale nsis-install-uninstall.json at preflight start and reads NSIS evidence only when the current helper run produced it; unreadable package scan directories are skipped instead of crashing."
     },
-    "2_readFailedRun": {
-      "status": "blocked",
-      "commands": [
-        {
-          "command": "gh run view 29920336923 --repo qingyueshen5-gif/AI-Workbench",
-          "exitCode": 1,
-          "stdout": "gh auth login required"
-        },
-        {
-          "command": "gh run view 29920336923 --repo qingyueshen5-gif/AI-Workbench --log-failed",
-          "exitCode": 1,
-          "stdout": "gh auth login required"
-        }
-      ],
-      "blockingReason": "No valid GitHub CLI authentication."
+    {
+      "file": "scripts/verify-nsis-install.mjs",
+      "change": "Uses a unique installed smoke runtime directory per run to avoid stale runtime cleanup failures."
     },
-    "3_fixWorkflowOrCloudFailure": {
-      "status": "not_run",
-      "reason": "Cloud failure root cause cannot be determined without readable run logs or artifacts."
+    {
+      "file": "scripts/clean-release-output.mjs",
+      "change": "Added a current-version release output cleaner used before dist:win to reduce repeated-build residue."
     },
-    "4_rerunActions": {
-      "status": "not_run",
-      "reason": "No cloud fix was made and gh auth is unavailable."
+    {
+      "file": ".github/workflows/windows-installer-preflight.yml",
+      "change": "Added Step Summary diagnostics and final gate checks for build outcome, preflight outcome, and installer existence."
     },
-    "5_generateEvidence": {
-      "status": "passed",
-      "artifacts": [
-        "verification/install-release/repair1-3-summary.json",
-        "verification/install-release/repair1-3-report.md"
-      ]
+    {
+      "file": ".gitignore",
+      "change": "Ignored temporary downloaded Actions artifact directories under verification/install-release/actions-*/."
+    }
+  ],
+  "localValidation": {
+    "nodeCheckVerifyInstallRelease": "passed",
+    "nodeCheckCleanReleaseOutput": "passed",
+    "npmRunBuild": "passed",
+    "npmRunDistWin": "failed_on_local_locked_release_dir_before_cleaner_finalized",
+    "npmRunVerifyInstallRelease": {
+      "status": "failed",
+      "reason": "Local existing release directory had win-unpacked removed/locked, so build.unpackedExists=false; NSIS install, installed smoke-test, uninstall, dependency fallback, port conflict fallback, and security scan passed against the existing installer."
+    }
+  },
+  "actions": {
+    "previousRun": {
+      "runId": "29920336923",
+      "status": "failed",
+      "artifactDownloaded": true,
+      "logFailedCommand": "failed locally because GitHub CLI could not write run-log cache under AppData, but artifact evidence was readable."
     },
-    "6_updateDocs": {
-      "status": "passed"
-    },
-    "7_commitPush": {
-      "status": "partial",
-      "commitId": "see git log after final documentation sync",
-      "push": "succeeded",
-      "postPushStatus": "## main...origin/main",
-      "postPushHead": "checked after push",
-      "postPushOriginMain": "matched local HEAD at check time",
-      "remainingIssue": "git fetch origin still fails with SEC_E_NO_CREDENTIALS and gh auth is still not logged in."
+    "newRun": {
+      "runId": "",
+      "url": "",
+      "conclusion": "pending",
+      "artifactDownloaded": false
     }
   },
   "validation": {
-    "ghAuthRestored": false,
-    "failedRunReadable": false,
-    "artifactDownloaded": false,
-    "cloudBuild": "not_run",
-    "cloudInstall": "not_run",
-    "cloudSmoke": "not_run",
-    "cloudUninstall": "not_run",
-    "cloudSecretScan": "not_run",
-    "newRunId": "",
-    "newRunUrl": "",
-    "newRunConclusion": "not_run"
+    "ghAuthRestored": true,
+    "failedRunReadable": true,
+    "artifactDownloaded": true,
+    "cloudBuild": "pending",
+    "cloudInstall": "pending",
+    "cloudSmoke": "pending",
+    "cloudUninstall": "pending",
+    "cloudSecretScan": "pending"
   },
-  "rootCause": "Not determined. The only verified blocker in R1.3 is missing GitHub CLI/Git credentials, which prevents reading the failed Actions logs and artifacts.",
   "knownIssues": [
-    "GitHub CLI is not authenticated.",
-    "git push succeeded, but git fetch still fails because Windows GitHub credentials are unavailable.",
-    "Run 29920336923 failure details remain unread.",
-    "shared_managed production injection remains blocked and is intentionally not handled in this task."
+    "shared_managed production injection remains blocked and is intentionally not handled in this task.",
+    "Local release-v0.4.6-installer/win-unpacked is currently incomplete due local file-lock cleanup issues; the new Actions run must verify the clean CI build."
   ],
   "canEnterR2SharedKeyProductionInjection": false,
   "canEnter3BRelease": false

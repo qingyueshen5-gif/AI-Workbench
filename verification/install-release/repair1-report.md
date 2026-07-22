@@ -1,10 +1,10 @@
 # Windows 安装包候选版发布前预验收
 
-生成时间：2026-07-22T12:10:31.691Z
+生成时间：2026-07-22T15:16:51.288Z
 
 ## 总状态
 
-- 状态：passed
+- 状态：failed
 - 版本：0.4.6
 - 安装包：release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe
 - 大小：111605899
@@ -39,6 +39,7 @@
 
 ## 已知问题
 
+- win-unpacked executable is missing.
 - shared_managed production injection is not verified in 3A; mechanism test used mock upstream only.
 
 ## 命令证据

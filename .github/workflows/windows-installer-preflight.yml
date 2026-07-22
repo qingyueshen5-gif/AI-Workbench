@@ -51,6 +51,24 @@ jobs:
         continue-on-error: true
         run: npm run verify:install-release
 
+      - name: Write preflight summary
+        if: always()
+        shell: pwsh
+        run: |
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "## Windows installer preflight"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ""
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- Build outcome: ${{ steps.build.outcome }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- Preflight outcome: ${{ steps.preflight.outcome }}"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- Installer exists: ${{ steps.build.outputs.artifact_exists }}"
+          if (Test-Path -LiteralPath 'verification/install-release/preflight-summary.json') {
+            $summary = Get-Content -Raw -LiteralPath 'verification/install-release/preflight-summary.json' | ConvertFrom-Json
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- Summary status: $($summary.status)"
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- Artifact path: $($summary.artifactPath)"
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- Known issues: $($summary.knownIssues.Count)"
+          } else {
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- Summary status: missing"
+          }
+
       - name: Upload installer candidate and evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -63,6 +81,6 @@ jobs:
             verification/install-release/**
           if-no-files-found: warn
 
-      - name: Fail when preflight failed
-        if: steps.preflight.outcome != 'success'
+      - name: Fail when build or preflight failed
+        if: steps.build.outcome != 'success' || steps.preflight.outcome != 'success' || steps.build.outputs.artifact_exists != 'True'
         run: exit 1

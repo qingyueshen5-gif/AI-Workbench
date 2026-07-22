@@ -23,6 +23,7 @@ const repair1SmokeLog = join(verificationDir, 'repair1-smoke.log');
 const repair1UninstallLog = join(verificationDir, 'repair1-uninstall.log');
 
 mkdirSync(verificationDir, { recursive: true });
+rmSync(nsisEvidenceFile, { force: true });
 
 const commands = [];
 
@@ -82,11 +83,22 @@ function walkFiles(dir, limitBytes = 1024 * 1024 * 8) {
   const stack = [dir];
   while (stack.length) {
     const current = stack.pop();
-    for (const name of readdirSync(current)) {
+    let names = [];
+    try {
+      names = readdirSync(current);
+    } catch {
+      continue;
+    }
+    for (const name of names) {
       const path = join(current, name);
       const relativePath = relative(root, path).replace(/\\/g, '/');
       if (/node_modules\/\.cache|Cache_Data|GPUCache|Code Cache/i.test(relativePath)) continue;
-      const stats = statSync(path);
+      let stats;
+      try {
+        stats = statSync(path);
+      } catch {
+        continue;
+      }
       if (stats.isDirectory()) {
         stack.push(path);
       } else if (stats.size <= limitBytes) {
@@ -639,7 +651,7 @@ async function main() {
     nsisPayload = runNsisInstallUninstall();
   }
 
-  if (nsisPayload || existsSync(nsisEvidenceFile)) {
+  if (nsisPayload) {
     const nsis = JSON.parse(readFileSync(nsisEvidenceFile, 'utf8'));
     summary.install = {
       status: (nsis.installedExeExists ?? nsis.expectedInstalledExeExists) && (nsis.uninstallerExists ?? nsis.expectedUninstallerExists) && Boolean(nsis.shortcutsPointToInstalledExe) ? 'passed' : 'failed',

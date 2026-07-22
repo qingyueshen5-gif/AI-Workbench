@@ -2,10 +2,14 @@
 
 ## Unreleased - 上线硬骨头3A-R1.3：Actions 云端预验收阻塞记录
 
-- 新增 `verification/install-release/repair1-3-summary.json` 和 `verification/install-release/repair1-3-report.md`，如实记录 R1.3 卡在 GitHub CLI/Git 凭证恢复。
+- 新增并更新 `verification/install-release/repair1-3-summary.json` 和 `verification/install-release/repair1-3-report.md`，记录 R1.3 从 GitHub CLI/Git 凭证阻塞恢复到云端构建根因定位。
 - 新增 `tasks/2026-07-22-上线硬骨头3A-R1.3-Actions云端预验收.md`，记录本轮执行、阻塞原因和恢复后的下一步命令。
-- 已确认本地 R1.2 安装链路仍为 passed，但没有可读的 Actions Run `29920336923` 日志，不能猜云端失败根因。
-- 当前 `gh auth status` 未登录，`git fetch origin` 因 GitHub 凭证缺失失败；本轮阻塞记录已成功 push，但恢复 `gh` 前仍不能读取 Actions artifact 或触发/观察 workflow。
+- 已下载并读取 Actions Run `29920336923` 的 artifact；根因是 `package.json` 写死 `build.electronDist=node_modules/electron/dist`，Actions 环境中该目录不存在导致 electron-builder 未产出安装包。
+- 删除 `build.electronDist`，让 electron-builder 在 CI 中自行解析/下载 Electron runtime。
+- 新增 `scripts/clean-release-output.mjs` 并接入 `dist:win`，减少重复构建残留。
+- `scripts/verify-install-release.mjs` 不再读取旧 NSIS 证据，并在扫描解包目录遇到不可读目录时继续。
+- `scripts/verify-nsis-install.mjs` 改为每次使用唯一 installed smoke runtime 目录。
+- Windows Installer Preflight workflow 增加 Step Summary，并在 final gate 同时检查 build、preflight 和 installer artifact。
 - 未进入 3B，未创建 Release/tag，`shared_managed` 生产验证仍为 blocked。
 
 ## Unreleased - 上线硬骨头3A-R1.2：NSIS安装器修复

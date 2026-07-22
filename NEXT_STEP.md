@@ -1,6 +1,6 @@
 # NEXT_STEP.md
 
-上线硬骨头3A 当前下一步：先恢复本机 GitHub CLI/Git 凭证，再取得 GitHub Actions artifact/log 权限并定位云端 preflight failure。
+上线硬骨头3A 当前下一步：提交 R1.3 云端构建修复并取得新的 GitHub Actions success run。
 
 执行前必须先读 `EXECUTION_PROTOCOL.md`。本轮只做候选安装包、本地预验收、Actions 预验收工作流和验收证据；不创建 GitHub Release，不创建正式 tag，不进入 3B。
 
@@ -14,14 +14,13 @@
 4. GitHub Actions Run `29919498085` 真实结果 failure，失败在 `Build installer candidate`；日志/artifact 权限不足，已补 build log 上传。
 5. GitHub Actions Run `29919834193` 和 `29920088772` build 成功，但 `Run install-release preflight` 被 workflow 条件跳过。
 6. GitHub Actions Run `29920336923` build 成功且 preflight 已执行，但最终仍 failure。
-7. 当前 `gh` token invalid，日志 403、artifact 下载 401，无法读取云端失败详情。
+7. GitHub CLI 已恢复，Run `29920336923` artifact 已下载读取。
 8. `shared_managed` 生产注入继续记录为 blocked，不在安装链路修复中冒充 passed。
-9. 3A-R1.3 已尝试恢复 `gh` 权限但授权未完成；当前 `gh auth status` 未登录，`git fetch origin` 因 GitHub 凭证缺失失败。证据见 `verification/install-release/repair1-3-summary.json`。
+9. 3A-R1.3 根因已定位：`package.json` 写死 `build.electronDist=node_modules/electron/dist`，Actions 环境中该目录不存在，导致 electron-builder 未产出安装包。已做最小修复，等待新 Actions run。
 
 下一步：
 
-1. 完成 `gh auth login --hostname github.com --git-protocol https --web --clipboard --scopes "repo,workflow"` 浏览器/设备授权。
-2. 验证 `gh auth status`、`gh api user --jq .login` 和 `git fetch origin`。
-3. 读取 artifact 中的 `verification/install-release/preflight-summary.json`、`preflight-report.md` 和 `actions-build.log`。
-4. 按真实云端失败原因继续修 3A。
-5. 不创建 Release/tag。
+1. commit + push R1.3 修复。
+2. 触发并观察新的 `Windows Installer Preflight` run。
+3. 下载新 run artifact，确认云端 build/install/smoke/uninstall/扫描真实通过。
+4. 不创建 Release/tag，不进入 R2 或 3B。

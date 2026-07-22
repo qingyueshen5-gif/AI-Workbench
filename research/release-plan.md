@@ -155,7 +155,7 @@ R1 结论：必须先查清 NSIS 为什么只写 updater 副本但不执行 `ins
 
 ## 3A-R1.3：Actions 云端预验收可观测性
 
-3A-R1.3 状态：blocked。
+3A-R1.3 状态：pending。
 
 目标：
 
@@ -166,14 +166,13 @@ R1 结论：必须先查清 NSIS 为什么只写 updater 副本但不执行 `ins
 
 本轮实际结果：
 
-- `gh auth status` 显示旧 token invalid。
-- 已执行 `gh auth logout --hostname github.com --user qingyueshen5-gif` 移除失效登录。
-- 两次尝试 `gh auth login --hostname github.com --git-protocol https --web --clipboard --scopes "repo,workflow"` 未完成浏览器/设备授权。
-- 当前 `gh` 未登录，`gh run view 29920336923` 无法读取日志。
-- `git fetch origin` 失败：Windows GitHub 凭证缺失。
+- GitHub CLI 已恢复。
+- Run `29920336923` artifact 已下载读取。
+- 根因是 `package.json` 写死 `build.electronDist=node_modules/electron/dist`，Actions 环境中该目录不存在，electron-builder 未产出安装包。
+- 次要问题是 preflight 脚本在 artifact 缺失时读取旧 NSIS 证据，造成报告混乱。
+- 已删除 `electronDist`，修复 preflight 旧证据读取，增强 workflow gate 和 Step Summary。
 
 结论：
 
-- 没有真实云端日志前，不猜失败根因，不改 workflow 制造绿灯。
-- R1.3 只能记录为 blocked。
-- 恢复 GitHub 凭证后继续读取 Run `29920336923` artifact/log，再修云端 preflight。
+- R1.3 仍需新的 Actions success run 才能写 passed。
+- 未取得 Actions success 前，不进入 3B，不创建 Release/tag。

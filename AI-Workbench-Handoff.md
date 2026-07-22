@@ -86,7 +86,7 @@
 - Codex 执行器已经恢复，不再卡在 PowerShell/WSL spawn 超时。
 - 统一模型入口已经完成：Workbench、Hermes、OpenClaw 三员工模型调用已统一经过本机 `18800` 代理。
 - 共享 key 已落地在 18800 服务端边界内，前端和员工配置不保存真实 key。
-- 下一步不是继续修 OpenClaw，也不是情报流水线；下一步是先恢复本机 GitHub CLI/Git 凭证，再取得 Run `29920336923` 的 artifact/log，按云端 preflight 失败原因继续修 3A。拿到 Actions passed 后再由产品负责人判断是否进入 3B：GitHub Release 下载链接。
+- 下一步不是继续修 OpenClaw，也不是情报流水线；下一步是提交并验证 3A-R1.3 的 Actions 构建修复。Run `29920336923` 根因已定位为 `electronDist` 写死导致云端没有生成安装包；拿到新的 Actions passed 后再由产品负责人判断是否进入 3B：GitHub Release 下载链接。
 
 # 第二部分：产品战略（核心理解）
 

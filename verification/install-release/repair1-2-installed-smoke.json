@@ -1,7 +1,7 @@
 {
   "task": "electron-smoke-test",
   "version": "0.4.6",
-  "startedAt": "2026-07-22T12:09:56.175Z",
+  "startedAt": "2026-07-22T15:15:52.032Z",
   "packaged": true,
   "userData": "C:\\Users\\胖胖虎\\AppData\\Roaming\\ai-workbench",
   "services": {
@@ -17,7 +17,7 @@
   "readiness": {
     "ok": true,
     "status": "ready",
-    "checkedAt": "2026-07-22T12:09:57.132Z",
+    "checkedAt": "2026-07-22T15:15:53.986Z",
     "userMessage": "工作台已就绪。",
     "ports": {
       "modelProxy": 29870,
@@ -33,11 +33,11 @@
         "title": "本机目录",
         "userMessage": "本机配置、数据、日志和验收目录会自动创建。",
         "details": {
-          "runtimeRoot": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-smoke-runtime",
-          "configDir": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-smoke-runtime\\config",
-          "dataDir": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-smoke-runtime\\data",
-          "logsDir": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-smoke-runtime\\logs",
-          "evidenceDir": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-smoke-runtime\\evidence"
+          "runtimeRoot": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-smoke-runtime-28508-1784733296780",
+          "configDir": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-smoke-runtime-28508-1784733296780\\config",
+          "dataDir": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-smoke-runtime-28508-1784733296780\\data",
+          "logsDir": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-smoke-runtime-28508-1784733296780\\logs",
+          "evidenceDir": "F:\\AI-Workbench\\verification\\install-release\\repair1-2-installed-smoke-runtime-28508-1784733296780\\evidence"
         }
       },
       {
@@ -95,5 +95,5 @@
   },
   "errors": [],
   "ok": true,
-  "finishedAt": "2026-07-22T12:09:57.153Z"
+  "finishedAt": "2026-07-22T15:15:54.111Z"
 }
