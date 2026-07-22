@@ -46,7 +46,7 @@ jobs:
 
       - name: Run install-release preflight
         id: preflight
-        if: steps.build.outputs.artifact_exists == 'True'
+        if: always()
         shell: pwsh
         continue-on-error: true
         run: npm run verify:install-release
@@ -64,5 +64,5 @@ jobs:
           if-no-files-found: warn
 
       - name: Fail when preflight failed
-        if: steps.build.outputs.artifact_exists != 'True' || steps.preflight.outcome != 'success'
+        if: steps.preflight.outcome != 'success'
         run: exit 1

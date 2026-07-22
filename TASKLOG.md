@@ -56,5 +56,5 @@ AI Workbench 已完成统一模型入口、上线硬骨头1“陌生机器不崩
 - R1.2 根因：安装包 payload 有效；默认 per-user 安装目录在当前中文用户名环境下没有稳定落盘，只留下 updater 缓存副本。显式 `/D=` 到 ASCII 路径可落盘。
 - R1.2 修复：新增 `build/installer.nsh`，将默认安装目录固定为 `%LOCALAPPDATA%\Programs\AIWorkbench`；新增 `scripts/verify-nsis-install.mjs`，主 preflight 改用 Node helper 真实执行安装、安装版 smoke-test 和卸载。
 - 本地结果：`npm.cmd run verify:install-release` 通过；NSIS `/S` 安装真实落盘，exe、卸载器、卸载注册表项、桌面/开始菜单快捷方式均存在；安装版 `--smoke-test` 退出码 0；卸载退出码 0。
-- GitHub Actions：Run `29919498085` 真实结果 failure，失败在 `Build installer candidate`，preflight 未执行；当前 gh 日志权限 403、artifact 下载 401。Run `29919834193` build 成功，但 preflight 因 workflow 条件错误被 skipped。已改为用安装包文件是否真实存在作为 preflight 执行条件。
+- GitHub Actions：Run `29919498085` 真实结果 failure，失败在 `Build installer candidate`，preflight 未执行；当前 gh 日志权限 403、artifact 下载 401。Run `29919834193` 和 `29920088772` build 成功，但 preflight 因 workflow 条件错误被 skipped。已改为 `if: always()`，让新 run 无条件执行核心 preflight。
 - 结论：本地安装链路已修复，但 3A-R1.2 总状态仍不能算 passed；不具备进入 3B 正式 GitHub Release 的条件。
