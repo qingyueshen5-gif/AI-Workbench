@@ -38,13 +38,21 @@ GitHub CLI 授权没有完成。已尝试：
 - 打开可见 PowerShell 窗口执行同一登录命令：窗口已启动，但授权尚未完成。
 - 再次 `gh auth status`：仍未登录。
 
-移除失效凭证后，`git fetch origin` 也失败：
+移除失效凭证后，`git fetch origin` 失败：
 
 ```text
 schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS
 ```
 
-这说明当前机器缺少可用 GitHub 凭证。恢复凭证前，无法读取 Actions 日志、下载 artifact、触发/观察 workflow，也无法 push 本轮记录到 GitHub。
+随后本轮阻塞记录已成功提交并 push：
+
+- commit：`0584ef660106d516cb25deabe8c6347c0bc47337`
+- push：成功
+- `git status --short --branch`：`## main...origin/main`
+- 本地 `HEAD`：`0584ef660106d516cb25deabe8c6347c0bc47337`
+- 本地 `origin/main` 引用：`0584ef660106d516cb25deabe8c6347c0bc47337`
+
+但 `git fetch origin` 仍失败，`gh auth status` 仍未登录。因此 GitHub Actions 日志读取能力没有恢复。
 
 ## 下一步
 

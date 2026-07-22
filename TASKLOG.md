@@ -36,7 +36,7 @@ AI Workbench 已完成统一模型入口、上线硬骨头1“陌生机器不崩
 - 状态：blocked。
 - 本轮确认：本地 R1.2 安装链路仍以 `verification/install-release/repair1-2-summary.json` 为准，状态 passed；但 Actions Run `29920336923` 仍未取得可读失败日志。
 - 执行过的关键命令：`gh auth status`、`gh auth logout --hostname github.com --user qingyueshen5-gif`、`gh auth login --hostname github.com --git-protocol https --web --clipboard --scopes "repo,workflow"`、`gh run view 29920336923 --repo qingyueshen5-gif/AI-Workbench`、`git fetch origin`。
-- 阻塞原因：GitHub CLI 浏览器/设备授权未完成；当前 `gh` 未登录，`gh run view` 要求先登录；移除失效凭证后 `git fetch origin` 也因 Windows GitHub 凭证缺失失败。
+- 阻塞原因：GitHub CLI 浏览器/设备授权未完成；当前 `gh` 未登录，`gh run view` 要求先登录；移除失效凭证后 `git fetch origin` 仍因 Windows GitHub 凭证缺失失败。R1.3 阻塞记录已成功 push，commit `0584ef660106d516cb25deabe8c6347c0bc47337`。
 - 验收产物：`verification/install-release/repair1-3-summary.json`、`verification/install-release/repair1-3-report.md`。
 - 结论：R1.3 没有判绿，没有修云端失败，没有进入 3B。下一步必须先恢复 GitHub 凭证，再读取 Run `29920336923` 日志和 artifact。
 
