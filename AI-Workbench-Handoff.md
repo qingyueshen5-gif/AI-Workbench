@@ -29,7 +29,7 @@
 版本号：
 
 - `package.json` 当前版本：`0.4.5`
-- `CHANGELOG.md` 最新版本条目：`Unreleased - 上线硬骨头3A：安装包候选版预验收`
+- `CHANGELOG.md` 最新版本条目：`Unreleased - 上线硬骨头3A-R1：安装启动卸载修复`
 
 ## 2. `research/` 真实存在文件
 
@@ -62,25 +62,25 @@
 
 ## 4. 当前真实进度
 
-- 产品版本：`v0.4.5`
+- 产品版本：`v0.4.6` 候选版，3A 尚未通过。
 - 任务账本：`TASKLOG.md` 已补齐，后续每次任务都必须同步更新。
 - 执行协议：`EXECUTION_PROTOCOL.md` 已补齐，所有新 AI / Codex 接手前必须读取。
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；DeepSeek、Hermes、OpenClaw 三员工都已通过 `18800` 调用模型，验收摘要在 `verification/unified-model-proxy/summary.json`。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线硬骨头3A 预验收未通过。候选包已生成，但 NSIS 静默安装未创建预期 per-user 安装目录/卸载器，packaged Electron smoke test 未完成，`shared_managed` 生产注入未验证；证据见 `verification/install-release/preflight-summary.json`。
+- 现在卡在什么：上线硬骨头3A-R1 未通过。候选包已生成，R1 已尝试修复 packaged smoke-test GPU 崩溃、改用 HTTP renderer smoke、改造安装验证为真实路径发现，并把 NSIS 改为 oneClick per-user；但安装器 `/S /currentuser` 退出码为 0 后只复制自身到 `%LOCALAPPDATA%\ai-workbench-updater\installer.exe`，没有创建真实安装目录、卸载注册表项、`AI Workbench.exe` 或卸载器。旧快捷方式仍指向历史坏路径，packaged smoke-test 和卸载均未实际执行；`shared_managed` 生产注入仍 blocked。证据见 `verification/install-release/repair1-summary.json`。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
 ## 5. 下一步
 
-1. 修复上线硬骨头3A 失败项并重新跑预验收。
+1. 继续修复上线硬骨头3A-R1 失败项：先查清 NSIS 为什么只写 updater 副本但不执行真实安装。
 2. 只有 3A passed 后，才由产品负责人判断是否进入 3B：GitHub Release 正式发布。
 3. 模型分层、手机端、情报流水线暂不抢跑，等上线最小集前三条稳定后继续。
 
 ## 交接重点
 
-- 产品版本：v0.4.5。
+- 产品版本：v0.4.6 候选版，3A-R1 failed，不能发布。
 - 当前形态：独立桌面应用，三个员工分别是 DeepSeek（理解/模型）、Hermes（终端/电脑执行）、OpenClaw（浏览器操作/长任务编排）。
 - OpenClaw gateway 掉线问题已经修好到可启动：清理 runtime 残留后可监听 `127.0.0.1:18789`。
 - Codex 执行器已经恢复，不再卡在 PowerShell/WSL spawn 超时。
@@ -756,5 +756,5 @@ OpenClaw 保持它熟悉的模型命名：
 新对话框的任务：
 
 1. 确认能读这个综合文件。
-2. 用大白话讲出：产品现在在哪（v0.4.5 独立应用三员工，硬骨头1/2已过）、下一步要做什么（下载安装包和 GitHub Release 下载链接）。
-3. 开始检查打包配置、生成安装包、创建/更新 Release，并记录验收证据。
+2. 用大白话讲出：产品现在在哪（v0.4.6 候选版，硬骨头1/2已过，3A-R1 安装链路失败）、下一步要做什么（先修安装器真实落盘，再谈 Release）。
+3. 不创建 Release；先修复 3A 安装链路，并记录真实验收证据。

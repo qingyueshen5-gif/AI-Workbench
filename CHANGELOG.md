@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## Unreleased - 上线硬骨头3A-R1：安装启动卸载修复
+
+### 修复尝试
+
+- Electron packaged smoke-test 增加 GPU 禁用参数，避免 Chromium GPU 进程触发 `0x80000003` 后直接崩溃。
+- smoke-test 不再依赖隐藏 BrowserWindow，改为启动内部服务后通过本地 HTTP 验证 renderer 产物可加载。
+- `scripts/verify-install-release.mjs` 增加 R1 真实安装/启动/卸载证据：`repair1-summary.json`、`repair1-report.md`、`repair1-install.log`、`repair1-smoke.log`、`repair1-uninstall.log`。
+- 安装验证改为记录真实用户上下文、快捷方式目标、updater installer 副本、注册表卸载项、真实安装目录、真实卸载器和退出码。
+- NSIS 配置尝试从 assisted installer 切到 oneClick per-user installer，以减少安装交互和管理员权限要求。
+
+### 验收
+
+- R1 本地预验收状态为 failed。
+- 安装包 `release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe` 已重新生成，SHA256 为 `7aef266db879f5f912b5eb806cd85347690ab033201736e39f59541c8617accd`。
+- 安装器 `/S /currentuser` 退出码为 0，但未创建真实安装目录、卸载注册表项、`AI Workbench.exe` 或卸载器；仅在 `%LOCALAPPDATA%\ai-workbench-updater\installer.exe` 留下同 hash 副本。
+- 旧快捷方式仍指向历史坏路径；packaged smoke-test 未运行；卸载未实际执行。
+- `shared_managed` 生产验证继续 blocked，本轮未处理、不冒充 passed。
+
 ## Unreleased - 上线硬骨头3A：安装包候选版预验收
 
 ### 新增

@@ -99,4 +99,24 @@
 
 ## 当前状态
 
-3A 进行中。3A 结果以 `verification/install-release/preflight-summary.json` 为准。
+3A-R1 状态：failed。
+
+R1 已完成的修复尝试：
+
+- Electron packaged smoke-test 增加 GPU 禁用参数，针对 `0x80000003` / Chromium GPU 进程崩溃做规避。
+- smoke-test 改为通过内部 HTTP 检查 renderer 产物，不再依赖隐藏 BrowserWindow。
+- 安装验证改为不假设固定路径，而是采集卸载注册表、快捷方式、真实 exe、真实卸载器和用户上下文。
+- NSIS 从 assisted installer 调整为 oneClick per-user installer，保持不要求管理员权限。
+
+R1 真实结果：
+
+- `AI-Workbench-Setup-v0.4.6-x64.exe /S /currentuser` 退出码为 0。
+- 安装器只复制自身到 `%LOCALAPPDATA%\ai-workbench-updater\installer.exe`，SHA256 与候选安装包一致。
+- 没有创建真实安装目录、卸载注册表项、`AI Workbench.exe` 或 `Uninstall AI Workbench.exe`。
+- 桌面和开始菜单快捷方式仍指向历史坏路径。
+- packaged smoke-test 未运行，卸载未实际执行。
+- `shared_managed` 生产验证继续 blocked，本轮不处理、不冒充 passed。
+
+下一轮必须先查清 NSIS 为什么只写 updater 副本但不执行 `installApplicationFiles`，优先在 GitHub Actions 干净 Windows 环境复现，排除本机旧快捷方式和旧 updater 状态干扰。3A 通过前不得进入 3B。
+
+证据以 `verification/install-release/repair1-summary.json` 和 `verification/install-release/repair1-report.md` 为准。

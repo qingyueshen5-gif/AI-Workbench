@@ -1,0 +1,15 @@
+2026-07-22T10:25:30Z repair1 packaged smoke-test not run.
+
+Reason:
+NSIS installer command exited 0 but did not create a discoverable installed executable.
+
+Expected installed executable:
+AI Workbench.exe
+
+Observed:
+- Installed exe exists: false
+- Uninstaller exists: false
+- Uninstall registry entries: none
+- Updater copy exists: %LOCALAPPDATA%\ai-workbench-updater\installer.exe
+
+Because no installed executable existed, running packaged --smoke-test would have been a false verification path.

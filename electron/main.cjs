@@ -8,6 +8,11 @@ const packageInfo = require('../package.json');
 
 app.disableHardwareAcceleration();
 app.commandLine.appendSwitch('disable-gpu');
+app.commandLine.appendSwitch('disable-gpu-compositing');
+app.commandLine.appendSwitch('disable-software-rasterizer');
+app.commandLine.appendSwitch('disable-accelerated-2d-canvas');
+app.commandLine.appendSwitch('disable-accelerated-video-decode');
+app.commandLine.appendSwitch('disable-vulkan');
 
 function logMain(message) {
   try {
@@ -126,6 +131,11 @@ async function waitForUrl(url, timeoutMs = 20000) {
   return false;
 }
 
+function writeJsonFile(filePath, payload) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, JSON.stringify(payload, null, 2), 'utf8');
+}
+
 function startNodeScript(name, scriptPath) {
   const serviceCwd = app.isPackaged ? path.dirname(process.execPath) : app.getAppPath();
   if (!fs.existsSync(scriptPath)) {
@@ -179,7 +189,7 @@ function startNodeScript(name, scriptPath) {
   return child;
 }
 
-async function ensureInternalServices() {
+async function ensureInternalServices(waitTimeoutMs = 8000) {
   const appPath = app.getAppPath();
   if (!await checkUrl(endpoints.modelProxy)) {
     startNodeScript('model-proxy', path.join(appPath, 'model-proxy.mjs'));
@@ -188,10 +198,10 @@ async function ensureInternalServices() {
     startNodeScript('api', path.join(appPath, 'server.mjs'));
   }
   const [modelProxyReady, apiReady] = await Promise.all([
-    waitForUrl(endpoints.modelProxy, 8000),
+    waitForUrl(endpoints.modelProxy, waitTimeoutMs),
     (async () => {
       const started = Date.now();
-      while (Date.now() - started < 8000) {
+      while (Date.now() - started < waitTimeoutMs) {
         if (await checkApiReady(1000)) return true;
         await new Promise((resolve) => setTimeout(resolve, 500));
       }
@@ -329,32 +339,33 @@ async function runSmokeTest() {
   };
   try {
     Menu.setApplicationMenu(null);
-    const services = await ensureInternalServices();
+    writeJsonFile(outputFile, { ...result, checkpoint: 'before-services' });
+    const services = await ensureInternalServices(smokeTestMode ? 20000 : 8000);
     result.services = services;
+    writeJsonFile(outputFile, { ...result, checkpoint: 'after-services' });
     if (services.apiReady) {
-      const win = new BrowserWindow({
-        width: 1024,
-        height: 720,
-        show: false,
-        title: windowTitle,
-        webPreferences: {
-          contextIsolation: true,
-          nodeIntegration: false,
-          sandbox: false
-        }
+      const htmlResult = await new Promise((resolve) => {
+        let body = '';
+        const request = http.get(endpoints.app, { timeout: 2500 }, (response) => {
+          response.setEncoding('utf8');
+          response.on('data', (chunk) => { body += chunk; });
+          response.on('end', () => resolve({ ok: response.statusCode >= 200 && response.statusCode < 300, statusCode: response.statusCode, body }));
+        });
+        request.on('timeout', () => {
+          request.destroy();
+          resolve({ ok: false, error: 'timeout', body });
+        });
+        request.on('error', (error) => resolve({ ok: false, error: friendlyError(error), body }));
       });
-      mainWindow = win;
-      await win.loadURL(endpoints.app);
-      const title = await win.webContents.executeJavaScript('document.title').catch(() => '');
-      const bodyText = await win.webContents.executeJavaScript('document.body ? document.body.innerText.slice(0, 400) : ""').catch(() => '');
       result.renderer = {
-        ok: Boolean(bodyText && !/Cannot\s+GET|ERR_|Error:/i.test(bodyText)),
-        title,
-        bodyTextLength: bodyText.length
+        ok: Boolean(htmlResult.ok && /<div id="root">|assets\/index-/i.test(htmlResult.body || '')),
+        statusCode: htmlResult.statusCode || 0,
+        bodyTextLength: String(htmlResult.body || '').length,
+        error: htmlResult.error || ''
       };
       const readiness = await readJsonUrl(endpoints.readiness, 2500);
       result.readiness = readiness.payload || null;
-      win.destroy();
+      writeJsonFile(outputFile, { ...result, checkpoint: 'after-renderer' });
     } else {
       result.renderer = { ok: false, reason: 'api_not_ready' };
     }
@@ -366,8 +377,7 @@ async function runSmokeTest() {
   } finally {
     result.finishedAt = new Date().toISOString();
     try {
-      fs.mkdirSync(path.dirname(outputFile), { recursive: true });
-      fs.writeFileSync(outputFile, JSON.stringify(result, null, 2), 'utf8');
+      writeJsonFile(outputFile, result);
     } catch (error) {
       logMain(`smoke-test:write-error ${error?.stack || error}`);
     }

@@ -49,8 +49,9 @@ AI Workbench 已完成统一模型入口、上线硬骨头1“陌生机器不崩
 ## 最新 3A 结果
 
 - 任务：上线硬骨头3A：安装包候选版与发布前预验收。
-- 状态：failed。
+- 最新修复轮：3A-R1，状态 failed。
 - 候选安装包：`release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe`。
-- 验收产物：`verification/install-release/preflight-summary.json`、`verification/install-release/preflight-report.md`、`verification/install-release/nsis-install-uninstall.json`。
-- 阻塞：NSIS 静默安装未创建预期 per-user 安装目录/卸载器；packaged Electron smoke test 未完成；`shared_managed` 生产注入未验证。
+- 验收产物：`verification/install-release/preflight-summary.json`、`verification/install-release/preflight-report.md`、`verification/install-release/nsis-install-uninstall.json`、`verification/install-release/repair1-summary.json`、`verification/install-release/repair1-report.md`、`verification/install-release/repair1-install.log`、`verification/install-release/repair1-uninstall.log`。
+- R1 已做：为 packaged smoke-test 禁用更多 GPU 路径并改为 HTTP renderer 探测；安装验证改为发现真实安装路径；尝试 assisted NSIS、默认 per-user、`/currentuser`、oneClick NSIS、`force-run` 和 60 秒等待。
+- 当前阻塞：NSIS 安装器退出码为 0，但只复制自身到 `%LOCALAPPDATA%\ai-workbench-updater\installer.exe`，没有创建真实安装目录、卸载注册表项、`AI Workbench.exe` 或卸载器；旧快捷方式仍指向历史坏路径；packaged smoke-test 因未安装而未运行；`shared_managed` 生产注入继续 blocked。
 - 结论：不具备进入 3B 正式 GitHub Release 的条件。

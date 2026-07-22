@@ -1,5 +1,5 @@
 {
-  "task": "install-release-preflight",
+  "task": "install-release-repair1",
   "status": "failed",
   "version": "0.4.6",
   "artifactName": "AI-Workbench-Setup-v0.4.6-x64.exe",
