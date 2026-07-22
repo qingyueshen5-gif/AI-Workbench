@@ -6,7 +6,7 @@
 
 - 本轮状态：pending
 - Run `29920336923` 失败根因：已定位
-- 修复：已在本地完成，等待提交后重跑 Actions
+- 修复：已在本地完成，Run `29933834029` 已证明 preflight passed；还需再跑一次确认 job success
 - 是否进入 3B：否
 - `shared_managed` 生产验证：blocked，本轮未处理
 
@@ -35,6 +35,7 @@ artifact 中的 `preflight-summary.json` 同步证明：
 ## 本轮最小修复
 
 - `package.json`：删除 `build.electronDist`，让 electron-builder 在 CI 中自行解析/下载 Electron runtime。
+- `package.json`：`dist:win` 增加 `--publish never`，禁止 electron-builder 在 CI 中隐式发布；3A 不创建 Release。
 - `scripts/verify-install-release.mjs`：预验收开始先删除旧 `nsis-install-uninstall.json`；只有本轮 NSIS helper 真实运行后才读取该证据；扫描解包目录遇到不可读目录时跳过而不是崩溃。
 - `scripts/verify-nsis-install.mjs`：每次使用唯一 installed smoke runtime 目录，避免旧 runtime 清理失败。
 - `scripts/clean-release-output.mjs`：新增当前版本候选输出清理脚本，并接入 `npm run dist:win`。
@@ -50,6 +51,28 @@ artifact 中的 `preflight-summary.json` 同步证明：
 | `npm.cmd run build` | passed | Vite 构建通过 |
 | `npm.cmd run dist:win` | failed | 本机旧 `release-v0.4.6-installer\win-unpacked` 残留被文件系统拒绝删除；CI 干净环境需以新 run 为准 |
 | `npm.cmd run verify:install-release` | failed | 已真实完成 NSIS 安装、安装版 smoke-test、卸载、依赖降级、端口兜底和扫描；失败项是本机 `win-unpacked` 已被前序清理破坏，`unpackedExists=false` |
+
+## Run 29933834029 结果
+
+- Run ID：`29933834029`
+- URL：https://github.com/qingyueshen5-gif/AI-Workbench/actions/runs/29933834029
+- Job conclusion：failure
+- artifact 下载：成功
+- artifact 内 `preflight-summary.json`：passed
+- 云端 build 产物：`release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe`
+- SHA256：`b774e44137ac733e038ab77b60e3f8a0ad88ea2e87c676e9bc1c2a93161dd669`
+- 云端安装：passed
+- 云端安装版 smoke-test：passed
+- 云端卸载：passed
+- 云端安全扫描：passed
+
+失败原因：
+
+```text
+GitHub Personal Access Token is not set, neither programmatically, nor using env "GH_TOKEN"
+```
+
+这是 electron-builder 在 CI 中检测到 GitHub 环境后尝试隐式 publish 导致的失败。3A 本来就禁止发布，所以已将 `dist:win` 改为 `electron-builder --win nsis --publish never`。
 
 ## 下一步
 

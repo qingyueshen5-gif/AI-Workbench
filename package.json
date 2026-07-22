@@ -10,7 +10,7 @@
     "build": "vite build",
     "build:icon": "node scripts/generate-icon.mjs",
     "electron": "npm run build && npm run build:icon && electron .",
-    "dist:win": "node scripts/clean-release-output.mjs && npm run build && npm run build:icon && electron-builder --win nsis",
+    "dist:win": "node scripts/clean-release-output.mjs && npm run build && npm run build:icon && electron-builder --win nsis --publish never",
     "preview": "vite preview",
     "verify": "node scripts/verify.mjs",
     "verify:agents": "node scripts/verify-agents.mjs",

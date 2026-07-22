@@ -21,7 +21,7 @@
 - 模型分层、手机端、情报流水线暂不抢跑，等上线最小集前三条稳定后继续。
 - 3A-R1 最新结论：failed。安装器 `/S /currentuser` 只复制自身到 `%LOCALAPPDATA%\ai-workbench-updater\installer.exe`，没有创建真实安装目录、卸载器或卸载注册表项。
 - 3A-R1.2 最新结论：local passed / Actions failed。已确认安装包 payload 有效，根因是默认 per-user 安装目录在当前中文用户名环境下没有稳定落盘；已通过 `build/installer.nsh` 固定默认安装目录为 `%LOCALAPPDATA%\Programs\AIWorkbench`，并新增 `scripts/verify-nsis-install.mjs`。本地 `npm.cmd run verify:install-release` 已通过，证据见 `verification/install-release/repair1-2-summary.json` 和 `verification/install-release/preflight-summary.json`。GitHub Actions Run `29920336923` 已真正执行 preflight，但最终仍 failure；当前 `gh` token invalid，日志 403、artifact 下载 401，无法读取云端失败详情。
-- 3A-R1.3 最新结论：pending。GitHub CLI 已恢复并读取 Run `29920336923` artifact；根因是 `package.json` 写死 `build.electronDist=node_modules/electron/dist`，Actions 环境中该目录不存在，electron-builder 未产出安装包。已做最小修复，等待新 Actions run 真实结果。证据见 `verification/install-release/repair1-3-summary.json` 和 `verification/install-release/repair1-3-report.md`。
+- 3A-R1.3 最新结论：pending。GitHub CLI 已恢复并读取 Run `29920336923` artifact；根因是 `package.json` 写死 `build.electronDist=node_modules/electron/dist`，Actions 环境中该目录不存在，electron-builder 未产出安装包。Run `29933834029` 已证明云端 build/install/smoke/uninstall/扫描通过，但 job 因 electron-builder 隐式 publish 需要 `GH_TOKEN` 仍失败；已追加 `--publish never`，等待下一次 Actions success。证据见 `verification/install-release/repair1-3-summary.json` 和 `verification/install-release/repair1-3-report.md`。
 - `shared_managed` 生产注入仍为 blocked，本轮不处理、不冒充 passed。
 
 ## 明天路线图（2026-07-19）

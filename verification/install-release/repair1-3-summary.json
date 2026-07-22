@@ -28,7 +28,7 @@
   "fixes": [
     {
       "file": "package.json",
-      "change": "Removed build.electronDist so electron-builder can resolve/download Electron runtime in CI instead of failing on a missing explicit path."
+      "change": "Removed build.electronDist so electron-builder can resolve/download Electron runtime in CI instead of failing on a missing explicit path; added --publish never to dist:win to prevent CI implicit publishing during 3A."
     },
     {
       "file": "scripts/verify-install-release.mjs",
@@ -69,25 +69,27 @@
       "logFailedCommand": "failed locally because GitHub CLI could not write run-log cache under AppData, but artifact evidence was readable."
     },
     "newRun": {
-      "runId": "",
-      "url": "",
-      "conclusion": "pending",
-      "artifactDownloaded": false
+      "runId": "29933834029",
+      "url": "https://github.com/qingyueshen5-gif/AI-Workbench/actions/runs/29933834029",
+      "conclusion": "failure",
+      "artifactDownloaded": true,
+      "preflightSummaryStatus": "passed",
+      "failureReason": "Build step outcome was failure because electron-builder attempted implicit GitHub publish in CI and GH_TOKEN was not set, even though installer artifact and preflight passed."
     }
   },
   "validation": {
     "ghAuthRestored": true,
     "failedRunReadable": true,
     "artifactDownloaded": true,
-    "cloudBuild": "pending",
-    "cloudInstall": "pending",
-    "cloudSmoke": "pending",
-    "cloudUninstall": "pending",
-    "cloudSecretScan": "pending"
+    "cloudBuild": "partial",
+    "cloudInstall": "passed",
+    "cloudSmoke": "passed",
+    "cloudUninstall": "passed",
+    "cloudSecretScan": "passed"
   },
   "knownIssues": [
     "shared_managed production injection remains blocked and is intentionally not handled in this task.",
-    "Local release-v0.4.6-installer/win-unpacked is currently incomplete due local file-lock cleanup issues; the new Actions run must verify the clean CI build."
+    "Run 29933834029 preflight summary passed, but job conclusion failed because electron-builder implicit publish requires GH_TOKEN; dist:win now uses --publish never and needs one more Actions run."
   ],
   "canEnterR2SharedKeyProductionInjection": false,
   "canEnter3BRelease": false

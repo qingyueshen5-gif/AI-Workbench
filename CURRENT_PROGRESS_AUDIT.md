@@ -58,7 +58,7 @@
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；DeepSeek、Hermes、OpenClaw 三员工都已通过 `18800` 调用模型，验收摘要在 `verification/unified-model-proxy/summary.json`。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线硬骨头3A-R1.3 已恢复 GitHub CLI 并读取 Run `29920336923` artifact；云端失败根因已定位为 `package.json` 写死 `build.electronDist=node_modules/electron/dist`，Actions 环境中该目录不存在，electron-builder 未产出安装包。已做最小修复，等待新的 Actions run 真实结果。`shared_managed` 生产注入仍 blocked。
+- 现在卡在什么：上线硬骨头3A-R1.3 已恢复 GitHub CLI 并读取 Run `29920336923` artifact；云端失败根因已定位为 `package.json` 写死 `build.electronDist=node_modules/electron/dist`，Actions 环境中该目录不存在，electron-builder 未产出安装包。Run `29933834029` 已证明云端 build/install/smoke/uninstall/扫描通过，但 job 因 electron-builder 隐式 publish 需要 `GH_TOKEN` 仍失败；已追加 `--publish never`，等待下一次 Actions success。`shared_managed` 生产注入仍 blocked。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 

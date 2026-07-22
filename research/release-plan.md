@@ -171,6 +171,7 @@ R1 结论：必须先查清 NSIS 为什么只写 updater 副本但不执行 `ins
 - 根因是 `package.json` 写死 `build.electronDist=node_modules/electron/dist`，Actions 环境中该目录不存在，electron-builder 未产出安装包。
 - 次要问题是 preflight 脚本在 artifact 缺失时读取旧 NSIS 证据，造成报告混乱。
 - 已删除 `electronDist`，修复 preflight 旧证据读取，增强 workflow gate 和 Step Summary。
+- Run `29933834029` 的 artifact 证明云端 build/install/smoke/uninstall/扫描已 passed；job failure 的剩余原因是 electron-builder 在 CI 中隐式 publish，报 `GH_TOKEN` 未设置。3A 禁止发布，已在 `dist:win` 增加 `--publish never`。
 
 结论：
 
