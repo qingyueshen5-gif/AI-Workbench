@@ -1,8 +1,8 @@
 {
   "task": "install-release-repair1-3-actions-observability",
-  "status": "pending",
+  "status": "passed",
   "version": "0.4.6",
-  "updatedAt": "2026-07-22T23:20:00+08:00",
+  "updatedAt": "2026-07-22T23:55:00+08:00",
   "goal": "恢复 GitHub Actions 运行结果可读性，定位 Run 29920336923 云端 preflight 失败步骤，最小修复并取得一次真实 success 运行。",
   "currentFacts": {
     "localR12": "passed",
@@ -69,28 +69,32 @@
       "logFailedCommand": "failed locally because GitHub CLI could not write run-log cache under AppData, but artifact evidence was readable."
     },
     "newRun": {
-      "runId": "29933834029",
-      "url": "https://github.com/qingyueshen5-gif/AI-Workbench/actions/runs/29933834029",
-      "conclusion": "failure",
+      "runId": "29935231224",
+      "url": "https://github.com/qingyueshen5-gif/AI-Workbench/actions/runs/29935231224",
+      "conclusion": "success",
       "artifactDownloaded": true,
       "preflightSummaryStatus": "passed",
-      "failureReason": "Build step outcome was failure because electron-builder attempted implicit GitHub publish in CI and GH_TOKEN was not set, even though installer artifact and preflight passed."
+      "artifactName": "AI-Workbench-Setup-v0.4.6-x64.exe",
+      "artifactPath": "release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe",
+      "artifactSizeBytes": 111522780,
+      "sha256": "ca833403906e8ba82c267813ced701b39a83f9d7a7d9f3e9e857a011b6b9ab47",
+      "failureReason": ""
     }
   },
   "validation": {
     "ghAuthRestored": true,
     "failedRunReadable": true,
     "artifactDownloaded": true,
-    "cloudBuild": "partial",
+    "cloudBuild": "passed",
     "cloudInstall": "passed",
     "cloudSmoke": "passed",
     "cloudUninstall": "passed",
-    "cloudSecretScan": "passed"
+    "cloudSecretScan": "passed",
+    "workflowConclusion": "success"
   },
   "knownIssues": [
-    "shared_managed production injection remains blocked and is intentionally not handled in this task.",
-    "Run 29933834029 preflight summary passed, but job conclusion failed because electron-builder implicit publish requires GH_TOKEN; dist:win now uses --publish never and needs one more Actions run."
+    "shared_managed production injection remains blocked and is intentionally not handled in this task."
   ],
-  "canEnterR2SharedKeyProductionInjection": false,
+  "canEnterR2SharedKeyProductionInjection": true,
   "canEnter3BRelease": false
 }

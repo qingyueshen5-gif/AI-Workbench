@@ -11,6 +11,7 @@
 - `scripts/verify-nsis-install.mjs` 改为每次使用唯一 installed smoke runtime 目录。
 - Windows Installer Preflight workflow 增加 Step Summary，并在 final gate 同时检查 build、preflight 和 installer artifact。
 - Run `29933834029` 的 artifact 证明云端 build/install/smoke/uninstall/扫描已 passed，但 electron-builder 在 CI 中隐式 publish 导致 job failure；`dist:win` 已追加 `--publish never`。
+- Run `29935231224` 真实 conclusion 为 success；云端候选安装包 build、NSIS 安装、安装版 smoke-test、卸载和安全扫描均通过。
 - 未进入 3B，未创建 Release/tag，`shared_managed` 生产验证仍为 blocked。
 
 ## Unreleased - 上线硬骨头3A-R1.2：NSIS安装器修复

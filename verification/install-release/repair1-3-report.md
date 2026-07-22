@@ -4,9 +4,9 @@
 
 ## 状态
 
-- 本轮状态：pending
+- 本轮状态：passed
 - Run `29920336923` 失败根因：已定位
-- 修复：已在本地完成，Run `29933834029` 已证明 preflight passed；还需再跑一次确认 job success
+- 修复：已完成并推送，Run `29935231224` 已取得真实 success
 - 是否进入 3B：否
 - `shared_managed` 生产验证：blocked，本轮未处理
 
@@ -74,8 +74,34 @@ GitHub Personal Access Token is not set, neither programmatically, nor using env
 
 这是 electron-builder 在 CI 中检测到 GitHub 环境后尝试隐式 publish 导致的失败。3A 本来就禁止发布，所以已将 `dist:win` 改为 `electron-builder --win nsis --publish never`。
 
+## Run 29935231224 最终结果
+
+- Run ID：`29935231224`
+- URL：https://github.com/qingyueshen5-gif/AI-Workbench/actions/runs/29935231224
+- Job conclusion：success
+- artifact 下载：成功
+- artifact 内 `preflight-summary.json`：passed
+- 云端 build：passed
+- 云端 NSIS 静默安装：passed
+- 云端安装路径：`C:\Users\runneradmin\AppData\Local\Programs\AIWorkbench`
+- 云端安装版 `--smoke-test`：passed，退出码 0
+- 云端卸载：passed，退出码 0
+- 云端密钥和开发机路径扫描：passed
+- 候选安装包：`release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe`
+- 大小：111522780 bytes
+- SHA256：`ca833403906e8ba82c267813ced701b39a83f9d7a7d9f3e9e857a011b6b9ab47`
+
+云端 artifact 证明：
+
+- `artifactExists: true`
+- `unpackedExists: true`
+- `install.status: passed`
+- `firstRun.exitCode: 0`
+- `uninstall.status: passed`
+- 五条硬验收均为 true
+
 ## 下一步
 
-提交并 push 后触发新的 `Windows Installer Preflight`。只有新 run conclusion 为 `success`，并下载 artifact 确认云端 build/install/smoke/uninstall/扫描通过后，R1.3 才能写 `passed`。
+R1.3 已完成。下一步可进入 `③A-R2 shared key 生产注入修复/验证`，但必须由产品负责人明确批准后才能开始。
 
-未取得 Actions success 前，不进入 R2，不进入 3B，不创建 Release/tag。
+当前仍不进入 3B，不创建 Release/tag。

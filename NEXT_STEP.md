@@ -1,6 +1,6 @@
 # NEXT_STEP.md
 
-上线硬骨头3A 当前下一步：提交 R1.3 云端构建修复并取得新的 GitHub Actions success run。
+上线硬骨头3A 当前下一步：等待产品负责人批准是否进入 `③A-R2 shared key 生产注入修复/验证`。
 
 执行前必须先读 `EXECUTION_PROTOCOL.md`。本轮只做候选安装包、本地预验收、Actions 预验收工作流和验收证据；不创建 GitHub Release，不创建正式 tag，不进入 3B。
 
@@ -16,11 +16,10 @@
 6. GitHub Actions Run `29920336923` build 成功且 preflight 已执行，但最终仍 failure。
 7. GitHub CLI 已恢复，Run `29920336923` artifact 已下载读取。
 8. `shared_managed` 生产注入继续记录为 blocked，不在安装链路修复中冒充 passed。
-9. 3A-R1.3 根因已定位：`package.json` 写死 `build.electronDist=node_modules/electron/dist`，Actions 环境中该目录不存在，导致 electron-builder 未产出安装包。Run `29933834029` 已证明预验收 passed，但 electron-builder 隐式 publish 导致 job failure；已追加 `--publish never`，等待下一次 Actions success。
+9. 3A-R1.3 根因已定位并修复：`package.json` 写死 `build.electronDist=node_modules/electron/dist` 导致 Run `29920336923` 未产出安装包；Run `29933834029` 又因 electron-builder 隐式 publish 失败；`dist:win` 已追加 `--publish never`，Run `29935231224` 已取得真实 success。
 
 下一步：
 
-1. commit + push R1.3 修复。
-2. 触发并观察新的 `Windows Installer Preflight` run。
-3. 下载新 run artifact，确认云端 build/install/smoke/uninstall/扫描真实通过。
-4. 不创建 Release/tag，不进入 R2 或 3B。
+1. 产品负责人判断是否进入 `③A-R2 shared key 生产注入修复/验证`。
+2. 未获得批准前，不进入 R2 或 3B。
+3. 不创建 Release/tag。

@@ -1,14 +1,14 @@
 # Windows 安装包候选版发布前预验收
 
-生成时间：2026-07-22T15:16:51.194Z
+生成时间：2026-07-22T15:52:41.992Z
 
 ## 总状态
 
-- 状态：failed
+- 状态：passed
 - 版本：0.4.6
 - 安装包：release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe
-- 大小：111605899
-- SHA256：857fd37521fa6cf8a01306d165e4cf3b5123013ca8392f1acf92807214976992
+- 大小：111522780
+- SHA256：ca833403906e8ba82c267813ced701b39a83f9d7a7d9f3e9e857a011b6b9ab47
 
 ## 五条硬验收
 
@@ -39,11 +39,10 @@
 
 ## 已知问题
 
-- win-unpacked executable is missing.
 - shared_managed production injection is not verified in 3A; mechanism test used mock upstream only.
 
 ## 命令证据
 
-- `C:\Program Files\nodejs\node.exe F:\AI-Workbench\scripts\verify-nsis-install.mjs F:\AI-Workbench\release-v0.4.6-installer\AI-Workbench-Setup-v0.4.6-x64.exe F:\AI-Workbench\verification\install-release` -> exit 0
-- `C:\Program Files\nodejs\node.exe F:\AI-Workbench\model-proxy.mjs` -> exit 0
+- `C:\hostedtoolcache\windows\node\22.23.1\x64\node.exe D:\a\AI-Workbench\AI-Workbench\scripts\verify-nsis-install.mjs D:\a\AI-Workbench\AI-Workbench\release-v0.4.6-installer\AI-Workbench-Setup-v0.4.6-x64.exe D:\a\AI-Workbench\AI-Workbench\verification\install-release` -> exit 0
+- `C:\hostedtoolcache\windows\node\22.23.1\x64\node.exe D:\a\AI-Workbench\AI-Workbench\model-proxy.mjs` -> exit 0
 - `git ls-files` -> exit 0

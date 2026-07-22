@@ -155,7 +155,7 @@ R1 结论：必须先查清 NSIS 为什么只写 updater 副本但不执行 `ins
 
 ## 3A-R1.3：Actions 云端预验收可观测性
 
-3A-R1.3 状态：pending。
+3A-R1.3 状态：passed。
 
 目标：
 
@@ -172,8 +172,10 @@ R1 结论：必须先查清 NSIS 为什么只写 updater 副本但不执行 `ins
 - 次要问题是 preflight 脚本在 artifact 缺失时读取旧 NSIS 证据，造成报告混乱。
 - 已删除 `electronDist`，修复 preflight 旧证据读取，增强 workflow gate 和 Step Summary。
 - Run `29933834029` 的 artifact 证明云端 build/install/smoke/uninstall/扫描已 passed；job failure 的剩余原因是 electron-builder 在 CI 中隐式 publish，报 `GH_TOKEN` 未设置。3A 禁止发布，已在 `dist:win` 增加 `--publish never`。
+- Run `29935231224` 真实 conclusion 为 success；云端 build/install/smoke/uninstall/扫描均通过，artifact summary 为 passed。
 
 结论：
 
-- R1.3 仍需新的 Actions success run 才能写 passed。
-- 未取得 Actions success 前，不进入 3B，不创建 Release/tag。
+- R1.3 已完成。
+- 下一步是否进入 `③A-R2 shared key 生产注入修复/验证` 必须等待产品负责人批准。
+- 当前仍不进入 3B，不创建 Release/tag。

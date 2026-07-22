@@ -39,7 +39,7 @@ AI Workbench 已完成统一模型入口、上线硬骨头1“陌生机器不崩
 - Run `29933834029`：云端安装包构建、安装、smoke-test、卸载和扫描均通过，artifact 内 `preflight-summary.json` 为 passed；但 job 仍 failure，原因是 electron-builder 在 CI 中尝试隐式 publish，报 `GH_TOKEN` 未设置。已追加 `--publish never`，需再跑一次 Actions。
 - 本地验证：`node --check` 和 `npm.cmd run build` 通过；`npm.cmd run verify:install-release` 完成安装、smoke、卸载和扫描，但因本机旧 `win-unpacked` 被文件锁清理破坏仍为 failed。最终以新 Actions 干净环境 run 为准。
 - 验收产物：`verification/install-release/repair1-3-summary.json`、`verification/install-release/repair1-3-report.md`。
-- 结论：R1.3 尚未判绿，需 push 后取得新的 Actions success；不进入 R2，不进入 3B。
+- 结论：R1.3 已判绿。Run `29935231224` 真实 success，云端 build/install/smoke/uninstall/扫描通过；不自动进入 R2，不进入 3B。
 
 ## 缺失文件说明
 
