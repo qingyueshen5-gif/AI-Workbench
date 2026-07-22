@@ -46,11 +46,10 @@ schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS
 
 随后本轮阻塞记录已成功提交并 push：
 
-- commit：`0584ef660106d516cb25deabe8c6347c0bc47337`
+- commit：以最终 `git log` 为准
 - push：成功
 - `git status --short --branch`：`## main...origin/main`
-- 本地 `HEAD`：`0584ef660106d516cb25deabe8c6347c0bc47337`
-- 本地 `origin/main` 引用：`0584ef660106d516cb25deabe8c6347c0bc47337`
+- 本地 `HEAD` 与 `origin/main`：推送后检查时一致
 
 但 `git fetch origin` 仍失败，`gh auth status` 仍未登录。因此 GitHub Actions 日志读取能力没有恢复。
 

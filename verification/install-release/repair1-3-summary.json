@@ -111,11 +111,11 @@
     },
     "7_commitPush": {
       "status": "partial",
-      "commitId": "0584ef660106d516cb25deabe8c6347c0bc47337",
+      "commitId": "see git log after final documentation sync",
       "push": "succeeded",
       "postPushStatus": "## main...origin/main",
-      "postPushHead": "0584ef660106d516cb25deabe8c6347c0bc47337",
-      "postPushOriginMain": "0584ef660106d516cb25deabe8c6347c0bc47337",
+      "postPushHead": "checked after push",
+      "postPushOriginMain": "matched local HEAD at check time",
       "remainingIssue": "git fetch origin still fails with SEC_E_NO_CREDENTIALS and gh auth is still not logged in."
     }
   },
@@ -135,7 +135,7 @@
   "rootCause": "Not determined. The only verified blocker in R1.3 is missing GitHub CLI/Git credentials, which prevents reading the failed Actions logs and artifacts.",
   "knownIssues": [
     "GitHub CLI is not authenticated.",
-    "git push succeeded for commit 0584ef660106d516cb25deabe8c6347c0bc47337, but git fetch still fails because Windows GitHub credentials are unavailable.",
+    "git push succeeded, but git fetch still fails because Windows GitHub credentials are unavailable.",
     "Run 29920336923 failure details remain unread.",
     "shared_managed production injection remains blocked and is intentionally not handled in this task."
   ],
