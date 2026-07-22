@@ -2,7 +2,7 @@
 
 > 【交接铁律】每完成一步，必须更新 `TASKLOG.md`、`CHANGELOG.md`、`CURRENT_TASK.md`、`NEXT_STEP.md`、`DECISIONS.md`、`CURRENT_PROGRESS_AUDIT.md`，再 commit + push。换对话框时，新对话框先读 `EXECUTION_PROTOCOL.md` + 这些文件 + 桌面 Handoff 文件即可接手。
 
-> 最新更新：2026-07-22
+> 最新更新：2026-07-23
 
 ## 当前阶段：让工作台从“只会指路”变成“真会干活”
 
@@ -10,7 +10,7 @@
 
 - [x] 硬骨头1：陌生机器不崩。启动路径改为缺依赖降级，config/data/logs/evidence 首次运行自动创建，18800/Hermes/OpenClaw/端口异常统一返回中文未就绪状态；自动验收证据见 `verification/clean-machine/summary.json`。
 - [x] 硬骨头2：共享 key 落地。18800 网关支持共享托管 key 兜底，员工和前端只使用本机占位 token；验收证据见 `verification/shared-key/summary.json`。
-- [ ] 硬骨头3：能下载能安装。3A 已生成候选包但预验收未通过；修复后重跑 3A，3A 通过并经产品负责人批准后才进入 3B：GitHub Release 正式发布并生成唯一下载链接。
+- [ ] 硬骨头3：能下载能安装。3A-R1.3 已通过，候选安装包云端 build/install/smoke/uninstall/扫描通过；本机安装版已恢复并保留。`shared_managed` 生产注入仍 blocked，下一次唯一主线是 ③A-R2；R2 通过后才做 ③A 总验收和 ③B 正式 Release。
 
 ## 当前口径校准
 
@@ -20,9 +20,10 @@
 - 统一模型入口的真实验收产物是 `verification/unified-model-proxy/summary.json`。
 - 模型分层、手机端、情报流水线暂不抢跑，等上线最小集前三条稳定后继续。
 - 3A-R1 最新结论：failed。安装器 `/S /currentuser` 只复制自身到 `%LOCALAPPDATA%\ai-workbench-updater\installer.exe`，没有创建真实安装目录、卸载器或卸载注册表项。
-- 3A-R1.2 最新结论：local passed / Actions failed。已确认安装包 payload 有效，根因是默认 per-user 安装目录在当前中文用户名环境下没有稳定落盘；已通过 `build/installer.nsh` 固定默认安装目录为 `%LOCALAPPDATA%\Programs\AIWorkbench`，并新增 `scripts/verify-nsis-install.mjs`。本地 `npm.cmd run verify:install-release` 已通过，证据见 `verification/install-release/repair1-2-summary.json` 和 `verification/install-release/preflight-summary.json`。GitHub Actions Run `29920336923` 已真正执行 preflight，但最终仍 failure；当前 `gh` token invalid，日志 403、artifact 下载 401，无法读取云端失败详情。
+- 3A-R1.2 历史结论：local passed / Actions failed。该轮已确认安装包 payload 有效，并修复默认 per-user 安装目录不稳定落盘问题；后续 3A-R1.3 已完成云端修复并通过，不再以 R1.2 的 Actions failure 作为当前状态。
 - 3A-R1.3 最新结论：passed。GitHub CLI 已恢复并读取 Run `29920336923` artifact；根因是 `package.json` 写死 `build.electronDist=node_modules/electron/dist`，Actions 环境中该目录不存在，electron-builder 未产出安装包。Run `29933834029` 证明预验收 passed 但 job 因 electron-builder 隐式 publish 失败；已追加 `--publish never`，Run `29935231224` 取得真实 success。证据见 `verification/install-release/repair1-3-summary.json`、`verification/install-release/repair1-3-report.md` 和 `verification/install-release/actions-29935231224.md`。
 - 本机安装版已恢复：已将 `F:\AI-Workbench\release-v0.4.6-installer\AI-Workbench-Setup-v0.4.6-x64.exe` 恢复为 Run `29935231224` 通过验收的 SHA256 `ca833403906e8ba82c267813ced701b39a83f9d7a7d9f3e9e857a011b6b9ab47`，安装到 `%LOCALAPPDATA%\Programs\AIWorkbench`，桌面/开始菜单快捷方式已修正，安装版启动验证通过；记录见 `tasks/2026-07-22-恢复本机安装版.md`。
+- 今日收尾已完成：本机安装版再次复核并保留；最近任务真实状态和产品距离已写入 `verification/daily-closeout/summary.json`、`verification/daily-closeout/report.md` 和 `tasks/2026-07-23-今日收尾与产品距离核验.md`。
 - `shared_managed` 生产注入仍为 blocked，本轮不处理、不冒充 passed。
 
 ## 明天路线图（2026-07-19）

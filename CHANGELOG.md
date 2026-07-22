@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Unreleased - 今日收尾与产品距离核验
+
+- 新增 `verification/daily-closeout/summary.json` 和 `verification/daily-closeout/report.md`，记录 2026-07-23 今日收尾、真实任务状态和产品距离核验。
+- 新增 `tasks/2026-07-23-今日收尾与产品距离核验.md`，记录本轮只做收尾、不开发新功能、不进入 R2/3B。
+- 复核本机 v0.4.6 安装版已恢复并保留：安装目录为 `%LOCALAPPDATA%\Programs\AIWorkbench`，桌面和开始菜单快捷方式已指向当前安装目录，安装版 smoke-test 退出码 0，用户数据未删除。
+- 修正 `LAUNCH.md`、`CURRENT_TASK.md`、`NEXT_STEP.md`、`TASKLOG.md`、`CURRENT_PROGRESS_AUDIT.md` 和 `AI-Workbench-Handoff.md` 中关于 3A-R1.3 的旧口径：Run `29935231224` 已真实 success，3A-R1.3 已通过。
+- 保持真实边界：`shared_managed` 生产注入仍为 blocked，GitHub Release 和唯一下载链接尚未完成，硬骨头3不能标记完成。
+
 ## Unreleased - 上线硬骨头3A-R1.3：Actions 云端预验收阻塞记录
 
 - 新增并更新 `verification/install-release/repair1-3-summary.json` 和 `verification/install-release/repair1-3-report.md`，记录 R1.3 从 GitHub CLI/Git 凭证阻塞恢复到云端构建根因定位。

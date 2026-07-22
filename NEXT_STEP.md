@@ -1,8 +1,8 @@
 # NEXT_STEP.md
 
-上线硬骨头3A 当前下一步：等待产品负责人批准是否进入 `③A-R2 shared key 生产注入修复/验证`。
+上线硬骨头3A 当前下一步：`③A-R2：shared_managed 真实生产注入修复/验证`。必须由产品负责人明确批准后才开始。
 
-本机日常使用状态：v0.4.6 安装版已恢复到 `%LOCALAPPDATA%\Programs\AIWorkbench`，桌面和开始菜单快捷方式已修正到当前安装目录；本轮不进入 R2 或 3B。
+本机日常使用状态：v0.4.6 安装版已恢复并保留在 `%LOCALAPPDATA%\Programs\AIWorkbench`，桌面和开始菜单快捷方式已修正到当前安装目录；今日收尾已完成，不进入 R2 或 3B。
 
 执行前必须先读 `EXECUTION_PROTOCOL.md`。本轮只做候选安装包、本地预验收、Actions 预验收工作流和验收证据；不创建 GitHub Release，不创建正式 tag，不进入 3B。
 
@@ -22,6 +22,7 @@
 
 下一步：
 
-1. 产品负责人判断是否进入 `③A-R2 shared key 生产注入修复/验证`。
-2. 未获得批准前，不进入 R2 或 3B。
-3. 不创建 Release/tag。
+1. 产品负责人明确批准后，进入 `③A-R2：shared_managed 真实生产注入修复/验证`。
+2. R2 通过后再做 ③A 总验收。
+3. ③A 总验收通过并经产品负责人批准后，才进入 ③B：GitHub Release 正式发布。
+4. 未获得批准前，不进入 R2 或 3B，不创建 Release/tag。

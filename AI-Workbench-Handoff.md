@@ -1,6 +1,6 @@
 # AI Workbench 新对话交接包
 
-生成时间：2026-07-22
+生成时间：2026-07-23
 
 用途：新对话框启动后，只读这一份文件即可快速理解当前真实状态、产品战略、当前任务和下一步动作。
 
@@ -28,7 +28,7 @@
 
 版本号：
 
-- `package.json` 当前版本：`0.4.5`
+- `package.json` 当前版本：`0.4.6`
 - `CHANGELOG.md` 最新版本条目：`Unreleased - 上线硬骨头3A-R1.2：NSIS安装器修复`
 
 ## 2. `research/` 真实存在文件
@@ -62,31 +62,32 @@
 
 ## 4. 当前真实进度
 
-- 产品版本：`v0.4.6` 候选版，3A-R1.3 GitHub Actions 云端预验收已通过。
+- 产品版本：`v0.4.6` 候选版，3A-R1.3 GitHub Actions 云端预验收已通过；本机安装版已恢复并保留。
 - 任务账本：`TASKLOG.md` 已补齐，后续每次任务都必须同步更新。
 - 执行协议：`EXECUTION_PROTOCOL.md` 已补齐，所有新 AI / Codex 接手前必须读取。
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；DeepSeek、Hermes、OpenClaw 三员工都已通过 `18800` 调用模型，验收摘要在 `verification/unified-model-proxy/summary.json`。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线硬骨头3A-R1.3 已完成。GitHub CLI 已恢复；Run `29920336923` 失败根因已定位为 `build.electronDist` 写死导致 Actions 无法找到 Electron runtime；Run `29933834029` 证明预验收 passed 但因隐式 publish 失败；Run `29935231224` 已真实 success。`shared_managed` 生产注入仍 blocked，下一步需产品负责人批准是否进入 `③A-R2 shared key 生产注入修复/验证`。
+- 现在卡在什么：上线硬骨头3A-R1.3 已完成。GitHub CLI 已恢复；Run `29920336923` 失败根因已定位为 `build.electronDist` 写死导致 Actions 无法找到 Electron runtime；Run `29933834029` 证明预验收 passed 但因隐式 publish 失败；Run `29935231224` 已真实 success。本机 v0.4.6 安装版已恢复并保留。`shared_managed` 生产注入仍 blocked，下一次唯一主线是 `③A-R2：shared_managed 真实生产注入修复/验证`。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
 ## 5. 下一步
 
-1. 等产品负责人判断是否进入 `③A-R2 shared key 生产注入修复/验证`。
-2. 只有 shared key 生产注入验证完成，并经产品负责人批准后，才由产品负责人判断是否进入 3B：GitHub Release 正式发布。
-3. 模型分层、手机端、情报流水线暂不抢跑，等上线最小集前三条稳定后继续。
+1. 等产品负责人批准后进入 `③A-R2：shared_managed 真实生产注入修复/验证`。
+2. R2 通过后再做 ③A 总验收。
+3. 只有 ③A 总验收完成并经产品负责人批准后，才由产品负责人判断是否进入 3B：GitHub Release 正式发布。
+4. 模型分层、手机端、情报流水线暂不抢跑，等上线最小集前三条稳定后继续。
 
 ## 交接重点
 
-- 产品版本：v0.4.6 候选版，3A-R1.2 本地预验收 passed，GitHub Actions failed，不能发布。
+- 产品版本：v0.4.6 候选版，3A-R1.3 GitHub Actions 云端预验收 passed，本机安装版已恢复并保留；仍不能发布，因为 `shared_managed` 生产注入和 3B Release 未完成。
 - 当前形态：独立桌面应用，三个员工分别是 DeepSeek（理解/模型）、Hermes（终端/电脑执行）、OpenClaw（浏览器操作/长任务编排）。
 - OpenClaw gateway 掉线问题已经修好到可启动：清理 runtime 残留后可监听 `127.0.0.1:18789`。
 - Codex 执行器已经恢复，不再卡在 PowerShell/WSL spawn 超时。
 - 统一模型入口已经完成：Workbench、Hermes、OpenClaw 三员工模型调用已统一经过本机 `18800` 代理。
 - 共享 key 已落地在 18800 服务端边界内，前端和员工配置不保存真实 key。
-- 下一步不是继续修 OpenClaw，也不是情报流水线；下一步是提交并验证 3A-R1.3 的 `--publish never` 修复。Run `29920336923` 根因已定位为 `electronDist` 写死导致云端没有生成安装包；Run `29933834029` 预验收已 passed 但 job 因 electron-builder 隐式 publish 失败。拿到新的 Actions passed 后再由产品负责人判断是否进入 3B：GitHub Release 下载链接。
+- 下一步不是继续修 OpenClaw，也不是情报流水线；下一步唯一主线是 `③A-R2：shared_managed 真实生产注入修复/验证`。R2 通过后再做 ③A 总验收，之后才由产品负责人判断是否进入 3B：GitHub Release 下载链接。
 
 # 第二部分：产品战略（核心理解）
 

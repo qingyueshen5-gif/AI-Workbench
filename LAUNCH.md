@@ -23,7 +23,8 @@
 
 ## 当前 3A 状态
 
-- 2026-07-22：硬骨头3A 已生成 Windows 安装包候选版 `AI-Workbench-Setup-v0.4.6-x64.exe`，但发布前预验收未通过。
-- 失败证据：`verification/install-release/preflight-summary.json`。
-- 硬骨头3不能标记完成；不进入 GitHub Release 3B。
+- 2026-07-23：硬骨头3A-R1.3 已通过。Windows 安装包候选版 `AI-Workbench-Setup-v0.4.6-x64.exe` 已在 GitHub Actions Run `29935231224` 通过 build/install/smoke/uninstall/扫描预验收。
+- 通过证据：`verification/install-release/preflight-summary.json`、`verification/install-release/repair1-3-summary.json`、`verification/install-release/actions-29935231224.md`。
+- 本机 v0.4.6 安装版已恢复并保留，记录见 `tasks/2026-07-22-恢复本机安装版.md`。
+- 硬骨头3仍不能标记完成；`shared_managed` 生产注入仍 blocked，GitHub Release 和唯一下载链接尚未完成。下一次唯一主线是 `③A-R2：shared_managed 真实生产注入修复/验证`。
 ---

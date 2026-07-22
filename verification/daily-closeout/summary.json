@@ -1,0 +1,115 @@
+{
+  "task": "daily-closeout-product-distance-audit",
+  "date": "2026-07-23",
+  "overallStatus": "passed",
+  "currentVersion": "0.4.6",
+  "currentCommit": "21a13b9f98346486fa716b3ba2f609e8d88d46ff",
+  "actionsRunId": "29935231224",
+  "localInstallRestored": {
+    "status": "passed",
+    "installerPath": "F:\\AI-Workbench\\release-v0.4.6-installer\\AI-Workbench-Setup-v0.4.6-x64.exe",
+    "sha256": "ca833403906e8ba82c267813ced701b39a83f9d7a7d9f3e9e857a011b6b9ab47",
+    "installDir": "%LOCALAPPDATA%\\Programs\\AIWorkbench",
+    "installedExeExists": true,
+    "desktopShortcut": "passed",
+    "startMenuShortcut": "passed",
+    "smokeExitCode": 0,
+    "version": "0.4.6.0",
+    "userDataPreserved": true,
+    "uninstallRunThisRound": false,
+    "note": "Direct /S timed out on this already-installed local machine; explicit /S /D=%LOCALAPPDATA%\\Programs\\AIWorkbench was used and the installation was retained."
+  },
+  "completedTasks": [
+    {
+      "name": "统一模型入口",
+      "status": "passed",
+      "evidence": "verification/unified-model-proxy/summary.json",
+      "basis": "summary ok=true; Workbench/Hermes/OpenClaw model calls are routed through 18800."
+    },
+    {
+      "name": "陌生机器不崩",
+      "status": "passed",
+      "evidence": "verification/clean-machine/summary.json, verification/clean-machine/readiness-report.md",
+      "basis": "summary ok=true; criteria a-e all ok=true."
+    },
+    {
+      "name": "共享 Key 机制",
+      "status": "partial",
+      "evidence": "verification/shared-key/summary.json, verification/install-release/preflight-summary.json",
+      "basis": "mechanism test ok=true and health does not leak key, but production shared_managed injection remains blocked."
+    },
+    {
+      "name": "Windows 安装包本地安装/启动/卸载",
+      "status": "passed",
+      "evidence": "verification/install-release/repair1-2-summary.json, verification/install-release/preflight-summary.json",
+      "basis": "R1.2 local install/start/uninstall passed; cloud preflight also passed."
+    },
+    {
+      "name": "GitHub Actions Run 29935231224",
+      "status": "passed",
+      "evidence": "verification/install-release/actions-29935231224.md, verification/install-release/repair1-3-summary.json",
+      "basis": "GitHub Actions conclusion=success; artifact summary status=passed."
+    },
+    {
+      "name": "密钥和开发机路径扫描",
+      "status": "passed",
+      "evidence": "verification/install-release/preflight-summary.json",
+      "basis": "packageHits, installerHits, packagePathHits, installerPathHits are empty; sourceRuntimeHits are informational environment variable names."
+    },
+    {
+      "name": "本机安装版恢复",
+      "status": "passed",
+      "evidence": "tasks/2026-07-22-恢复本机安装版.md",
+      "basis": "installer hash matched, installed exe exists, shortcuts point to current install directory, smoke-test exit code 0, user data exists."
+    }
+  ],
+  "blockedTasks": [
+    {
+      "name": "shared_managed 生产注入",
+      "status": "blocked",
+      "evidence": "verification/install-release/preflight-summary.json",
+      "reason": "3A smoke validates installed mechanics only; production shared key injection is explicitly not verified."
+    },
+    {
+      "name": "GitHub Release 与唯一下载链接",
+      "status": "blocked",
+      "evidence": "LAUNCH.md, TASKLOG.md",
+      "reason": "3B has not been approved or executed; no formal Release/tag/download link exists."
+    }
+  ],
+  "productDistance": {
+    "zeroBarrier": {
+      "status": "partial",
+      "evidence": "verification/install-release/preflight-summary.json; local install restored",
+      "remainingGap": "Installer lets users avoid Node/npm/Python, but production shared key and public download link are not complete."
+    },
+    "doesRealWork": {
+      "status": "partial",
+      "evidence": "verification/v0.4.3-actions/summary.json; verification/unified-model-proxy/summary.json",
+      "remainingGap": "Basic computer actions and model routing have evidence; broader task reliability and production shared key still need validation."
+    },
+    "keepsSimple": {
+      "status": "passed",
+      "evidence": "PRODUCT.md; CURRENT_TASK.md; no new UI/config pages added in 3A/R1.3/local restore",
+      "remainingGap": "Need example prompts and feedback/safety text later without adding visible complexity."
+    },
+    "installDelivery": {
+      "status": "partial",
+      "evidence": "verification/install-release/preflight-summary.json; GitHub Actions Run 29935231224",
+      "remainingGap": "Candidate installer works and cloud preflight passed; formal GitHub Release and shareable download link are not done."
+    },
+    "selfHosting": {
+      "status": "partial",
+      "evidence": "verification/unified-model-proxy/summary.json; verification/shared-key/summary.json",
+      "remainingGap": "Model calls are centralized through 18800; production credential injection remains blocked."
+    },
+    "launchReadiness": {
+      "status": "blocked",
+      "evidence": "LAUNCH.md; no release/tag created",
+      "remainingGap": "No formal Release/tag/download link; shared_managed production injection must be resolved before 3B."
+    }
+  },
+  "modelRouterSummaryCreated": false,
+  "nextSingleTask": "③A-R2：shared_managed 真实生产注入修复/验证",
+  "todayConclusion": "今天恢复了本机可用安装版，确认安装包云端预验收通过，并把真实进度收敛到仓库；产品更接近最终形态，因为普通安装、启动、降级和卸载链路已验证；仍被 shared_managed 生产注入和 GitHub Release 唯一下载链接两个问题卡住。"
+}
