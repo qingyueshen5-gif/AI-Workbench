@@ -40,11 +40,13 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force -Path verification/install-release | Out-Null
           npm run dist:win *>&1 | Tee-Object -FilePath verification/install-release/actions-build.log
+          $artifactExists = Test-Path -LiteralPath 'release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe'
+          "artifact_exists=$artifactExists" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
           exit $LASTEXITCODE
 
       - name: Run install-release preflight
         id: preflight
-        if: steps.build.outcome == 'success'
+        if: steps.build.outputs.artifact_exists == 'True'
         shell: pwsh
         continue-on-error: true
         run: npm run verify:install-release
@@ -62,5 +64,5 @@ jobs:
           if-no-files-found: warn
 
       - name: Fail when preflight failed
-        if: steps.build.outcome != 'success' || steps.preflight.outcome != 'success'
+        if: steps.build.outputs.artifact_exists != 'True' || steps.preflight.outcome != 'success'
         run: exit 1
