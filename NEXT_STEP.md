@@ -2,6 +2,8 @@
 
 上线硬骨头3A 当前下一步：等待产品负责人批准是否进入 `③A-R2 shared key 生产注入修复/验证`。
 
+本机日常使用状态：v0.4.6 安装版已恢复到 `%LOCALAPPDATA%\Programs\AIWorkbench`，桌面和开始菜单快捷方式已修正到当前安装目录；本轮不进入 R2 或 3B。
+
 执行前必须先读 `EXECUTION_PROTOCOL.md`。本轮只做候选安装包、本地预验收、Actions 预验收工作流和验收证据；不创建 GitHub Release，不创建正式 tag，不进入 3B。
 
 当前 3A-R1.2 本地修复证据见 `verification/install-release/repair1-2-summary.json`、`verification/install-release/repair1-2-report.md`、`verification/install-release/preflight-summary.json` 和 `verification/install-release/preflight-report.md`。

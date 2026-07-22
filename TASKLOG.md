@@ -2,7 +2,7 @@
 
 > 仓库文件是唯一事实来源。每个任务下达、完成、验收和交接都必须写回本仓库，不能只留在对话里。
 
-最新更新：2026-07-22
+最新更新：2026-07-23
 
 ## 当前一句话状态
 
@@ -17,12 +17,13 @@ AI Workbench 已完成统一模型入口、上线硬骨头1“陌生机器不崩
 | 硬骨头2：共享 key 落地 | 已完成 | 18800 网关支持共享托管 key 兜底；用户本机 key 优先；前端、Hermes、OpenClaw 和员工配置只使用本机占位 token。 | `verification/shared-key/summary.json` |
 | 任务账本与进度口径校准 | 已完成 | 新增本文件作为总账本；明确当前缺失文件、真实进度和下一步；避免跨 AI 协作时混淆“统一模型入口”和“模型分层”。 | `TASKLOG.md` |
 | 固化分段执行与验收协议 | 已完成 | 创建 `EXECUTION_PROTOCOL.md`，把单一主线、分段执行、真实验收、失败也留痕和产品负责人批准下一阶段写成固定规范；当前 3A 仍是唯一主线，未改变产品路线。 | `EXECUTION_PROTOCOL.md`、`tasks/2026-07-22-固化分段执行与验收协议.md` |
+| 恢复本机安装版 | 已完成 | 将 F 盘候选安装包恢复为 Actions Run `29935231224` 通过验收的 hash 版本，重新安装 v0.4.6 到本机，修正桌面和开始菜单快捷方式，启动验证通过；未进入 R2/3B，未改代码。 | `tasks/2026-07-22-恢复本机安装版.md` |
 
 ## 当前未完成任务
 
 | 任务 | 当前状态 | 下一步 |
 | --- | --- | --- |
-| 硬骨头3：能下载能安装 | 3A 未通过 | 已生成 `release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe`，但发布前预验收失败；修复后重跑 3A，产品负责人批准后才能进入 3B GitHub Release。 |
+| 硬骨头3：能下载能安装 | 3A-R1.3 已通过，待产品负责人批准下一步 | 候选安装包云端预验收已通过；本机安装版已恢复。`shared_managed` 生产注入仍 blocked，是否进入 R2 需产品负责人批准；3B Release 仍未开始。 |
 | 打开后知道能干嘛 | 未完成 | 首屏放 3-5 条能点即跑的示例指令。 |
 | 办不成时是人话不是崩 | 部分完成 | 已有 readiness 降级说明；后续继续补失败自愈、重试和人话解释。 |
 | 反馈出口 + 一句安全告知 | 未完成 | 增加反馈渠道和基础安全告知。 |
@@ -33,10 +34,11 @@ AI Workbench 已完成统一模型入口、上线硬骨头1“陌生机器不崩
 ## 最新 3A-R1.3 结果
 
 - 任务：上线硬骨头3A-R1.3：恢复 GitHub Actions 可观测性并完成云端预验收。
-- 状态：pending。
+- 状态：passed。
 - 本轮确认：GitHub CLI 已恢复，Run `29920336923` 的 artifact 已下载读取；`actions-build.log` 显示云端构建失败根因是 `package.json` 写死 `build.electronDist=node_modules/electron/dist`，而 Actions `npm ci` 后该目录不存在。
 - 已做最小修复：删除 `electronDist`；预验收脚本不再读取旧 NSIS 证据；NSIS smoke runtime 改为唯一目录；workflow 增加 Step Summary 和 build/preflight/artifact gate；临时 Actions 下载目录加入 `.gitignore`。
-- Run `29933834029`：云端安装包构建、安装、smoke-test、卸载和扫描均通过，artifact 内 `preflight-summary.json` 为 passed；但 job 仍 failure，原因是 electron-builder 在 CI 中尝试隐式 publish，报 `GH_TOKEN` 未设置。已追加 `--publish never`，需再跑一次 Actions。
+- Run `29933834029`：云端安装包构建、安装、smoke-test、卸载和扫描均通过，artifact 内 `preflight-summary.json` 为 passed；但 job 仍 failure，原因是 electron-builder 在 CI 中尝试隐式 publish，报 `GH_TOKEN` 未设置。已追加 `--publish never`。
+- Run `29935231224`：真实 conclusion 为 success；云端 build/install/smoke/uninstall/扫描均 passed。
 - 本地验证：`node --check` 和 `npm.cmd run build` 通过；`npm.cmd run verify:install-release` 完成安装、smoke、卸载和扫描，但因本机旧 `win-unpacked` 被文件锁清理破坏仍为 failed。最终以新 Actions 干净环境 run 为准。
 - 验收产物：`verification/install-release/repair1-3-summary.json`、`verification/install-release/repair1-3-report.md`。
 - 结论：R1.3 已判绿。Run `29935231224` 真实 success，云端 build/install/smoke/uninstall/扫描通过；不自动进入 R2，不进入 3B。
@@ -60,12 +62,12 @@ AI Workbench 已完成统一模型入口、上线硬骨头1“陌生机器不崩
 ## 最新 3A 结果
 
 - 任务：上线硬骨头3A：安装包候选版与发布前预验收。
-- 最新修复轮：3A-R1.2，状态 local passed / Actions failed。
-- 候选安装包：`release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe`。
+- 最新修复轮：3A-R1.3，状态 passed。
+- 候选安装包：`release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe`，SHA256 `ca833403906e8ba82c267813ced701b39a83f9d7a7d9f3e9e857a011b6b9ab47`。
 - 验收产物：`verification/install-release/preflight-summary.json`、`verification/install-release/preflight-report.md`、`verification/install-release/nsis-install-uninstall.json`、`verification/install-release/repair1-2-summary.json`、`verification/install-release/repair1-2-report.md`、`verification/install-release/repair1-2-install.log`、`verification/install-release/repair1-2-smoke.log`、`verification/install-release/repair1-2-uninstall.log`。
 - R1 已做：为 packaged smoke-test 禁用更多 GPU 路径并改为 HTTP renderer 探测；安装验证改为发现真实安装路径；尝试 assisted NSIS、默认 per-user、`/currentuser`、oneClick NSIS、`force-run` 和 60 秒等待。
 - R1.2 根因：安装包 payload 有效；默认 per-user 安装目录在当前中文用户名环境下没有稳定落盘，只留下 updater 缓存副本。显式 `/D=` 到 ASCII 路径可落盘。
 - R1.2 修复：新增 `build/installer.nsh`，将默认安装目录固定为 `%LOCALAPPDATA%\Programs\AIWorkbench`；新增 `scripts/verify-nsis-install.mjs`，主 preflight 改用 Node helper 真实执行安装、安装版 smoke-test 和卸载。
 - 本地结果：`npm.cmd run verify:install-release` 通过；NSIS `/S` 安装真实落盘，exe、卸载器、卸载注册表项、桌面/开始菜单快捷方式均存在；安装版 `--smoke-test` 退出码 0；卸载退出码 0。
-- GitHub Actions：Run `29919498085` failure，失败在 build；Run `29919834193` 和 `29920088772` build 成功但 preflight 被 skipped；Run `29920336923` build 成功且 preflight 已执行，但最终仍 failure。当前 `gh` token invalid，日志 403、artifact 下载 401，无法读取云端 preflight 失败详情。
-- 结论：本地安装链路已修复，但 3A-R1.2 总状态 failed；不具备进入 3B 正式 GitHub Release 的条件。
+- GitHub Actions：Run `29919498085` failure，失败在 build；Run `29919834193` 和 `29920088772` build 成功但 preflight 被 skipped；Run `29920336923` build 失败根因已定位；Run `29933834029` preflight passed 但隐式 publish 失败；Run `29935231224` 已真实 success。
+- 结论：3A-R1.3 已通过；本机安装版已恢复。`shared_managed` 生产注入仍 blocked，未获产品负责人批准前不进入 R2；3B 正式 GitHub Release 尚未开始。
