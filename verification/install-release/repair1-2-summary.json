@@ -295,11 +295,11 @@
   },
   "actions": {
     "status": "failed",
-    "runId": "29919498085",
-    "url": "https://github.com/qingyueshen5-gif/AI-Workbench/actions/runs/29919498085",
-    "failedStep": "Build installer candidate",
-    "preflightStep": "skipped",
-    "reason": "GitHub Actions failed before install-release preflight. Current gh token cannot read logs (HTTP 403) or download artifacts (HTTP 401); workflow diagnostics were added for the next run."
+    "runId": "29920336923",
+    "url": "https://github.com/qingyueshen5-gif/AI-Workbench/actions/runs/29920336923",
+    "failedStep": "Fail when preflight failed",
+    "preflightStep": "executed",
+    "reason": "GitHub Actions build succeeded and install-release preflight executed, but final run still failed. Current gh token is invalid; logs return HTTP 403 and artifact download returns HTTP 401, so cloud failure details cannot be read from this environment."
   },
   "shared_managed": {
     "mechanism_test": "passed",

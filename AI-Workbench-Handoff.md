@@ -68,7 +68,7 @@
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；DeepSeek、Hermes、OpenClaw 三员工都已通过 `18800` 调用模型，验收摘要在 `verification/unified-model-proxy/summary.json`。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线硬骨头3A-R1.2 本地已修复 NSIS 安装器不落盘。本地 `npm.cmd run verify:install-release` 通过；但 GitHub Actions 尚未通过。Run `29919498085` 失败在 build 且日志/artifact 权限不足；Run `29919834193` build 成功但 preflight 被 workflow 条件跳过。已改为用安装包文件是否存在作为 preflight 执行条件。`shared_managed` 生产注入仍 blocked。
+- 现在卡在什么：上线硬骨头3A-R1.2 本地已修复 NSIS 安装器不落盘。本地 `npm.cmd run verify:install-release` 通过；但 GitHub Actions 尚未通过。Run `29920336923` build 成功且 preflight 已执行，但最终仍 failure。当前 `gh` token invalid，日志 403、artifact 下载 401，无法读取云端失败详情。`shared_managed` 生产注入仍 blocked。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
@@ -86,7 +86,7 @@
 - Codex 执行器已经恢复，不再卡在 PowerShell/WSL spawn 超时。
 - 统一模型入口已经完成：Workbench、Hermes、OpenClaw 三员工模型调用已统一经过本机 `18800` 代理。
 - 共享 key 已落地在 18800 服务端边界内，前端和员工配置不保存真实 key。
-- 下一步不是继续修 OpenClaw，也不是情报流水线；下一步是修 3A GitHub Actions 构建阶段失败，拿到 Actions passed 后再由产品负责人判断是否进入 3B：GitHub Release 下载链接。
+- 下一步不是继续修 OpenClaw，也不是情报流水线；下一步是取得 Run `29920336923` 的 artifact/log，按云端 preflight 失败原因继续修 3A。拿到 Actions passed 后再由产品负责人判断是否进入 3B：GitHub Release 下载链接。
 
 # 第二部分：产品战略（核心理解）
 
@@ -756,5 +756,5 @@ OpenClaw 保持它熟悉的模型命名：
 新对话框的任务：
 
 1. 确认能读这个综合文件。
-2. 用大白话讲出：产品现在在哪（v0.4.6 候选版，硬骨头1/2已过，3A-R1.2 本地预验收通过、Actions 构建失败）、下一步要做什么（修 Actions 构建失败，拿到 Actions passed 后再由产品负责人决定是否进 3B）。
+2. 用大白话讲出：产品现在在哪（v0.4.6 候选版，硬骨头1/2已过，3A-R1.2 本地预验收通过、Actions preflight 仍失败）、下一步要做什么（先拿 Run `29920336923` artifact/log 定位云端失败，修到 Actions passed 后再由产品负责人决定是否进 3B）。
 3. 不创建 Release；未获得产品负责人批准前不得进入 3B。
