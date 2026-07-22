@@ -11,3 +11,4 @@
 - 执行协议：所有大任务采用单一主线、分段执行、逐段验证、失败也留痕；产品负责人批准后才能进入下一阶段。固定规范见 `EXECUTION_PROTOCOL.md`。
 - 发布分段：硬骨头3拆成 3A 候选安装包预验收和 3B GitHub Release 正式发布。3A 未通过时禁止 Release、禁止 tag、禁止把 LAUNCH 硬骨头3标记完成。
 - 安装器策略：3A-R1.2 保持 NSIS oneClick per-user installer，不要求管理员权限；默认安装目录固定为 `%LOCALAPPDATA%\Programs\AIWorkbench`，避免中文用户名环境下默认 per-user 安装目录不稳定落盘。该策略已通过本地 `npm.cmd run verify:install-release`，仍需 GitHub Actions 真实结果确认。
+- Actions 判绿策略：3A-R1.3 只有在恢复 GitHub CLI/Git 凭证、读取真实 Actions 日志/artifact，并取得新的 `windows-installer-preflight.yml` success run 后才能判绿。缺少凭证时状态只能写 blocked，不能根据本地 passed 推断云端 passed。

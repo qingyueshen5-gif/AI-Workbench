@@ -152,3 +152,28 @@ R1 结论：必须先查清 NSIS 为什么只写 updater 副本但不执行 `ins
 - `shared_managed` 生产注入仍为 blocked，本轮不处理、不冒充 passed。
 
 证据以 `verification/install-release/repair1-summary.json` 和 `verification/install-release/repair1-report.md` 为准。
+
+## 3A-R1.3：Actions 云端预验收可观测性
+
+3A-R1.3 状态：blocked。
+
+目标：
+
+- 恢复 GitHub CLI 权限；
+- 读取 Run `29920336923` 失败日志和 artifact；
+- 按真实云端失败原因最小修复；
+- 取得一次新的 `windows-installer-preflight.yml` success run。
+
+本轮实际结果：
+
+- `gh auth status` 显示旧 token invalid。
+- 已执行 `gh auth logout --hostname github.com --user qingyueshen5-gif` 移除失效登录。
+- 两次尝试 `gh auth login --hostname github.com --git-protocol https --web --clipboard --scopes "repo,workflow"` 未完成浏览器/设备授权。
+- 当前 `gh` 未登录，`gh run view 29920336923` 无法读取日志。
+- `git fetch origin` 失败：Windows GitHub 凭证缺失。
+
+结论：
+
+- 没有真实云端日志前，不猜失败根因，不改 workflow 制造绿灯。
+- R1.3 只能记录为 blocked。
+- 恢复 GitHub 凭证后继续读取 Run `29920336923` artifact/log，再修云端 preflight。

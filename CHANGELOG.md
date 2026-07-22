@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Unreleased - 上线硬骨头3A-R1.3：Actions 云端预验收阻塞记录
+
+- 新增 `verification/install-release/repair1-3-summary.json` 和 `verification/install-release/repair1-3-report.md`，如实记录 R1.3 卡在 GitHub CLI/Git 凭证恢复。
+- 新增 `tasks/2026-07-22-上线硬骨头3A-R1.3-Actions云端预验收.md`，记录本轮执行、阻塞原因和恢复后的下一步命令。
+- 已确认本地 R1.2 安装链路仍为 passed，但没有可读的 Actions Run `29920336923` 日志，不能猜云端失败根因。
+- 当前 `gh auth status` 未登录，`git fetch origin` 因 GitHub 凭证缺失失败；恢复凭证前不能读取 Actions artifact、触发/观察 workflow 或 push。
+- 未进入 3B，未创建 Release/tag，`shared_managed` 生产验证仍为 blocked。
+
 ## Unreleased - 上线硬骨头3A-R1.2：NSIS安装器修复
 
 - 新增 `build/installer.nsh`，将 NSIS 默认 per-user 安装目录固定为 `%LOCALAPPDATA%\Programs\AIWorkbench`，修复中文用户名环境下默认安装不稳定落盘问题。

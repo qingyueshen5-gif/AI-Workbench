@@ -59,12 +59,14 @@
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；DeepSeek、Hermes、OpenClaw 三员工都已通过 `18800` 调用模型，验收摘要在 `verification/unified-model-proxy/summary.json`。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
 - 现在卡在什么：上线硬骨头3A-R1.2 本地已修复 NSIS 安装器不落盘。本地 `npm.cmd run verify:install-release` 通过；但 GitHub Actions 尚未通过。Run `29920336923` build 成功且 preflight 已执行，但最终仍 failure。当前 `gh` token invalid，日志 403、artifact 下载 401，无法读取云端失败详情。`shared_managed` 生产注入仍 blocked。
+- 2026-07-22 3A-R1.3 追加事实：已移除失效 `gh` 登录记录并尝试浏览器/设备授权，但授权未完成；当前 `gh` 未登录，`gh run view` 不能读取 Run `29920336923`，`git fetch origin` 因 GitHub 凭证缺失失败。R1.3 状态 blocked，证据见 `verification/install-release/repair1-3-summary.json`。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
 ## 5. 下一步
 
-1. 重新认证 `gh` 或从 GitHub 网页下载 Run `29920336923` artifact。
-2. 读取云端 `preflight-summary.json` 和日志后继续修 3A。
-3. 只有 3A Actions passed 并经产品负责人批准后，才进入 3B：GitHub Release 正式发布。
-3. 模型分层、手机端、情报流水线暂不抢跑，等上线最小集前三条稳定后继续。
+1. 先完成本机 GitHub CLI/Git 凭证恢复：`gh auth login --hostname github.com --git-protocol https --web --clipboard --scopes "repo,workflow"`。
+2. 验证 `gh auth status`、`gh api user --jq .login` 和 `git fetch origin`。
+3. 读取云端 `preflight-summary.json` 和日志后继续修 3A。
+4. 只有 3A Actions passed 并经产品负责人批准后，才进入 3B：GitHub Release 正式发布。
+5. 模型分层、手机端、情报流水线暂不抢跑，等上线最小集前三条稳定后继续。

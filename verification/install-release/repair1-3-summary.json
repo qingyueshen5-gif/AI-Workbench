@@ -1,0 +1,139 @@
+{
+  "task": "install-release-repair1-3-actions-observability",
+  "status": "blocked",
+  "version": "0.4.6",
+  "startedAt": "2026-07-22T21:05:21.9165094+08:00",
+  "goal": "恢复 GitHub Actions 运行结果可读性，定位 Run 29920336923 云端 preflight 失败步骤，最小修复并取得一次真实 success 运行。",
+  "currentFacts": {
+    "localR12": "passed",
+    "installerPath": "release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe",
+    "installDir": "%LOCALAPPDATA%\\Programs\\AIWorkbench",
+    "actionsRunToInspect": "29920336923",
+    "actionsRunUrl": "https://github.com/qingyueshen5-gif/AI-Workbench/actions/runs/29920336923",
+    "sharedManagedProduction": "blocked"
+  },
+  "stageStatus": {
+    "0_repoAudit": {
+      "status": "partial",
+      "commands": [
+        {
+          "command": "git status --short --branch",
+          "exitCode": 0,
+          "stdout": "## main...origin/main"
+        },
+        {
+          "command": "git rev-parse HEAD",
+          "exitCode": 0,
+          "stdout": "c08ddae0c7b7aee4a895be18051d0eb9d14255f2"
+        },
+        {
+          "command": "git rev-parse origin/main",
+          "exitCode": 0,
+          "stdout": "c08ddae0c7b7aee4a895be18051d0eb9d14255f2"
+        },
+        {
+          "command": "git remote -v",
+          "exitCode": 0,
+          "stdout": "origin https://github.com/qingyueshen5-gif/AI-Workbench.git"
+        },
+        {
+          "command": "git fetch origin",
+          "exitCode": 1,
+          "stderr": "schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS"
+        }
+      ],
+      "note": "git fetch failed after removing the invalid gh credential because no GitHub credential is available in Windows credential storage."
+    },
+    "1_restoreGhAuth": {
+      "status": "blocked",
+      "commands": [
+        {
+          "command": "gh auth status",
+          "exitCode": 1,
+          "stdout": "token invalid / not logged in"
+        },
+        {
+          "command": "gh auth logout --hostname github.com --user qingyueshen5-gif",
+          "exitCode": 0,
+          "stdout": "Logged out of github.com account qingyueshen5-gif"
+        },
+        {
+          "command": "gh auth login --hostname github.com --git-protocol https --web --clipboard --scopes repo,workflow",
+          "exitCode": 124,
+          "stdout": "timed out waiting for browser/device authorization"
+        },
+        {
+          "command": "Start-Process powershell.exe ... gh auth login --web --clipboard --scopes repo,workflow",
+          "exitCode": 0,
+          "stdout": "visible authorization window launched"
+        },
+        {
+          "command": "gh auth status",
+          "exitCode": 1,
+          "stdout": "not logged into any GitHub hosts"
+        }
+      ],
+      "blockingReason": "GitHub browser/device authorization has not completed. Without gh auth, Actions logs and artifacts cannot be read or downloaded."
+    },
+    "2_readFailedRun": {
+      "status": "blocked",
+      "commands": [
+        {
+          "command": "gh run view 29920336923 --repo qingyueshen5-gif/AI-Workbench",
+          "exitCode": 1,
+          "stdout": "gh auth login required"
+        },
+        {
+          "command": "gh run view 29920336923 --repo qingyueshen5-gif/AI-Workbench --log-failed",
+          "exitCode": 1,
+          "stdout": "gh auth login required"
+        }
+      ],
+      "blockingReason": "No valid GitHub CLI authentication."
+    },
+    "3_fixWorkflowOrCloudFailure": {
+      "status": "not_run",
+      "reason": "Cloud failure root cause cannot be determined without readable run logs or artifacts."
+    },
+    "4_rerunActions": {
+      "status": "not_run",
+      "reason": "No cloud fix was made and gh auth is unavailable."
+    },
+    "5_generateEvidence": {
+      "status": "passed",
+      "artifacts": [
+        "verification/install-release/repair1-3-summary.json",
+        "verification/install-release/repair1-3-report.md"
+      ]
+    },
+    "6_updateDocs": {
+      "status": "passed"
+    },
+    "7_commitPush": {
+      "status": "pending",
+      "reason": "Local commit can be created, but push requires restored GitHub credentials."
+    }
+  },
+  "validation": {
+    "ghAuthRestored": false,
+    "failedRunReadable": false,
+    "artifactDownloaded": false,
+    "cloudBuild": "not_run",
+    "cloudInstall": "not_run",
+    "cloudSmoke": "not_run",
+    "cloudUninstall": "not_run",
+    "cloudSecretScan": "not_run",
+    "newRunId": "",
+    "newRunUrl": "",
+    "newRunConclusion": "not_run"
+  },
+  "rootCause": "Not determined. The only verified blocker in R1.3 is missing GitHub CLI/Git credentials, which prevents reading the failed Actions logs and artifacts.",
+  "knownIssues": [
+    "GitHub CLI is not authenticated.",
+    "Git fetch/push currently fails because Windows Git credentials are unavailable.",
+    "Run 29920336923 failure details remain unread.",
+    "shared_managed production injection remains blocked and is intentionally not handled in this task."
+  ],
+  "canEnterR2SharedKeyProductionInjection": false,
+  "canEnter3BRelease": false
+}

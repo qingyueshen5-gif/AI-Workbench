@@ -4,7 +4,7 @@
 
 用途：新对话框启动后，只读这一份文件即可快速理解当前真实状态、产品战略、当前任务和下一步动作。
 
-交接必读文件：`EXECUTION_PROTOCOL.md`、`PRODUCT.md`、`VISION.md`、`CURRENT_TASK.md`、`LAUNCH.md`、`TASKLOG.md`、`CHANGELOG.md`、`CURRENT_PROGRESS_AUDIT.md`、`research/self-hosting-plan.md`、`research/unified-model-proxy-plan.md`。
+交接必读文件：`EXECUTION_PROTOCOL.md`、`PRODUCT.md`、`VISION.md`、`CURRENT_TASK.md`、`LAUNCH.md`、`TASKLOG.md`、`CHANGELOG.md`、`CURRENT_PROGRESS_AUDIT.md`、`verification/install-release/repair1-3-summary.json`、`research/self-hosting-plan.md`、`research/unified-model-proxy-plan.md`。
 
 # 第一部分：当前真实进度
 
@@ -86,7 +86,7 @@
 - Codex 执行器已经恢复，不再卡在 PowerShell/WSL spawn 超时。
 - 统一模型入口已经完成：Workbench、Hermes、OpenClaw 三员工模型调用已统一经过本机 `18800` 代理。
 - 共享 key 已落地在 18800 服务端边界内，前端和员工配置不保存真实 key。
-- 下一步不是继续修 OpenClaw，也不是情报流水线；下一步是取得 Run `29920336923` 的 artifact/log，按云端 preflight 失败原因继续修 3A。拿到 Actions passed 后再由产品负责人判断是否进入 3B：GitHub Release 下载链接。
+- 下一步不是继续修 OpenClaw，也不是情报流水线；下一步是先恢复本机 GitHub CLI/Git 凭证，再取得 Run `29920336923` 的 artifact/log，按云端 preflight 失败原因继续修 3A。拿到 Actions passed 后再由产品负责人判断是否进入 3B：GitHub Release 下载链接。
 
 # 第二部分：产品战略（核心理解）
 
