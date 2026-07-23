@@ -9,7 +9,7 @@
   },
   "vars": {
     "MANAGED_PROXY_ENABLED": "true",
-    "ALLOWED_MODELS": "deepseek-chat,deepseek-reasoner",
+    "ALLOWED_MODELS": "deepseek-chat",
     "DAILY_GLOBAL_LIMIT": "200",
     "DAILY_INSTALL_LIMIT": "40",
     "DAILY_IP_LIMIT": "80",

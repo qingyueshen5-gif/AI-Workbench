@@ -228,7 +228,7 @@ async function runProductionChecks(checks) {
   const models = await fetch(`${productionUrl}/v1/models`);
   const modelsPayload = await models.json().catch(() => ({}));
   const modelIds = Array.isArray(modelsPayload.data) ? modelsPayload.data.map((item) => item.id) : [];
-  addCheck(checks, 'production_model_allowlist', models.ok && modelIds.includes('deepseek-chat') && modelIds.includes('deepseek-reasoner') ? 'passed' : 'failed', `models=${modelIds.join(',')}`);
+  addCheck(checks, 'production_model_allowlist', models.ok && modelIds.length === 1 && modelIds[0] === 'deepseek-chat' ? 'passed' : 'failed', `models=${modelIds.join(',')}`);
 
   const registered = await registerProduction();
   addCheck(checks, 'production_install_register', registered.response.ok && Boolean(registered.body?.token) ? 'passed' : 'failed', `http_status=${registered.response.status}`);

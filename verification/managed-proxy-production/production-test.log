@@ -1,272 +1,236 @@
 {
-  "at": "2026-07-23T08:14:48.237Z",
+  "at": "2026-07-23T10:53:16.249Z",
   "name": "mechanism_18800_reports_managed_remote",
   "status": "passed",
   "detail": "managed_remote"
 }
 {
-  "at": "2026-07-23T08:14:49.473Z",
+  "at": "2026-07-23T10:53:17.310Z",
   "name": "mechanism_local_proxy_forwards_to_managed_proxy",
   "status": "passed",
   "detail": "http_status=200"
 }
 {
-  "at": "2026-07-23T08:14:49.510Z",
+  "at": "2026-07-23T10:53:17.343Z",
   "name": "mechanism_token_forwarding",
   "status": "passed",
   "detail": "register=1, chat=1"
 }
 {
-  "at": "2026-07-23T08:14:49.654Z",
+  "at": "2026-07-23T10:53:17.440Z",
   "name": "mechanism_token_not_plaintext_in_runtime_config",
   "status": "passed",
   "detail": "managed config exists"
 }
 {
-  "at": "2026-07-23T08:14:49.820Z",
+  "at": "2026-07-23T10:53:17.540Z",
   "name": "mechanism_logs_do_not_leak_tokens",
   "status": "passed",
   "detail": "stdout/stderr scanned"
 }
 {
-  "at": "2026-07-23T08:14:51.685Z",
+  "at": "2026-07-23T10:53:19.305Z",
   "name": "production_health",
   "status": "passed",
   "detail": "http_status=200, enabled=true"
 }
 {
-  "at": "2026-07-23T08:14:52.068Z",
+  "at": "2026-07-23T10:53:19.947Z",
   "name": "production_model_allowlist",
   "status": "passed",
-  "detail": "models=deepseek-chat,deepseek-reasoner"
+  "detail": "models=deepseek-chat"
 }
 {
-  "at": "2026-07-23T08:14:52.887Z",
+  "at": "2026-07-23T10:53:20.845Z",
   "name": "production_install_register",
   "status": "passed",
   "detail": "http_status=200"
 }
 {
-  "at": "2026-07-23T08:14:53.304Z",
+  "at": "2026-07-23T10:53:21.206Z",
   "name": "production_token_refresh",
   "status": "passed",
   "detail": "http_status=200"
 }
 {
-  "at": "2026-07-23T08:14:54.551Z",
+  "at": "2026-07-23T10:53:23.017Z",
   "name": "production_deepseek_upstream_call",
   "status": "passed",
   "detail": "http_status=200, reply=生产共享模型调用成功"
 }
 {
-  "at": "2026-07-23T08:14:55.935Z",
+  "at": "2026-07-23T10:53:23.871Z",
   "name": "production_18800_credential_source",
   "status": "passed",
   "detail": "managed_remote"
 }
 {
-  "at": "2026-07-23T08:14:59.458Z",
+  "at": "2026-07-23T10:53:27.417Z",
   "name": "production_18800_real_chat_without_local_keys",
   "status": "passed",
   "detail": "http_status=200, reply=生产共享模型调用成功"
 }
 {
-  "at": "2026-07-23T08:15:03.081Z",
+  "at": "2026-07-23T10:53:30.507Z",
   "name": "production_18800_refreshes_expiring_token",
   "status": "passed",
-  "detail": "http_status=200, before=2026-07-24T08:14:56.000Z, after=2026-07-24T08:14:59.000Z"
+  "detail": "http_status=200, before=2026-07-24T10:53:24.000Z, after=2026-07-24T10:53:27.000Z"
 }
 {
-  "at": "2026-07-23T08:15:05.135Z",
+  "at": "2026-07-23T10:53:32.299Z",
   "name": "failure_bad_token_chinese_message",
   "status": "passed",
   "detail": "http_status=401, message=共享模型服务认证失败，请稍后重试。"
 }
 {
-  "at": "2026-07-23T08:15:06.839Z",
+  "at": "2026-07-23T10:53:34.368Z",
   "name": "failure_model_allowlist_rejects_unknown_model",
   "status": "passed",
   "detail": "http_status=400, code=model_not_allowed"
 }
 {
-  "at": "2026-07-23T08:15:27.877Z",
+  "at": "2026-07-23T10:53:47.058Z",
   "step": "d1",
-  "command": "INSERT INTO revoked_tokens (jti, revoked_at, reason) VALUES ('557d100e-d7b1-4af7-b214-59e97dcd314c', '2026-07-23T08:15:07.274Z', 'verification');",
+  "command": "INSERT INTO revoked_tokens (jti, revoked_at, reason) VALUES ('1349728c-8f66-4000-80c7-eed5db7747c4', '2026-07-23T10:53:35.056Z', 'verification');",
   "exitCode": 0,
   "signal": "",
   "error": "",
-  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.19ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.1932\n      },\n      \"duration\": 0.1932,\n      \"changes\": 1,\n      \"last_row_id\": 1,\n      \"changed_db\": true,\n      \"size_after\": 49152,\n      \"rows_read\": 0,\n      \"rows_written\": 2,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
+  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.29ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.2864\n      },\n      \"duration\": 0.2864,\n      \"changes\": 1,\n      \"last_row_id\": 1,\n      \"changed_db\": true,\n      \"size_after\": 65536,\n      \"rows_read\": 0,\n      \"rows_written\": 2,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
   "stderr": "\u001b[33m▲ \u001b[43;33m[\u001b[43;30mWARNING\u001b[43;33m]\u001b[0m \u001b[1mProxy environment variables detected. We'll use your proxy for fetch requests.\u001b[0m\n\n\n"
 }
 {
-  "at": "2026-07-23T08:15:29.137Z",
+  "at": "2026-07-23T10:53:48.317Z",
   "name": "failure_revoked_token_rejected",
   "status": "passed",
   "detail": "http_status=401, code=revoked_token"
 }
 {
-  "at": "2026-07-23T08:15:50.379Z",
+  "at": "2026-07-23T10:54:00.936Z",
   "step": "d1",
-  "command": "DELETE FROM revoked_tokens WHERE jti = '557d100e-d7b1-4af7-b214-59e97dcd314c';",
+  "command": "DELETE FROM revoked_tokens WHERE jti = '1349728c-8f66-4000-80c7-eed5db7747c4';",
   "exitCode": 0,
   "signal": "",
   "error": "",
-  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.30ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.3021\n      },\n      \"duration\": 0.3021,\n      \"changes\": 1,\n      \"last_row_id\": 0,\n      \"changed_db\": true,\n      \"size_after\": 49152,\n      \"rows_read\": 1,\n      \"rows_written\": 1,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
+  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.18ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.1821\n      },\n      \"duration\": 0.1821,\n      \"changes\": 1,\n      \"last_row_id\": 0,\n      \"changed_db\": true,\n      \"size_after\": 65536,\n      \"rows_read\": 1,\n      \"rows_written\": 1,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
   "stderr": "\u001b[33m▲ \u001b[43;33m[\u001b[43;30mWARNING\u001b[43;33m]\u001b[0m \u001b[1mProxy environment variables detected. We'll use your proxy for fetch requests.\u001b[0m\n\n\n"
 }
 {
-  "at": "2026-07-23T08:16:12.551Z",
+  "at": "2026-07-23T10:54:16.696Z",
   "step": "d1",
-  "command": "INSERT INTO daily_usage (usage_date, installation_hash, ip_hash, request_count, input_tokens, output_tokens, updated_at) VALUES ('2026-07-23', '8ec784d3d9df8e9fd6639cc319e682e0bca761f6cd19d09ba60f4de93d965179', 'verification-install-limit', 40, 0, 0, '2026-07-23T08:15:51.706Z') ON CONFLICT(usage_date, installation_hash, ip_hash) DO UPDATE SET request_count = 40, updated_at = excluded.updated_at;",
+  "command": "INSERT INTO daily_usage (usage_date, installation_hash, ip_hash, request_count, input_tokens, output_tokens, updated_at) VALUES ('2026-07-23', '1647bd992c263ede2a5c940632827290142a5e0680f49457de70bb22f0fd4f74', 'verification-install-limit', 40, 0, 0, '2026-07-23T10:54:03.240Z') ON CONFLICT(usage_date, installation_hash, ip_hash) DO UPDATE SET request_count = 40, updated_at = excluded.updated_at;",
   "exitCode": 0,
   "signal": "",
   "error": "",
-  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.21ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.2086\n      },\n      \"duration\": 0.2086,\n      \"changes\": 1,\n      \"last_row_id\": 23,\n      \"changed_db\": true,\n      \"size_after\": 49152,\n      \"rows_read\": 0,\n      \"rows_written\": 5,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
+  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.32ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.3246\n      },\n      \"duration\": 0.3246,\n      \"changes\": 1,\n      \"last_row_id\": 32,\n      \"changed_db\": true,\n      \"size_after\": 65536,\n      \"rows_read\": 0,\n      \"rows_written\": 5,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
   "stderr": "\u001b[33m▲ \u001b[43;33m[\u001b[43;30mWARNING\u001b[43;33m]\u001b[0m \u001b[1mProxy environment variables detected. We'll use your proxy for fetch requests.\u001b[0m\n\n\n"
 }
 {
-  "at": "2026-07-23T08:16:13.872Z",
+  "at": "2026-07-23T10:54:17.961Z",
   "name": "failure_install_daily_limit_chinese_message",
   "status": "passed",
   "detail": "http_status=429, code=install_daily_limit"
 }
 {
-  "at": "2026-07-23T08:16:34.716Z",
+  "at": "2026-07-23T10:54:37.693Z",
   "step": "d1",
-  "command": "DELETE FROM daily_usage WHERE usage_date='2026-07-23' AND installation_hash='8ec784d3d9df8e9fd6639cc319e682e0bca761f6cd19d09ba60f4de93d965179' AND ip_hash='verification-install-limit';",
+  "command": "DELETE FROM daily_usage WHERE usage_date='2026-07-23' AND installation_hash='1647bd992c263ede2a5c940632827290142a5e0680f49457de70bb22f0fd4f74' AND ip_hash='verification-install-limit';",
   "exitCode": 0,
   "signal": "",
   "error": "",
-  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.23ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.2308\n      },\n      \"duration\": 0.2308,\n      \"changes\": 1,\n      \"last_row_id\": 0,\n      \"changed_db\": true,\n      \"size_after\": 49152,\n      \"rows_read\": 1,\n      \"rows_written\": 1,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
+  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.31ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.3102\n      },\n      \"duration\": 0.3102,\n      \"changes\": 1,\n      \"last_row_id\": 0,\n      \"changed_db\": true,\n      \"size_after\": 65536,\n      \"rows_read\": 1,\n      \"rows_written\": 1,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
   "stderr": "\u001b[33m▲ \u001b[43;33m[\u001b[43;30mWARNING\u001b[43;33m]\u001b[0m \u001b[1mProxy environment variables detected. We'll use your proxy for fetch requests.\u001b[0m\n\n\n"
 }
 {
-  "at": "2026-07-23T08:16:54.438Z",
+  "at": "2026-07-23T10:55:00.392Z",
   "step": "d1",
-  "command": "SELECT ip_hash FROM daily_usage WHERE usage_date='2026-07-23' AND installation_hash='8ec784d3d9df8e9fd6639cc319e682e0bca761f6cd19d09ba60f4de93d965179' LIMIT 1;",
+  "command": "SELECT ip_hash FROM daily_usage WHERE usage_date='2026-07-23' AND installation_hash='1647bd992c263ede2a5c940632827290142a5e0680f49457de70bb22f0fd4f74' LIMIT 1;",
   "exitCode": 0,
   "signal": "",
   "error": "",
-  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.30ms\n[\n  {\n    \"results\": [\n      {\n        \"ip_hash\": \"5b409955e2ae4e3a56397bad956f8abd386992e9334cb8d9e0cdfe900ca32c13\"\n      }\n    ],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.2979\n      },\n      \"duration\": 0.2979,\n      \"changes\": 0,\n      \"last_row_id\": 0,\n      \"changed_db\": false,\n      \"size_after\": 49152,\n      \"rows_read\": 1,\n      \"rows_written\": 0,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
+  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.25ms\n[\n  {\n    \"results\": [\n      {\n        \"ip_hash\": \"5b409955e2ae4e3a56397bad956f8abd386992e9334cb8d9e0cdfe900ca32c13\"\n      }\n    ],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.2462\n      },\n      \"duration\": 0.2462,\n      \"changes\": 0,\n      \"last_row_id\": 0,\n      \"changed_db\": false,\n      \"size_after\": 65536,\n      \"rows_read\": 1,\n      \"rows_written\": 0,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
   "stderr": "\u001b[33m▲ \u001b[43;33m[\u001b[43;30mWARNING\u001b[43;33m]\u001b[0m \u001b[1mProxy environment variables detected. We'll use your proxy for fetch requests.\u001b[0m\n\n\n"
 }
 {
-  "at": "2026-07-23T08:17:18.900Z",
+  "at": "2026-07-23T10:55:25.524Z",
   "step": "d1",
-  "command": "INSERT INTO daily_usage (usage_date, installation_hash, ip_hash, request_count, input_tokens, output_tokens, updated_at) VALUES ('2026-07-23', 'verification-ip-limit', '5b409955e2ae4e3a56397bad956f8abd386992e9334cb8d9e0cdfe900ca32c13', 80, 0, 0, '2026-07-23T08:16:54.452Z') ON CONFLICT(usage_date, installation_hash, ip_hash) DO UPDATE SET request_count = 80, updated_at = excluded.updated_at;",
+  "command": "INSERT INTO daily_usage (usage_date, installation_hash, ip_hash, request_count, input_tokens, output_tokens, updated_at) VALUES ('2026-07-23', 'verification-ip-limit', '5b409955e2ae4e3a56397bad956f8abd386992e9334cb8d9e0cdfe900ca32c13', 80, 0, 0, '2026-07-23T10:55:00.453Z') ON CONFLICT(usage_date, installation_hash, ip_hash) DO UPDATE SET request_count = 80, updated_at = excluded.updated_at;",
   "exitCode": 0,
   "signal": "",
   "error": "",
-  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.24ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.2361\n      },\n      \"duration\": 0.2361,\n      \"changes\": 1,\n      \"last_row_id\": 23,\n      \"changed_db\": true,\n      \"size_after\": 49152,\n      \"rows_read\": 0,\n      \"rows_written\": 5,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
+  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.31ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.3126\n      },\n      \"duration\": 0.3126,\n      \"changes\": 1,\n      \"last_row_id\": 32,\n      \"changed_db\": true,\n      \"size_after\": 65536,\n      \"rows_read\": 0,\n      \"rows_written\": 5,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
   "stderr": "\u001b[33m▲ \u001b[43;33m[\u001b[43;30mWARNING\u001b[43;33m]\u001b[0m \u001b[1mProxy environment variables detected. We'll use your proxy for fetch requests.\u001b[0m\n\n\n"
 }
 {
-  "at": "2026-07-23T08:17:20.205Z",
+  "at": "2026-07-23T10:55:26.844Z",
   "name": "failure_ip_daily_limit_chinese_message",
   "status": "passed",
   "detail": "http_status=429, code=ip_daily_limit"
 }
 {
-  "at": "2026-07-23T08:17:41.128Z",
+  "at": "2026-07-23T10:55:45.067Z",
   "step": "d1",
   "command": "DELETE FROM daily_usage WHERE usage_date='2026-07-23' AND installation_hash='verification-ip-limit';",
   "exitCode": 0,
   "signal": "",
   "error": "",
-  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.31ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.3135\n      },\n      \"duration\": 0.3135,\n      \"changes\": 1,\n      \"last_row_id\": 0,\n      \"changed_db\": true,\n      \"size_after\": 49152,\n      \"rows_read\": 1,\n      \"rows_written\": 1,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
+  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.20ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.1965\n      },\n      \"duration\": 0.1965,\n      \"changes\": 1,\n      \"last_row_id\": 0,\n      \"changed_db\": true,\n      \"size_after\": 65536,\n      \"rows_read\": 1,\n      \"rows_written\": 1,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
   "stderr": "\u001b[33m▲ \u001b[43;33m[\u001b[43;30mWARNING\u001b[43;33m]\u001b[0m \u001b[1mProxy environment variables detected. We'll use your proxy for fetch requests.\u001b[0m\n\n\n"
 }
 {
-  "at": "2026-07-23T08:18:01.512Z",
+  "at": "2026-07-23T10:56:00.276Z",
   "step": "d1",
-  "command": "INSERT INTO daily_usage (usage_date, installation_hash, ip_hash, request_count, input_tokens, output_tokens, updated_at) VALUES ('2026-07-23', 'verification-global-limit', 'verification-global-limit', 200, 0, 0, '2026-07-23T08:17:41.171Z') ON CONFLICT(usage_date, installation_hash, ip_hash) DO UPDATE SET request_count = 200, updated_at = excluded.updated_at;",
+  "command": "INSERT INTO daily_usage (usage_date, installation_hash, ip_hash, request_count, input_tokens, output_tokens, updated_at) VALUES ('2026-07-23', 'verification-global-limit', 'verification-global-limit', 200, 0, 0, '2026-07-23T10:55:45.102Z') ON CONFLICT(usage_date, installation_hash, ip_hash) DO UPDATE SET request_count = 200, updated_at = excluded.updated_at;",
   "exitCode": 0,
   "signal": "",
   "error": "",
-  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.27ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.2659\n      },\n      \"duration\": 0.2659,\n      \"changes\": 1,\n      \"last_row_id\": 23,\n      \"changed_db\": true,\n      \"size_after\": 49152,\n      \"rows_read\": 0,\n      \"rows_written\": 5,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
+  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.30ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.2977\n      },\n      \"duration\": 0.2977,\n      \"changes\": 1,\n      \"last_row_id\": 32,\n      \"changed_db\": true,\n      \"size_after\": 65536,\n      \"rows_read\": 0,\n      \"rows_written\": 5,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
   "stderr": "\u001b[33m▲ \u001b[43;33m[\u001b[43;30mWARNING\u001b[43;33m]\u001b[0m \u001b[1mProxy environment variables detected. We'll use your proxy for fetch requests.\u001b[0m\n\n\n"
 }
 {
-  "at": "2026-07-23T08:18:02.813Z",
+  "at": "2026-07-23T10:56:01.615Z",
   "name": "failure_global_daily_limit_chinese_message",
   "status": "passed",
   "detail": "http_status=429, code=global_daily_limit"
 }
 {
-  "at": "2026-07-23T08:18:24.955Z",
+  "at": "2026-07-23T10:56:19.175Z",
   "step": "d1",
   "command": "DELETE FROM daily_usage WHERE usage_date='2026-07-23' AND installation_hash='verification-global-limit';",
   "exitCode": 0,
   "signal": "",
   "error": "",
-  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.24ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.2428\n      },\n      \"duration\": 0.2428,\n      \"changes\": 1,\n      \"last_row_id\": 0,\n      \"changed_db\": true,\n      \"size_after\": 49152,\n      \"rows_read\": 1,\n      \"rows_written\": 1,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
+  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.33ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.3343\n      },\n      \"duration\": 0.3343,\n      \"changes\": 1,\n      \"last_row_id\": 0,\n      \"changed_db\": true,\n      \"size_after\": 65536,\n      \"rows_read\": 1,\n      \"rows_written\": 1,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
   "stderr": "\u001b[33m▲ \u001b[43;33m[\u001b[43;30mWARNING\u001b[43;33m]\u001b[0m \u001b[1mProxy environment variables detected. We'll use your proxy for fetch requests.\u001b[0m\n\n\n"
 }
 {
-  "at": "2026-07-23T08:18:46.182Z",
+  "at": "2026-07-23T10:56:38.392Z",
   "step": "d1",
-  "command": "INSERT INTO daily_usage (usage_date, installation_hash, ip_hash, request_count, input_tokens, output_tokens, updated_at) VALUES ('2026-07-23', 'verification-token-budget', 'verification-token-budget', 0, 200000, 0, '2026-07-23T08:18:24.997Z') ON CONFLICT(usage_date, installation_hash, ip_hash) DO UPDATE SET input_tokens = 200000, updated_at = excluded.updated_at;",
+  "command": "INSERT INTO daily_usage (usage_date, installation_hash, ip_hash, request_count, input_tokens, output_tokens, updated_at) VALUES ('2026-07-23', 'verification-token-budget', 'verification-token-budget', 0, 200000, 0, '2026-07-23T10:56:19.220Z') ON CONFLICT(usage_date, installation_hash, ip_hash) DO UPDATE SET input_tokens = 200000, updated_at = excluded.updated_at;",
   "exitCode": 0,
   "signal": "",
   "error": "",
-  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.23ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.2293\n      },\n      \"duration\": 0.2293,\n      \"changes\": 1,\n      \"last_row_id\": 23,\n      \"changed_db\": true,\n      \"size_after\": 49152,\n      \"rows_read\": 0,\n      \"rows_written\": 5,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
+  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.29ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.291\n      },\n      \"duration\": 0.291,\n      \"changes\": 1,\n      \"last_row_id\": 32,\n      \"changed_db\": true,\n      \"size_after\": 65536,\n      \"rows_read\": 0,\n      \"rows_written\": 5,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
   "stderr": "\u001b[33m▲ \u001b[43;33m[\u001b[43;30mWARNING\u001b[43;33m]\u001b[0m \u001b[1mProxy environment variables detected. We'll use your proxy for fetch requests.\u001b[0m\n\n\n"
 }
 {
-  "at": "2026-07-23T08:18:47.514Z",
+  "at": "2026-07-23T10:56:39.659Z",
   "name": "failure_budget_token_limit_chinese_message",
   "status": "passed",
   "detail": "http_status=429, code=global_token_limit"
 }
 {
-  "at": "2026-07-23T08:19:08.419Z",
+  "at": "2026-07-23T10:56:57.397Z",
   "step": "d1",
   "command": "DELETE FROM daily_usage WHERE usage_date='2026-07-23' AND installation_hash='verification-token-budget';",
   "exitCode": 0,
   "signal": "",
   "error": "",
-  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.20ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.203\n      },\n      \"duration\": 0.203,\n      \"changes\": 1,\n      \"last_row_id\": 0,\n      \"changed_db\": true,\n      \"size_after\": 49152,\n      \"rows_read\": 1,\n      \"rows_written\": 1,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
+  "stdout": "\n ⛅️ wrangler <jwt-redacted>\n────────────────────\nResource location: remote \n\n🌀 Executing on remote database aiw-managed-proxy (202583b9-817f-4115-9ab1-41e136133de8):\n🌀 To execute on your local development database, remove the --remote flag from your wrangler command.\n🚣 Executed 1 command in 0.23ms\n[\n  {\n    \"results\": [],\n    \"success\": true,\n    \"meta\": {\n      \"served_by\": \"v3-prod\",\n      \"served_by_region\": \"WEUR\",\n      \"served_by_colo\": \"LHR\",\n      \"served_by_primary\": true,\n      \"timings\": {\n        \"sql_duration_ms\": 0.2315\n      },\n      \"duration\": 0.2315,\n      \"changes\": 1,\n      \"last_row_id\": 0,\n      \"changed_db\": true,\n      \"size_after\": 65536,\n      \"rows_read\": 1,\n      \"rows_written\": 1,\n      \"total_attempts\": 1\n    }\n  }\n]\n",
   "stderr": "\u001b[33m▲ \u001b[43;33m[\u001b[43;30mWARNING\u001b[43;33m]\u001b[0m \u001b[1mProxy environment variables detected. We'll use your proxy for fetch requests.\u001b[0m\n\n\n"
 }
 {
-  "at": "2026-07-23T08:19:17.283Z",
+  "at": "2026-07-23T10:57:08.670Z",
   "name": "security_scan_no_secret_values",
   "status": "passed",
   "detail": "no secret-like values found"
-}
-{
-  "at": "2026-07-23T08:54:33.539Z",
-  "name": "production_emergency_shutdown",
-  "status": "passed",
-  "detail": "MANAGED_PROXY_ENABLED=false deployed; chat returned http_status=503, code=managed_proxy_disabled, Chinese message=共享模型服务已临时停用，请稍后再试。"
-}
-{
-  "at": "2026-07-23T08:54:33.726Z",
-  "name": "production_restored_after_shutdown",
-  "status": "passed",
-  "detail": "MANAGED_PROXY_ENABLED=true redeployed; /health returned http_status=200, enabled=true, version=be24a4ff-6253-4883-a162-10dd04d91490"
-}
-{
-  "at": "2026-07-23T09:11:20.081Z",
-  "name": "installed_zero_config_real_chat",
-  "status": "passed",
-  "detail": "credentialSource=managed_remote, chatStatus=200, reply=生产共享模型调用成功"
-}
-{
-  "at": "2026-07-23T09:11:20.262Z",
-  "name": "security_scan_installer_and_install_dir",
-  "status": "superseded",
-  "detail": "intermediate scan result superseded by final security-scan-installation.log status=passed"
-}
-{
-  "at": "2026-07-23T09:11:20.305Z",
-  "name": "security_scan_process_args",
-  "status": "passed",
-  "detail": "scannedProcessCount=395, matches=0"
-}
-{
-  "at": "2026-07-23T09:30:37.6679091Z",
-  "name": "security_scan_installer_and_install_dir_final",
-  "status": "passed",
-  "detail": "security-scan-installation.log final status=passed, scannedFiles=167, matches=0"
 }

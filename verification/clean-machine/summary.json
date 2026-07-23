@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "checkedAt": "2026-07-22T06:36:25.580Z",
+  "checkedAt": "2026-07-23T10:52:06.643Z",
   "results": {
     "a": {
       "ok": true,
@@ -12,14 +12,14 @@
       "ok": true,
       "name": "首次启动自动重建 config/data/logs/evidence",
       "runtimeRoot": "<temp-runtime>",
-      "port": 54669,
+      "port": 65229,
       "rebuilt": true,
       "dataFileCreated": true
     },
     "c": {
       "ok": true,
       "name": "18800/Hermes/OpenClaw 全不可用时主入口降级可见",
-      "port": 54721,
+      "port": 65310,
       "readinessStatus": "degraded",
       "notReady": [
         "model_proxy",
@@ -34,8 +34,8 @@
       "occupied5173": "already_occupied",
       "proxyExitCode": 0,
       "modelProxyReadiness": "ready_existing_service",
-      "devServerReadiness": "ready_existing_service",
-      "readinessStatus": "ready"
+      "devServerReadiness": "not_ready",
+      "readinessStatus": "degraded"
     },
     "e": {
       "ok": true,

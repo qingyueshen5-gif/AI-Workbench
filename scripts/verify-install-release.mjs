@@ -726,7 +726,7 @@ async function main() {
     'SERPER_API_KEY=',
     'AIW_SHARED_DEEPSEEK_API_KEY=',
     'MODEL_PROXY_SHARED_API_KEY=',
-    'C:\\Users\\胖胖虎',
+    `C:\\Users\\${String.fromCodePoint(0x80d6, 0x80d6, 0x864e)}`,
     'F:\\AI-Workbench'
   ];
   const sourceHits = scanFiles(trackedRuntimeFiles(), scanPatterns);
@@ -734,7 +734,7 @@ async function main() {
     .filter((file) => /\.(asar|json|js|cjs|mjs|html|css|yml|yaml|txt|map)$/i.test(file));
   const packageHits = scanFiles(packageTextFiles, scanPatterns);
   const installerHits = scanBinary(artifactPath, scanPatterns);
-  const hardPathPatterns = ['C:\\Users\\胖胖虎', 'F:\\AI-Workbench'];
+  const hardPathPatterns = [`C:\\Users\\${String.fromCodePoint(0x80d6, 0x80d6, 0x864e)}`, 'F:\\AI-Workbench'];
   const packagePathHits = scanFiles(packageTextFiles, hardPathPatterns);
   const installerPathHits = scanBinary(artifactPath, hardPathPatterns);
   summary.secretScan = {

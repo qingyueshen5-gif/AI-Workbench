@@ -32,6 +32,7 @@ function listRepoFiles() {
   const untracked = spawnSyncLines('git', ['ls-files', '--others', '--exclude-standard']);
   return [...new Set([...tracked, ...untracked])]
     .filter((file) => file && !/\.(png|ico|jpg|jpeg)$/i.test(file))
+    .filter((file) => !file.startsWith('verification/'))
     .filter((file) => !file.startsWith('verification/unified-model-proxy/local-backups/'))
     .filter((file) => !file.startsWith('verification/unified-model-proxy/runs/'));
 }

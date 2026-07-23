@@ -62,7 +62,7 @@
 - `.git`
 - 开发日志
 - 历史安装包
-- `C:\Users\胖胖虎`
+- `%USERPROFILE%`
 - `F:\AI-Workbench`
 - 开发机专属绝对路径
 
@@ -73,7 +73,7 @@
 - `SERPER_API_KEY=`
 - `AIW_SHARED_DEEPSEEK_API_KEY=`
 - `MODEL_PROXY_SHARED_API_KEY=`
-- `C:\Users\胖胖虎`
+- `%USERPROFILE%`
 - `F:\AI-Workbench`
 
 不得在报告中输出完整密钥。

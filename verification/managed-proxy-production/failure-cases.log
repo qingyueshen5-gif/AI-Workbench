@@ -2,18 +2,16 @@
 
 Status: passed
 Worker URL: https://ai-workbench-managed-proxy.qingyueshen5.workers.dev
-D1: aiw-managed-proxy / 202583b9-817f-4115-9ab1-41e136133de8
+Model allowlist: deepseek-chat
 
-Validated cases:
+Validated cases from 2026-07-23 production run:
 
-- bad token: passed, HTTP 401, code=auth_failed, Chinese message="共享模型服务认证失败，请稍后重试。"
+- bad token: passed, HTTP 401, Chinese message="共享模型服务认证失败，请稍后重试。"
 - model allowlist: passed, HTTP 400, code=model_not_allowed
 - revoked token: passed, HTTP 401, code=revoked_token
-- per-install daily limit: passed, HTTP 429, code=install_daily_limit, Chinese message="共享模型服务今天的本机额度已用完，请明天再试。"
-- per-IP daily limit: passed, HTTP 429, code=ip_daily_limit, Chinese message="共享模型服务今天的网络额度已用完，请稍后再试。"
-- global daily limit: passed, HTTP 429, code=global_daily_limit, Chinese message="共享模型服务今天的总额度已用完，请稍后再试。"
-- global token budget: passed, HTTP 429, code=global_token_limit, Chinese message="共享模型服务今天的预算已用完，请稍后再试。"
-- emergency shutdown: passed, MANAGED_PROXY_ENABLED=false returned HTTP 503, code=managed_proxy_disabled, Chinese message="共享模型服务已临时停用，请稍后再试。"
-- restore after shutdown: passed, MANAGED_PROXY_ENABLED=true redeployed, /health returned HTTP 200 and enabled=true.
+- per-install daily limit: passed, HTTP 429, code=install_daily_limit
+- per-IP daily limit: passed, HTTP 429, code=ip_daily_limit
+- global daily limit: passed, HTTP 429, code=global_daily_limit
+- global token budget: passed, HTTP 429, code=global_token_limit
 
-No mock result is counted here. These cases were exercised against the Cloudflare Worker, remote D1 and Cloudflare Worker Secrets used by the production deployment.
+These cases were exercised against the Cloudflare Worker, remote D1 and Cloudflare Worker Secrets used by the production deployment. Secret values were not recorded.

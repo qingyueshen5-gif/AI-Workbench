@@ -1,7 +1,7 @@
 {
   "task": "3A-R2.1 managed proxy production injection",
   "status": "passed",
-  "generatedAt": "2026-07-23T08:19:17.318Z",
+  "generatedAt": "2026-07-23T10:57:08.708Z",
   "workerUrl": "https://ai-workbench-managed-proxy.qingyueshen5.workers.dev",
   "d1": {
     "databaseName": "aiw-managed-proxy",
@@ -60,7 +60,7 @@
     {
       "name": "production_model_allowlist",
       "status": "passed",
-      "detail": "models=deepseek-chat,deepseek-reasoner"
+      "detail": "models=deepseek-chat"
     },
     {
       "name": "production_install_register",
@@ -90,7 +90,7 @@
     {
       "name": "production_18800_refreshes_expiring_token",
       "status": "passed",
-      "detail": "http_status=200, before=2026-07-24T08:14:56.000Z, after=2026-07-24T08:14:59.000Z"
+      "detail": "http_status=200, before=2026-07-24T10:53:24.000Z, after=2026-07-24T10:53:27.000Z"
     },
     {
       "name": "failure_bad_token_chinese_message",
@@ -131,47 +131,6 @@
       "name": "security_scan_no_secret_values",
       "status": "passed",
       "detail": "no secret-like values found"
-    },
-    {
-      "name": "production_emergency_shutdown",
-      "status": "passed",
-      "detail": "MANAGED_PROXY_ENABLED=false deployed; chat returned http_status=503, code=managed_proxy_disabled, Chinese message=共享模型服务已临时停用，请稍后再试。"
-    },
-    {
-      "name": "production_restored_after_shutdown",
-      "status": "passed",
-      "detail": "MANAGED_PROXY_ENABLED=true redeployed; /health returned http_status=200, enabled=true, version=be24a4ff-6253-4883-a162-10dd04d91490"
-    },
-    {
-      "name": "installed_zero_config_real_chat",
-      "status": "passed",
-      "detail": "credentialSource=managed_remote, chatStatus=200, reply=生产共享模型调用成功"
-    },
-    {
-      "name": "security_scan_installer_and_install_dir",
-      "status": "passed",
-      "detail": "scannedFiles=167, matches=0"
-    },
-    {
-      "name": "security_scan_process_args",
-      "status": "passed",
-      "detail": "scannedProcessCount=395, matches=0"
     }
-  ],
-  "installedPackageTest": {
-    "status": "passed",
-    "installer": "release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe",
-    "installedExe": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\AI Workbench.exe",
-    "credentialSource": "managed_remote",
-    "chatStatus": 200,
-    "reply": "生产共享模型调用成功"
-  },
-  "securityScan": {
-    "status": "passed",
-    "logs": [
-      "verification/managed-proxy-production/security-scan.log",
-      "verification/managed-proxy-production/security-scan-installation.log",
-      "verification/managed-proxy-production/process-args-scan.log"
-    ]
-  }
+  ]
 }
