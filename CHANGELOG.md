@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Unreleased - 上线硬骨头3A：总验收
+
+- 新增 `scripts/verify-3a-final.mjs`，执行 ③A 总验收：候选安装包真实安装、快捷方式检查、安装版后端启动、生产 Managed Proxy 对话、中文降级、安全扫描、真实卸载和恢复日常安装版。
+- 新增 `verification/3a-final/summary.json`、`verification/3a-final/report.md`、`verification/3a-final/production-dialogue.log`、`verification/3a-final/security-scan.log` 和 `verification/3a-final/app-launch.log`。
+- ③A 总验收 passed：候选包来自 Actions Run `30001627121` artifact，文件名 `AI-Workbench-Setup-v0.4.6-x64.exe`，SHA256 `b8de2e3f90c0063b8b3003c09de0b0886cc1861f4e8091df5f09994bdf6573f9`。
+- 无本机 `DEEPSEEK_API_KEY` / shared key 环境下，安装版通过 `managed_remote` 生产链路返回 `③A总验收通过`。
+- 安全扫描 passed：源码、安装器、安装目录可行动项、运行目录和进程命令行均未发现真实 key；Electron/Chromium 第三方运行时二进制命中已单独归类为误报噪声。
+- 本轮未创建 GitHub Release，未创建正式 tag；下一步必须等待产品负责人明确批准后，才可进入 ③B 正式 Release。
+
 ## Unreleased - 上线硬骨头3A-R2.1：Cloudflare 生产部署与真实验证
 
 - 部署 `managed-proxy/` 到 Cloudflare Workers：`https://ai-workbench-managed-proxy.qingyueshen5.workers.dev`。

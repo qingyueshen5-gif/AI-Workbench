@@ -16,3 +16,4 @@
 - shared_managed 生产架构：正式链路锁定为客户端/Workbench/Hermes/OpenClaw -> 本机 `127.0.0.1:18800` -> AI Workbench 自控远程 Managed Proxy -> DeepSeek 官方 API。真实 DeepSeek key 只能存远程服务端 Secret，禁止进入安装包、用户电脑、本机 `.env`、环境变量、日志或进程参数；不采用“Key 随包分发 + 消费限额”方案，限流、预算和紧急关闭只能作为远程服务保护措施。
 - R2.0 历史结论：当时 `shared_managed` 机制测试 passed，但生产注入仍 blocked；该 blocked 已由 R2.1 Cloudflare 生产部署与真实验证解除。R2.1 前不得进入 3B Release、首屏示例、模型分层、手机端或情报流水线。
 - R2.1 结论：Cloudflare Worker、D1、Secrets、生产 URL、真实 DeepSeek 上游、无本机 Key 18800、安装版零配置、刷新/吊销/限流/预算/紧急关闭/中文降级和安全扫描均已通过。R2.1 passed 只允许进入 3A 总验收，不等于 3A 总验收已完成，也不允许直接进入 3B Release。
+- ③A 总验收结论：候选安装包真实安装、快捷方式、安装版后端启动、`managed_remote` 生产对话、中文降级、安全扫描、真实卸载和恢复日常安装版均已通过；证据见 `verification/3a-final/summary.json`。③A passed 只允许等待产品负责人批准进入 ③B，不代表可以自动 Release/tag。

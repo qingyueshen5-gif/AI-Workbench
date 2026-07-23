@@ -1,0 +1,26 @@
+{
+  "at": "2026-07-23T14:44:14.454Z",
+  "process": "model-proxy",
+  "stream": "stdout",
+  "text": "Model proxy listening at http://<jwt-redacted>.1:28880\n"
+}
+{
+  "at": "2026-07-23T14:44:14.520Z",
+  "process": "api",
+  "stream": "stdout",
+  "text": "API server listening at http://<jwt-redacted>.1:28881\n"
+}
+{
+  "at": "2026-07-23T14:44:19.181Z",
+  "process": "api",
+  "stream": "exit",
+  "code": null,
+  "signal": "SIGTERM"
+}
+{
+  "at": "2026-07-23T14:44:19.199Z",
+  "process": "model-proxy",
+  "stream": "exit",
+  "code": null,
+  "signal": "SIGTERM"
+}

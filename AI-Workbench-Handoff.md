@@ -4,7 +4,9 @@
 
 用途：新对话框启动后，只读这一份文件即可快速理解当前真实状态、产品战略、当前任务和下一步动作。
 
-交接必读文件：`EXECUTION_PROTOCOL.md`、`PRODUCT.md`、`VISION.md`、`CURRENT_TASK.md`、`LAUNCH.md`、`TASKLOG.md`、`CHANGELOG.md`、`CURRENT_PROGRESS_AUDIT.md`、`verification/install-release/repair1-3-summary.json`、`verification/managed-proxy-production/summary.json`、`research/self-hosting-plan.md`、`research/unified-model-proxy-plan.md`、`research/managed-proxy-production-plan.md`。
+交接必读文件：`EXECUTION_PROTOCOL.md`、`PRODUCT.md`、`VISION.md`、`CURRENT_TASK.md`、`LAUNCH.md`、`TASKLOG.md`、`CHANGELOG.md`、`CURRENT_PROGRESS_AUDIT.md`、`verification/install-release/repair1-3-summary.json`、`verification/managed-proxy-production/summary.json`、`verification/3a-final/summary.json`、`research/self-hosting-plan.md`、`research/unified-model-proxy-plan.md`、`research/managed-proxy-production-plan.md`。
+
+最新状态：③A 总验收已 passed。候选安装包来自 Actions Run `30001627121` artifact，文件名 `AI-Workbench-Setup-v0.4.6-x64.exe`，SHA256 `b8de2e3f90c0063b8b3003c09de0b0886cc1861f4e8091df5f09994bdf6573f9`；已完成真实安装、快捷方式、安装版后端启动、`managed_remote` 生产对话、中文降级、安全扫描、真实卸载和恢复日常安装版。未创建 GitHub Release，未创建正式 tag；下一步只能等待产品负责人批准进入 ③B。
 
 # 第一部分：当前真实进度
 
@@ -29,7 +31,7 @@
 版本号：
 
 - `package.json` 当前版本：`0.4.6`
-- `CHANGELOG.md` 最新版本条目：`Unreleased - 上线硬骨头3A-R2.1：Cloudflare 生产部署与真实验证`
+- `CHANGELOG.md` 最新版本条目：`Unreleased - 上线硬骨头3A：总验收`
 
 ## 2. `research/` 真实存在文件
 
@@ -68,14 +70,14 @@
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；DeepSeek、Hermes、OpenClaw 三员工都已通过 `18800` 调用模型，验收摘要在 `verification/unified-model-proxy/summary.json`。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线硬骨头3A-R1.3 已完成。Run `29935231224` 已真实 success。本机 v0.4.6 安装版已恢复并保留。3A-R2.0 已完成架构核验。3A-R2.1 已完成 Cloudflare 生产部署与真实验证，生产 Worker、D1、Secrets、无本机 Key 18800、安装版零配置、刷新/吊销/限流/预算/紧急关闭/中文降级和安全扫描均 passed。下一步只能做 ③A 总验收，不能直接进入 3B Release。
+- 现在卡在什么：上线硬骨头3A-R1.3 已完成。Run `29935231224` 已真实 success。本机 v0.4.6 安装版已恢复并保留。3A-R2.0 已完成架构核验。3A-R2.1 已完成 Cloudflare 生产部署与真实验证。③A 总验收已 passed，候选包真实安装、快捷方式、安装版后端启动、生产对话、中文降级、安全扫描、卸载和恢复安装版均通过。下一步只能等待产品负责人批准进入 ③B，不能自动创建 Release/tag。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
 ## 5. 下一步
 
-1. 执行 ③A 总验收，复核 R1.3 安装链路和 R2.1 生产共享模型链路。
-2. 只有 ③A 总验收完成并经产品负责人批准后，才由产品负责人判断是否进入 3B：GitHub Release 正式发布。
+1. 等待产品负责人批准进入 ③B。
+2. 只有获得明确批准后，才进入 3B：GitHub Release 正式发布。
 3. 模型分层、手机端、情报流水线暂不抢跑，等上线最小集前三条稳定后继续。
 
 ## 交接重点

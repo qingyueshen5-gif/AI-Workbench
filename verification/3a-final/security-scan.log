@@ -1,0 +1,40 @@
+{
+  "sourceMatches": [],
+  "installerMatches": [],
+  "installDirMatches": [
+    {
+      "file": "C:/Users/胖胖虎/AppData/Local/Programs/AIWorkbench/vk_swiftshader.dll",
+      "pattern": "deepseek_or_openai_style_key"
+    },
+    {
+      "file": "C:/Users/胖胖虎/AppData/Local/Programs/AIWorkbench/vulkan-1.dll",
+      "pattern": "deepseek_or_openai_style_key"
+    },
+    {
+      "file": "C:/Users/胖胖虎/AppData/Local/Programs/AIWorkbench/locales/nl.pak",
+      "pattern": "deepseek_or_openai_style_key"
+    }
+  ],
+  "runtimeMatches": [],
+  "processArgs": {
+    "status": "passed",
+    "scannedProcessCount": 387,
+    "matches": []
+  },
+  "thirdPartyRuntimeMatches": [
+    {
+      "file": "C:/Users/胖胖虎/AppData/Local/Programs/AIWorkbench/vk_swiftshader.dll",
+      "pattern": "deepseek_or_openai_style_key"
+    },
+    {
+      "file": "C:/Users/胖胖虎/AppData/Local/Programs/AIWorkbench/vulkan-1.dll",
+      "pattern": "deepseek_or_openai_style_key"
+    },
+    {
+      "file": "C:/Users/胖胖虎/AppData/Local/Programs/AIWorkbench/locales/nl.pak",
+      "pattern": "deepseek_or_openai_style_key"
+    }
+  ],
+  "actionableInstallDirMatches": [],
+  "status": "passed"
+}

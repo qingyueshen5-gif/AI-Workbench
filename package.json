@@ -25,6 +25,7 @@
     "verify:clean-machine": "node scripts/verify-clean-machine.mjs",
     "verify:shared-key": "node scripts/verify-shared-key.mjs",
     "verify:install-release": "node scripts/verify-install-release.mjs",
+    "verify:3a-final": "node --use-env-proxy scripts/verify-3a-final.mjs",
     "verify:managed-proxy-production": "node --use-env-proxy scripts/verify-managed-proxy-production.mjs",
     "verify:chat-proxy": "node scripts/verify-chat-proxy.mjs",
     "verify:hermes-proxy": "node scripts/verify-hermes-proxy.mjs",

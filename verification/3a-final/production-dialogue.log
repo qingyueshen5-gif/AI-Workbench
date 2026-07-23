@@ -1,0 +1,8 @@
+{
+  "at": "2026-07-23T14:44:18.748Z",
+  "prompt": "请只回复：③A总验收通过",
+  "httpStatus": 200,
+  "routedAgentId": "deepseek",
+  "credentialSource": "managed_remote",
+  "reply": "③A总验收通过"
+}

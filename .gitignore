@@ -32,5 +32,7 @@ verification/version-management/fixture-versions/
 versions/backups/*.json
 .tmp-version-management/
 .tmp-managed-proxy-runtime*/
+.tmp-3a-*/
+.tmp-3a-*
 .tmp-install-r1/
 verification/install-release/actions-*/
