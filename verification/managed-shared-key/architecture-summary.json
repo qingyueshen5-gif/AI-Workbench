@@ -1,0 +1,63 @@
+{
+  "task": "managed-shared-key-architecture-audit",
+  "status": "passed",
+  "date": "2026-07-23",
+  "currentVersion": "0.4.6",
+  "currentCommit": "57876e523d9a1530b8ffd36e561614fb53ddad10",
+  "scope": "R2.0 architecture audit only; no production implementation or release.",
+  "facts": {
+    "cleanMachine": "passed",
+    "installerPreflight": "passed",
+    "sharedManagedMechanism": "passed",
+    "sharedManagedProduction": "blocked",
+    "release": "not_started",
+    "modelRouterSummaryCreated": false
+  },
+  "currentChain": {
+    "client": "Workbench/Hermes/OpenClaw",
+    "localProxy": "127.0.0.1:18800 model-proxy.mjs launched by Electron main process",
+    "currentUpstream": "https://api.deepseek.com/v1",
+    "currentCredentialReadOrder": [
+      "DEEPSEEK_API_KEY",
+      "AIW_SHARED_DEEPSEEK_API_KEY",
+      "MODEL_PROXY_SHARED_API_KEY"
+    ],
+    "currentCredentialStorage": "local process env or local .env files if configured",
+    "healthExposure": "credentialSource only; no key value"
+  },
+  "blockedRootCause": "The production shared key has no remote service-side injection path. Current shared_managed is a local environment fallback label, not an implemented managed service.",
+  "mockProves": [
+    "model-proxy can use AIW_SHARED_DEEPSEEK_API_KEY from process env",
+    "health/logs/process output do not leak the mock key",
+    "employees can keep using local placeholder tokens"
+  ],
+  "mockDoesNotProve": [
+    "fresh installed machines can obtain production access without user configuration",
+    "real DeepSeek key is stored only in a remote service Secret",
+    "rate limit, budget, revocation and kill switch work in production",
+    "GitHub Release users can call the production shared service"
+  ],
+  "lockedArchitecture": {
+    "client": "Workbench/Hermes/OpenClaw",
+    "localProxy": "127.0.0.1:18800",
+    "remoteProxy": "AI Workbench managed proxy",
+    "provider": "DeepSeek official API",
+    "keyPolicy": "Real DeepSeek key only in remote service Secret; never in installer or user computer.",
+    "rejectedOption": "Do not ship shared key in installer with usage limits."
+  },
+  "recommendedPlatform": {
+    "provider": "Cloudflare Workers",
+    "reason": "Smallest operations footprint with service-side secrets, HTTPS workers.dev URL, rate limiting and easy rollback."
+  },
+  "externalConditionsRequired": [
+    "Cloudflare account/login with Workers deploy permission",
+    "Production DeepSeek API key entered only as Cloudflare Worker Secret",
+    "Daily budget decision",
+    "Per-instance and per-IP rate limit decision",
+    "Permission to use workers.dev for first production test or domain DNS access if custom domain is required",
+    "Permission to use Wrangler in R2.1"
+  ],
+  "nextSingleTask": "③A-R2.1：实现远程 Managed Proxy 并做真实生产注入验证",
+  "canEnterR21": true,
+  "canEnterRelease": false
+}

@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Unreleased - 上线硬骨头3A-R2.0：共享 Key 架构核验
+
+- 新增 `research/managed-proxy-production-plan.md`，锁定正式生产架构：客户端/Workbench/Hermes/OpenClaw -> 本机 `127.0.0.1:18800` -> AI Workbench 自控远程 Managed Proxy -> DeepSeek 官方 API。
+- 新增 `verification/managed-shared-key/architecture-summary.json` 和 `verification/managed-shared-key/architecture-report.md`，记录 `shared_managed` 当前阻塞、mock 边界、真实 key 安全边界和 R2.1 外部条件。
+- 新增 `tasks/2026-07-24-上线硬骨头3A-R2.0-共享Key架构核验.md`，记录本轮只做架构核验，不改代码，不进入 Release/首屏示例/模型分层。
+- 明确真实 DeepSeek key 只能存在远程服务端 Secret，禁止进入安装包、用户电脑、本机 `.env`、环境变量、日志或进程参数。
+- 正式拒绝“Key 随包分发 + 消费限额”方案；限流、预算、紧急关闭统一放在远程 Managed Proxy。
+- 下一次唯一主线更新为 `③A-R2.1：实现远程 Managed Proxy 并做真实生产注入验证`。
+
 ## Unreleased - 今日收尾与产品距离核验
 
 - 新增 `verification/daily-closeout/summary.json` 和 `verification/daily-closeout/report.md`，记录 2026-07-23 今日收尾、真实任务状态和产品距离核验。

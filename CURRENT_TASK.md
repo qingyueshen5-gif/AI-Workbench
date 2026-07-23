@@ -10,7 +10,7 @@
 
 - [x] 硬骨头1：陌生机器不崩。启动路径改为缺依赖降级，config/data/logs/evidence 首次运行自动创建，18800/Hermes/OpenClaw/端口异常统一返回中文未就绪状态；自动验收证据见 `verification/clean-machine/summary.json`。
 - [x] 硬骨头2：共享 key 落地。18800 网关支持共享托管 key 兜底，员工和前端只使用本机占位 token；验收证据见 `verification/shared-key/summary.json`。
-- [ ] 硬骨头3：能下载能安装。3A-R1.3 已通过，候选安装包云端 build/install/smoke/uninstall/扫描通过；本机安装版已恢复并保留。`shared_managed` 生产注入仍 blocked，下一次唯一主线是 ③A-R2；R2 通过后才做 ③A 总验收和 ③B 正式 Release。
+- [ ] 硬骨头3：能下载能安装。3A-R1.3 已通过，候选安装包云端 build/install/smoke/uninstall/扫描通过；本机安装版已恢复并保留。3A-R2.0 已锁定 `shared_managed` 生产架构；生产注入仍 blocked，下一次唯一主线是 ③A-R2.1；R2.1 通过后才做 ③A 总验收和 ③B 正式 Release。
 
 ## 当前口径校准
 
@@ -24,7 +24,8 @@
 - 3A-R1.3 最新结论：passed。GitHub CLI 已恢复并读取 Run `29920336923` artifact；根因是 `package.json` 写死 `build.electronDist=node_modules/electron/dist`，Actions 环境中该目录不存在，electron-builder 未产出安装包。Run `29933834029` 证明预验收 passed 但 job 因 electron-builder 隐式 publish 失败；已追加 `--publish never`，Run `29935231224` 取得真实 success。证据见 `verification/install-release/repair1-3-summary.json`、`verification/install-release/repair1-3-report.md` 和 `verification/install-release/actions-29935231224.md`。
 - 本机安装版已恢复：已将 `F:\AI-Workbench\release-v0.4.6-installer\AI-Workbench-Setup-v0.4.6-x64.exe` 恢复为 Run `29935231224` 通过验收的 SHA256 `ca833403906e8ba82c267813ced701b39a83f9d7a7d9f3e9e857a011b6b9ab47`，安装到 `%LOCALAPPDATA%\Programs\AIWorkbench`，桌面/开始菜单快捷方式已修正，安装版启动验证通过；记录见 `tasks/2026-07-22-恢复本机安装版.md`。
 - 今日收尾已完成：本机安装版再次复核并保留；最近任务真实状态和产品距离已写入 `verification/daily-closeout/summary.json`、`verification/daily-closeout/report.md` 和 `tasks/2026-07-23-今日收尾与产品距离核验.md`。
-- `shared_managed` 生产注入仍为 blocked，本轮不处理、不冒充 passed。
+- 3A-R2.0 最新结论：passed。当前 `shared_managed` 只是本机环境兜底机制，不是远程生产注入；正式架构锁定为客户端/Workbench/Hermes/OpenClaw -> 本机 `127.0.0.1:18800` -> AI Workbench 自控远程 Managed Proxy -> DeepSeek 官方 API。证据见 `research/managed-proxy-production-plan.md`、`verification/managed-shared-key/architecture-summary.json` 和 `verification/managed-shared-key/architecture-report.md`。
+- `shared_managed` 生产注入仍为 blocked，下一次唯一主线是 ③A-R2.1，不冒充 passed。
 
 ## 明天路线图（2026-07-19）
 
