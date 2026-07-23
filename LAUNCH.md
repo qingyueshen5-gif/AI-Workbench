@@ -26,5 +26,5 @@
 - 2026-07-23：硬骨头3A-R1.3 已通过。Windows 安装包候选版 `AI-Workbench-Setup-v0.4.6-x64.exe` 已在 GitHub Actions Run `29935231224` 通过 build/install/smoke/uninstall/扫描预验收。
 - 通过证据：`verification/install-release/preflight-summary.json`、`verification/install-release/repair1-3-summary.json`、`verification/install-release/actions-29935231224.md`。
 - 本机 v0.4.6 安装版已恢复并保留，记录见 `tasks/2026-07-22-恢复本机安装版.md`。
-- 硬骨头3仍不能标记完成；`shared_managed` 生产注入仍 blocked，GitHub Release 和唯一下载链接尚未完成。3A-R2.1 已完成 Managed Proxy 代码和本地机制验证，证据见 `verification/managed-proxy-production/summary.json`；真实 Cloudflare Worker、D1、Secrets、生产 URL 和 DeepSeek 上游生产调用未完成。
+- 硬骨头3仍不能标记完成；3A-R2.1 生产 Managed Proxy 已通过，证据见 `verification/managed-proxy-production/summary.json`。GitHub Release 和唯一下载链接尚未完成，下一步只能做 ③A 总验收；总验收通过并经产品负责人批准后才进入 ③B Release。
 ---

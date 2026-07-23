@@ -154,6 +154,7 @@ function startNodeScript(name, scriptPath) {
     env: {
       ...process.env,
       AIW_PACKAGED: app.isPackaged ? '1' : '0',
+      NODE_USE_ENV_PROXY: process.env.NODE_USE_ENV_PROXY || '1',
       ELECTRON_RUN_AS_NODE: '1'
     },
     stdio: 'ignore'

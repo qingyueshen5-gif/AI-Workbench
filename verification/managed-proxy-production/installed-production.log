@@ -1,0 +1,12 @@
+{
+  "task": "installed-managed-proxy-production",
+  "status": "passed",
+  "installedExe": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\AI Workbench.exe",
+  "scriptPath": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\resources\\app.asar\\model-proxy.mjs",
+  "runtimeRoot": "F:\\AI-Workbench\\.tmp-installed-managed-proxy-1784797537946-2164",
+  "healthCredentialSource": "managed_remote",
+  "healthConfigured": true,
+  "chatStatus": 200,
+  "reply": "生产共享模型调用成功",
+  "stdoutStderrLeakScan": "passed"
+}

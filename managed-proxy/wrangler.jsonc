@@ -9,10 +9,11 @@
   },
   "vars": {
     "MANAGED_PROXY_ENABLED": "true",
-    "ALLOWED_MODELS": "deepseek-chat",
+    "ALLOWED_MODELS": "deepseek-chat,deepseek-reasoner",
     "DAILY_GLOBAL_LIMIT": "200",
     "DAILY_INSTALL_LIMIT": "40",
     "DAILY_IP_LIMIT": "80",
+    "DAILY_TOKEN_LIMIT": "200000",
     "MAX_REQUEST_BYTES": "65536",
     "MAX_INPUT_CHARS": "30000",
     "MAX_OUTPUT_TOKENS": "2048",
@@ -23,7 +24,7 @@
     {
       "binding": "DB",
       "database_name": "aiw-managed-proxy",
-      "database_id": "REPLACE_WITH_CLOUDFLARE_D1_DATABASE_ID"
+      "database_id": "202583b9-817f-4115-9ab1-41e136133de8"
     }
   ]
 }

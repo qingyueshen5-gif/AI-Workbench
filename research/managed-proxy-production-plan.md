@@ -40,9 +40,9 @@ Workbench / Hermes / OpenClaw
 - 陌生机器只有在本机环境变量或本机 `.env` 已存在 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY` 时，才会进入 `shared_managed`。
 - 这不满足“用户开箱即用，不配置 key”的产品铁律。
 
-## 2. 当前阻塞
+## 2. 历史阻塞与当前状态
 
-`shared_managed` 机制测试已经通过，但真实生产注入仍 blocked。
+`shared_managed` 机制测试已经通过；2026-07-24 续跑 R2.1 后，真实 Cloudflare 生产注入也已通过。
 
 当前 mock 证明了：
 
@@ -59,16 +59,16 @@ Workbench / Hermes / OpenClaw
 - 正式共享服务已部署、可访问、可回滚。
 - 安装包发布后真实用户的请求能完成生产调用。
 
-blocked 的具体原因：
+R2.1 执行前 blocked 的具体原因，以及续跑后的状态：
 
 | 项 | 状态 | 说明 |
 | --- | --- | --- |
-| 代码 | partial | 本机 18800 已能走 shared env；还缺远程 Managed Proxy 客户端调用逻辑、实例鉴权和失败降级。 |
-| 部署环境 | missing | 仓库没有远程 Managed Proxy 项目、部署配置和正式 URL。 |
-| 云账号 | missing | 当前仓库没有 Cloudflare Worker 账号/项目绑定证据。 |
+| 代码 | passed | 本机 18800 已支持 `managed_remote`，安装版内置公开生产 Worker URL，并保留本机 `DEEPSEEK_API_KEY` 优先级。 |
+| 部署环境 | passed | Cloudflare Worker 已部署到 `https://ai-workbench-managed-proxy.qingyueshen5.workers.dev`。 |
+| 云账号 | passed | Wrangler 已登录并完成 Worker/D1 部署。 |
 | 域名 | optional | 最快上线可先用 `workers.dev`，正式可后续绑定自有域名。 |
-| Secret | missing | 真实 DeepSeek key 没有写入远程服务端 Secret。 |
-| 正式 Key | missing/external | 需要产品负责人提供或确认可用于生产的 DeepSeek key，不能进入仓库或用户电脑。 |
+| Secret | passed | `DEEPSEEK_API_KEY`、`TOKEN_SIGNING_SECRET`、`INSTALLATION_HASH_SALT` 已配置为 Cloudflare Secret，值未进入仓库或本机日志。 |
+| 正式 Key | passed | DeepSeek key 已通过交互式 Wrangler Secret 写入 Cloudflare。 |
 
 真实 key 当前是否会进入用户电脑：
 
@@ -315,3 +315,16 @@ R2.1 预计修改：
 - 首版只开放 `deepseek-chat` 和 `deepseek-reasoner`。
 - 不做用户登录、不做付费、不做配置页面。
 - 不发布 GitHub Release，不创建 tag。
+
+## 14. R2.1 实际生产结果
+
+2026-07-24 续跑 R2.1 后，生产注入已通过：
+
+- Worker URL：`https://ai-workbench-managed-proxy.qingyueshen5.workers.dev`
+- D1：`aiw-managed-proxy` / `202583b9-817f-4115-9ab1-41e136133de8`
+- Secrets：`DEEPSEEK_API_KEY`、`TOKEN_SIGNING_SECRET`、`INSTALLATION_HASH_SALT` 只存在 Cloudflare
+- 真实生产对话：无本机 Key 的 18800 和安装版均返回 `生产共享模型调用成功`
+- 覆盖项：刷新、吊销、单实例限流、单 IP 限流、全局限流、预算限额、紧急关闭/恢复、中文降级、安全扫描
+- 验收证据：`verification/managed-proxy-production/summary.json`
+
+该结果只代表 R2.1 passed；不代表 3A 总验收或 3B Release 已完成。

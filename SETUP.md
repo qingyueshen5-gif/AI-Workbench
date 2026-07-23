@@ -76,7 +76,7 @@ npm.cmd install
 
 ## 环境变量配置
 
-安装版默认由 18800 模型代理读取共享托管 key，用户不需要配置模型 key。开发态如需使用自己的 DeepSeek 账户，可以在项目根目录新建 `.env` 文件，填入：
+安装版默认由本机 18800 模型代理连接 AI Workbench 自控 Cloudflare Managed Proxy，用户不需要配置模型 key。开发态如需使用自己的 DeepSeek 账户，可以在项目根目录新建 `.env` 文件，填入：
 
 ```bash
 DEEPSEEK_API_KEY=（可选；使用自己的 DeepSeek 账户时填写）
@@ -86,26 +86,27 @@ SERPER_API_KEY=（可选；需要通用网络搜索能力时填写，去 serper.
 注意：`.env` 只能留在本机，不能提交到 GitHub。
 
 说明：
-- `DEEPSEEK_API_KEY`：开发者本机模型 key，优先级高于共享托管 key；普通用户不需要填写。
-- `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`：发布/托管流程注入给 18800 服务端的共享 key，不写进前端、员工配置或仓库文件。
+- `DEEPSEEK_API_KEY`：开发者本机模型 key，优先级高于远程 Managed Proxy；普通用户不需要填写。
+- `MANAGED_PROXY_URL` / `AIW_MANAGED_PROXY_URL`：可覆盖默认生产 Worker URL。生产默认 URL 是公开配置，不是 Secret。
+- `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`：仅允许开发/机制测试使用；安装版生产路径禁止依赖本机 shared key。
 - `SERPER_API_KEY`：用于 `web_search` 通用联网搜索工具。没有这个 key 时，模型仍可聊天和提炼，但不能执行实时搜索、新闻、当前价格等查询。
 
 ## 安装包候选版状态
 
-2026-07-22 生成了 v0.4.6 Windows 安装包候选版：
+2026-07-24 重新生成了 v0.4.6 Windows 安装包候选版：
 
 ```text
 release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe
 ```
 
-该候选版仅用于 3A 预验收，尚未发布到 GitHub Release。当前 3A 状态为 failed，证据见：
+该候选版仅用于 3A 预验收，尚未发布到 GitHub Release。当前 3A-R1.3 和 3A-R2.1 均已通过，3A 总验收和 3B Release 尚未完成。R2.1 生产 Managed Proxy 证据见：
 
 ```text
-verification/install-release/preflight-summary.json
-verification/install-release/preflight-report.md
+verification/managed-proxy-production/summary.json
+verification/managed-proxy-production/report.md
 ```
 
-不要把该候选包发给真实用户。只有 3A 修复并通过、产品负责人批准进入 3B、GitHub Release 下载链接验证完成后，才能对外分发。
+不要把该候选包发给真实用户。只有 3A 总验收通过、产品负责人批准进入 3B、GitHub Release 下载链接验证完成后，才能对外分发。
 
 ## 启动项目
 

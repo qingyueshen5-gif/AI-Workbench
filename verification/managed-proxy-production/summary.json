@@ -1,46 +1,177 @@
 {
   "task": "3A-R2.1 managed proxy production injection",
-  "status": "blocked",
-  "generatedAt": "2026-07-23T06:24:57.433Z",
+  "status": "passed",
+  "generatedAt": "2026-07-23T08:19:17.318Z",
+  "workerUrl": "https://ai-workbench-managed-proxy.qingyueshen5.workers.dev",
+  "d1": {
+    "databaseName": "aiw-managed-proxy",
+    "databaseId": "202583b9-817f-4115-9ab1-41e136133de8",
+    "tablesVerified": true
+  },
+  "secrets": {
+    "status": "configured_in_cloudflare",
+    "namesVerified": [
+      "DEEPSEEK_API_KEY",
+      "TOKEN_SIGNING_SECRET",
+      "INSTALLATION_HASH_SALT"
+    ],
+    "valuesStoredLocally": false
+  },
   "mechanismTest": {
     "status": "passed",
     "scope": "local mock managed proxy plus local 18800 client integration"
   },
   "productionTest": {
-    "status": "blocked",
+    "status": "passed",
     "scope": "real Cloudflare Worker, D1, Worker Secrets and DeepSeek upstream",
-    "blocker": "Cloudflare account, D1 database id, Worker secrets and production URL were not available to this local run."
+    "blocker": ""
   },
   "checks": [
     {
-      "name": "local_18800_reports_managed_remote",
+      "name": "mechanism_18800_reports_managed_remote",
       "status": "passed",
       "detail": "managed_remote"
     },
     {
-      "name": "local_proxy_forwards_through_managed_proxy",
+      "name": "mechanism_local_proxy_forwards_to_managed_proxy",
       "status": "passed",
-      "detail": "http_status=200, body={\"id\":\"chatcmpl-managed-mock\",\"object\":\"chat.completion\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"managed proxy ok\"},\"finish_reason\":\"stop\"}],\"usage\":{\"prompt_tokens\":5,\"completion_tokens\":3,\"total_tokens\":8}}"
+      "detail": "http_status=200"
     },
     {
-      "name": "managed_registration_and_token_forwarding",
+      "name": "mechanism_token_forwarding",
       "status": "passed",
       "detail": "register=1, chat=1"
     },
     {
-      "name": "managed_token_persisted_without_plain_secret",
+      "name": "mechanism_token_not_plaintext_in_runtime_config",
       "status": "passed",
       "detail": "managed config exists"
     },
     {
-      "name": "logs_do_not_leak_shared_or_managed_tokens",
+      "name": "mechanism_logs_do_not_leak_tokens",
       "status": "passed",
       "detail": "stdout/stderr scanned"
     },
     {
-      "name": "cloudflare_worker_production_deployment",
-      "status": "blocked",
-      "detail": "No production Cloudflare Worker URL or secrets were supplied in this run."
+      "name": "production_health",
+      "status": "passed",
+      "detail": "http_status=200, enabled=true"
+    },
+    {
+      "name": "production_model_allowlist",
+      "status": "passed",
+      "detail": "models=deepseek-chat,deepseek-reasoner"
+    },
+    {
+      "name": "production_install_register",
+      "status": "passed",
+      "detail": "http_status=200"
+    },
+    {
+      "name": "production_token_refresh",
+      "status": "passed",
+      "detail": "http_status=200"
+    },
+    {
+      "name": "production_deepseek_upstream_call",
+      "status": "passed",
+      "detail": "http_status=200, reply=生产共享模型调用成功"
+    },
+    {
+      "name": "production_18800_credential_source",
+      "status": "passed",
+      "detail": "managed_remote"
+    },
+    {
+      "name": "production_18800_real_chat_without_local_keys",
+      "status": "passed",
+      "detail": "http_status=200, reply=生产共享模型调用成功"
+    },
+    {
+      "name": "production_18800_refreshes_expiring_token",
+      "status": "passed",
+      "detail": "http_status=200, before=2026-07-24T08:14:56.000Z, after=2026-07-24T08:14:59.000Z"
+    },
+    {
+      "name": "failure_bad_token_chinese_message",
+      "status": "passed",
+      "detail": "http_status=401, message=共享模型服务认证失败，请稍后重试。"
+    },
+    {
+      "name": "failure_model_allowlist_rejects_unknown_model",
+      "status": "passed",
+      "detail": "http_status=400, code=model_not_allowed"
+    },
+    {
+      "name": "failure_revoked_token_rejected",
+      "status": "passed",
+      "detail": "http_status=401, code=revoked_token"
+    },
+    {
+      "name": "failure_install_daily_limit_chinese_message",
+      "status": "passed",
+      "detail": "http_status=429, code=install_daily_limit"
+    },
+    {
+      "name": "failure_ip_daily_limit_chinese_message",
+      "status": "passed",
+      "detail": "http_status=429, code=ip_daily_limit"
+    },
+    {
+      "name": "failure_global_daily_limit_chinese_message",
+      "status": "passed",
+      "detail": "http_status=429, code=global_daily_limit"
+    },
+    {
+      "name": "failure_budget_token_limit_chinese_message",
+      "status": "passed",
+      "detail": "http_status=429, code=global_token_limit"
+    },
+    {
+      "name": "security_scan_no_secret_values",
+      "status": "passed",
+      "detail": "no secret-like values found"
+    },
+    {
+      "name": "production_emergency_shutdown",
+      "status": "passed",
+      "detail": "MANAGED_PROXY_ENABLED=false deployed; chat returned http_status=503, code=managed_proxy_disabled, Chinese message=共享模型服务已临时停用，请稍后再试。"
+    },
+    {
+      "name": "production_restored_after_shutdown",
+      "status": "passed",
+      "detail": "MANAGED_PROXY_ENABLED=true redeployed; /health returned http_status=200, enabled=true, version=be24a4ff-6253-4883-a162-10dd04d91490"
+    },
+    {
+      "name": "installed_zero_config_real_chat",
+      "status": "passed",
+      "detail": "credentialSource=managed_remote, chatStatus=200, reply=生产共享模型调用成功"
+    },
+    {
+      "name": "security_scan_installer_and_install_dir",
+      "status": "passed",
+      "detail": "scannedFiles=167, matches=0"
+    },
+    {
+      "name": "security_scan_process_args",
+      "status": "passed",
+      "detail": "scannedProcessCount=395, matches=0"
     }
-  ]
+  ],
+  "installedPackageTest": {
+    "status": "passed",
+    "installer": "release-v0.4.6-installer/AI-Workbench-Setup-v0.4.6-x64.exe",
+    "installedExe": "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench\\AI Workbench.exe",
+    "credentialSource": "managed_remote",
+    "chatStatus": 200,
+    "reply": "生产共享模型调用成功"
+  },
+  "securityScan": {
+    "status": "passed",
+    "logs": [
+      "verification/managed-proxy-production/security-scan.log",
+      "verification/managed-proxy-production/security-scan-installation.log",
+      "verification/managed-proxy-production/process-args-scan.log"
+    ]
+  }
 }

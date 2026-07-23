@@ -8,6 +8,7 @@ export interface Env {
   DAILY_GLOBAL_LIMIT?: string;
   DAILY_INSTALL_LIMIT?: string;
   DAILY_IP_LIMIT?: string;
+  DAILY_TOKEN_LIMIT?: string;
   MAX_REQUEST_BYTES?: string;
   MAX_INPUT_CHARS?: string;
   MAX_OUTPUT_TOKENS?: string;
@@ -125,6 +126,7 @@ async function enforceUsage(env: Env, installHash: string, ip: string) {
   const installLimit = configNumber(env.DAILY_INSTALL_LIMIT, 40);
   const ipLimit = configNumber(env.DAILY_IP_LIMIT, 80);
   const globalLimit = configNumber(env.DAILY_GLOBAL_LIMIT, 200);
+  const tokenLimit = configNumber(env.DAILY_TOKEN_LIMIT, 200000);
 
   const installRow = await env.DB.prepare(
     'SELECT COALESCE(SUM(request_count), 0) AS n FROM daily_usage WHERE usage_date = ? AND installation_hash = ?'
@@ -145,6 +147,13 @@ async function enforceUsage(env: Env, installHash: string, ip: string) {
   ).bind(date).first<{ n: number }>();
   if (Number(globalRow?.n || 0) >= globalLimit) {
     return json({ error: { message: '共享模型服务今天的总额度已用完，请稍后再试。', code: 'global_daily_limit' } }, { status: 429 });
+  }
+
+  const tokenRow = await env.DB.prepare(
+    'SELECT COALESCE(SUM(input_tokens + output_tokens), 0) AS n FROM daily_usage WHERE usage_date = ?'
+  ).bind(date).first<{ n: number }>();
+  if (Number(tokenRow?.n || 0) >= tokenLimit) {
+    return json({ error: { message: '共享模型服务今天的预算已用完，请稍后再试。', code: 'global_token_limit' } }, { status: 429 });
   }
 
   return null;

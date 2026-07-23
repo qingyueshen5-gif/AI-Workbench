@@ -29,7 +29,7 @@
 版本号：
 
 - `package.json` 当前版本：`0.4.6`
-- `CHANGELOG.md` 最新版本条目：`Unreleased - 上线硬骨头3A-R2.1：Managed Proxy 机制落地`
+- `CHANGELOG.md` 最新版本条目：`Unreleased - 上线硬骨头3A-R2.1：Cloudflare 生产部署与真实验证`
 
 ## 2. `research/` 真实存在文件
 
@@ -68,17 +68,15 @@
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；DeepSeek、Hermes、OpenClaw 三员工都已通过 `18800` 调用模型，验收摘要在 `verification/unified-model-proxy/summary.json`。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线硬骨头3A-R1.3 已完成。GitHub CLI 已恢复；Run `29920336923` 失败根因已定位为 `build.electronDist` 写死导致 Actions 无法找到 Electron runtime；Run `29933834029` 证明预验收 passed 但因隐式 publish 失败；Run `29935231224` 已真实 success。本机 v0.4.6 安装版已恢复并保留。3A-R2.0 已完成架构核验。3A-R2.1 已完成 Cloudflare Workers Managed Proxy 骨架和本机 18800 `managed_remote` 机制接入，本地 mock 验证 passed；真实 Cloudflare Worker、D1、Secrets、生产 URL 和 DeepSeek 上游生产调用仍 blocked。
+- 现在卡在什么：上线硬骨头3A-R1.3 已完成。Run `29935231224` 已真实 success。本机 v0.4.6 安装版已恢复并保留。3A-R2.0 已完成架构核验。3A-R2.1 已完成 Cloudflare 生产部署与真实验证，生产 Worker、D1、Secrets、无本机 Key 18800、安装版零配置、刷新/吊销/限流/预算/紧急关闭/中文降级和安全扫描均 passed。下一步只能做 ③A 总验收，不能直接进入 3B Release。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
 ## 5. 下一步
 
-1. 补齐 Cloudflare Worker、D1、Worker Secrets、生产 Managed Proxy URL 和 DeepSeek 上游生产调用条件。
-2. 重跑 `npm.cmd run verify:managed-proxy-production` 并补真实外部部署证据。
-3. R2.1 生产验证通过后再做 ③A 总验收。
-4. 只有 ③A 总验收完成并经产品负责人批准后，才由产品负责人判断是否进入 3B：GitHub Release 正式发布。
-5. 模型分层、手机端、情报流水线暂不抢跑，等上线最小集前三条稳定后继续。
+1. 执行 ③A 总验收，复核 R1.3 安装链路和 R2.1 生产共享模型链路。
+2. 只有 ③A 总验收完成并经产品负责人批准后，才由产品负责人判断是否进入 3B：GitHub Release 正式发布。
+3. 模型分层、手机端、情报流水线暂不抢跑，等上线最小集前三条稳定后继续。
 
 ## 交接重点
 
@@ -87,8 +85,8 @@
 - OpenClaw gateway 掉线问题已经修好到可启动：清理 runtime 残留后可监听 `127.0.0.1:18789`。
 - Codex 执行器已经恢复，不再卡在 PowerShell/WSL spawn 超时。
 - 统一模型入口已经完成：Workbench、Hermes、OpenClaw 三员工模型调用已统一经过本机 `18800` 代理。
-- 共享 key 机制已在本机 18800 边界内通过 mock 验证，前端和员工配置不保存真实 key；R2.1 已补远程 Managed Proxy 代码和本机接入，但生产注入仍 blocked，正式方案必须走远程 Managed Proxy 服务端 Secret。
-- 下一步不是继续修 OpenClaw，也不是情报流水线；下一步唯一主线是补齐 R2.1 外部生产条件并做真实生产验证。R2.1 生产验证通过后再做 ③A 总验收，之后才由产品负责人判断是否进入 3B：GitHub Release 下载链接。
+- 共享 key 生产注入已通过 R2.1：真实 key 只在 Cloudflare Secret，前端、员工和安装版本机均不保存真实 key；本机 18800 使用安装实例 token 连接远程 Managed Proxy。
+- 下一步不是继续修 OpenClaw，也不是情报流水线；下一步唯一主线是 ③A 总验收。总验收通过后才由产品负责人判断是否进入 3B：GitHub Release 下载链接。
 
 # 第二部分：产品战略（核心理解）
 

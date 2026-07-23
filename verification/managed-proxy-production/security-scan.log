@@ -1,0 +1,5 @@
+command=rg -n --hidden --glob !managed-proxy/node_modules/** --glob !node_modules/** --glob !release*/** --glob !dist/** --glob !.npm-cache*/** --glob !.tmp*/** --glob !managed-proxy/.wrangler/** sk-[A-Za-z0-9_-]{20,}|eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+ .git managed-proxy model-proxy.mjs runtime-paths.mjs electron scripts verification/managed-proxy-production
+exitCode=1
+stdout:
+
+stderr:

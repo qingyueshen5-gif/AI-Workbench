@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Unreleased - 上线硬骨头3A-R2.1：Cloudflare 生产部署与真实验证
+
+- 部署 `managed-proxy/` 到 Cloudflare Workers：`https://ai-workbench-managed-proxy.qingyueshen5.workers.dev`。
+- 创建并绑定 D1 数据库 `aiw-managed-proxy`，真实 `database_id` 为 `202583b9-817f-4115-9ab1-41e136133de8`，`installations`、`daily_usage`、`revoked_tokens` 三张表已执行 schema 并读写通过。
+- 通过 Cloudflare Secret 配置 `DEEPSEEK_API_KEY`、`TOKEN_SIGNING_SECRET`、`INSTALLATION_HASH_SALT`；Secret 值未写入仓库、本机 `.env`、日志或命令行。
+- `model-proxy.mjs` 内置公开生产 Worker URL 作为安装版默认 Managed Proxy URL；本机 `DEEPSEEK_API_KEY` 仍优先，安装版禁止回退本机 shared key 作为生产方案。
+- 真实生产验证 passed：无本机 Key 的 18800 和安装版均通过生产 Worker 调用 DeepSeek，返回 `生产共享模型调用成功`。
+- 刷新、吊销、单实例限流、单 IP 限流、全局限流、预算限额、紧急关闭/恢复、中文降级和安全扫描均通过。
+- 未创建 GitHub Release，未创建 tag，未进入 ③A 总验收或 ③B。
+
 ## Unreleased - 上线硬骨头3A-R2.1：Managed Proxy 机制落地
 
 - 新增 `managed-proxy/` Cloudflare Workers 服务骨架，包含 `/health`、`/v1/models`、`/v1/install/register`、`/v1/install/refresh` 和 `/v1/chat/completions`，真实 DeepSeek key 只通过 Worker Secret 读取。

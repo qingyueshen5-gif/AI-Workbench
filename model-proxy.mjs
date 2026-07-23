@@ -15,6 +15,7 @@ const port = Number(process.env.MODEL_PROXY_PORT || 18800);
 const maxRetries = Number(process.env.MODEL_PROXY_MAX_RETRIES || 3);
 const packagedMode = process.env.AIW_PACKAGED === '1';
 const clientVersion = String(process.env.npm_package_version || '0.4.6');
+const bundledManagedProxyUrl = 'https://ai-workbench-managed-proxy.qingyueshen5.workers.dev';
 
 migrateLegacyRuntimeData(root);
 
@@ -67,7 +68,7 @@ function readManagedState() {
 }
 
 function getManagedProxyUrl() {
-  return String(process.env.MANAGED_PROXY_URL || process.env.AIW_MANAGED_PROXY_URL || readManagedState().managedProxyUrl || '').trim().replace(/\/+$/, '');
+  return String(process.env.MANAGED_PROXY_URL || process.env.AIW_MANAGED_PROXY_URL || readManagedState().managedProxyUrl || (packagedMode ? bundledManagedProxyUrl : '')).trim().replace(/\/+$/, '');
 }
 
 function providerApiKey(provider) {

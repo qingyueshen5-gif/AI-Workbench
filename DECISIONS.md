@@ -14,5 +14,5 @@
 - Actions 判绿策略：3A-R1.3 只有在恢复 GitHub CLI/Git 凭证、读取真实 Actions 日志/artifact，并取得新的 `windows-installer-preflight.yml` success run 后才能判绿。Run `29935231224` 已满足该条件；后续外部流程仍必须取得真实 run 结果后才能判绿。
 - CI Electron runtime 策略：不要在 `package.json` 写死 `build.electronDist=node_modules/electron/dist`；CI 中由 electron-builder 自行解析/下载 Electron runtime，避免 `npm ci` 后该目录不存在导致云端安装包构建失败。
 - shared_managed 生产架构：正式链路锁定为客户端/Workbench/Hermes/OpenClaw -> 本机 `127.0.0.1:18800` -> AI Workbench 自控远程 Managed Proxy -> DeepSeek 官方 API。真实 DeepSeek key 只能存远程服务端 Secret，禁止进入安装包、用户电脑、本机 `.env`、环境变量、日志或进程参数；不采用“Key 随包分发 + 消费限额”方案，限流、预算和紧急关闭只能作为远程服务保护措施。
-- R2.0 结论：当前 `shared_managed` 机制测试 passed，但生产注入仍 blocked；下一次唯一主线是 `③A-R2.1：实现远程 Managed Proxy 并做真实生产注入验证`。R2.1 前不得进入 3B Release、首屏示例、模型分层、手机端或情报流水线。
-- R2.1 结论：远程 Managed Proxy 代码和本地机制验证已完成，但真实 Cloudflare Worker、D1、Secrets、生产 URL 和 DeepSeek 上游生产调用未执行，状态仍为 blocked；不得用本地 mock 结果进入 3A 总验收或 3B Release。
+- R2.0 历史结论：当时 `shared_managed` 机制测试 passed，但生产注入仍 blocked；该 blocked 已由 R2.1 Cloudflare 生产部署与真实验证解除。R2.1 前不得进入 3B Release、首屏示例、模型分层、手机端或情报流水线。
+- R2.1 结论：Cloudflare Worker、D1、Secrets、生产 URL、真实 DeepSeek 上游、无本机 Key 18800、安装版零配置、刷新/吊销/限流/预算/紧急关闭/中文降级和安全扫描均已通过。R2.1 passed 只允许进入 3A 总验收，不等于 3A 总验收已完成，也不允许直接进入 3B Release。

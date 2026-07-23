@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "scannedRoots": [
+    "release-v0.4.6-installer",
+    "C:\\Users\\胖胖虎\\AppData\\Local\\Programs\\AIWorkbench"
+  ],
+  "scannedFiles": 167,
+  "patterns": [
+    "deepseek_or_openai_style_key",
+    "jwt_like_long_token"
+  ],
+  "matches": []
+}

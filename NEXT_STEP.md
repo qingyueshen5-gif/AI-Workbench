@@ -1,10 +1,10 @@
 # NEXT_STEP.md
 
-上线硬骨头3A 当前下一步：补齐 `③A-R2.1` 的真实生产部署条件，并重跑生产验证。代码和本地机制验证已完成；真实 Cloudflare Worker、D1、Secrets、生产 URL 和 DeepSeek 上游生产调用仍 blocked。
+上线硬骨头3A 当前下一步：`③A 总验收`。3A-R2.1 Cloudflare 生产部署与真实验证已 passed；不要再重复 R2.1，也不要直接进入 3B Release。
 
 本机日常使用状态：v0.4.6 安装版已恢复并保留在 `%LOCALAPPDATA%\Programs\AIWorkbench`，桌面和开始菜单快捷方式已修正到当前安装目录；今日收尾已完成，不进入 R2 或 3B。
 
-执行前必须先读 `EXECUTION_PROTOCOL.md`。下一轮只补 R2.1 真实生产注入验证；不创建 GitHub Release，不创建正式 tag，不进入 3B。
+执行前必须先读 `EXECUTION_PROTOCOL.md`。下一轮只做 ③A 总验收；不创建 GitHub Release，不创建正式 tag，不进入 3B。
 
 当前 3A-R1.2 本地修复证据见 `verification/install-release/repair1-2-summary.json`、`verification/install-release/repair1-2-report.md`、`verification/install-release/preflight-summary.json` 和 `verification/install-release/preflight-report.md`。
 
@@ -17,13 +17,12 @@
 5. GitHub Actions Run `29919834193` 和 `29920088772` build 成功，但 `Run install-release preflight` 被 workflow 条件跳过。
 6. GitHub Actions Run `29920336923` build 成功且 preflight 已执行，但最终仍 failure。
 7. GitHub CLI 已恢复，Run `29920336923` artifact 已下载读取。
-8. `shared_managed` 生产注入继续记录为 blocked，不在安装链路修复中冒充 passed。
+8. `shared_managed` 的旧本机兜底已被 R2.1 远程 Managed Proxy 正式替代；生产注入已通过，不再记录为 blocked。
 9. 3A-R1.3 根因已定位并修复：`package.json` 写死 `build.electronDist=node_modules/electron/dist` 导致 Run `29920336923` 未产出安装包；Run `29933834029` 又因 electron-builder 隐式 publish 失败；`dist:win` 已追加 `--publish never`，Run `29935231224` 已取得真实 success。
 
 下一步：
 
-1. 产品负责人提供或授权 Cloudflare 账号、D1 数据库、Worker Secrets 和生产 Managed Proxy URL。
-2. 重跑 `npm.cmd run verify:managed-proxy-production`，并补真实外部部署日志/URL/上游调用证据。
-3. R2.1 生产验证通过后再做 ③A 总验收。
-4. ③A 总验收通过并经产品负责人批准后，才进入 ③B：GitHub Release 正式发布。
-5. 未获得生产验证通过前，不进入 3A 总验收或 3B，不创建 Release/tag。
+1. 执行 ③A 总验收，复核 R1.3 安装链路、R2.1 生产共享模型链路、安装版零配置和安全扫描。
+2. ③A 总验收通过后，等待产品负责人明确批准。
+3. 产品负责人批准后，才进入 ③B：GitHub Release 正式发布。
+4. 未获得批准前，不进入 3B，不创建 Release/tag。

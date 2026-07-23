@@ -10,7 +10,7 @@
 
 - [x] 硬骨头1：陌生机器不崩。启动路径改为缺依赖降级，config/data/logs/evidence 首次运行自动创建，18800/Hermes/OpenClaw/端口异常统一返回中文未就绪状态；自动验收证据见 `verification/clean-machine/summary.json`。
 - [x] 硬骨头2：共享 key 落地。18800 网关支持共享托管 key 兜底，员工和前端只使用本机占位 token；验收证据见 `verification/shared-key/summary.json`。
-- [ ] 硬骨头3：能下载能安装。3A-R1.3 已通过，候选安装包云端 build/install/smoke/uninstall/扫描通过；本机安装版已恢复并保留。3A-R2.0 已锁定 `shared_managed` 生产架构；3A-R2.1 已完成 Managed Proxy 代码和本地机制验证，但真实 Cloudflare/D1/Secrets/生产 URL 未提供，生产验证仍 blocked。R2.1 生产验证通过后才做 ③A 总验收和 ③B 正式 Release。
+- [ ] 硬骨头3：能下载能安装。3A-R1.3 已通过，候选安装包云端 build/install/smoke/uninstall/扫描通过；3A-R2.0 已锁定 `shared_managed` 生产架构；3A-R2.1 已通过 Cloudflare 生产部署与真实验证。下一步只能做 ③A 总验收；总验收通过并经产品负责人批准后，才进入 ③B 正式 Release。
 
 ## 当前口径校准
 
@@ -25,7 +25,7 @@
 - 本机安装版已恢复：已将 `F:\AI-Workbench\release-v0.4.6-installer\AI-Workbench-Setup-v0.4.6-x64.exe` 恢复为 Run `29935231224` 通过验收的 SHA256 `ca833403906e8ba82c267813ced701b39a83f9d7a7d9f3e9e857a011b6b9ab47`，安装到 `%LOCALAPPDATA%\Programs\AIWorkbench`，桌面/开始菜单快捷方式已修正，安装版启动验证通过；记录见 `tasks/2026-07-22-恢复本机安装版.md`。
 - 今日收尾已完成：本机安装版再次复核并保留；最近任务真实状态和产品距离已写入 `verification/daily-closeout/summary.json`、`verification/daily-closeout/report.md` 和 `tasks/2026-07-23-今日收尾与产品距离核验.md`。
 - 3A-R2.0 最新结论：passed。当前 `shared_managed` 只是本机环境兜底机制，不是远程生产注入；正式架构锁定为客户端/Workbench/Hermes/OpenClaw -> 本机 `127.0.0.1:18800` -> AI Workbench 自控远程 Managed Proxy -> DeepSeek 官方 API。证据见 `research/managed-proxy-production-plan.md`、`verification/managed-shared-key/architecture-summary.json` 和 `verification/managed-shared-key/architecture-report.md`。
-- 3A-R2.1 最新结论：blocked。新增 Cloudflare Workers 远程 Managed Proxy 骨架、本机 `18800` 的 `managed_remote` 接入、安装实例 token 注册/续期和 DPAPI 保存；本地 mock 验证通过，证据见 `verification/managed-proxy-production/summary.json` 和 `verification/managed-proxy-production/report.md`。真实 Cloudflare Worker、D1、Secrets、生产 URL 和 DeepSeek 上游生产调用未执行，不冒充 passed。
+- 3A-R2.1 最新结论：passed。Cloudflare Worker 已部署到 `https://ai-workbench-managed-proxy.qingyueshen5.workers.dev`；D1 `aiw-managed-proxy` 已建表并读写通过；三个 Secret 只存在 Cloudflare；无本机 Key 的 18800 和安装版均通过生产 Worker 调用 DeepSeek，返回“生产共享模型调用成功”；刷新、吊销、限流、预算、紧急关闭、中文降级和安全扫描均通过。证据见 `verification/managed-proxy-production/summary.json` 和 `verification/managed-proxy-production/report.md`。
 
 ## 明天路线图（2026-07-19）
 
