@@ -1,0 +1,29 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ai-workbench-managed-proxy",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-23",
+  "workers_dev": true,
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    "MANAGED_PROXY_ENABLED": "true",
+    "ALLOWED_MODELS": "deepseek-chat",
+    "DAILY_GLOBAL_LIMIT": "200",
+    "DAILY_INSTALL_LIMIT": "40",
+    "DAILY_IP_LIMIT": "80",
+    "MAX_REQUEST_BYTES": "65536",
+    "MAX_INPUT_CHARS": "30000",
+    "MAX_OUTPUT_TOKENS": "2048",
+    "UPSTREAM_TIMEOUT_MS": "60000",
+    "DEEPSEEK_BASE_URL": "https://api.deepseek.com/v1"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "aiw-managed-proxy",
+      "database_id": "REPLACE_WITH_CLOUDFLARE_D1_DATABASE_ID"
+    }
+  ]
+}

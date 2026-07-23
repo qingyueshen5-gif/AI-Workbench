@@ -1,10 +1,10 @@
 # NEXT_STEP.md
 
-上线硬骨头3A 当前下一步：`③A-R2.1：实现远程 Managed Proxy 并做真实生产注入验证`。必须由产品负责人明确批准后才开始。
+上线硬骨头3A 当前下一步：补齐 `③A-R2.1` 的真实生产部署条件，并重跑生产验证。代码和本地机制验证已完成；真实 Cloudflare Worker、D1、Secrets、生产 URL 和 DeepSeek 上游生产调用仍 blocked。
 
 本机日常使用状态：v0.4.6 安装版已恢复并保留在 `%LOCALAPPDATA%\Programs\AIWorkbench`，桌面和开始菜单快捷方式已修正到当前安装目录；今日收尾已完成，不进入 R2 或 3B。
 
-执行前必须先读 `EXECUTION_PROTOCOL.md`。本轮只做候选安装包、本地预验收、Actions 预验收工作流和验收证据；不创建 GitHub Release，不创建正式 tag，不进入 3B。
+执行前必须先读 `EXECUTION_PROTOCOL.md`。下一轮只补 R2.1 真实生产注入验证；不创建 GitHub Release，不创建正式 tag，不进入 3B。
 
 当前 3A-R1.2 本地修复证据见 `verification/install-release/repair1-2-summary.json`、`verification/install-release/repair1-2-report.md`、`verification/install-release/preflight-summary.json` 和 `verification/install-release/preflight-report.md`。
 
@@ -22,7 +22,8 @@
 
 下一步：
 
-1. 产品负责人明确批准后，进入 `③A-R2.1：实现远程 Managed Proxy 并做真实生产注入验证`。
-2. R2.1 通过后再做 ③A 总验收。
-3. ③A 总验收通过并经产品负责人批准后，才进入 ③B：GitHub Release 正式发布。
-4. 未获得批准前，不进入 R2 或 3B，不创建 Release/tag。
+1. 产品负责人提供或授权 Cloudflare 账号、D1 数据库、Worker Secrets 和生产 Managed Proxy URL。
+2. 重跑 `npm.cmd run verify:managed-proxy-production`，并补真实外部部署日志/URL/上游调用证据。
+3. R2.1 生产验证通过后再做 ③A 总验收。
+4. ③A 总验收通过并经产品负责人批准后，才进入 ③B：GitHub Release 正式发布。
+5. 未获得生产验证通过前，不进入 3A 总验收或 3B，不创建 Release/tag。

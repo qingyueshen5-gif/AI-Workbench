@@ -33,6 +33,7 @@ export const runtimeDataDir = join(runtimeRoot, 'data');
 export const runtimeLogsDir = join(runtimeRoot, 'logs');
 export const runtimeEvidenceDir = join(runtimeRoot, 'evidence');
 export const runtimeDataFile = String(process.env.AIW_DATA_FILE || '').trim() || join(runtimeDataDir, 'workbench.json');
+export const runtimeManagedProxyFile = join(runtimeConfigDir, 'managed-proxy.json');
 export const runtimeModelProxyLogFile = join(runtimeLogsDir, 'model-proxy-calls.jsonl');
 export const runtimeStartupLogFile = join(runtimeLogsDir, 'workbench-startup.log');
 export const runtimeStartupErrorLogFile = join(runtimeLogsDir, 'workbench-startup.err.log');

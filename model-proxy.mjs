@@ -1,8 +1,10 @@
 import { createServer } from 'node:http';
-import { readFileSync, mkdirSync, appendFileSync } from 'node:fs';
+import { readFileSync, mkdirSync, appendFileSync, existsSync, writeFileSync } from 'node:fs';
+import { randomUUID } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { migrateLegacyRuntimeData, runtimeModelProxyLogFile, runtimeRoot } from './runtime-paths.mjs';
+import { migrateLegacyRuntimeData, runtimeConfigDir, runtimeManagedProxyFile, runtimeModelProxyLogFile, runtimeRoot } from './runtime-paths.mjs';
 import { explainPortStatus } from './readiness.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
@@ -11,6 +13,8 @@ const runtimeEnvFile = join(runtimeRoot, '.env');
 const logFile = runtimeModelProxyLogFile;
 const port = Number(process.env.MODEL_PROXY_PORT || 18800);
 const maxRetries = Number(process.env.MODEL_PROXY_MAX_RETRIES || 3);
+const packagedMode = process.env.AIW_PACKAGED === '1';
+const clientVersion = String(process.env.npm_package_version || '0.4.6');
 
 migrateLegacyRuntimeData(root);
 
@@ -53,12 +57,119 @@ const providers = {
 
 const defaultProviderId = String(process.env.MODEL_PROXY_DEFAULT_PROVIDER || 'deepseek').trim() || 'deepseek';
 
+function readManagedState() {
+  try {
+    if (!existsSync(runtimeManagedProxyFile)) return {};
+    return JSON.parse(readFileSync(runtimeManagedProxyFile, 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
+function getManagedProxyUrl() {
+  return String(process.env.MANAGED_PROXY_URL || process.env.AIW_MANAGED_PROXY_URL || readManagedState().managedProxyUrl || '').trim().replace(/\/+$/, '');
+}
+
 function providerApiKey(provider) {
   const localKey = String(process.env[provider.apiKeyEnv] || '').trim();
   if (localKey) return { value: localKey, source: 'local_env', configured: true };
+  if (getManagedProxyUrl()) return { value: '', source: 'managed_remote', configured: true, managed: true };
+  if (packagedMode) return { value: '', source: 'missing', configured: false };
   const sharedKey = String(process.env[provider.sharedApiKeyEnv] || process.env.MODEL_PROXY_SHARED_API_KEY || '').trim();
   if (sharedKey) return { value: sharedKey, source: 'shared_managed', configured: true };
   return { value: '', source: 'missing', configured: false };
+}
+
+function writeManagedState(state) {
+  mkdirSync(runtimeConfigDir, { recursive: true });
+  writeFileSync(runtimeManagedProxyFile, `${JSON.stringify(state, null, 2)}\n`, 'utf8');
+}
+
+function protectSecret(value) {
+  if (process.platform !== 'win32') return { encoding: 'plain-dev-only', value };
+  const script = '[Console]::InputEncoding=[Text.Encoding]::UTF8; $raw=[Console]::In.ReadToEnd(); ConvertTo-SecureString -String $raw -AsPlainText -Force | ConvertFrom-SecureString';
+  const result = spawnSync('powershell.exe', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-Command', script], {
+    input: value,
+    encoding: 'utf8',
+    windowsHide: true
+  });
+  if (result.status !== 0) throw new Error('安装令牌加密保存失败');
+  return { encoding: 'windows-dpapi', value: String(result.stdout || '').trim() };
+}
+
+function unprotectSecret(record) {
+  if (!record?.value) return '';
+  if (record.encoding === 'plain-dev-only') return String(record.value || '');
+  if (record.encoding !== 'windows-dpapi') return '';
+  const script = '$encrypted=[Console]::In.ReadToEnd(); $secure=ConvertTo-SecureString -String $encrypted; $bstr=[Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure); try { [Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr) } finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr) }';
+  const result = spawnSync('powershell.exe', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-Command', script], {
+    input: String(record.value || ''),
+    encoding: 'utf8',
+    windowsHide: true
+  });
+  if (result.status !== 0) return '';
+  return String(result.stdout || '').trim();
+}
+
+function tokenExpiresSoon(expiresAt) {
+  const time = Date.parse(String(expiresAt || ''));
+  return !Number.isFinite(time) || time - Date.now() < 10 * 60 * 1000;
+}
+
+async function managedRequest(path, options = {}) {
+  const managedProxyUrl = getManagedProxyUrl();
+  const response = await fetch(`${managedProxyUrl}${path}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options.headers || {})
+    }
+  });
+  const text = await response.text();
+  let payload = null;
+  try { payload = JSON.parse(text); } catch {}
+  return { response, text, payload };
+}
+
+async function ensureManagedToken() {
+  const managedProxyUrl = getManagedProxyUrl();
+  if (!managedProxyUrl) throw new Error('共享模型服务地址未配置');
+  const state = readManagedState();
+  const installationId = String(state.installationId || randomUUID());
+  const currentToken = unprotectSecret(state.token);
+  if (currentToken && !tokenExpiresSoon(state.expiresAt)) return { token: currentToken, installationId };
+  if (currentToken) {
+    const refreshed = await managedRequest('/v1/install/refresh', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${currentToken}` }
+    });
+    if (refreshed.response.ok && refreshed.payload?.token) {
+      const next = {
+        ...state,
+        installationId,
+        managedProxyUrl,
+        token: protectSecret(String(refreshed.payload.token)),
+        expiresAt: String(refreshed.payload.expiresAt || '')
+      };
+      writeManagedState(next);
+      return { token: String(refreshed.payload.token), installationId };
+    }
+  }
+  const registered = await managedRequest('/v1/install/register', {
+    method: 'POST',
+    body: JSON.stringify({ installationId, version: clientVersion })
+  });
+  if (!registered.response.ok || !registered.payload?.token) {
+    const message = registered.payload?.error?.message || '共享模型服务注册失败';
+    throw new Error(message);
+  }
+  writeManagedState({
+    installationId,
+    managedProxyUrl,
+    token: protectSecret(String(registered.payload.token)),
+    expiresAt: String(registered.payload.expiresAt || '')
+  });
+  return { token: String(registered.payload.token), installationId };
 }
 
 function resolveProvider(providerId = defaultProviderId) {
@@ -174,7 +285,7 @@ async function forwardOpenAiCompatible(request, response, path) {
   const provider = resolveProvider(request.headers['x-aiw-provider']);
   const credential = providerApiKey(provider);
   if (!credential.configured) {
-    sendJson(response, 503, { error: { message: `本机模型代理缺少 ${provider.apiKeyEnv}。` } });
+    sendJson(response, 503, { error: { message: packagedMode ? '共享模型服务未配置，工作台可以先打开，请稍后重试。' : `本机模型代理缺少 ${provider.apiKeyEnv}。` } });
     return;
   }
   try {
@@ -186,13 +297,25 @@ async function forwardOpenAiCompatible(request, response, path) {
         upstreamBody = JSON.stringify(parsed);
       } catch {}
     }
-    const result = await fetchWithRetry(provider, path, {
+    const headers = {
+      'Content-Type': request.headers['content-type'] || 'application/json'
+    };
+    let targetProvider = provider;
+    let targetPath = path;
+    if (credential.managed) {
+      const managed = await ensureManagedToken();
+      targetProvider = { ...provider, baseUrl: getManagedProxyUrl() };
+      targetPath = '/v1/chat/completions';
+      headers.Authorization = `Bearer ${managed.token}`;
+      headers['x-aiw-installation-id'] = managed.installationId;
+      headers['x-aiw-client-version'] = clientVersion;
+    } else {
+      headers.Authorization = `Bearer ${credential.value}`;
+    }
+    const result = await fetchWithRetry(targetProvider, targetPath, {
       method: request.method,
       body: upstreamBody,
-      headers: {
-        'Content-Type': request.headers['content-type'] || 'application/json',
-        Authorization: `Bearer ${credential.value}`
-      },
+      headers,
       simulateFailOnce: request.headers['x-aiw-simulate-network-fail-once'] === '1'
     });
     appendCallLog({
@@ -219,7 +342,9 @@ async function forwardOpenAiCompatible(request, response, path) {
     });
     sendJson(response, 502, {
       error: {
-        message: `本机模型代理重试 ${maxRetries} 次后仍失败：${error.message}`
+        message: credential.managed
+          ? `共享模型服务暂时不可用：${error.message || '请稍后再试'}。`
+          : `本机模型代理重试 ${maxRetries} 次后仍失败：${error.message}`
       }
     });
   }

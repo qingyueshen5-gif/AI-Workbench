@@ -20,12 +20,13 @@ AI Workbench 已完成统一模型入口、上线硬骨头1“陌生机器不崩
 | 恢复本机安装版 | 已完成 | 将 F 盘候选安装包恢复为 Actions Run `29935231224` 通过验收的 hash 版本，重新安装 v0.4.6 到本机，修正桌面和开始菜单快捷方式，启动验证通过；未进入 R2/3B，未改代码。 | `tasks/2026-07-22-恢复本机安装版.md` |
 | 今日收尾与产品距离核验 | 已完成 | 复核本机安装版、最近任务真实状态和产品距离；确认 3A-R1.3 passed、本机安装版已保留、shared_managed 生产注入和 3B Release 仍是核心阻塞。 | `verification/daily-closeout/summary.json`、`verification/daily-closeout/report.md`、`tasks/2026-07-23-今日收尾与产品距离核验.md` |
 | 3A-R2.0：共享 Key 架构核验 | 已完成 | 审计当前 `shared_managed` 链路，确认当前只是本机环境兜底机制，不是生产远程注入；锁定正式架构为本机 18800 -> 自控远程 Managed Proxy -> DeepSeek 官方 API。 | `research/managed-proxy-production-plan.md`、`verification/managed-shared-key/architecture-summary.json`、`verification/managed-shared-key/architecture-report.md` |
+| 3A-R2.1：Managed Proxy 机制落地 | blocked | 新增 Cloudflare Workers 远程代理骨架和本机 18800 `managed_remote` 接入；本地 mock 验证注册、token 转发、DPAPI 保存和日志脱敏均通过。真实 Cloudflare/D1/Secrets/生产 URL 未提供，生产注入验证 blocked。 | `managed-proxy/`、`verification/managed-proxy-production/summary.json`、`verification/managed-proxy-production/report.md` |
 
 ## 当前未完成任务
 
 | 任务 | 当前状态 | 下一步 |
 | --- | --- | --- |
-| 硬骨头3：能下载能安装 | 3A-R1.3 已通过；R2.0 已通过；R2.1 未开始；3B 未开始 | 候选安装包云端预验收已通过；本机安装版已恢复并保留。下一次唯一主线是 `③A-R2.1：实现远程 Managed Proxy 并做真实生产注入验证`；3B Release 仍未开始。 |
+| 硬骨头3：能下载能安装 | 3A-R1.3 已通过；R2.0 已通过；R2.1 机制测试 passed / 生产验证 blocked；3B 未开始 | 候选安装包云端预验收已通过；本机安装版已恢复并保留。下一次唯一主线是补齐 Cloudflare Worker、D1、Secrets 和生产 URL 后重跑 R2.1 生产验证；3B Release 仍未开始。 |
 | 打开后知道能干嘛 | 未完成 | 首屏放 3-5 条能点即跑的示例指令。 |
 | 办不成时是人话不是崩 | 部分完成 | 已有 readiness 降级说明；后续继续补失败自愈、重试和人话解释。 |
 | 反馈出口 + 一句安全告知 | 未完成 | 增加反馈渠道和基础安全告知。 |

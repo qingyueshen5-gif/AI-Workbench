@@ -1,0 +1,46 @@
+{
+  "task": "3A-R2.1 managed proxy production injection",
+  "status": "blocked",
+  "generatedAt": "2026-07-23T06:24:57.433Z",
+  "mechanismTest": {
+    "status": "passed",
+    "scope": "local mock managed proxy plus local 18800 client integration"
+  },
+  "productionTest": {
+    "status": "blocked",
+    "scope": "real Cloudflare Worker, D1, Worker Secrets and DeepSeek upstream",
+    "blocker": "Cloudflare account, D1 database id, Worker secrets and production URL were not available to this local run."
+  },
+  "checks": [
+    {
+      "name": "local_18800_reports_managed_remote",
+      "status": "passed",
+      "detail": "managed_remote"
+    },
+    {
+      "name": "local_proxy_forwards_through_managed_proxy",
+      "status": "passed",
+      "detail": "http_status=200, body={\"id\":\"chatcmpl-managed-mock\",\"object\":\"chat.completion\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"managed proxy ok\"},\"finish_reason\":\"stop\"}],\"usage\":{\"prompt_tokens\":5,\"completion_tokens\":3,\"total_tokens\":8}}"
+    },
+    {
+      "name": "managed_registration_and_token_forwarding",
+      "status": "passed",
+      "detail": "register=1, chat=1"
+    },
+    {
+      "name": "managed_token_persisted_without_plain_secret",
+      "status": "passed",
+      "detail": "managed config exists"
+    },
+    {
+      "name": "logs_do_not_leak_shared_or_managed_tokens",
+      "status": "passed",
+      "detail": "stdout/stderr scanned"
+    },
+    {
+      "name": "cloudflare_worker_production_deployment",
+      "status": "blocked",
+      "detail": "No production Cloudflare Worker URL or secrets were supplied in this run."
+    }
+  ]
+}

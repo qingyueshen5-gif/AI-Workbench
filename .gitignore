@@ -3,6 +3,7 @@ dist/
 release*/
 .electron-cache/
 .npm-cache/
+.npm-cache-r*/
 data/
 .env
 .dev-server*.log
@@ -30,5 +31,6 @@ verification/unified-model-proxy/runs/
 verification/version-management/fixture-versions/
 versions/backups/*.json
 .tmp-version-management/
+.tmp-managed-proxy-runtime*/
 .tmp-install-r1/
 verification/install-release/actions-*/

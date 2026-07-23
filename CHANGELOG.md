@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Unreleased - 上线硬骨头3A-R2.1：Managed Proxy 机制落地
+
+- 新增 `managed-proxy/` Cloudflare Workers 服务骨架，包含 `/health`、`/v1/models`、`/v1/install/register`、`/v1/install/refresh` 和 `/v1/chat/completions`，真实 DeepSeek key 只通过 Worker Secret 读取。
+- `model-proxy.mjs` 新增远程 `managed_remote` 模式：安装版无本机 key 时可指向远程 Managed Proxy，首次运行生成安装实例 ID，获取短期实例 token，并用 Windows DPAPI 保存 token。
+- `electron/main.cjs` 启动子 Node 进程时传入 `AIW_PACKAGED`，安装版不会再回退读取本机 shared key 作为生产方案。
+- 新增 `scripts/verify-managed-proxy-production.mjs` 和 `verification/managed-proxy-production/summary.json`，本地 mock 证明 18800 -> Managed Proxy 机制链路、注册/转发/token 保存和日志脱敏均通过。
+- 本轮总状态仍为 `blocked`：真实 Cloudflare Worker、D1、Secrets、生产 URL 和 DeepSeek 上游生产调用未执行，不能进入 3A 总验收或 3B Release。
+
 ## Unreleased - 上线硬骨头3A-R2.0：共享 Key 架构核验
 
 - 新增 `research/managed-proxy-production-plan.md`，锁定正式生产架构：客户端/Workbench/Hermes/OpenClaw -> 本机 `127.0.0.1:18800` -> AI Workbench 自控远程 Managed Proxy -> DeepSeek 官方 API。

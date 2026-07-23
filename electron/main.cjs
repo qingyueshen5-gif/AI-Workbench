@@ -153,6 +153,7 @@ function startNodeScript(name, scriptPath) {
     windowsHide: true,
     env: {
       ...process.env,
+      AIW_PACKAGED: app.isPackaged ? '1' : '0',
       ELECTRON_RUN_AS_NODE: '1'
     },
     stdio: 'ignore'
