@@ -3,7 +3,7 @@
   "packageVersion": "0.4.6",
   "contextVersion": "0.4.6",
   "releaseVersion": "v0.4.6",
-  "nextStep": "产品资产备份与电脑清理审计",
+  "nextStep": "电脑环境治理：产品资产备份、单点故障核查和清理候选盘点",
   "capabilityStatusChecks": [
     {
       "name": "模型分层 未标记为已完成",
@@ -62,5 +62,5 @@
   ],
   "errors": [],
   "warnings": [],
-  "verifiedAt": "2026-07-24T05:03:22.554Z"
+  "verifiedAt": "2026-07-24T08:13:59.247Z"
 }

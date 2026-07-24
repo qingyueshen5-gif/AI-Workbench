@@ -36,6 +36,7 @@ const scannedFiles = [
 ];
 
 const ignoredHistoricalPaths = ['CHANGELOG.md', 'TASKLOG.md', 'tasks/**', 'verification/**', 'research/**'];
+const expectedNextStep = '电脑环境治理：产品资产备份、单点故障核查和清理候选盘点';
 
 function readText(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
@@ -135,7 +136,7 @@ function main() {
       }
     }
 
-    if (nextStep !== '产品资产备份与电脑清理审计') {
+    if (nextStep !== expectedNextStep) {
       errors.push(`NEXT_STEP.md 标记区不是当前唯一下一步：${nextStep}`);
     }
     for (const file of scannedFiles.filter((file) => file !== 'NEXT_STEP.md')) {
@@ -144,7 +145,8 @@ function main() {
       const conflict = nextLines.some((line) => {
         if (/^\s*#/.test(line)) return false;
         if (line.includes('用途：')) return false;
-        if (line.includes('产品资产备份与电脑清理审计')) return false;
+        if (line.includes(expectedNextStep)) return false;
+        if (line.includes('电脑环境治理')) return false;
         if (line.includes('NEXT_STEP.md')) return false;
         if (line.includes('新对话交接')) return false;
         if (/不得|不自动|不能|需要继续执行任务/.test(line)) return false;
