@@ -9,7 +9,7 @@ test('worker source does not allow client upstream override', () => {
 
 test('schema contains required tables', () => {
   const schema = readFileSync(new URL('../schema.sql', import.meta.url), 'utf8');
-  for (const table of ['installations', 'daily_usage', 'revoked_tokens', 'monthly_model_budget']) {
+  for (const table of ['installations', 'daily_usage', 'revoked_tokens', 'monthly_model_budget', 'monthly_platform_budget']) {
     assert.match(schema, new RegExp(`CREATE TABLE IF NOT EXISTS ${table}`));
   }
 });

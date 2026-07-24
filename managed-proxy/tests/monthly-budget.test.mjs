@@ -25,8 +25,11 @@ class MockD1 {
     this.installations = new Map();
     this.revoked = new Set();
     this.dailyUsage = new Map();
+    this.platformBudget = new Map();
     this.monthlyBudget = new Map();
     this.failBudgetWrite = false;
+    this.failModelDetailInsert = false;
+    this.failModelDetailUpdate = false;
   }
 
   prepare(sql) {
@@ -127,8 +130,21 @@ class MockStatement {
       this.db.dailyUsage.set(key, row);
       return { meta: { changes: 1 }, changes: 1 };
     }
-    if (sql.includes('INSERT OR IGNORE INTO monthly_model_budget')) {
+    if (sql.includes('INSERT OR IGNORE INTO monthly_platform_budget')) {
       if (this.db.failBudgetWrite) throw new Error('mock budget insert failure');
+      const [month, updatedAt] = this.args;
+      if (!this.db.platformBudget.has(month)) {
+        this.db.platformBudget.set(month, {
+          month_key: month,
+          reserved_micro_usd: 0,
+          call_count: 0,
+          updated_at: updatedAt
+        });
+      }
+      return { meta: { changes: 1 }, changes: 1 };
+    }
+    if (sql.includes('INSERT OR IGNORE INTO monthly_model_budget')) {
+      if (this.db.failModelDetailInsert) throw new Error('mock model detail insert failure');
       const [month, model, updatedAt] = this.args;
       const key = this.db.budgetKey(month, model);
       if (!this.db.monthlyBudget.has(key)) {
@@ -142,15 +158,25 @@ class MockStatement {
       }
       return { meta: { changes: 1 }, changes: 1 };
     }
-    if (sql.includes('UPDATE monthly_model_budget')) {
+    if (sql.includes('UPDATE monthly_platform_budget')) {
       if (this.db.failBudgetWrite) throw new Error('mock budget update failure');
-      const [amount, updatedAt, month, model, repeatedAmount, cap] = this.args.map((item) => Number.isFinite(Number(item)) ? Number(item) : item);
+      const [amount, updatedAt, month, repeatedAmount, cap] = this.args.map((item) => Number.isFinite(Number(item)) ? Number(item) : item);
       assert.equal(amount, repeatedAmount);
-      const key = this.db.budgetKey(month, model);
-      const row = this.db.monthlyBudget.get(key);
+      const row = this.db.platformBudget.get(month);
       if (!row || row.reserved_micro_usd + amount > Number(cap)) {
         return { meta: { changes: 0 }, changes: 0 };
       }
+      row.reserved_micro_usd += amount;
+      row.call_count += 1;
+      row.updated_at = updatedAt;
+      return { meta: { changes: 1 }, changes: 1 };
+    }
+    if (sql.includes('UPDATE monthly_model_budget')) {
+      if (this.db.failModelDetailUpdate) throw new Error('mock model detail update failure');
+      const [amount, updatedAt, month, model] = this.args.map((item) => Number.isFinite(Number(item)) ? Number(item) : item);
+      const key = this.db.budgetKey(month, model);
+      const row = this.db.monthlyBudget.get(key);
+      if (!row) return { meta: { changes: 0 }, changes: 0 };
       row.reserved_micro_usd += amount;
       row.call_count += 1;
       row.updated_at = updatedAt;
@@ -171,6 +197,21 @@ function baseEnv(overrides = {}) {
     MODEL_PRICE_CONFIG_JSON: JSON.stringify({
       'deepseek-chat': {
         provider: 'deepseek',
+        inputCacheMissMicroUsdPerMillionTokens: 1000000,
+        outputMicroUsdPerMillionTokens: 1000000
+      },
+      'model-a': {
+        provider: 'mock',
+        inputCacheMissMicroUsdPerMillionTokens: 1000000,
+        outputMicroUsdPerMillionTokens: 1000000
+      },
+      'model-b': {
+        provider: 'mock',
+        inputCacheMissMicroUsdPerMillionTokens: 1000000,
+        outputMicroUsdPerMillionTokens: 1000000
+      },
+      'model-c': {
+        provider: 'mock',
         inputCacheMissMicroUsdPerMillionTokens: 1000000,
         outputMicroUsdPerMillionTokens: 1000000
       }
@@ -228,6 +269,7 @@ test('budget below cap allows mock upstream', async () => {
     const row = [...env.DB.monthlyBudget.values()][0];
     assert.equal(row.call_count, 1);
     assert.ok(row.reserved_micro_usd > 0);
+    assert.equal([...env.DB.platformBudget.values()][0].reserved_micro_usd, row.reserved_micro_usd);
   } finally {
     globalThis.fetch = originalFetch;
   }
@@ -251,6 +293,7 @@ test('exact cap allows once and next call is rejected before upstream', async ()
     assert.equal(rejected.status, 429);
     assert.equal((await rejected.json()).error.code, 'monthly_budget_exhausted');
     assert.equal(upstreamCalls, 1);
+    assert.equal([...env.DB.platformBudget.values()][0].reserved_micro_usd, amount);
     assert.equal([...env.DB.monthlyBudget.values()][0].reserved_micro_usd, amount);
   } finally {
     globalThis.fetch = originalFetch;
@@ -275,6 +318,7 @@ test('concurrent calls cannot reserve over hard cap', async () => {
     assert.equal(statuses.filter((status) => status === 200).length, 10);
     assert.equal(statuses.filter((status) => status === 429).length, 15);
     assert.equal(upstreamCalls, 10);
+    assert.equal([...env.DB.platformBudget.values()][0].reserved_micro_usd, amount * 10);
     assert.equal([...env.DB.monthlyBudget.values()][0].reserved_micro_usd, amount * 10);
   } finally {
     globalThis.fetch = originalFetch;
@@ -344,6 +388,8 @@ test('month switch uses a new ledger row', async () => {
     assert.equal((await worker.default.fetch(chatRequest(token, payload()), env)).status, 200);
     assert.ok(env.DB.monthlyBudget.has('2026-07|deepseek-chat'));
     assert.ok(env.DB.monthlyBudget.has('2026-08|deepseek-chat'));
+    assert.ok(env.DB.platformBudget.has('2026-07'));
+    assert.ok(env.DB.platformBudget.has('2026-08'));
   } finally {
     globalThis.fetch = originalFetch;
   }
@@ -360,6 +406,98 @@ test('multibyte input reserves by UTF-8 request bytes when larger than char esti
     assert.equal((await worker.default.fetch(chatRequest(token, p), env)).status, 200);
     const row = [...env.DB.monthlyBudget.values()][0];
     assert.equal(row.reserved_micro_usd, reservedAmountFor(p));
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('cross-model sequential calls share one platform cap', async () => {
+  const worker = await loadWorker();
+  const pA = payload('a', 10, 'model-a');
+  const pB = payload('a', 10, 'model-b');
+  const amount = reservedAmountFor(pA);
+  assert.equal(amount, reservedAmountFor(pB));
+  const env = baseEnv({
+    ALLOWED_MODELS: 'model-a,model-b',
+    MONTHLY_MODEL_HARD_CAP_MICRO_USD: String(amount)
+  });
+  const { token } = await register(worker, env);
+  let upstreamCalls = 0;
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => {
+    upstreamCalls += 1;
+    return new Response(JSON.stringify({ usage: { completion_tokens: 1 } }), { status: 200 });
+  };
+  try {
+    assert.equal((await worker.default.fetch(chatRequest(token, pA), env)).status, 200);
+    const rejected = await worker.default.fetch(chatRequest(token, pB), env);
+    assert.equal(rejected.status, 429);
+    assert.equal((await rejected.json()).error.code, 'monthly_budget_exhausted');
+    assert.equal(upstreamCalls, 1);
+    assert.equal(env.DB.platformBudget.get('2026-07').reserved_micro_usd, amount);
+    assert.equal(env.DB.monthlyBudget.get('2026-07|model-a').reserved_micro_usd, amount);
+    assert.equal(env.DB.monthlyBudget.get('2026-07|model-b').reserved_micro_usd, 0);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('cross-model concurrent calls share one aggregate cap', async () => {
+  const worker = await loadWorker();
+  const models = ['model-a', 'model-b', 'model-c'];
+  const p = payload('x', 10, 'model-a');
+  const amount = reservedAmountFor(p);
+  const env = baseEnv({
+    ALLOWED_MODELS: models.join(','),
+    MONTHLY_MODEL_HARD_CAP_MICRO_USD: String(amount * 10)
+  });
+  const { token } = await register(worker, env);
+  let upstreamCalls = 0;
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => {
+    upstreamCalls += 1;
+    return new Response(JSON.stringify({ usage: { completion_tokens: 1 } }), { status: 200 });
+  };
+  try {
+    const responses = await Promise.all(Array.from({ length: 25 }, (_, index) => {
+      const model = models[index % models.length];
+      return worker.default.fetch(chatRequest(token, payload('x', 10, model)), env);
+    }));
+    const statuses = responses.map((response) => response.status);
+    assert.equal(statuses.filter((status) => status === 200).length, 10);
+    assert.equal(statuses.filter((status) => status === 429).length, 15);
+    assert.equal(upstreamCalls, 10);
+    const platformReserved = env.DB.platformBudget.get('2026-07').reserved_micro_usd;
+    const detailReserved = [...env.DB.monthlyBudget.values()].reduce((sum, row) => sum + row.reserved_micro_usd, 0);
+    assert.equal(platformReserved, amount * 10);
+    assert.equal(detailReserved, platformReserved);
+    for (const model of models) {
+      assert.ok((env.DB.monthlyBudget.get(`2026-07|${model}`)?.reserved_micro_usd || 0) < amount * 10);
+    }
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('model detail write failure fails closed after platform reservation without refund', async () => {
+  const worker = await loadWorker();
+  const p = payload();
+  const amount = reservedAmountFor(p);
+  const env = baseEnv({ MONTHLY_MODEL_HARD_CAP_MICRO_USD: String(amount * 2) });
+  const { token } = await register(worker, env);
+  let upstreamCalls = 0;
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => {
+    upstreamCalls += 1;
+    return new Response('{}', { status: 200 });
+  };
+  try {
+    env.DB.failModelDetailUpdate = true;
+    const response = await worker.default.fetch(chatRequest(token, p), env);
+    assert.equal(response.status, 503);
+    assert.equal((await response.json()).error.code, 'monthly_budget_unavailable');
+    assert.equal(upstreamCalls, 0);
+    assert.equal(env.DB.platformBudget.get('2026-07').reserved_micro_usd, amount);
   } finally {
     globalThis.fetch = originalFetch;
   }

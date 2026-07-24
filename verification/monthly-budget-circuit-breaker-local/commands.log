@@ -11,3 +11,20 @@
 2026-07-24T21:57+08:00 | JSON parse and git diff --check | exit 0 | output: evidence JSON parsed; diff check passed with CRLF warnings only
 2026-07-24T21:58+08:00 | sensitive scan | exit 0 | output: broad Authorization header scan had code/test header false positives; refined full secret/token/private-key scan passed
 2026-07-24T21:58+08:00 | deployment boundary check | exit 0 | output: no wrangler config, env, secrets, release, package, model-proxy or server changes; no deploy command run
+2026-07-24T22:04+08:00 | product owner review finding | exit 0 | output: first 3A implementation enforced 40 USD by model via monthly_model_budget(month_key, model), not across all providers/models combined
+2026-07-24T22:06+08:00 | implement platform aggregate correction | exit 0 | output: added monthly_platform_budget(month_key) aggregate ledger; monthly_model_budget retained as non-authoritative detail ledger
+2026-07-24T22:07+08:00 | npm.cmd test | exit 1 | output: initial detail-write-failure test simulated detail insert failure before platform reservation; corrected test mock to target model detail update after platform reservation
+2026-07-24T22:08+08:00 | npm.cmd test | exit 0 | output: 12 tests passed, 0 failed; includes single-model regression, cross-model sequential, cross-model concurrency and model-detail write failure; mock upstream only; real provider not called
+2026-07-24T22:11+08:00 | git status --short --branch; git log -5 --oneline --decorate | exit 0 | output: continued from local modifications only; HEAD=origin/main=aad42e186ec05175f21fa5aa489759aef9f3be13
+2026-07-24T22:11+08:00 | npm.cmd test | exit 0 | output: 12 tests passed, 0 failed; 25 cross-model concurrent requests produced 10 upstream calls and 15 pre-upstream rejections; real provider not called
+2026-07-24T22:12+08:00 | npm.cmd run docs:generate-handoff | exit 0 | output: AI-Workbench-Handoff.md generated from authoritative files
+2026-07-24T22:12+08:00 | npm.cmd run verify:docs-consistency | exit 1 | output: expected NEXT_STEP string still used old wording; updated docs consistency guard to current authoritative next step
+2026-07-24T22:13+08:00 | npm.cmd run verify:docs-consistency | exit 0 | output: passed
+2026-07-24T22:13+08:00 | JSON parse for summary/test-results/artifact-manifest/docs-consistency | exit 0 | output: all parsed
+2026-07-24T22:13+08:00 | git diff --check | exit 0 | output: no whitespace errors; CRLF warnings only
+2026-07-24T22:14+08:00 | sensitive scan | exit 0 | output: refined secret/token/private-key patterns found no matches
+2026-07-24T22:14+08:00 | production boundary check | exit 0 | output: no wrangler deploy, no remote D1 migration, no Secret command, no package/version/release/model-proxy/server config change; no real provider call made
+2026-07-24T22:16+08:00 | npm.cmd run docs:generate-handoff | exit 0 | output: regenerated after correcting handoff template wording for post-3A local state
+2026-07-24T22:16+08:00 | npm.cmd run verify:docs-consistency | exit 0 | output: passed
+2026-07-24T22:17+08:00 | sensitive scan | exit 0 | output: refined secret/token/private-key patterns found no matches
+2026-07-24T22:17+08:00 | deployment boundary scan | exit 0 | output: only existing package/README command text and this log mention deploy/remote D1; no deployment command executed, no production config diff

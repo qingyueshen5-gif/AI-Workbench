@@ -25,7 +25,7 @@
 - 电脑环境治理第一批安全清理：partial。累计释放 F 盘约 3.06 GB；重启后指定遗留目录已处理，用户 npm 缓存仍因 `EPERM` 未清理，Windows 临时文件仍需产品负责人手动确认。证据见 `verification/pc-cleanup-batch1/summary.json`。
 - 阶段性总审核（砍薄版）：passed。备份隔离恢复、Git 凭据扫描和文档假完成核对均已执行；未发现确认的 Git 凭据泄漏或 confirmed fake completion，非关键过期表述已修正。证据见 `verification/thin-stage-audit/summary.json`。
 - 生存体检：passed。当前没有真实用户用量；5/50/100 用户平台月成本规划值约为 199.12 / 1686.24 / 3338.61 CNY，现金跑道约 7.81 / 6.64 / 5.69 个月。钱包安全状态 unsafe，理论最坏成本 `unbounded`，证据见 `verification/survival-cost-audit/summary.json`。
-- 第 3A 段本地钱包刹车：local_passed。月度模型预算硬上限 40 USD 已在本地 Managed Proxy 中实现，预算调用前原子预留、失败不退款、并发不超支、缺价格/D1 失败 fail-closed 均通过 mock 测试；未部署生产，证据见 `verification/monthly-budget-circuit-breaker-local/summary.json`。
+- 第 3A 段本地钱包刹车：local_passed_after_platform_aggregate_correction。首次实现被发现按模型分别执行 40 USD 硬上限；现已修正为所有 provider/模型合计 40 USD 的平台总账硬上限，模型账只做明细。单模型、跨模型顺序、跨模型并发、模型明细失败 fail-closed、缺价格/D1 失败不上游等 mock 测试通过；未部署生产，证据见 `verification/monthly-budget-circuit-breaker-local/summary.json`。
 
 ## 当前事实
 

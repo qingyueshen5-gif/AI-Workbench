@@ -1,14 +1,20 @@
 # Monthly Budget Circuit Breaker Local Report
 
-Generated at: 2026-07-24T21:53:00+08:00
+Generated at: 2026-07-24T22:18:00+08:00
 
 ## Result
 
-Execution status: local_passed.
+Execution status: local_passed_after_platform_aggregate_correction.
 
 Deployment status: not_deployed.
 
 No real provider was called. No Cloudflare Worker deployment, remote D1 migration, Secret change, production model call, UI change, model layering, context compression or v0.4.7 work was performed.
+
+## Correction Scope
+
+The first local 3A implementation used `monthly_model_budget` with primary key `(month_key, model)` as the hard-cap ledger. That meant each model could independently reserve up to `MONTHLY_MODEL_HARD_CAP_MICRO_USD`; future model A and model B could each consume 40 USD, for 80 USD total model spend in one month.
+
+That did not satisfy the locked policy: the 40 USD model hard cap is for all providers and all models combined. This correction changes the hard-cap authority to a platform aggregate ledger and keeps the model ledger only as detail evidence.
 
 ## Budget Decision
 
@@ -27,7 +33,20 @@ The Managed Proxy now has a provider-aware price layer. Current default model pr
 
 The budget engine reads model pricing by model id. If model pricing is missing or invalid, the Worker returns 503 before upstream and does not call the provider. The code remains framework/provider-aware; DeepSeek is the first configured provider implementation, not product positioning.
 
-The D1 schema adds:
+The D1 schema now has two budget ledgers:
+
+Platform aggregate ledger, the only hard-cap authority:
+
+```sql
+CREATE TABLE IF NOT EXISTS monthly_platform_budget (
+  month_key TEXT PRIMARY KEY,
+  reserved_micro_usd INTEGER NOT NULL DEFAULT 0,
+  call_count INTEGER NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL
+);
+```
+
+Per-model detail ledger, used for audit and future model/provider analysis only:
 
 ```sql
 CREATE TABLE IF NOT EXISTS monthly_model_budget (
@@ -46,12 +65,15 @@ Before every upstream model call:
 
 1. The Worker resolves model pricing.
 2. It computes conservative maximum possible cost in integer micro-USD.
-3. It initializes the current month/model ledger row with `INSERT OR IGNORE`.
-4. It performs one conditional `UPDATE monthly_model_budget SET reserved_micro_usd = reserved_micro_usd + ?, call_count = call_count + 1 ... WHERE reserved_micro_usd + ? <= ?`.
-5. If the update changes no row, the request returns HTTP 429 with `monthly_budget_exhausted` before upstream.
-6. If D1, pricing, or reservation parsing fails, the request returns HTTP 503 before upstream.
+3. It initializes the current month platform ledger row with `INSERT OR IGNORE`.
+4. It initializes the current month/model detail ledger row with `INSERT OR IGNORE`.
+5. It performs one conditional `UPDATE monthly_platform_budget SET reserved_micro_usd = reserved_micro_usd + ?, call_count = call_count + 1 ... WHERE month_key = ? AND reserved_micro_usd + ? <= ?`.
+6. If the platform update changes no row, the request returns HTTP 429 with `monthly_budget_exhausted` before upstream.
+7. If platform reservation succeeds, it updates the matching model detail row.
+8. If the model detail update fails, the request returns HTTP 503 before upstream and the platform reservation is not refunded.
+9. If D1, pricing, or reservation parsing fails, the request returns HTTP 503 before upstream.
 
-This avoids a read-then-write budget race.
+This avoids a read-then-write budget race and avoids summing model rows outside an atomic update. The model detail ledger never decides whether an upstream call is allowed.
 
 ## Conservative Reservation
 
@@ -65,7 +87,7 @@ The reservation uses:
 
 This is intentionally conservative for Chinese and other multibyte text, provider failure paths and local proxy retries.
 
-Reservations are never refunded after upstream success, failure, timeout, connection interruption or Worker crash. This is intentional: stop early rather than miss billable attempts.
+Reservations are never refunded after upstream success, failure, timeout, connection interruption, Worker crash, or model-detail write failure after platform reservation. This is intentional: stop early rather than miss billable attempts.
 
 ## User-Facing Errors
 
@@ -83,7 +105,7 @@ Budget system unavailable or missing pricing:
 
 ## Local Validation
 
-`npm.cmd test` in `managed-proxy` passed 9/9 tests.
+`npm.cmd test` in `managed-proxy` passed 12/12 tests after the aggregate correction.
 
 Covered cases:
 
@@ -96,6 +118,9 @@ Covered cases:
 - unknown model or missing pricing returns 503 before upstream, upstream calls 0
 - month switch creates a separate ledger row
 - multibyte input uses raw UTF-8 request bytes where larger than the existing char/4 estimate
+- cross-model sequential calls share one platform cap: `model-a` succeeds, `model-b` is rejected with 429 before upstream when the shared cap is exhausted
+- cross-model concurrent calls share one aggregate cap: 25 requests across `model-a`, `model-b` and `model-c` with a 10-call cap produce 10 upstream calls and 15 pre-upstream rejections
+- model detail write failure fails closed after platform reservation, returns 503, calls upstream 0 times and keeps the platform reservation
 - existing register, authentication, daily request and daily token flow remains exercised through the Worker mock
 
 The attempted command `node --test --test-reporter=json tests/*.test.mjs` failed because this Node runtime treats `json` as an external reporter package. This did not affect implementation behavior; formal evidence is summarized in `test-results.json` from the passing `npm.cmd test` run.

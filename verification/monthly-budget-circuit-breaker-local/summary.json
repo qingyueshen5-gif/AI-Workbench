@@ -1,29 +1,60 @@
 {
   "task": "monthly-budget-circuit-breaker-local",
-  "execution_status": "local_passed",
+  "execution_status": "local_passed_after_platform_aggregate_correction",
   "deployment_status": "not_deployed",
+  "budget_scope": "all providers and models combined",
   "platform_monthly_policy_cap_micro_usd": 50000000,
   "model_monthly_hard_cap_micro_usd": 40000000,
   "infrastructure_reserve_micro_usd": 10000000,
+  "platform_aggregate_ledger": {
+    "table": "monthly_platform_budget",
+    "primary_key": "month_key",
+    "fields": ["month_key", "reserved_micro_usd", "call_count", "updated_at"],
+    "enforces_hard_cap": true
+  },
+  "per_model_detail_ledger": {
+    "table": "monthly_model_budget",
+    "primary_key": ["month_key", "model"],
+    "fields": ["month_key", "model", "reserved_micro_usd", "call_count", "updated_at"],
+    "enforces_hard_cap": false,
+    "purpose": "audit and future model/provider analysis only"
+  },
   "reservation_strategy": {
     "timing": "before upstream provider call",
     "storage": "integer micro-USD",
     "input_tokens": "max(existing estimated input tokens, raw request UTF-8 bytes)",
     "output_tokens": "final effective max_tokens",
     "input_price": "cache-miss price",
-    "refund_policy": "no refund after upstream success, failure, timeout, connection interruption, or Worker crash"
+    "refund_policy": "no refund after upstream success, failure, timeout, connection interruption, Worker crash, or model-detail write failure after platform reservation"
   },
   "atomicity_evidence": {
-    "schema": "monthly_model_budget(month_key, model, reserved_micro_usd, call_count, updated_at)",
-    "operation": "INSERT OR IGNORE initializes row, then one conditional UPDATE atomically increments reserved_micro_usd only if reserved_micro_usd + reservation <= cap",
-    "non_atomic_read_then_write": false
+    "operation": "single conditional UPDATE on monthly_platform_budget increments reserved_micro_usd only if reserved_micro_usd + reservation <= MONTHLY_MODEL_HARD_CAP_MICRO_USD",
+    "non_atomic_sum_across_models": false,
+    "model_detail_is_not_authority": true
   },
-  "concurrency_test": {
+  "cross_model_sequential_test": {
+    "status": "passed",
+    "model_a_status": 200,
+    "model_b_status": 429,
+    "upstream_calls": 1,
+    "platform_reserved_over_cap": false
+  },
+  "cross_model_concurrency_test": {
     "status": "passed",
     "requests": 25,
+    "models": ["model-a", "model-b", "model-c"],
     "successful_upstream_calls": 10,
     "rejected_before_upstream": 15,
-    "reserved_over_cap": false
+    "platform_reserved_over_cap": false,
+    "per_model_detail_sum_exceeds_platform": false
+  },
+  "detail_write_failure_test": {
+    "status": "passed",
+    "platform_reservation_succeeded": true,
+    "model_detail_write_failed": true,
+    "http_status": 503,
+    "upstream_calls": 0,
+    "platform_reservation_refunded": false
   },
   "failure_path_test": {
     "status": "passed",
@@ -46,5 +77,5 @@
     "verification/monthly-budget-circuit-breaker-local/test-results.json",
     "verification/monthly-budget-circuit-breaker-local/artifact-manifest.json"
   ],
-  "next_action": "Wait for product owner acceptance of 3A local wallet circuit breaker. Do not deploy production or enter 3B without approval."
+  "next_action": "Wait for product owner re-acceptance of 3A local wallet circuit breaker. Do not deploy production or enter 3B without approval."
 }

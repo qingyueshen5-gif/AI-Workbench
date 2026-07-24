@@ -31,7 +31,7 @@ AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 
 | 产品定位修正与判断依据文档 | 已完成 | 将当前状态文档统一为“AI Workbench 是模型与 Agent 无关的调度框架；DeepSeek 是当前唯一生产实现且可替换”的口径；新增 `THINKING.md` 记录产品负责人判断依据；交接文件清单改为三份。 | `THINKING.md`、`tasks/2026-07-24-产品定位修正与判断依据文档.md` |
 | 阶段性总审核（砍薄版） | 已完成 | 隔离恢复最新外部备份；扫描当前 Git tracked 内容和完整本地可达历史的凭据泄漏；核对 completed/passed/已完成声明与证据是否匹配；未发现确认的 Git 凭据泄漏或 confirmed fake completion，已修正 README、当前进度和 CONTEXT 的非关键过期表述。 | `verification/thin-stage-audit/summary.json`、`verification/thin-stage-audit/report.md` |
 | 生存体检 | 已完成并修正场景边界 | 在 SSE 中断后先盘点现场，保护半成品，只做验证和交付收尾；随后修正 5/50/100 场景边界。当前限额正常路径月平台成本上界约 40.76 CNY，现金跑道约 7.96 个月；原 199.12 / 1686.24 / 3338.61 CNY 保留为 `uncapped_demand_pressure`，不代表当前生产限额下实际可发生的正常路径成本。钱包安全状态 unsafe，理论最坏成本 `unbounded` 的依据是失败/超时/并发逃逸路径不能证明 fail-closed。 | `verification/survival-cost-audit/summary.json`、`verification/survival-cost-audit/report.md` |
-| 第 3A 段：本地钱包刹车 | 已完成本地验证 | Managed Proxy 新增月度模型预算账本、调用前整数 micro-USD 保守预留、条件原子更新、预算耗尽 429、预算系统/价格失败 503、失败不退款和并发不超支；本轮只做本地 mock 验证，未部署 Cloudflare、未执行远端 D1 migration、未调用真实 provider。 | `verification/monthly-budget-circuit-breaker-local/summary.json`、`verification/monthly-budget-circuit-breaker-local/report.md` |
+| 第 3A 段：本地钱包刹车 | 已完成平台合计预算纠偏和本地验证 | 产品负责人验收发现首次实现按模型分别执行 40 USD 硬上限，未来多模型会突破“所有模型合计 40 USD”的政策；现已修正为 `monthly_platform_budget` 平台总账执行唯一条件原子预留，`monthly_model_budget` 只做模型明细。单模型、跨模型顺序、跨模型并发、模型明细失败 fail-closed、失败不退款和缺价格/D1 失败不上游均通过本地 mock 测试；未部署 Cloudflare、未执行远端 D1 migration、未调用真实 provider。 | `verification/monthly-budget-circuit-breaker-local/summary.json`、`verification/monthly-budget-circuit-breaker-local/report.md` |
 
 ## 当前未完成任务
 

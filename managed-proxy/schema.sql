@@ -33,6 +33,13 @@ CREATE TABLE IF NOT EXISTS monthly_model_budget (
   PRIMARY KEY (month_key, model)
 );
 
+CREATE TABLE IF NOT EXISTS monthly_platform_budget (
+  month_key TEXT PRIMARY KEY,
+  reserved_micro_usd INTEGER NOT NULL DEFAULT 0,
+  call_count INTEGER NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL
+);
+
 CREATE INDEX IF NOT EXISTS idx_daily_usage_date ON daily_usage (usage_date);
 CREATE INDEX IF NOT EXISTS idx_daily_usage_installation ON daily_usage (usage_date, installation_hash);
 CREATE INDEX IF NOT EXISTS idx_daily_usage_ip ON daily_usage (usage_date, ip_hash);

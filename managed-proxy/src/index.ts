@@ -201,20 +201,33 @@ async function reserveMonthlyModelBudget(env: Env, model: string, amountMicroUsd
   const month = currentMonth(env);
   const at = nowIso();
   await env.DB.prepare(
+    `INSERT OR IGNORE INTO monthly_platform_budget (month_key, reserved_micro_usd, call_count, updated_at)
+     VALUES (?, 0, 0, ?)`
+  ).bind(month, at).run();
+  await env.DB.prepare(
     `INSERT OR IGNORE INTO monthly_model_budget (month_key, model, reserved_micro_usd, call_count, updated_at)
      VALUES (?, ?, 0, 0, ?)`
   ).bind(month, model, at).run();
-  const result = await env.DB.prepare(
+  const platformResult = await env.DB.prepare(
+    `UPDATE monthly_platform_budget
+     SET reserved_micro_usd = reserved_micro_usd + ?,
+       call_count = call_count + 1,
+     updated_at = ?
+     WHERE month_key = ?
+       AND reserved_micro_usd + ? <= ?`
+  ).bind(amountMicroUsd, at, month, amountMicroUsd, cap).run();
+  const changed = Number(platformResult?.meta?.changes || platformResult?.changes || 0);
+  if (changed !== 1) return false;
+  const modelResult = await env.DB.prepare(
     `UPDATE monthly_model_budget
      SET reserved_micro_usd = reserved_micro_usd + ?,
        call_count = call_count + 1,
        updated_at = ?
      WHERE month_key = ?
-       AND model = ?
-       AND reserved_micro_usd + ? <= ?`
-  ).bind(amountMicroUsd, at, month, model, amountMicroUsd, cap).run();
-  const changed = Number(result?.meta?.changes || result?.changes || 0);
-  if (changed !== 1) return false;
+       AND model = ?`
+  ).bind(amountMicroUsd, at, month, model).run();
+  const modelChanged = Number(modelResult?.meta?.changes || modelResult?.changes || 0);
+  if (modelChanged !== 1) throw new Error('model_budget_detail_unavailable');
   return true;
 }
 
