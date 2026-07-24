@@ -1,0 +1,196 @@
+{
+  "task": "AI Workbench pc environment governance",
+  "status": "audit_completed_cleanup_pending_owner_approval",
+  "generatedAt": "2026-07-24T09:55:00.000Z",
+  "head": "7200f78fb344ced4f2a30302670d8e9a88cc5ca0",
+  "remoteSyncBaseline": {
+    "branch": "main",
+    "headEqualsOriginMain": true,
+    "ahead": 0,
+    "behind": 0,
+    "baselineClean": true
+  },
+  "scope": {
+    "allowed": [
+      "backup",
+      "restore verification",
+      "account single-point-of-failure check",
+      "disk inventory",
+      "process inventory",
+      "cache inventory",
+      "installer inventory",
+      "startup inventory",
+      "installed software inventory",
+      "cleanup candidate list"
+    ],
+    "forbiddenActionsPerformed": []
+  },
+  "backup": {
+    "method": "git archive of HEAD tracked files",
+    "trackedFileCount": 239,
+    "workspaceZipCommitted": false,
+    "externalBackupPath": "D:\\AI-Workbench-Backups\\2026-07-24-pc-environment-governance\\ai-workbench-head-7200f78.zip",
+    "sha256": "37157BD16891AA2527F88CC6A1ACFEF0ABA235AE14ED389C76D8A5208D50D291",
+    "bytes": 2400359,
+    "externalCopyReadable": true,
+    "externalHashMatchesWorkspaceSource": true,
+    "note": "The workspace zip was deleted after the external copy was verified, so the large archive is not intended for Git commit."
+  },
+  "restoreVerification": {
+    "expandedFileCount": 239,
+    "sampledFiles": [
+      "package.json",
+      "TASKLOG.md",
+      "PRODUCT.md",
+      "server.mjs",
+      "model-proxy.mjs",
+      "scripts/verify-docs-consistency.mjs"
+    ],
+    "sampleBlobHashesMatchedHead": true,
+    "temporaryRestoreDirectory": "verification/pc-environment-governance/restore-check",
+    "temporaryRestoreDirectoryDeletion": "partial_windows_exfat_access_denied_empty_directory_skeleton_remains",
+    "temporaryRestoreDirectoryTrackedByGit": false
+  },
+  "accountChecks": {
+    "githubCli": {
+      "loggedIn": true,
+      "account": "qingyueshen5-gif",
+      "protocol": "https",
+      "scopesObserved": [
+        "gist",
+        "read:org",
+        "repo",
+        "workflow"
+      ],
+      "manualOwnerActionRequired": "Confirm GitHub 2FA, recovery email, and recovery codes in the browser. Do not share codes."
+    },
+    "cloudflareWrangler": {
+      "loggedIn": true,
+      "credentialPathObserved": "C:\\Users\\胖胖虎\\AppData\\Roaming\\xdg.config\\.wrangler\\config\\default.toml",
+      "wranglerVersion": "4.113.0",
+      "manualOwnerActionRequired": "Confirm Cloudflare 2FA, account recovery method, billing contact, and emergency access in the browser. Do not share secrets.",
+      "warnings": [
+        "Wrangler can read login state but failed to write its log file because of EPERM under the Wrangler log directory.",
+        "Proxy environment variables were detected by Wrangler."
+      ]
+    },
+    "developerTools": {
+      "git": "available",
+      "githubCli": "available",
+      "node": "available",
+      "npm": "available",
+      "localManagedProxyWrangler": "available",
+      "globalWrangler": "not found on PATH"
+    }
+  },
+  "diskInventory": [
+    {
+      "drive": "C:",
+      "totalGB": 198.8,
+      "freeGB": 31.7,
+      "risk": "medium_low_free_space"
+    },
+    {
+      "drive": "D:",
+      "totalGB": 120.0,
+      "freeGB": 17.7,
+      "risk": "medium_low_free_space"
+    },
+    {
+      "drive": "F:",
+      "totalGB": 1863.0,
+      "freeGB": 1607.5,
+      "risk": "low"
+    }
+  ],
+  "largestWorkspaceCandidates": [
+    {
+      "path": "release-v0.4.4-installer-final16",
+      "sizeMB": 560.3,
+      "category": "old release build output"
+    },
+    {
+      "path": "release-v0.4.4-installer-final15",
+      "sizeMB": 557.5,
+      "category": "old release build output"
+    },
+    {
+      "path": "release-v0.4.4-installer-final14",
+      "sizeMB": 557.4,
+      "category": "old release build output"
+    },
+    {
+      "path": "node_modules",
+      "sizeMB": 503.7,
+      "category": "dependency cache"
+    },
+    {
+      "path": "release-v0.4.6-installer",
+      "sizeMB": 372.4,
+      "category": "current release output"
+    },
+    {
+      "path": ".npm-cache",
+      "sizeMB": 259.4,
+      "category": "npm cache"
+    },
+    {
+      "path": "managed-proxy",
+      "sizeMB": 165.7,
+      "category": "active subproject, do not delete as a whole"
+    },
+    {
+      "path": ".electron-cache",
+      "sizeMB": 137.6,
+      "category": "electron cache"
+    }
+  ],
+  "cacheInventory": [
+    {
+      "path": "C:\\Users\\胖胖虎\\AppData\\Local\\Temp",
+      "sizeMB": 1551.4
+    },
+    {
+      "path": "C:\\Users\\胖胖虎\\AppData\\Local\\npm-cache",
+      "sizeMB": 3427.3
+    },
+    {
+      "path": "F:\\AI-Workbench\\.npm-cache",
+      "sizeMB": 259.4
+    },
+    {
+      "path": "F:\\AI-Workbench\\.electron-cache",
+      "sizeMB": 137.6
+    },
+    {
+      "path": "F:\\AI-Workbench\\.npm-cache-r21c",
+      "sizeMB": 134.7
+    }
+  ],
+  "startupInventory": {
+    "startupFolderItems": [
+      "AI Workbench Dev Server.lnk",
+      "OpenClaw Gateway.cmd",
+      "人人视频.lnk",
+      "发送至 OneNote.lnk"
+    ],
+    "registryRunItems": [
+      "SecurityHealth",
+      "RtkAudUService"
+    ]
+  },
+  "cleanupCandidatesRequireOwnerApproval": [
+    "Old release-v0.4.0 through release-v0.4.4 build output directories after confirming no unique artifact is needed.",
+    "Old .tmp-* verification runtime directories after confirming no evidence not already committed is needed.",
+    "Old .verify-* and .strict-* runtime/profile directories after confirming no active validation depends on them.",
+    "Local npm/electron caches after confirming no offline rebuild requirement.",
+    "Duplicate downloaded v0.4.6 installer copies after confirming GitHub Release and D: backup remain readable.",
+    "Startup folder entries for AI Workbench Dev Server, OpenClaw Gateway, media apps, and OneNote only after owner confirms desired boot behavior.",
+    "Potentially unused installed apps such as duplicate Python versions, duplicate QGIS versions, media apps, remote-control tools, and vendor app stores only after owner approval."
+  ],
+  "blockedOwnerOnlyChecks": [
+    "GitHub browser security page: verify 2FA, recovery email, recovery codes, and emergency access.",
+    "Cloudflare dashboard security page: verify 2FA, recovery method, billing contact, and emergency access.",
+    "Confirm where the D: external backup should be mirrored if D: is not considered durable enough."
+  ]
+}
