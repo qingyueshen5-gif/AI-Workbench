@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## Unreleased - 上线硬骨头3B：v0.4.6 Alpha Release
+
+- 创建 annotated tag `v0.4.6`，指向 ③A 验收提交 `dbe48d6f29a4fbea02370fe699ed4e7ff837f38b`。
+- 创建公开 GitHub prerelease `AI Workbench v0.4.6 Alpha`：https://github.com/qingyueshen5-gif/AI-Workbench/releases/tag/v0.4.6
+- 上传安装包 `AI-Workbench-Setup-v0.4.6-x64.exe` 和 SHA256 校验文件。
+- 安装包直接下载链接：https://github.com/qingyueshen5-gif/AI-Workbench/releases/download/v0.4.6/AI-Workbench-Setup-v0.4.6-x64.exe
+- 安装包大小 `111524004` bytes，SHA256 `b8de2e3f90c0063b8b3003c09de0b0886cc1861f4e8091df5f09994bdf6573f9`。
+- 发布后从公开 Release 重新下载并校验大小/SHA256，结果 passed。
+- 上线硬骨头3“能下载能安装”完成；上线三大硬骨头整体完成。
+- 本轮未修改功能代码、UI、模型分层、手机端或多 Agent 调度。
+
 ## Unreleased - 上线硬骨头3A：总验收
 
 - 新增 `scripts/verify-3a-final.mjs`，执行 ③A 总验收：候选安装包真实安装、快捷方式检查、安装版后端启动、生产 Managed Proxy 对话、中文降级、安全扫描、真实卸载和恢复日常安装版。

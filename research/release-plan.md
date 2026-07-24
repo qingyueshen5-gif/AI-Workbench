@@ -99,6 +99,17 @@
 
 ## 当前状态
 
+3B 状态：passed。
+
+- 已创建 annotated tag `v0.4.6`，指向 ③A 验收提交 `dbe48d6f29a4fbea02370fe699ed4e7ff837f38b`。
+- 已创建公开 GitHub prerelease：`AI Workbench v0.4.6 Alpha`。
+- Release URL：`https://github.com/qingyueshen5-gif/AI-Workbench/releases/tag/v0.4.6`。
+- 安装包直接下载链接：`https://github.com/qingyueshen5-gif/AI-Workbench/releases/download/v0.4.6/AI-Workbench-Setup-v0.4.6-x64.exe`。
+- 安装包大小：`111524004` bytes。
+- SHA256：`b8de2e3f90c0063b8b3003c09de0b0886cc1861f4e8091df5f09994bdf6573f9`。
+- 发布后下载回测 passed，证据见 `verification/3b-release/summary.json` 和 `verification/3b-release/report.md`。
+- 3B 仅完成公开 Alpha 发布，不包含功能代码、UI、模型分层、手机端或多 Agent 调度改造。
+
 3A-R1 状态：failed。
 
 R1 已完成的修复尝试：
@@ -177,5 +188,5 @@ R1 结论：必须先查清 NSIS 为什么只写 updater 副本但不执行 `ins
 结论：
 
 - R1.3 已完成。
-- 下一步是否进入 `③A-R2 shared key 生产注入修复/验证` 必须等待产品负责人批准。
+- 该 R1.3 历史阶段完成后，后续已完成 R2.0、R2.1、③A 总验收和 ③B GitHub Alpha Release。
 - 当前仍不进入 3B，不创建 Release/tag。

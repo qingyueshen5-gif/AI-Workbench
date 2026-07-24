@@ -1,0 +1,63 @@
+{
+  "task": "3B public alpha release",
+  "status": "passed",
+  "generatedAt": "2026-07-24T03:29:00Z",
+  "release": {
+    "tag": "v0.4.6",
+    "title": "AI Workbench v0.4.6 Alpha",
+    "url": "https://github.com/qingyueshen5-gif/AI-Workbench/releases/tag/v0.4.6",
+    "isDraft": false,
+    "isPrerelease": true,
+    "publishedAt": "2026-07-24T03:28:40Z",
+    "targetCommitish": "dbe48d6f29a4fbea02370fe699ed4e7ff837f38b"
+  },
+  "tag": {
+    "type": "annotated",
+    "tagObject": "a1788d576e96627c8901077b90b79253caf3832b",
+    "commit": "dbe48d6f29a4fbea02370fe699ed4e7ff837f38b",
+    "pushedToOrigin": true
+  },
+  "sourceAcceptance": {
+    "commit": "dbe48d6f29a4fbea02370fe699ed4e7ff837f38b",
+    "actionsRunId": "30001627121",
+    "actionsRunHeadSha": "9f2217226f06f7b0c7feed0f92ab32925a5825ea",
+    "actionsRunConclusion": "success",
+    "summary": "Tag points to the 3A acceptance evidence commit; installer asset comes from the 3A-accepted Actions artifact."
+  },
+  "assets": {
+    "installer": {
+      "name": "AI-Workbench-Setup-v0.4.6-x64.exe",
+      "url": "https://github.com/qingyueshen5-gif/AI-Workbench/releases/download/v0.4.6/AI-Workbench-Setup-v0.4.6-x64.exe",
+      "sizeBytes": 111524004,
+      "sha256": "b8de2e3f90c0063b8b3003c09de0b0886cc1861f4e8091df5f09994bdf6573f9",
+      "githubDigest": "sha256:b8de2e3f90c0063b8b3003c09de0b0886cc1861f4e8091df5f09994bdf6573f9",
+      "state": "uploaded"
+    },
+    "sha256": {
+      "name": "AI-Workbench-Setup-v0.4.6-x64.exe.sha256",
+      "url": "https://github.com/qingyueshen5-gif/AI-Workbench/releases/download/v0.4.6/AI-Workbench-Setup-v0.4.6-x64.exe.sha256",
+      "sizeBytes": 100,
+      "sha256": "b701f082ffd5837ffa793f49a4d4c9150e7f9d1598fb0e649e5bb45cc4bc95dc",
+      "state": "uploaded"
+    }
+  },
+  "downloadVerification": {
+    "status": "passed",
+    "downloadDir": "F:\\AI-Workbench\\.tmp-3b-release-download-24928",
+    "sizeMatches": true,
+    "sha256Matches": true,
+    "sha256FileMatches": true
+  },
+  "boundaries": {
+    "releaseType": "public alpha prerelease",
+    "platform": "Windows only",
+    "requiresInternet": true,
+    "notIncluded": [
+      "mobile app",
+      "model routing/layering",
+      "complete multi-agent orchestration",
+      "cross-site automation"
+    ],
+    "sensitiveDataWarning": "Do not enter highly sensitive or confidential information in this Alpha."
+  }
+}

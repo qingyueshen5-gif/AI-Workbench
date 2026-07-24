@@ -1,18 +1,18 @@
 # AI Workbench 新对话交接包
 
-生成时间：2026-07-23
+生成时间：2026-07-24
 
 用途：新对话框启动后，只读这一份文件即可快速理解当前真实状态、产品战略、当前任务和下一步动作。
 
-交接必读文件：`EXECUTION_PROTOCOL.md`、`PRODUCT.md`、`VISION.md`、`CURRENT_TASK.md`、`LAUNCH.md`、`TASKLOG.md`、`CHANGELOG.md`、`CURRENT_PROGRESS_AUDIT.md`、`verification/install-release/repair1-3-summary.json`、`verification/managed-proxy-production/summary.json`、`verification/3a-final/summary.json`、`research/self-hosting-plan.md`、`research/unified-model-proxy-plan.md`、`research/managed-proxy-production-plan.md`。
+交接必读文件：`EXECUTION_PROTOCOL.md`、`PRODUCT.md`、`VISION.md`、`CURRENT_TASK.md`、`LAUNCH.md`、`TASKLOG.md`、`CHANGELOG.md`、`CURRENT_PROGRESS_AUDIT.md`、`verification/install-release/repair1-3-summary.json`、`verification/managed-proxy-production/summary.json`、`verification/3a-final/summary.json`、`verification/3b-release/summary.json`、`research/self-hosting-plan.md`、`research/unified-model-proxy-plan.md`、`research/managed-proxy-production-plan.md`、`research/release-plan.md`。
 
-最新状态：③A 总验收已 passed。候选安装包来自 Actions Run `30001627121` artifact，文件名 `AI-Workbench-Setup-v0.4.6-x64.exe`，SHA256 `b8de2e3f90c0063b8b3003c09de0b0886cc1861f4e8091df5f09994bdf6573f9`；已完成真实安装、快捷方式、安装版后端启动、`managed_remote` 生产对话、中文降级、安全扫描、真实卸载和恢复日常安装版。未创建 GitHub Release，未创建正式 tag；下一步只能等待产品负责人批准进入 ③B。
+最新状态：③B 已 passed，AI Workbench v0.4.6 Alpha 已公开发布。Release 页面：`https://github.com/qingyueshen5-gif/AI-Workbench/releases/tag/v0.4.6`；安装包直接下载：`https://github.com/qingyueshen5-gif/AI-Workbench/releases/download/v0.4.6/AI-Workbench-Setup-v0.4.6-x64.exe`；大小 `111524004` bytes；SHA256 `b8de2e3f90c0063b8b3003c09de0b0886cc1861f4e8091df5f09994bdf6573f9`。上线三大硬骨头整体完成；下一步是产品方向收口与首批用户准备。
 
 # 第一部分：当前真实进度
 
 # 当前真实进度清单
 
-生成时间：2026-07-22
+生成时间：2026-07-24
 
 范围：只按当前仓库真实文件和已提交验收证据盘点；不按记忆猜测。
 
@@ -31,7 +31,7 @@
 版本号：
 
 - `package.json` 当前版本：`0.4.6`
-- `CHANGELOG.md` 最新版本条目：`Unreleased - 上线硬骨头3A：总验收`
+- `CHANGELOG.md` 最新版本条目：`Unreleased - 上线硬骨头3B：v0.4.6 Alpha Release`
 
 ## 2. `research/` 真实存在文件
 
@@ -64,31 +64,31 @@
 
 ## 4. 当前真实进度
 
-- 产品版本：`v0.4.6` 候选版，3A-R1.3 GitHub Actions 云端预验收已通过；本机安装版已恢复并保留。
+- 产品版本：`v0.4.6` Alpha，GitHub Release 已公开发布并完成下载回测。
 - 任务账本：`TASKLOG.md` 已补齐，后续每次任务都必须同步更新。
 - 执行协议：`EXECUTION_PROTOCOL.md` 已补齐，所有新 AI / Codex 接手前必须读取。
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；DeepSeek、Hermes、OpenClaw 三员工都已通过 `18800` 调用模型，验收摘要在 `verification/unified-model-proxy/summary.json`。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线硬骨头3A-R1.3 已完成。Run `29935231224` 已真实 success。本机 v0.4.6 安装版已恢复并保留。3A-R2.0 已完成架构核验。3A-R2.1 已完成 Cloudflare 生产部署与真实验证。③A 总验收已 passed，候选包真实安装、快捷方式、安装版后端启动、生产对话、中文降级、安全扫描、卸载和恢复安装版均通过。下一步只能等待产品负责人批准进入 ③B，不能自动创建 Release/tag。
+- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。下一步是产品方向收口与首批用户准备。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
 ## 5. 下一步
 
-1. 等待产品负责人批准进入 ③B。
-2. 只有获得明确批准后，才进入 3B：GitHub Release 正式发布。
-3. 模型分层、手机端、情报流水线暂不抢跑，等上线最小集前三条稳定后继续。
+1. 产品方向收口与首批用户准备。
+2. 补齐首屏 3-5 条示例指令、反馈出口、一句安全告知和首批用户说明。
+3. 模型分层、手机端、情报流水线暂不抢跑。
 
 ## 交接重点
 
-- 产品版本：v0.4.6 候选版，3A-R1.3 GitHub Actions 云端预验收 passed，本机安装版已恢复并保留；3A-R2.0 架构核验 passed；仍不能发布，因为 `shared_managed` 生产注入和 3B Release 未完成。
+- 产品版本：v0.4.6 Alpha，GitHub Release 已公开发布并完成下载回测；上线三大硬骨头整体完成。
 - 当前形态：独立桌面应用，三个员工分别是 DeepSeek（理解/模型）、Hermes（终端/电脑执行）、OpenClaw（浏览器操作/长任务编排）。
 - OpenClaw gateway 掉线问题已经修好到可启动：清理 runtime 残留后可监听 `127.0.0.1:18789`。
 - Codex 执行器已经恢复，不再卡在 PowerShell/WSL spawn 超时。
 - 统一模型入口已经完成：Workbench、Hermes、OpenClaw 三员工模型调用已统一经过本机 `18800` 代理。
 - 共享 key 生产注入已通过 R2.1：真实 key 只在 Cloudflare Secret，前端、员工和安装版本机均不保存真实 key；本机 18800 使用安装实例 token 连接远程 Managed Proxy。
-- 下一步不是继续修 OpenClaw，也不是情报流水线；下一步唯一主线是 ③A 总验收。总验收通过后才由产品负责人判断是否进入 3B：GitHub Release 下载链接。
+- 下一步不是继续修 OpenClaw，也不是情报流水线；下一步唯一主线是产品方向收口与首批用户准备。
 
 # 第二部分：产品战略（核心理解）
 
@@ -743,20 +743,20 @@ OpenClaw 保持它熟悉的模型命名：
 
 # 第五部分：下一步指令
 
-## 下一步：上线硬骨头3 下载安装
+## 下一步：产品方向收口与首批用户准备
 
 当前状态：上线硬骨头1“陌生机器不崩”和硬骨头2“共享 key 落地”已完成；Workbench/Hermes/OpenClaw 三个员工的模型调用已统一到 18800 代理，真实 key 只在 18800 服务端边界内读取。
 
-下一步：打安装包并挂 GitHub Release，只给用户一个下载链接。
+下一步：围绕已公开的 v0.4.6 Alpha，补齐首批用户能理解、敢安装、能反馈的最小材料。
 
 - 确认安装包包含 `dist/**`、Electron、`server.mjs`、`model-proxy.mjs`、`readiness.mjs`、`runtime-paths.mjs` 和必要运行目录。
 - 在发布流程里明确共享 key 注入方式，不能把真实 key 写进仓库、前端、员工配置或公开日志。
-- 产出 GitHub Release 下载链接，并保留安装版验收证据。
+- 保留 GitHub Release 下载链接和 3B 发布验收证据。
 
 目标：普通用户只点一个链接下载、安装、打开，不需要配置 key，也不会因为缺依赖白屏。
 
 新对话框的任务：
 
 1. 确认能读这个综合文件。
-2. 用大白话讲出：产品现在在哪（v0.4.6 候选版，硬骨头1/2已过，3A-R1.2 本地预验收通过、Actions preflight 仍失败）、下一步要做什么（先拿 Run `29920336923` artifact/log 定位云端失败，修到 Actions passed 后再由产品负责人决定是否进 3B）。
-3. 不创建 Release；未获得产品负责人批准前不得进入 3B。
+2. 用大白话讲出：产品现在在哪（v0.4.6 Alpha 已公开发布，三大硬骨头已完成）、下一步要做什么（产品方向收口与首批用户准备）。
+3. 不自动进入模型分层、手机端、情报流水线或大规模功能改造。

@@ -2,7 +2,7 @@
 
 > 【交接铁律】每完成一步，必须更新 `TASKLOG.md`、`CHANGELOG.md`、`CURRENT_TASK.md`、`NEXT_STEP.md`、`DECISIONS.md`、`CURRENT_PROGRESS_AUDIT.md`，再 commit + push。换对话框时，新对话框先读 `EXECUTION_PROTOCOL.md` + 这些文件 + 桌面 Handoff 文件即可接手。
 
-> 最新更新：2026-07-23
+> 最新更新：2026-07-24
 
 ## 当前阶段：让工作台从“只会指路”变成“真会干活”
 
@@ -10,7 +10,7 @@
 
 - [x] 硬骨头1：陌生机器不崩。启动路径改为缺依赖降级，config/data/logs/evidence 首次运行自动创建，18800/Hermes/OpenClaw/端口异常统一返回中文未就绪状态；自动验收证据见 `verification/clean-machine/summary.json`。
 - [x] 硬骨头2：共享 key 落地。18800 网关支持共享托管 key 兜底，员工和前端只使用本机占位 token；验收证据见 `verification/shared-key/summary.json`。
-- [ ] 硬骨头3：能下载能安装。3A-R1.3 已通过，候选安装包云端 build/install/smoke/uninstall/扫描通过；3A-R2.0 已锁定 `shared_managed` 生产架构；3A-R2.1 已通过 Cloudflare 生产部署与真实验证；③A 总验收已 passed。下一步必须等待产品负责人批准，批准后才进入 ③B 正式 GitHub Release。
+- [x] 硬骨头3：能下载能安装。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已通过；公开下载链接已完成并回测通过。证据见 `verification/3b-release/summary.json`。
 
 ## 当前口径校准
 
@@ -26,7 +26,8 @@
 - 今日收尾已完成：本机安装版再次复核并保留；最近任务真实状态和产品距离已写入 `verification/daily-closeout/summary.json`、`verification/daily-closeout/report.md` 和 `tasks/2026-07-23-今日收尾与产品距离核验.md`。
 - 3A-R2.0 最新结论：passed。当前 `shared_managed` 只是本机环境兜底机制，不是远程生产注入；正式架构锁定为客户端/Workbench/Hermes/OpenClaw -> 本机 `127.0.0.1:18800` -> AI Workbench 自控远程 Managed Proxy -> DeepSeek 官方 API。证据见 `research/managed-proxy-production-plan.md`、`verification/managed-shared-key/architecture-summary.json` 和 `verification/managed-shared-key/architecture-report.md`。
 - 3A-R2.1 最新结论：passed。Cloudflare Worker 已部署到 `https://ai-workbench-managed-proxy.qingyueshen5.workers.dev`；D1 `aiw-managed-proxy` 已建表并读写通过；三个 Secret 只存在 Cloudflare；无本机 Key 的 18800 和安装版均通过生产 Worker 调用 DeepSeek，返回“生产共享模型调用成功”；刷新、吊销、限流、预算、紧急关闭、中文降级和安全扫描均通过。证据见 `verification/managed-proxy-production/summary.json` 和 `verification/managed-proxy-production/report.md`。
-- ③A 总验收最新结论：passed。Actions Run `30001627121` 候选安装包 `AI-Workbench-Setup-v0.4.6-x64.exe` SHA256 `b8de2e3f90c0063b8b3003c09de0b0886cc1861f4e8091df5f09994bdf6573f9` 已完成真实安装、快捷方式、安装版后端启动、`managed_remote` 生产对话、中文降级、安全扫描、真实卸载和恢复日常安装版；证据见 `verification/3a-final/summary.json` 和 `verification/3a-final/report.md`。未创建 Release/tag，未进入 ③B。
+- ③A 总验收结论：passed。Actions Run `30001627121` 候选安装包 `AI-Workbench-Setup-v0.4.6-x64.exe` SHA256 `b8de2e3f90c0063b8b3003c09de0b0886cc1861f4e8091df5f09994bdf6573f9` 已完成真实安装、快捷方式、安装版后端启动、`managed_remote` 生产对话、中文降级、安全扫描、真实卸载和恢复日常安装版；证据见 `verification/3a-final/summary.json` 和 `verification/3a-final/report.md`。该阶段当时未创建 Release/tag，后续已进入并通过 ③B。
+- ③B 最新结论：passed。已创建 annotated tag `v0.4.6`，公开 prerelease `AI Workbench v0.4.6 Alpha`，上传安装包和 SHA256 文件；从公开下载链接回测大小与 SHA256 完全一致。Release URL：`https://github.com/qingyueshen5-gif/AI-Workbench/releases/tag/v0.4.6`。安装包直接下载链接：`https://github.com/qingyueshen5-gif/AI-Workbench/releases/download/v0.4.6/AI-Workbench-Setup-v0.4.6-x64.exe`。证据见 `verification/3b-release/summary.json` 和 `verification/3b-release/report.md`。
 
 ## 明天路线图（2026-07-19）
 
@@ -130,7 +131,7 @@
 - [x] 共享 key 验收：`npm.cmd run verify:shared-key` 在无 `DEEPSEEK_API_KEY` 的临时环境下通过共享托管 key 调通 18800，确认 health、日志和进程输出不泄露 key
 
 ### 下一步
-1. 等待产品负责人批准进入 ③B；批准后再创建 GitHub Release/tag，并给用户一个下载链接。
+1. 产品方向收口与首批用户准备。
 2. 对失败和卡壳场景补齐自愈、重试和人话解释。
 3. 模型分层、手机端、情报流水线暂不抢跑。
 

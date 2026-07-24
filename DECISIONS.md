@@ -6,7 +6,7 @@
 - 护城河：极致零门槛 + 真办成事 + 死守简单。
 - 去第三方依赖：三员工模型全经 18800。
 - 共享 key 边界：真实模型 key 只允许 18800 服务端读取；前端、员工配置、OpenClaw/Hermes 只使用本机占位 token。用户本机 `DEEPSEEK_API_KEY` 优先，共享托管 key 作为开箱即用兜底。
-- 上线最小集优先：先过 3 个硬骨头（陌生机器不崩 ✓、共享 key、下载安装），模型分层/手机端/情报流水线可为上线让路。
+- 上线最小集优先：先过 3 个硬骨头（陌生机器不崩 ✓、共享 key ✓、下载安装 ✓），模型分层/手机端/情报流水线可为上线让路。
 - 五步走：①修 OpenClaw ✓ ②统一模型入口 ✓ ③模型分层（待继续）④手机端 ⑤情报流水线。
 - 执行协议：所有大任务采用单一主线、分段执行、逐段验证、失败也留痕；产品负责人批准后才能进入下一阶段。固定规范见 `EXECUTION_PROTOCOL.md`。
 - 发布分段：硬骨头3拆成 3A 候选安装包预验收和 3B GitHub Release 正式发布。3A 未通过时禁止 Release、禁止 tag、禁止把 LAUNCH 硬骨头3标记完成。
@@ -17,3 +17,4 @@
 - R2.0 历史结论：当时 `shared_managed` 机制测试 passed，但生产注入仍 blocked；该 blocked 已由 R2.1 Cloudflare 生产部署与真实验证解除。R2.1 前不得进入 3B Release、首屏示例、模型分层、手机端或情报流水线。
 - R2.1 结论：Cloudflare Worker、D1、Secrets、生产 URL、真实 DeepSeek 上游、无本机 Key 18800、安装版零配置、刷新/吊销/限流/预算/紧急关闭/中文降级和安全扫描均已通过。R2.1 passed 只允许进入 3A 总验收，不等于 3A 总验收已完成，也不允许直接进入 3B Release。
 - ③A 总验收结论：候选安装包真实安装、快捷方式、安装版后端启动、`managed_remote` 生产对话、中文降级、安全扫描、真实卸载和恢复日常安装版均已通过；证据见 `verification/3a-final/summary.json`。③A passed 只允许等待产品负责人批准进入 ③B，不代表可以自动 Release/tag。
+- ③B 发布结论：AI Workbench v0.4.6 Alpha 已创建公开 GitHub prerelease，annotated tag `v0.4.6` 指向 ③A 验收提交，安装包和 SHA256 文件已上传，公开下载回测 passed；证据见 `verification/3b-release/summary.json`。上线三大硬骨头整体完成，下一任务是产品方向收口与首批用户准备。

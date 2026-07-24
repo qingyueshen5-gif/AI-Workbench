@@ -21,12 +21,16 @@
 ## 上线判断
 最小集 = 上面 6 条,真正卡脖子的是前 3 条硬骨头。第 3/4/5 步都可为上线让路。
 
-## 当前 3A 状态
+## 当前发布状态
 
 - 2026-07-23：硬骨头3A-R1.3 已通过。Windows 安装包候选版 `AI-Workbench-Setup-v0.4.6-x64.exe` 已在 GitHub Actions Run `29935231224` 通过 build/install/smoke/uninstall/扫描预验收。
 - 通过证据：`verification/install-release/preflight-summary.json`、`verification/install-release/repair1-3-summary.json`、`verification/install-release/actions-29935231224.md`。
 - 本机 v0.4.6 安装版已恢复并保留，记录见 `tasks/2026-07-22-恢复本机安装版.md`。
 - 3A-R2.1 生产 Managed Proxy 已通过，证据见 `verification/managed-proxy-production/summary.json`。
 - ③A 总验收已通过，证据见 `verification/3a-final/summary.json`；候选包真实安装、生产对话、中文降级、安全扫描、卸载和恢复安装版均 passed。
-- 硬骨头3仍不能标记完成；GitHub Release 和唯一下载链接尚未完成。下一步只能等待产品负责人批准进入 ③B Release。
+- ③B GitHub Release 已通过，证据见 `verification/3b-release/summary.json`。
+- Release 页面：`https://github.com/qingyueshen5-gif/AI-Workbench/releases/tag/v0.4.6`。
+- 唯一安装包下载链接：`https://github.com/qingyueshen5-gif/AI-Workbench/releases/download/v0.4.6/AI-Workbench-Setup-v0.4.6-x64.exe`。
+- 安装包大小：`111524004` bytes；SHA256：`b8de2e3f90c0063b8b3003c09de0b0886cc1861f4e8091df5f09994bdf6573f9`。
+- 硬骨头3“能下载能安装”已完成；上线三大硬骨头整体完成。
 ---

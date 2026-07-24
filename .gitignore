@@ -34,5 +34,7 @@ versions/backups/*.json
 .tmp-managed-proxy-runtime*/
 .tmp-3a-*/
 .tmp-3a-*
+.tmp-3b-*/
+.tmp-3b-*
 .tmp-install-r1/
 verification/install-release/actions-*/

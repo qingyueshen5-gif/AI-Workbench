@@ -1,0 +1,14 @@
+2026-07-24T03:29:00Z 3B download verification
+release_url=https://github.com/qingyueshen5-gif/AI-Workbench/releases/tag/v0.4.6
+installer_url=https://github.com/qingyueshen5-gif/AI-Workbench/releases/download/v0.4.6/AI-Workbench-Setup-v0.4.6-x64.exe
+sha256_url=https://github.com/qingyueshen5-gif/AI-Workbench/releases/download/v0.4.6/AI-Workbench-Setup-v0.4.6-x64.exe.sha256
+download_dir=F:\AI-Workbench\.tmp-3b-release-download-24928
+downloaded_size=111524004
+expected_size=111524004
+downloaded_sha256=b8de2e3f90c0063b8b3003c09de0b0886cc1861f4e8091df5f09994bdf6573f9
+expected_sha256=b8de2e3f90c0063b8b3003c09de0b0886cc1861f4e8091df5f09994bdf6573f9
+sha256_file_text=b8de2e3f90c0063b8b3003c09de0b0886cc1861f4e8091df5f09994bdf6573f9  AI-Workbench-Setup-v0.4.6-x64.exe
+size_matches=true
+sha256_matches=true
+sha256_file_matches=true
+result=passed
