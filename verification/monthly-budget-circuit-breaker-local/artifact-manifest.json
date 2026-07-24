@@ -1,0 +1,30 @@
+{
+  "generated_at": "2026-07-24T21:53:00+08:00",
+  "artifacts": [
+    {
+      "path": "verification/monthly-budget-circuit-breaker-local/summary.json",
+      "exists": true,
+      "bytes": 2138
+    },
+    {
+      "path": "verification/monthly-budget-circuit-breaker-local/report.md",
+      "exists": true,
+      "bytes": 4441
+    },
+    {
+      "path": "verification/monthly-budget-circuit-breaker-local/commands.log",
+      "exists": true,
+      "bytes": 2014
+    },
+    {
+      "path": "verification/monthly-budget-circuit-breaker-local/test-results.json",
+      "exists": true,
+      "bytes": 2273
+    },
+    {
+      "path": "verification/monthly-budget-circuit-breaker-local/artifact-manifest.json",
+      "exists": true,
+      "bytes": 757
+    }
+  ]
+}

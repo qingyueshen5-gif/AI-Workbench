@@ -1,0 +1,81 @@
+{
+  "generated_at": "2026-07-24T21:53:00+08:00",
+  "command": "npm.cmd test",
+  "working_directory": "managed-proxy",
+  "exit_code": 0,
+  "real_provider_called": false,
+  "deployment_status": "not_deployed",
+  "summary": {
+    "tests": 9,
+    "passed": 9,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "checks": [
+    {
+      "name": "existing_source_override_guard",
+      "status": "passed"
+    },
+    {
+      "name": "schema_contains_monthly_budget_table_and_existing_tables",
+      "status": "passed"
+    },
+    {
+      "name": "budget_below_cap_allows_mock_upstream",
+      "status": "passed",
+      "upstream_calls": 1
+    },
+    {
+      "name": "exact_cap_allows_once_next_call_rejected_before_upstream",
+      "status": "passed",
+      "http_statuses": [200, 429],
+      "rejection_code": "monthly_budget_exhausted",
+      "upstream_calls": 1
+    },
+    {
+      "name": "concurrent_calls_do_not_reserve_over_hard_cap",
+      "status": "passed",
+      "request_count": 25,
+      "success_count": 10,
+      "rejected_count": 15,
+      "upstream_calls": 10,
+      "reserved_equals_cap": true
+    },
+    {
+      "name": "upstream_timeout_and_500_do_not_refund",
+      "status": "passed",
+      "timeout_status": 502,
+      "upstream_500_status": 500,
+      "reservation_increased_after_each_attempt": true
+    },
+    {
+      "name": "d1_budget_failure_fails_closed_before_upstream",
+      "status": "passed",
+      "http_status": 503,
+      "code": "monthly_budget_unavailable",
+      "upstream_calls": 0
+    },
+    {
+      "name": "unknown_model_or_missing_price_fails_closed_before_upstream",
+      "status": "passed",
+      "http_status": 503,
+      "code": "model_price_unavailable",
+      "upstream_calls": 0
+    },
+    {
+      "name": "month_switch_uses_new_ledger_row",
+      "status": "passed",
+      "months": ["2026-07", "2026-08"]
+    },
+    {
+      "name": "multibyte_input_uses_utf8_request_bytes_for_reservation",
+      "status": "passed"
+    }
+  ],
+  "reporter_note": {
+    "command": "node --test --test-reporter=json tests/*.test.mjs",
+    "exit_code": 1,
+    "reason": "Node treated json as a package reporter name and returned ERR_MODULE_NOT_FOUND; no production code or evidence result depends on this failed reporter attempt."
+  }
+}

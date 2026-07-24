@@ -19,7 +19,7 @@ AI Workbench v0.4.6 Alpha 已公开发布。③A 总验收和 ③B GitHub Releas
 
 当前尚无真实用户。模型调用成本由平台承担，且平台月度金额硬上限尚未建立；现金跑道约 8 个月，月支出约 8200。当前目标是盈亏平衡和知名度，不是收费或利润最大化。
 
-生存体检已完成场景边界修正：分析任务 passed_after_boundary_correction，但钱包安全状态 unsafe。当前无真实用户用量，无法形成真实用户平均成本。当前限额正常路径受 `DAILY_TOKEN_LIMIT=200000` 和 `DAILY_GLOBAL_LIMIT=200` 约束，在 8000 input + 2048 output token 假设下先撞 `DAILY_TOKEN_LIMIT`，平台每天约 20 次成功模型调用、若每任务 2 次调用则每天约 10 个完整前端任务，月平台成本上界约 40.76 CNY，现金跑道约 7.96 个月。原 5/50/100 用户平台月成本 199.12 / 1686.24 / 3338.61 CNY 已重新命名为 `uncapped_demand_pressure`，只表示未来扩容或放宽限额后的需求压力，不代表当前生产限额下可实际发生的正常路径成本。当前理论最坏成本仍为 `unbounded`，依据是失败/超时/并发逃逸路径不能证明 fail-closed，证据见 `verification/survival-cost-audit/summary.json`。
+生存体检已由产品负责人验收通过。第 3A 段本地钱包刹车已完成本地实现和 mock 验证：平台月度总预算政策上限 50 USD，模型调用硬上限 40 USD，基础设施及价格波动预留 10 USD；Managed Proxy 使用整数 micro-USD，在调用 provider 前按模型价格保守预留，D1 条件原子更新成功后才允许上游调用，失败/超时/500 不退款，缺价格或预算账本不可用时 fail closed。证据见 `verification/monthly-budget-circuit-breaker-local/summary.json`。本轮未部署生产 Cloudflare Worker，未执行远端 D1 migration，未修改 Secrets，未调用真实 provider。
 
 ## 当前架构
 
@@ -46,7 +46,7 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 详细未完成清单以 `CURRENT_PROGRESS_AUDIT.md` 为唯一权威。本文件只展示摘要：
 
 - 电脑环境治理审计已完成；第一批安全清理仍为 partial，用户 npm 缓存仍因 `EPERM` 未清理，Windows 临时文件仍需产品负责人手动确认。
-- 生存体检已完成验证和交付收尾，当前等待产品负责人验收；未经批准不得实现平台月度总开销上限、自动熔断或其他后续任务。
+- 第 3A 段本地钱包刹车已完成本地验证，当前等待产品负责人验收；未经批准不得部署生产环境或进入第 3B 段。
 - 首屏 3-5 条示例指令、反馈入口、安全和隐私告知尚未完成。
 - 3-5 名真实用户测试尚未开始。
 - 长期记忆、任务历史和状态卡、质量检查层、自动任务拆解和分配尚未完成。
@@ -56,9 +56,9 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 
 当前唯一下一步以 `NEXT_STEP.md` 为唯一权威：
 
-等待产品负责人验收生存体检。未经批准，不得实现平台月度总开销上限、自动熔断或其他后续任务。
+等待产品负责人验收第 3A 段本地钱包刹车。未经批准不得部署生产环境。
 
-不得自动实现平台月度总开销上限、自动熔断、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发。
+不得部署 Cloudflare 生产环境、执行远端 D1 migration、修改 Secrets、进入第 3B 段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发。
 
 ## 产品方向文件索引
 

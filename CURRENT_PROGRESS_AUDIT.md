@@ -69,10 +69,11 @@
 - 电脑环境治理第一批安全清理 partial：累计释放 F 盘约 3.06 GB，重启后指定遗留目录已删除并新增释放约 11.54 GiB；用户 npm 缓存仍因 `EPERM` 未清理，Windows 临时文件仍需产品负责人手动确认。
 - 阶段性总审核（砍薄版） completed：备份隔离恢复、Git 凭据扫描和文档假完成核对均已通过，证据见 `verification/thin-stage-audit/summary.json`。
 - 生存体检 completed_after_boundary_correction：分析任务 passed_after_boundary_correction。当前无真实用户用量；当前限额正常路径在 8000 input + 2048 output token 假设下先撞 `DAILY_TOKEN_LIMIT`，平台每天约 20 次成功模型调用、若每任务 2 次调用则每天约 10 个完整前端任务，月平台成本上界约 40.76 CNY，现金跑道约 7.96 个月。原 5/50/100 用户平台月成本 199.12 / 1686.24 / 3338.61 CNY 保留为 `uncapped_demand_pressure`，不代表当前生产限额下实际可发生的正常路径成本。钱包安全状态 unsafe；理论最坏成本 `unbounded` 的依据是失败/超时/并发逃逸路径不能证明 fail-closed。证据见 `verification/survival-cost-audit/summary.json`。
+- 第 3A 段本地钱包刹车 local_passed：Managed Proxy 已本地实现月度模型预算账本、调用前整数 micro-USD 保守预留、条件原子更新、预算耗尽 429、预算系统/价格失败 503、失败不退款和并发不超支。预算政策为 50 USD 平台月度总上限、40 USD 模型硬上限、10 USD 基础设施预留。本轮未部署生产，未调用真实 provider，证据见 `verification/monthly-budget-circuit-breaker-local/summary.json`。
 
 未完成：
 
-- 等待产品负责人验收生存体检。未经批准，不得实现平台月度总开销上限、自动熔断或其他后续任务。
+- 等待产品负责人验收第 3A 段本地钱包刹车。未经批准不得部署生产环境。
 - 实际电脑清理。
 - 首屏 3-5 条示例指令。
 - 反馈入口和安全/隐私告知。
@@ -88,7 +89,7 @@
 - 跨网站复杂执行。
 - 国际化和区域合规。
 
-当前唯一下一步：等待产品负责人验收生存体检。未经批准，不得实现平台月度总开销上限、自动熔断或其他后续任务。
+当前唯一下一步：等待产品负责人验收第 3A 段本地钱包刹车。未经批准不得部署生产环境。
 
 <!-- AIW_CAPABILITY_STATUS_END -->
 
@@ -98,14 +99,14 @@
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；Workbench、Hermes、OpenClaw 三类执行入口都已通过 `18800` 调用当前生产 provider DeepSeek，验收摘要在 `verification/unified-model-proxy/summary.json`。DeepSeek 是当前实现细节，后续 provider 必须可替换。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。电脑环境治理审计已完成，第一批安全清理为 partial，重启后指定遗留目录已处理但用户 npm 缓存仍因 `EPERM` 未清理。阶段性总审核已由产品负责人验收通过，生存体检已完成验证和交付收尾；当前唯一下一步是等待产品负责人验收生存体检，未经批准不得实现平台月度总开销上限或自动熔断。
+- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。阶段性总审核和生存体检均已由产品负责人验收通过。第 3A 段本地钱包刹车已完成本地验证但未部署生产；当前唯一下一步是等待产品负责人验收第 3A 段，未经批准不得部署生产环境或进入第 3B 段。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
 ## 5. 近期优先级
 
-1. 等待产品负责人验收生存体检。
-2. 平台月度总开销上限和自动熔断。该项只能在产品负责人验收生存体检并明确批准后执行。
+1. 等待产品负责人验收第 3A 段本地钱包刹车。
+2. 第 3B 段生产部署和远端 D1 migration。该项只能在产品负责人验收 3A 并明确批准后执行。
 3. 模型分层调度与上下文压缩。
 4. v0.4.7 首屏示例、反馈入口和安全告知。
 5. 3-5 名真实用户测试。

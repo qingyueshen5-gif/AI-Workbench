@@ -24,6 +24,15 @@ CREATE TABLE IF NOT EXISTS revoked_tokens (
   reason TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS monthly_model_budget (
+  month_key TEXT NOT NULL,
+  model TEXT NOT NULL,
+  reserved_micro_usd INTEGER NOT NULL DEFAULT 0,
+  call_count INTEGER NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL,
+  PRIMARY KEY (month_key, model)
+);
+
 CREATE INDEX IF NOT EXISTS idx_daily_usage_date ON daily_usage (usage_date);
 CREATE INDEX IF NOT EXISTS idx_daily_usage_installation ON daily_usage (usage_date, installation_hash);
 CREATE INDEX IF NOT EXISTS idx_daily_usage_ip ON daily_usage (usage_date, ip_hash);

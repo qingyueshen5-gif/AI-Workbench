@@ -14,6 +14,10 @@ export interface Env {
   MAX_OUTPUT_TOKENS?: string;
   UPSTREAM_TIMEOUT_MS?: string;
   DEEPSEEK_BASE_URL?: string;
+  PLATFORM_MONTHLY_BUDGET_MICRO_USD?: string;
+  MONTHLY_MODEL_HARD_CAP_MICRO_USD?: string;
+  MODEL_PRICE_CONFIG_JSON?: string;
+  CURRENT_MONTH_OVERRIDE?: string;
 }
 
 type Json = Record<string, unknown>;
@@ -40,9 +44,20 @@ function today() {
   return new Date().toISOString().slice(0, 10);
 }
 
+function currentMonth(env: Env) {
+  const override = String(env.CURRENT_MONTH_OVERRIDE || '').trim();
+  if (/^\d{4}-\d{2}$/.test(override)) return override;
+  return new Date().toISOString().slice(0, 7);
+}
+
 function configNumber(value: string | undefined, fallback: number) {
   const n = Number(value);
   return Number.isFinite(n) && n > 0 ? n : fallback;
+}
+
+function configInteger(value: string | undefined, fallback: number) {
+  const n = Number(value);
+  return Number.isSafeInteger(n) && n > 0 ? n : fallback;
 }
 
 function allowedModels(env: Env) {
@@ -119,6 +134,88 @@ function tokenUsageFromPayload(payload: any) {
     inputTokens: Math.ceil(inputChars / 4),
     outputTokens: 0
   };
+}
+
+type ModelPrice = {
+  provider: string;
+  inputCacheMissMicroUsdPerMillionTokens: number;
+  outputMicroUsdPerMillionTokens: number;
+};
+
+const defaultModelPrices: Record<string, ModelPrice> = {
+  'deepseek-chat': {
+    provider: 'deepseek',
+    inputCacheMissMicroUsdPerMillionTokens: 140000,
+    outputMicroUsdPerMillionTokens: 280000
+  },
+  'deepseek-v4-flash': {
+    provider: 'deepseek',
+    inputCacheMissMicroUsdPerMillionTokens: 140000,
+    outputMicroUsdPerMillionTokens: 280000
+  }
+};
+
+function modelPrices(env: Env): Record<string, ModelPrice> {
+  const raw = String(env.MODEL_PRICE_CONFIG_JSON || '').trim();
+  if (!raw) return defaultModelPrices;
+  const parsed = JSON.parse(raw) as Record<string, ModelPrice>;
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('bad_price_config');
+  return parsed;
+}
+
+function priceForModel(env: Env, model: string) {
+  const price = modelPrices(env)[model];
+  if (!price) throw new Error('missing_model_price');
+  for (const [key, value] of Object.entries({
+    inputCacheMissMicroUsdPerMillionTokens: price.inputCacheMissMicroUsdPerMillionTokens,
+    outputMicroUsdPerMillionTokens: price.outputMicroUsdPerMillionTokens
+  })) {
+    if (!Number.isSafeInteger(value) || value <= 0) throw new Error(`bad_model_price_${key}`);
+  }
+  return price;
+}
+
+function ceilDiv(numerator: bigint, denominator: bigint) {
+  return (numerator + denominator - 1n) / denominator;
+}
+
+function microUsdForTokens(tokens: number, microUsdPerMillionTokens: number) {
+  return ceilDiv(BigInt(tokens) * BigInt(microUsdPerMillionTokens), 1000000n);
+}
+
+function reservedInputTokens(estimatedInputTokens: number, rawRequestBytes: number) {
+  return Math.max(estimatedInputTokens, rawRequestBytes);
+}
+
+function reservationAmountMicroUsd(price: ModelPrice, inputTokens: number, outputTokens: number) {
+  const total =
+    microUsdForTokens(inputTokens, price.inputCacheMissMicroUsdPerMillionTokens)
+    + microUsdForTokens(outputTokens, price.outputMicroUsdPerMillionTokens);
+  if (total > BigInt(Number.MAX_SAFE_INTEGER)) throw new Error('reservation_too_large');
+  return Number(total);
+}
+
+async function reserveMonthlyModelBudget(env: Env, model: string, amountMicroUsd: number) {
+  if (!Number.isSafeInteger(amountMicroUsd) || amountMicroUsd <= 0) throw new Error('bad_reservation_amount');
+  const cap = configInteger(env.MONTHLY_MODEL_HARD_CAP_MICRO_USD, 40000000);
+  const month = currentMonth(env);
+  const at = nowIso();
+  await env.DB.prepare(
+    `INSERT OR IGNORE INTO monthly_model_budget (month_key, model, reserved_micro_usd, call_count, updated_at)
+     VALUES (?, ?, 0, 0, ?)`
+  ).bind(month, model, at).run();
+  const result = await env.DB.prepare(
+    `UPDATE monthly_model_budget
+     SET reserved_micro_usd = reserved_micro_usd + ?,
+       call_count = call_count + 1,
+       updated_at = ?
+     WHERE month_key = ?
+       AND model = ?
+       AND reserved_micro_usd + ? <= ?`
+  ).bind(amountMicroUsd, at, month, model, amountMicroUsd, cap).run();
+  const changed = Number(result?.meta?.changes || result?.changes || 0);
+  if (changed !== 1) return false;
+  return true;
 }
 
 async function enforceUsage(env: Env, installHash: string, ip: string) {
@@ -268,6 +365,22 @@ async function chatCompletions(request: Request, env: Env) {
   const ip = await ipHash(env, request);
   const limited = await enforceUsage(env, auth.installHash, ip);
   if (limited) return limited;
+  const model = String(payload.model || '');
+  try {
+    const price = priceForModel(env, model);
+    const reserveInput = reservedInputTokens(usage.inputTokens, new Blob([raw]).size);
+    const reserveOutput = Number(payload.max_tokens);
+    const reservation = reservationAmountMicroUsd(price, reserveInput, reserveOutput);
+    const reserved = await reserveMonthlyModelBudget(env, model, reservation);
+    if (!reserved) {
+      return json({ error: { message: '共享模型服务本月额度已用完，请稍后再试。', code: 'monthly_budget_exhausted' } }, { status: 429 });
+    }
+  } catch (error: any) {
+    const code = error?.message === 'missing_model_price' || String(error?.message || '').startsWith('bad_model_price')
+      ? 'model_price_unavailable'
+      : 'monthly_budget_unavailable';
+    return json({ error: { message: '共享模型服务预算系统暂时不可用，请稍后再试。', code } }, { status: 503 });
+  }
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort('upstream timeout'), configNumber(env.UPSTREAM_TIMEOUT_MS, 60000));
   try {

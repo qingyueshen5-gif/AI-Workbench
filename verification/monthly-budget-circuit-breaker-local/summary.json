@@ -1,0 +1,50 @@
+{
+  "task": "monthly-budget-circuit-breaker-local",
+  "execution_status": "local_passed",
+  "deployment_status": "not_deployed",
+  "platform_monthly_policy_cap_micro_usd": 50000000,
+  "model_monthly_hard_cap_micro_usd": 40000000,
+  "infrastructure_reserve_micro_usd": 10000000,
+  "reservation_strategy": {
+    "timing": "before upstream provider call",
+    "storage": "integer micro-USD",
+    "input_tokens": "max(existing estimated input tokens, raw request UTF-8 bytes)",
+    "output_tokens": "final effective max_tokens",
+    "input_price": "cache-miss price",
+    "refund_policy": "no refund after upstream success, failure, timeout, connection interruption, or Worker crash"
+  },
+  "atomicity_evidence": {
+    "schema": "monthly_model_budget(month_key, model, reserved_micro_usd, call_count, updated_at)",
+    "operation": "INSERT OR IGNORE initializes row, then one conditional UPDATE atomically increments reserved_micro_usd only if reserved_micro_usd + reservation <= cap",
+    "non_atomic_read_then_write": false
+  },
+  "concurrency_test": {
+    "status": "passed",
+    "requests": 25,
+    "successful_upstream_calls": 10,
+    "rejected_before_upstream": 15,
+    "reserved_over_cap": false
+  },
+  "failure_path_test": {
+    "status": "passed",
+    "upstream_timeout_reservation_refunded": false,
+    "upstream_500_reservation_refunded": false,
+    "d1_failure_upstream_calls": 0
+  },
+  "unknown_pricing_test": {
+    "status": "passed",
+    "http_status": 503,
+    "code": "model_price_unavailable",
+    "upstream_calls": 0
+  },
+  "real_provider_called": false,
+  "production_deployment": false,
+  "evidence_files": [
+    "verification/monthly-budget-circuit-breaker-local/summary.json",
+    "verification/monthly-budget-circuit-breaker-local/report.md",
+    "verification/monthly-budget-circuit-breaker-local/commands.log",
+    "verification/monthly-budget-circuit-breaker-local/test-results.json",
+    "verification/monthly-budget-circuit-breaker-local/artifact-manifest.json"
+  ],
+  "next_action": "Wait for product owner acceptance of 3A local wallet circuit breaker. Do not deploy production or enter 3B without approval."
+}
