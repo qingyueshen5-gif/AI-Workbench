@@ -1,0 +1,43 @@
+{
+  "status": "passed",
+  "backup_object": "git archive of HEAD tracked files from commit 7200f78fb344ced4f2a30302670d8e9a88cc5ca0",
+  "backup_path": "D:/AI-Workbench-Backups/2026-07-24-pc-environment-governance/ai-workbench-head-7200f78.zip",
+  "backup_sha256": "37157BD16891AA2527F88CC6A1ACFEF0ABA235AE14ED389C76D8A5208D50D291",
+  "backup_bytes": 2400359,
+  "zip_entries": 279,
+  "zip_file_entries": 239,
+  "git_tracked_file_count_at_backup_commit": 239,
+  "expanded_to": "F:/AI-Workbench/.tmp-thin-stage-restore-7200f78",
+  "expanded_file_count": 239,
+  "expanded_total_bytes": 4309823,
+  "tests": [
+    {
+      "name": "zip_readable",
+      "status": "passed",
+      "detail": "System.IO.Compression opened archive and counted entries"
+    },
+    {
+      "name": "expand_archive",
+      "status": "passed",
+      "detail": "Expand-Archive completed with exit code 0 into isolated .tmp directory"
+    },
+    {
+      "name": "file_count_matches_backup_commit",
+      "status": "passed",
+      "detail": "239 restored files equals git ls-tree -r file count for 7200f78"
+    },
+    {
+      "name": "sample_blob_hashes_match_commit",
+      "status": "passed",
+      "files": [
+        "package.json",
+        "TASKLOG.md",
+        "PRODUCT.md",
+        "server.mjs",
+        "model-proxy.mjs",
+        "scripts/verify-docs-consistency.mjs"
+      ]
+    }
+  ],
+  "limitation": "Same-machine D: copy. It proves readable restorable tracked-file backup, not offsite disaster recovery."
+}

@@ -6,7 +6,7 @@
 
 ## 当前一句话状态
 
-AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 公开发布、产品方向收口、文档基准防漂移机制、电脑环境治理审计和产品定位修正。第一批安全清理遗留目录已在重启后处理，用户 npm 缓存仍因 `EPERM` 未清理；Windows 临时文件需产品负责人手动确认。
+AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 公开发布、产品方向收口、文档基准防漂移机制、电脑环境治理审计、产品定位修正和阶段性总审核（砍薄版）。第一批安全清理遗留目录已在重启后处理，用户 npm 缓存仍因 `EPERM` 未清理；Windows 临时文件需产品负责人手动确认。当前等待产品负责人验收阶段性总审核，未经批准不得进入生存体检或其他任务。
 
 ## 已完成任务
 
@@ -29,6 +29,7 @@ AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 
 | 电脑环境治理审计 | 已完成 | 完成产品资产备份、备份可恢复性验证、GitHub/Cloudflare/工具登录状态核查、磁盘/进程/缓存/安装包/自启项/软件盘点和清理候选清单。 | `verification/pc-environment-governance/summary.json`、`verification/pc-environment-governance/report.md`、`tasks/2026-07-24-电脑环境治理审计.md` |
 | 电脑环境治理第一批安全清理 | 部分完成 | 已释放 F 盘约 3.06 GB；npm 缓存因 `EPERM` 未清理，Windows 临时文件改为人工确认，权限异常旧目录待重启后精确处理。 | `verification/pc-cleanup-batch1/summary.json`、`verification/pc-cleanup-batch1/report.md`、`tasks/2026-07-24-电脑环境治理第一批安全清理.md` |
 | 产品定位修正与判断依据文档 | 已完成 | 将当前状态文档统一为“AI Workbench 是模型与 Agent 无关的调度框架；DeepSeek 是当前唯一生产实现且可替换”的口径；新增 `THINKING.md` 记录产品负责人判断依据；交接文件清单改为三份。 | `THINKING.md`、`tasks/2026-07-24-产品定位修正与判断依据文档.md` |
+| 阶段性总审核（砍薄版） | 已完成 | 隔离恢复最新外部备份；扫描当前 Git tracked 内容和完整本地可达历史的凭据泄漏；核对 completed/passed/已完成声明与证据是否匹配；未发现确认的 Git 凭据泄漏或 confirmed fake completion，已修正 README、当前进度和 CONTEXT 的非关键过期表述。 | `verification/thin-stage-audit/summary.json`、`verification/thin-stage-audit/report.md` |
 
 ## 当前未完成任务
 
@@ -43,6 +44,7 @@ AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 
 | 自动情报流水线 | 未开始/P3 | 后续再做，不阻塞上线。 |
 | 电脑环境治理：产品资产备份、单点故障核查和清理候选盘点 | 已完成 | 已进入第一批安全清理，当前清理结果为 partial。 |
 | 重启后处理第一批遗留空目录，并由产品负责人决定Windows临时文件及第二批软件清理 | 部分完成 | 已处理批准遗留目录；用户 npm 缓存仍因 `EPERM` 失败，Windows 临时文件仍需产品负责人手动确认；不得自动进入第二批清理。 |
+| 生存体检：计算 100 名用户下的最坏成本 | 未开始 | 只能在产品负责人验收阶段性总审核并明确批准后执行；不是本轮任务。 |
 
 ## 最新 3A-R1.3 结果
 

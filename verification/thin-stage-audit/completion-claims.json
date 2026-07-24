@@ -1,0 +1,195 @@
+{
+  "status": "passed_with_noncritical_findings_corrected",
+  "methodology": "Mapped completed/passed/current claims in Handoff, CURRENT_PROGRESS_AUDIT, NEXT_STEP, DECISIONS, README and verification summaries to implementation/evidence paths. Did not rerun full green modules.",
+  "claims": [
+    {
+      "claim": "Windows install/start/shortcut/uninstall completed",
+      "locations": [
+        "AI-Workbench-Handoff.md",
+        "CURRENT_PROGRESS_AUDIT.md",
+        "DECISIONS.md"
+      ],
+      "implementation": [
+        "electron/main.cjs",
+        "package.json build.nsis"
+      ],
+      "evidence": [
+        "verification/3a-final/summary.json",
+        "verification/install-release/repair1-3-summary.json"
+      ],
+      "classification": "verified_existing",
+      "rationale": "3A final summary passed with install, startup_api, shortcuts, uninstall and restore_daily_install checks."
+    },
+    {
+      "claim": "Stranger machine does not crash; Chinese degraded readiness exists",
+      "locations": [
+        "AI-Workbench-Handoff.md",
+        "CURRENT_PROGRESS_AUDIT.md"
+      ],
+      "implementation": [
+        "readiness.mjs",
+        "health/self-heal.mjs",
+        "scripts/verify-clean-machine.mjs"
+      ],
+      "evidence": [
+        "verification/clean-machine/summary.json"
+      ],
+      "classification": "verified_existing",
+      "rationale": "summary ok true; degraded readiness and rebuild checks recorded."
+    },
+    {
+      "claim": "No user model API key required in packaged production path",
+      "locations": [
+        "AI-Workbench-Handoff.md",
+        "CURRENT_PROGRESS_AUDIT.md",
+        "CONTEXT.md"
+      ],
+      "implementation": [
+        "model-proxy.mjs",
+        "managed-proxy/src/index.ts"
+      ],
+      "evidence": [
+        "verification/managed-proxy-production/summary.json",
+        "verification/3a-final/summary.json"
+      ],
+      "classification": "verified_existing",
+      "rationale": "production managed_remote and no_local_keys checks passed; DeepSeek is current provider only."
+    },
+    {
+      "claim": "Cloudflare Managed Proxy production deployment passed",
+      "locations": [
+        "AI-Workbench-Handoff.md",
+        "CURRENT_PROGRESS_AUDIT.md",
+        "DECISIONS.md"
+      ],
+      "implementation": [
+        "managed-proxy/src/index.ts",
+        "model-proxy.mjs"
+      ],
+      "evidence": [
+        "verification/managed-proxy-production/summary.json"
+      ],
+      "classification": "verified_existing",
+      "rationale": "summary status passed; production Worker, D1, secrets names, upstream call, rate/budget failure cases and security scan recorded."
+    },
+    {
+      "claim": "3A final acceptance passed",
+      "locations": [
+        "AI-Workbench-Handoff.md",
+        "CURRENT_PROGRESS_AUDIT.md",
+        "DECISIONS.md"
+      ],
+      "implementation": [
+        "release-v0.4.6 installer pipeline and installed app"
+      ],
+      "evidence": [
+        "verification/3a-final/summary.json",
+        "verification/3a-final/report.md"
+      ],
+      "classification": "verified_existing",
+      "rationale": "summary status passed and report includes real install, production dialogue, security scan, uninstall and restore."
+    },
+    {
+      "claim": "3B public Alpha Release passed",
+      "locations": [
+        "AI-Workbench-Handoff.md",
+        "CURRENT_PROGRESS_AUDIT.md",
+        "DECISIONS.md"
+      ],
+      "implementation": [
+        "GitHub Release v0.4.6"
+      ],
+      "evidence": [
+        "verification/3b-release/summary.json",
+        "verification/3b-release/report.md"
+      ],
+      "classification": "verified_existing",
+      "rationale": "summary status passed; release URL, uploaded asset, SHA256 and download verification recorded."
+    },
+    {
+      "claim": "Docs consistency mechanism completed",
+      "locations": [
+        "AI-Workbench-Handoff.md",
+        "CURRENT_PROGRESS_AUDIT.md"
+      ],
+      "implementation": [
+        "scripts/generate-handoff.mjs",
+        "scripts/verify-docs-consistency.mjs"
+      ],
+      "evidence": [
+        "verification/docs-consistency/summary.json"
+      ],
+      "classification": "verified_existing",
+      "rationale": "docs consistency command passed before this audit and is rerun in this audit."
+    },
+    {
+      "claim": "Product asset backup and restore verification completed",
+      "locations": [
+        "AI-Workbench-Handoff.md",
+        "CURRENT_PROGRESS_AUDIT.md",
+        "TASKLOG.md"
+      ],
+      "implementation": [
+        "git archive external backup process"
+      ],
+      "evidence": [
+        "verification/pc-environment-governance/summary.json",
+        "verification/thin-stage-audit/restore-check.json"
+      ],
+      "classification": "verified_existing",
+      "rationale": "Prior evidence existed; this audit independently expanded the external backup and matched sample blobs."
+    },
+    {
+      "claim": "First cleanup still waiting for reboot leftover processing",
+      "locations": [
+        "AI-Workbench-Handoff.md",
+        "CURRENT_PROGRESS_AUDIT.md"
+      ],
+      "implementation": [
+        "documentation status"
+      ],
+      "evidence": [
+        "verification/pc-cleanup-batch1/summary.json"
+      ],
+      "classification": "status_conflict",
+      "rationale": "pc-cleanup summary shows postRebootLeftoverProcessing deleted 44 directories and failedDirectoryCount 0; docs were stale and were corrected. npm cache remains failed_eperm_after_reboot, so cleanup remains partial."
+    },
+    {
+      "claim": "README current version and current state",
+      "locations": [
+        "README.md"
+      ],
+      "implementation": [
+        "current repository"
+      ],
+      "evidence": [
+        "package.json",
+        "verification/3b-release/summary.json"
+      ],
+      "classification": "status_conflict",
+      "rationale": "README described v0.3.0 MVP as current while package.json and release evidence show v0.4.6 Alpha; README was corrected."
+    },
+    {
+      "claim": "Model layering / complete multi Agent / mobile / intelligence pipeline not complete",
+      "locations": [
+        "AI-Workbench-Handoff.md",
+        "CURRENT_PROGRESS_AUDIT.md"
+      ],
+      "implementation": [
+        "not implemented"
+      ],
+      "evidence": [
+        "CURRENT_PROGRESS_AUDIT.md missing-file notes",
+        "verification/model-router/summary.json absent"
+      ],
+      "classification": "verified_existing",
+      "rationale": "Current docs correctly keep these items unfinished; no fake passed evidence was created."
+    }
+  ],
+  "confirmed_fake_completions": [],
+  "noncritical_findings": [
+    "README current version/status was stale at audit start and has been corrected.",
+    "Current progress/Handoff cleanup leftover wording lagged behind pc-cleanup evidence and has been corrected.",
+    "CONTEXT unfinished summary and next-step text lagged behind latest product owner instruction and has been corrected."
+  ]
+}

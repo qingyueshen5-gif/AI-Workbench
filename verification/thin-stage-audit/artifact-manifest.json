@@ -1,0 +1,40 @@
+{
+  "generated_at": "2026-07-24T20:26:00+08:00",
+  "artifacts": [
+    {
+      "path": "verification/thin-stage-audit/summary.json",
+      "exists": true,
+      "bytes": 2344
+    },
+    {
+      "path": "verification/thin-stage-audit/report.md",
+      "exists": true,
+      "bytes": 3406
+    },
+    {
+      "path": "verification/thin-stage-audit/restore-check.json",
+      "exists": true,
+      "bytes": 1481
+    },
+    {
+      "path": "verification/thin-stage-audit/git-secret-scan.json",
+      "exists": true,
+      "bytes": 1439
+    },
+    {
+      "path": "verification/thin-stage-audit/completion-claims.json",
+      "exists": true,
+      "bytes": 6954
+    },
+    {
+      "path": "verification/thin-stage-audit/commands.log",
+      "exists": true,
+      "bytes": 4448
+    },
+    {
+      "path": "verification/thin-stage-audit/artifact-manifest.json",
+      "exists": true,
+      "bytes": 906
+    }
+  ]
+}

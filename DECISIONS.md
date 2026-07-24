@@ -25,3 +25,5 @@
 - R2.1 结论：Cloudflare Worker、D1、Secrets、生产 URL、真实 DeepSeek 上游、无本机 Key 18800、安装版零配置、刷新/吊销/限流/预算/紧急关闭/中文降级和安全扫描均已通过。R2.1 passed 只允许进入 3A 总验收，不等于 3A 总验收已完成，也不允许直接进入 3B Release。
 - ③A 总验收结论：候选安装包真实安装、快捷方式、安装版后端启动、`managed_remote` 生产对话、中文降级、安全扫描、真实卸载和恢复日常安装版均已通过；证据见 `verification/3a-final/summary.json`。该阶段已完成，后续已进入并通过 ③B。
 - ③B 发布结论：AI Workbench v0.4.6 Alpha 已创建公开 GitHub prerelease，annotated tag `v0.4.6` 指向 ③A 验收提交，安装包和 SHA256 文件已上传，公开下载回测 passed；证据见 `verification/3b-release/summary.json`。上线三大硬骨头整体完成，产品方向已收口，下一任务已调整为电脑环境治理：产品资产备份、单点故障核查和清理候选盘点。
+- 2026-07-24 阶段性总审核优先级调整：产品负责人将当前优先级从电脑环境清理调整为“阶段性总审核（砍薄版）”。本轮只审核三件事：现有产品资产备份是否真的可以恢复；Git 当前内容及完整可达历史是否泄漏真实密钥、Token、密码或其他凭据；文档是否宣称 completed/passed/已完成但没有实现、没有执行或没有真实证据。已有有效 verification 证据且已经判绿的模块不得重复跑完整验收，只检查证据是否存在、是否与结论对应；发现冲突或缺口才深入。审核完成后必须停止，等待产品负责人验收，不得自动进入生存体检、成本熔断、模型分层、v0.4.7 或其他任务。
+- 2026-07-24 阶段性总审核结论：砍薄版审核 passed，证据见 `verification/thin-stage-audit/summary.json`。最新外部备份已做隔离恢复并比对关键文件；当前 Git tracked 内容和完整本地可达历史未发现确认的真实凭据泄漏；未发现 confirmed fake completion。README、CURRENT_PROGRESS_AUDIT、CONTEXT 和 Handoff 中的非关键过期/冲突表述已修正。`git fetch origin --prune` 因本机 Git 凭据 `SEC_E_NO_CREDENTIALS` 失败，远端最新性刷新未完成；不得自动登录或修改凭据，等待产品负责人后续批准处理。

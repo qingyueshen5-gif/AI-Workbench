@@ -36,7 +36,7 @@ const scannedFiles = [
 ];
 
 const ignoredHistoricalPaths = ['CHANGELOG.md', 'TASKLOG.md', 'tasks/**', 'verification/**', 'research/**'];
-const expectedNextStep = '重启后处理第一批遗留空目录，并由产品负责人决定Windows临时文件及第二批软件清理。';
+const expectedNextStep = '等待产品负责人验收阶段性总审核（砍薄版）。未经产品负责人批准，不得进入生存体检或其他任务。';
 
 function readText(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');

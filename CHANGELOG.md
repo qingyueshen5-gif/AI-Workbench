@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Unreleased - 阶段性总审核（砍薄版）
+
+- 新增 `verification/thin-stage-audit/` 审核证据，覆盖备份隔离恢复、Git 凭据泄漏扫描和 completed/passed 声明核对。
+- 备份恢复 passed：外部备份 zip 可读、可解包，239 个 tracked 文件恢复到隔离 `.tmp` 目录，关键文件 blob 与备份提交匹配。
+- Git 凭据扫描 passed：覆盖当前 tracked 内容和完整本地可达历史；未发现确认的真实密钥、Token、密码或 private key 进入 Git。`.env` 仅记录为本地未跟踪敏感文件存在，未读取值。
+- 文档假完成检查 passed：未发现 confirmed fake completion；修正 README 旧 v0.3 当前状态、当前进度/Handoff 清理遗留项过期描述和 CONTEXT 下一步过期描述。
+- 记录 `git fetch origin --prune` 因 `SEC_E_NO_CREDENTIALS` 失败；未修改凭据、未登录、未重写历史、未 force push。
+- 本轮只改文档、文档生成模板和审核证据，未修改功能代码、Managed Proxy、Cloudflare、模型配置、Release、安装包或用户数据。
+
 ## Unreleased - 产品定位修正与判断依据文档
 
 - 在 `PRODUCT.md` 顶部加入模型与 Agent 无关的调度框架定位声明，明确 DeepSeek 是当前唯一生产实现和可替换实现细节，不是产品定位。

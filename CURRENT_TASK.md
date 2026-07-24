@@ -5,13 +5,15 @@
 
 ## 当前主线
 
-本轮唯一任务：电脑环境治理第一批安全清理收尾。
+本轮唯一任务：阶段性总审核（砍薄版）。
 
 边界：
 
-- 只处理已批准的旧临时目录、旧 release 构建目录、npm 缓存官方清理命令和清理报告留痕。
-- 不卸载软件、不结束进程、不修改 ACL、不取得所有权、不迁移仓库。
-- 不清理浏览器账号/缓存、GitHub/Cloudflare/Windows 凭据、`managed-proxy`、`node_modules`、`release-v0.4.6-installer` 或 verification 正式证据。
+- 只审核备份是否真的可恢复、Git 当前内容和完整本地可达历史是否泄漏凭据、文档是否存在假完成。
+- 已有有效 verification 证据且已经判绿的模块不重复跑完整验收，只核对证据是否存在、是否对应声明。
+- 不修改功能代码、Managed Proxy、Cloudflare、模型配置、Release、安装包或用户数据。
+- 不轮换、吊销或修改任何密钥；发现泄密只记录脱敏事实并等待产品负责人批准处置。
+- 审核完成后停止，等待产品负责人验收，不自动进入生存体检、成本熔断、模型分层、v0.4.7 或其他任务。
 
 ## 最近完成
 
@@ -20,7 +22,8 @@
 - 产品方向收口：completed。全球产品、一个输入框、质量基线托底、人机共同打磨、借用生态但掌握控制层、跨平台执行边界和阶段路线已整合进现有文档。
 - 文档基准纠偏与防漂移机制：completed。已纠正当前状态漂移，建立 Handoff 自动生成和文档一致性校验，故障注入已证明可检出版本漂移。
 - 电脑环境治理审计：completed。证据见 `verification/pc-environment-governance/summary.json`。
-- 电脑环境治理第一批安全清理：partial。累计释放 F 盘约 3.06 GB；npm 缓存、Windows 临时文件和权限异常遗留目录仍需后续处理。证据见 `verification/pc-cleanup-batch1/summary.json`。
+- 电脑环境治理第一批安全清理：partial。累计释放 F 盘约 3.06 GB；重启后指定遗留目录已处理，用户 npm 缓存仍因 `EPERM` 未清理，Windows 临时文件仍需产品负责人手动确认。证据见 `verification/pc-cleanup-batch1/summary.json`。
+- 阶段性总审核（砍薄版）：passed。备份隔离恢复、Git 凭据扫描和文档假完成核对均已执行；未发现确认的 Git 凭据泄漏或 confirmed fake completion，非关键过期表述已修正。证据见 `verification/thin-stage-audit/summary.json`。
 
 ## 当前事实
 
@@ -29,8 +32,8 @@
 - 安装包直接下载：`https://github.com/qingyueshen5-gif/AI-Workbench/releases/download/v0.4.6/AI-Workbench-Setup-v0.4.6-x64.exe`。
 - 安装包大小：`111524004` bytes。
 - SHA256：`b8de2e3f90c0063b8b3003c09de0b0886cc1861f4e8091df5f09994bdf6573f9`。
-- 当前架构：`Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> Cloudflare Managed Proxy -> DeepSeek 官方 API`。
-- 真实 DeepSeek Key 只存在 Cloudflare Secret，不进入安装包和用户电脑。
+- 当前架构：`Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware Managed Proxy -> 当前生产 provider`。
+- DeepSeek 是当前唯一已接入的生产实现，属于可替换实现细节，不是产品定位。真实 DeepSeek Key 只存在 Cloudflare Secret，不进入安装包和用户电脑。
 
 ## 上线硬骨头
 
@@ -42,9 +45,9 @@
 
 以下能力仍未实施，不得写成当前已完成：
 
-- 第一批遗留空目录重启后复核。
 - Windows 临时文件人工确认。
 - 自启项调整和闲置软件卸载决策。
+- 生存体检、平台月度总上限和自动熔断。
 - 首屏示例指令、反馈入口、安全和隐私告知。
 - 3-5 名真实用户测试。
 - 长期记忆、任务历史和状态卡、质量检查层、自动任务拆解和分配。
@@ -52,6 +55,6 @@
 
 ## 当前唯一下一步
 
-当前唯一下一步以 `NEXT_STEP.md` 为准：重启后处理第一批遗留空目录，并由产品负责人决定Windows临时文件及第二批软件清理。
+当前唯一下一步以 `NEXT_STEP.md` 为准：等待产品负责人验收阶段性总审核（砍薄版）。未经产品负责人批准，不得进入生存体检或其他任务。
 
-完成本轮第一批安全清理收尾后必须停止，等待产品负责人批准，不自动进入第二批清理。
+完成本轮审核后必须停止，等待产品负责人验收，不自动进入生存体检、第二批清理或其他任务。
