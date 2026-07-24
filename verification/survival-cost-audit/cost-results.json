@@ -1,0 +1,113 @@
+{
+  "generated_at": "2026-07-24T20:40:00+08:00",
+  "formulas": {
+    "upstream_call_cost": "input_tokens * blended_input_unit_price + output_tokens * output_unit_price + cache/other_items",
+    "user_request_cost": "upstream_call_cost * upstream_calls_per_user_request * retry_multiplier",
+    "monthly_model_cost": "users * requests_per_user_per_day * monthly_days * user_request_cost",
+    "monthly_platform_total": "monthly_model_cost + infrastructure_fixed + infrastructure_variable"
+  },
+  "current_hard_monthly_cap": null,
+  "theoretical_worst_case": "unbounded",
+  "current_code_reference_limits": {
+    "source_files": [
+      "managed-proxy/src/index.ts",
+      "managed-proxy/wrangler.jsonc",
+      "model-proxy.mjs",
+      "server.mjs"
+    ],
+    "current_provider": "deepseek",
+    "current_allowed_model": "deepseek-chat",
+    "managed_proxy_base_url": "https://ai-workbench-managed-proxy.qingyueshen5.workers.dev",
+    "daily_global_request_limit": 200,
+    "daily_install_request_limit": 40,
+    "daily_ip_request_limit": 80,
+    "daily_global_token_limit": 200000,
+    "max_request_bytes": 65536,
+    "max_input_chars": 30000,
+    "input_token_estimation_in_code": "Math.ceil(inputChars / 4)",
+    "max_output_tokens": 2048,
+    "local_model_proxy_max_retries": 3,
+    "managed_proxy_upstream_retries": 0,
+    "maximum_model_calls_per_user_request_in_current_chat_flow": 2,
+    "monthly_total_cost_cap": null,
+    "wallet_or_provider_spend_cap_verified_in_code": false,
+    "notes": [
+      "Managed Proxy enforces daily request and token limits, but not a monthly currency budget.",
+      "The token limit is checked before a request and output tokens are recorded after upstream response, so concurrent requests can overshoot the nominal token budget.",
+      "The local 18800 proxy can retry upstream failures up to MODEL_PROXY_MAX_RETRIES default 3; the Cloudflare Worker itself does not retry the DeepSeek upstream call."
+    ]
+  },
+  "observed_data": {
+    "real_users_available": false,
+    "real_user_average_cost_available": false,
+    "conclusion": "尚无真实用户，无法形成真实用户平均成本。",
+    "test_data_note": "verification/managed-proxy-production contains production verification calls and limit tests, but they are test samples and not real user traffic."
+  },
+  "marginal_high_active_user_monthly_model_cost_usd": 4.877107,
+  "marginal_high_active_user_monthly_model_cost_cny": 33.05,
+  "results": [
+    {
+      "scenario": "planning_pressure_5_users",
+      "users": 5,
+      "requests_per_user_per_day": 40,
+      "input_tokens_per_request": 8000,
+      "output_tokens_per_request": 2048,
+      "upstream_calls_per_user_request": 2,
+      "retry_multiplier": 1.2,
+      "cache_hit_rate": 0,
+      "single_upstream_call_cost_usd": 0.001693,
+      "single_user_request_cost_usd": 0.004064,
+      "monthly_model_cost_usd": 24.385536,
+      "monthly_infrastructure_cost_usd": 5,
+      "monthly_platform_total_usd": 29.385536,
+      "monthly_platform_total_cny": 199.12,
+      "total_monthly_burn_with_current_8200_cny": 8399.12,
+      "estimated_runway_months": 7.81,
+      "data_type": "规划假设",
+      "confidence": "medium",
+      "primary_risk": "No real user average exists; high-active behavior and retry rate are assumptions."
+    },
+    {
+      "scenario": "planning_pressure_50_users",
+      "users": 50,
+      "requests_per_user_per_day": 40,
+      "input_tokens_per_request": 8000,
+      "output_tokens_per_request": 2048,
+      "upstream_calls_per_user_request": 2,
+      "retry_multiplier": 1.2,
+      "cache_hit_rate": 0,
+      "single_upstream_call_cost_usd": 0.001693,
+      "single_user_request_cost_usd": 0.004064,
+      "monthly_model_cost_usd": 243.85536,
+      "monthly_infrastructure_cost_usd": 5,
+      "monthly_platform_total_usd": 248.85536,
+      "monthly_platform_total_cny": 1686.24,
+      "total_monthly_burn_with_current_8200_cny": 9886.24,
+      "estimated_runway_months": 6.64,
+      "data_type": "规划假设",
+      "confidence": "medium",
+      "primary_risk": "No real user average exists; high-active behavior and retry rate are assumptions."
+    },
+    {
+      "scenario": "planning_pressure_100_users",
+      "users": 100,
+      "requests_per_user_per_day": 40,
+      "input_tokens_per_request": 8000,
+      "output_tokens_per_request": 2048,
+      "upstream_calls_per_user_request": 2,
+      "retry_multiplier": 1.2,
+      "cache_hit_rate": 0,
+      "single_upstream_call_cost_usd": 0.001693,
+      "single_user_request_cost_usd": 0.004064,
+      "monthly_model_cost_usd": 487.71072,
+      "monthly_infrastructure_cost_usd": 5,
+      "monthly_platform_total_usd": 492.71072,
+      "monthly_platform_total_cny": 3338.61,
+      "total_monthly_burn_with_current_8200_cny": 11538.61,
+      "estimated_runway_months": 5.69,
+      "data_type": "规划假设",
+      "confidence": "medium",
+      "primary_risk": "No real user average exists; high-active behavior and retry rate are assumptions."
+    }
+  ]
+}

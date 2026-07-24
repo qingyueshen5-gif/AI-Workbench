@@ -1,0 +1,63 @@
+{
+  "task": "survival-cost-audit",
+  "started_at": "2026-07-24T20:38:00+08:00",
+  "completed_at": "2026-07-24T20:58:00+08:00",
+  "repository_head_before": "79cd0290feaf5d422b75eae060a3b0a70e024f57",
+  "execution_status": "passed",
+  "wallet_safety_status": "unsafe",
+  "current_provider": "DeepSeek as current production implementation; provider-neutral framework remains the product positioning",
+  "current_model": "deepseek-chat in code; priced as DeepSeek official current compatibility target deepseek-v4-flash non-thinking mode",
+  "pricing_date": "2026-07-24",
+  "observed_real_user_data_available": false,
+  "current_hard_monthly_cap": null,
+  "automatic_cost_circuit_breaker": false,
+  "theoretical_worst_case": "unbounded",
+  "scenario_5_users": {
+    "monthly_platform_total_usd": 29.385536,
+    "monthly_platform_total_cny": 199.12,
+    "estimated_runway_months": 7.81
+  },
+  "scenario_50_users": {
+    "monthly_platform_total_usd": 248.85536,
+    "monthly_platform_total_cny": 1686.24,
+    "estimated_runway_months": 6.64
+  },
+  "scenario_100_users": {
+    "monthly_platform_total_usd": 492.71072,
+    "monthly_platform_total_cny": 3338.61,
+    "estimated_runway_months": 5.69
+  },
+  "runway_impact": {
+    "baseline_monthly_burn_cny": 8200,
+    "baseline_runway_months": 8,
+    "estimated_cash_reserve_cny": 65600,
+    "method": "estimated_cash_reserve_cny / (baseline_monthly_burn_cny + monthly_platform_total_cny)"
+  },
+  "main_cost_driver": "request volume multiplied by upstream model calls per user request, output token ceiling, and retry multiplier; provider unit price is replaceable but remains a direct multiplier",
+  "critical_findings": [
+    "No platform monthly currency cap exists in the verified code or evidence.",
+    "No automatic monthly spend circuit breaker is implemented.",
+    "No real user usage data exists; 5/50/100 user results are planning pressure scenarios, not observed averages."
+  ],
+  "assumptions": {
+    "requests_per_user_per_day": 40,
+    "input_tokens_per_upstream_call": 8000,
+    "output_tokens_per_upstream_call": 2048,
+    "upstream_calls_per_user_request": 2,
+    "retry_multiplier": 1.2,
+    "monthly_days": 30,
+    "cache_hit_rate": 0,
+    "usd_to_cny": 6.776
+  },
+  "evidence_files": [
+    "verification/survival-cost-audit/assumptions.json",
+    "verification/survival-cost-audit/pricing-sources.json",
+    "verification/survival-cost-audit/scenarios.json",
+    "verification/survival-cost-audit/cost-results.json",
+    "verification/survival-cost-audit/summary.json",
+    "verification/survival-cost-audit/report.md",
+    "verification/survival-cost-audit/commands.log",
+    "verification/survival-cost-audit/artifact-manifest.json"
+  ],
+  "next_action": "Wait for product owner acceptance of the survival cost audit. After approval, the next task should be platform monthly total spend cap and automatic circuit breaker, but this audit did not implement it."
+}

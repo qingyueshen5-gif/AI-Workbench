@@ -1,0 +1,45 @@
+{
+  "generated_at": "2026-07-24T20:58:00+08:00",
+  "artifacts": [
+    {
+      "path": "verification/survival-cost-audit/assumptions.json",
+      "exists": true,
+      "bytes": 3064
+    },
+    {
+      "path": "verification/survival-cost-audit/pricing-sources.json",
+      "exists": true,
+      "bytes": 2360
+    },
+    {
+      "path": "verification/survival-cost-audit/scenarios.json",
+      "exists": true,
+      "bytes": 1985
+    },
+    {
+      "path": "verification/survival-cost-audit/cost-results.json",
+      "exists": true,
+      "bytes": 5001
+    },
+    {
+      "path": "verification/survival-cost-audit/summary.json",
+      "exists": true,
+      "bytes": 2927
+    },
+    {
+      "path": "verification/survival-cost-audit/report.md",
+      "exists": true,
+      "bytes": 7316
+    },
+    {
+      "path": "verification/survival-cost-audit/commands.log",
+      "exists": true,
+      "bytes": 3129
+    },
+    {
+      "path": "verification/survival-cost-audit/artifact-manifest.json",
+      "exists": true,
+      "bytes": 1041
+    }
+  ]
+}

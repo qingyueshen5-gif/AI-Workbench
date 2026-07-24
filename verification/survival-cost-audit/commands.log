@@ -1,0 +1,20 @@
+2026-07-24T20:38+08:00 | git status --short; git rev-parse HEAD; git rev-parse origin/main; git log -5 --oneline --decorate | exit 0 | output: clean tracked worktree; HEAD=origin/main=79cd0290feaf5d422b75eae060a3b0a70e024f57
+2026-07-24T20:38+08:00 | git fetch origin --prune | exit 1 | output: SEC_E_NO_CREDENTIALS; credentials were not modified
+2026-07-24T20:39+08:00 | read cost-related implementation and evidence | exit 0 | output: managed-proxy, model-proxy, server, wrangler config and managed-proxy-production evidence reviewed
+2026-07-24T20:40+08:00 | create initial half-finished files | exit 0 | output: scripts/calculate-survival-cost.mjs plus assumptions/pricing-sources/scenarios/cost-results JSON created before SSE interruption
+2026-07-24T20:46+08:00 | node scripts/calculate-survival-cost.mjs | exit 0 | output: cost-results generated; no model calls
+2026-07-24T20:49+08:00 | interrupted by SSE idle timeout; user requested现场盘点 only | exit 0 | output: no task continuation, no commit, no push
+2026-07-24T20:52+08:00 | resume: git status --short and half-finished file inventory | exit 0 | output: tracked worktree clean; untracked cost script and survival-cost-audit directory present
+2026-07-24T20:53+08:00 | node --check scripts/calculate-survival-cost.mjs | exit 0 | output: syntax ok
+2026-07-24T20:53+08:00 | parse existing four JSON files | exit 0 | output: assumptions, pricing-sources, scenarios and cost-results valid JSON
+2026-07-24T20:54+08:00 | locate code facts with Select-String | exit 0 | output: provider/model/limits/retry/token facts found in managed-proxy, wrangler, model-proxy and server files
+2026-07-24T20:55+08:00 | node scripts/calculate-survival-cost.mjs twice and compare cost-results SHA256 | exit 0 | output: both hashes 33CA03A69C0DA7454FFED7B71657DCF9C45616152189BDC6BE1D41F94D96BCC5
+2026-07-24T20:56+08:00 | temporary bad-input validation using AIW_SURVIVAL_COST_DIR | exit 0 | output: missing field exit=1; negative token exit=1; invalid JSON exit=1; temporary directory removed
+2026-07-24T20:58+08:00 | write report, summary, commands log and manifest | exit 0 | output: survival-cost-audit evidence completed; no production config changed
+2026-07-24T21:06+08:00 | npm.cmd run docs:generate-handoff | exit 0 | output: handoff snapshot generated
+2026-07-24T21:06+08:00 | npm.cmd run verify:docs-consistency | exit 0 | output: passed
+2026-07-24T21:09+08:00 | parse formal survival-cost-audit JSON and docs-consistency summary | exit 0 | output: all parsed successfully
+2026-07-24T21:09+08:00 | git diff --check | exit 0 | output: no whitespace errors; CRLF warnings only
+2026-07-24T21:10+08:00 | sensitive pattern scan over changed/untracked files | exit 0 | output: no full key/token/private-key/Authorization-header pattern hits
+2026-07-24T21:10+08:00 | production config/code path guard | exit 0 | output: no src, Managed Proxy production code/config, model-proxy, server, release or package version files changed
+2026-07-24T21:10+08:00 | temporary file and process check | exit 0 | output: no aiw survival temporary test directories; no real model call command was run

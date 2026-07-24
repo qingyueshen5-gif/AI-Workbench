@@ -1,0 +1,58 @@
+{
+  "generated_at": "2026-07-24T20:40:00+08:00",
+  "pricing_date": "2026-07-24",
+  "current_provider": {
+    "provider": "DeepSeek",
+    "model_used_for_current_production_pricing": "deepseek-v4-flash",
+    "current_code_model_name": "deepseek-chat",
+    "model_name_note": "DeepSeek official docs state deepseek-chat becomes a compatibility alias for deepseek-v4-flash non-thinking mode on 2026-07-24 at 15:59 UTC. Current code still allows deepseek-chat.",
+    "currency": "USD",
+    "unit": "1M tokens",
+    "input_cache_hit_usd_per_million_tokens": 0.0028,
+    "input_cache_miss_usd_per_million_tokens": 0.14,
+    "output_usd_per_million_tokens": 0.28,
+    "source": {
+      "name": "DeepSeek API Docs - Pricing Details",
+      "url": "https://api-docs.deepseek.com/quick_start/pricing-details-usd",
+      "retrieved_at": "2026-07-24T20:40:00+08:00"
+    }
+  },
+  "provider_neutral_variables": [
+    "input_cache_hit_unit_price",
+    "input_cache_miss_unit_price",
+    "output_unit_price",
+    "billing_unit_tokens",
+    "currency",
+    "cache_hit_rate",
+    "upstream_calls_per_user_request",
+    "retry_multiplier"
+  ],
+  "infrastructure": {
+    "currency": "USD",
+    "fixed_monthly_usd": 5,
+    "variable_monthly_usd": 0,
+    "assumption": "Conservative planning includes Cloudflare Workers Paid minimum monthly platform charge. The tested 5/50/100 user scenarios are expected to stay within included Workers/D1 request-volume allowances, so variable infrastructure cost is modeled as 0 until measured otherwise.",
+    "sources": [
+      {
+        "name": "Cloudflare Workers Pricing",
+        "url": "https://developers.cloudflare.com/workers/platform/pricing/",
+        "retrieved_at": "2026-07-24T20:40:00+08:00"
+      },
+      {
+        "name": "Cloudflare D1 Pricing",
+        "url": "https://developers.cloudflare.com/d1/platform/pricing/",
+        "retrieved_at": "2026-07-24T20:40:00+08:00"
+      }
+    ]
+  },
+  "exchange_rate": {
+    "usd_to_cny": 6.776,
+    "source": {
+      "name": "Federal Reserve H.10 Foreign Exchange Rates, China yuan per U.S. dollar",
+      "url": "https://www.federalreserve.gov/releases/h10/hist/dat00_ch.htm",
+      "date_used": "2026-07-17",
+      "retrieved_at": "2026-07-24T20:40:00+08:00"
+    },
+    "note": "USD values remain authoritative for provider bills; CNY conversion is for runway planning only."
+  }
+}

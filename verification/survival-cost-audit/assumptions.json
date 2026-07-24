@@ -1,0 +1,52 @@
+{
+  "task": "survival-cost-audit",
+  "generated_at": "2026-07-24T20:40:00+08:00",
+  "product_positioning": "AI Workbench is a model- and Agent-neutral orchestration framework. DeepSeek is only the current production provider implementation.",
+  "monthly_days": 30,
+  "current_baseline_monthly_burn_cny": 8200,
+  "current_runway_months": 8,
+  "current_code_reference_limits": {
+    "source_files": [
+      "managed-proxy/src/index.ts",
+      "managed-proxy/wrangler.jsonc",
+      "model-proxy.mjs",
+      "server.mjs"
+    ],
+    "current_provider": "deepseek",
+    "current_allowed_model": "deepseek-chat",
+    "managed_proxy_base_url": "https://ai-workbench-managed-proxy.qingyueshen5.workers.dev",
+    "daily_global_request_limit": 200,
+    "daily_install_request_limit": 40,
+    "daily_ip_request_limit": 80,
+    "daily_global_token_limit": 200000,
+    "max_request_bytes": 65536,
+    "max_input_chars": 30000,
+    "input_token_estimation_in_code": "Math.ceil(inputChars / 4)",
+    "max_output_tokens": 2048,
+    "local_model_proxy_max_retries": 3,
+    "managed_proxy_upstream_retries": 0,
+    "maximum_model_calls_per_user_request_in_current_chat_flow": 2,
+    "monthly_total_cost_cap": null,
+    "wallet_or_provider_spend_cap_verified_in_code": false,
+    "notes": [
+      "Managed Proxy enforces daily request and token limits, but not a monthly currency budget.",
+      "The token limit is checked before a request and output tokens are recorded after upstream response, so concurrent requests can overshoot the nominal token budget.",
+      "The local 18800 proxy can retry upstream failures up to MODEL_PROXY_MAX_RETRIES default 3; the Cloudflare Worker itself does not retry the DeepSeek upstream call."
+    ]
+  },
+  "observed_data": {
+    "real_users_available": false,
+    "real_user_average_cost_available": false,
+    "conclusion": "尚无真实用户，无法形成真实用户平均成本。",
+    "test_data_note": "verification/managed-proxy-production contains production verification calls and limit tests, but they are test samples and not real user traffic."
+  },
+  "planning_assumption_rationale": [
+    "40 requests per user per day matches the current per-install daily request limit and represents a high-active user.",
+    "8000 input tokens is below the current MAX_INPUT_CHARS=30000 code estimate of about 7500 tokens but rounded upward as a conservative planning value.",
+    "2048 output tokens matches the current MAX_OUTPUT_TOKENS default and configured Worker variable.",
+    "2 upstream calls per user request covers the current tool path where the first model call chooses tools and the final model call summarizes tool results.",
+    "1.2 retry multiplier is a planning pressure factor, not observed production behavior.",
+    "0 cache hit rate is conservative for current planning because the product does not explicitly control provider prompt-cache behavior."
+  ],
+  "important_distinction": "This audit can pass as an analysis task while the product wallet state remains unsafe because no monthly total spend cap exists."
+}

@@ -3,7 +3,7 @@
   "packageVersion": "0.4.6",
   "contextVersion": "0.4.6",
   "releaseVersion": "v0.4.6",
-  "nextStep": "等待产品负责人验收阶段性总审核（砍薄版）。未经产品负责人批准，不得进入生存体检或其他任务。",
+  "nextStep": "等待产品负责人验收生存体检。未经批准，不得实现平台月度总开销上限、自动熔断或其他后续任务。",
   "capabilityStatusChecks": [
     {
       "name": "模型分层 未标记为已完成",
@@ -62,5 +62,5 @@
   ],
   "errors": [],
   "warnings": [],
-  "verifiedAt": "2026-07-24T12:27:22.888Z"
+  "verifiedAt": "2026-07-24T13:11:38.272Z"
 }

@@ -1,0 +1,47 @@
+{
+  "generated_at": "2026-07-24T20:40:00+08:00",
+  "scenarios": [
+    {
+      "name": "planning_pressure_5_users",
+      "users": 5,
+      "requests_per_user_per_day": 40,
+      "input_tokens_per_upstream_call": 8000,
+      "output_tokens_per_upstream_call": 2048,
+      "upstream_calls_per_user_request": 2,
+      "retry_multiplier": 1.2,
+      "cache_hit_rate": 0,
+      "failed_requests_billable_assumption": "Only attempts that reach the upstream provider are counted; retry_multiplier covers billable retry exposure.",
+      "data_type": "规划假设",
+      "confidence": "medium",
+      "primary_risk": "No real user average exists; high-active behavior and retry rate are assumptions."
+    },
+    {
+      "name": "planning_pressure_50_users",
+      "users": 50,
+      "requests_per_user_per_day": 40,
+      "input_tokens_per_upstream_call": 8000,
+      "output_tokens_per_upstream_call": 2048,
+      "upstream_calls_per_user_request": 2,
+      "retry_multiplier": 1.2,
+      "cache_hit_rate": 0,
+      "failed_requests_billable_assumption": "Only attempts that reach the upstream provider are counted; retry_multiplier covers billable retry exposure.",
+      "data_type": "规划假设",
+      "confidence": "medium",
+      "primary_risk": "No real user average exists; high-active behavior and retry rate are assumptions."
+    },
+    {
+      "name": "planning_pressure_100_users",
+      "users": 100,
+      "requests_per_user_per_day": 40,
+      "input_tokens_per_upstream_call": 8000,
+      "output_tokens_per_upstream_call": 2048,
+      "upstream_calls_per_user_request": 2,
+      "retry_multiplier": 1.2,
+      "cache_hit_rate": 0,
+      "failed_requests_billable_assumption": "Only attempts that reach the upstream provider are counted; retry_multiplier covers billable retry exposure.",
+      "data_type": "规划假设",
+      "confidence": "medium",
+      "primary_risk": "No real user average exists; high-active behavior and retry rate are assumptions."
+    }
+  ]
+}

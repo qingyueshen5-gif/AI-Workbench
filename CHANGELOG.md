@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Unreleased - 生存体检
+
+- 新增 `scripts/calculate-survival-cost.mjs`，用输入 JSON 驱动并可复算 5/50/100 用户规划压力场景成本；脚本不读取 Secret、不调用真实模型、不修改生产配置。
+- 新增 `verification/survival-cost-audit/` 证据，记录假设、官方价格来源、场景、计算结果、50 用户手工复核、命令日志和摘要。
+- 生存体检执行状态 passed，但钱包安全状态 unsafe：当前没有平台月度金额硬上限或自动熔断，理论最坏月度成本为 `unbounded`。
+- 当前无真实用户用量，5/50/100 用户结果属于规划压力场景，不是实际用户平均成本；平台月成本约为 199.12 / 1686.24 / 3338.61 CNY，现金跑道约为 7.81 / 6.64 / 5.69 个月。
+- 本轮只做成本分析、验证、证据和文档状态更新，未修改生产功能代码、Cloudflare、Managed Proxy、模型配置、限流、Release 或安装包。
+
 ## Unreleased - 阶段性总审核（砍薄版）
 
 - 新增 `verification/thin-stage-audit/` 审核证据，覆盖备份隔离恢复、Git 凭据泄漏扫描和 completed/passed 声明核对。

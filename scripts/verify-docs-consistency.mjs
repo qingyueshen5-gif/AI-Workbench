@@ -36,7 +36,7 @@ const scannedFiles = [
 ];
 
 const ignoredHistoricalPaths = ['CHANGELOG.md', 'TASKLOG.md', 'tasks/**', 'verification/**', 'research/**'];
-const expectedNextStep = '等待产品负责人验收阶段性总审核（砍薄版）。未经产品负责人批准，不得进入生存体检或其他任务。';
+const expectedNextStep = '等待产品负责人验收生存体检。未经批准，不得实现平台月度总开销上限、自动熔断或其他后续任务。';
 
 function readText(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
