@@ -19,7 +19,9 @@ AI Workbench v0.4.6 Alpha 已公开发布。③A 总验收和 ③B GitHub Releas
 
 当前尚无真实用户。模型调用成本由平台承担，且平台月度金额硬上限尚未建立；现金跑道约 8 个月，月支出约 8200。当前目标是盈亏平衡和知名度，不是收费或利润最大化。
 
-生存体检已由产品负责人验收通过。第 3A 段本地钱包刹车已完成平台合计预算纠偏和 mock 验证：平台月度总预算政策上限 50 USD，所有 provider/模型合计的模型调用硬上限 40 USD，基础设施及价格波动预留 10 USD；Managed Proxy 使用整数 micro-USD，在调用 provider 前按模型价格保守预留，由 `monthly_platform_budget(month_key)` 平台总账执行唯一 D1 条件原子更新，成功后才允许上游调用。`monthly_model_budget(month_key, model)` 只做模型明细账和审计用途，不决定硬上限。失败/超时/500 不退款，缺价格或预算账本不可用时 fail closed。证据见 `verification/monthly-budget-circuit-breaker-local/summary.json`。本轮未部署生产 Cloudflare Worker，未执行远端 D1 migration，未修改 Secrets，未调用真实 provider。
+生存体检和第 3A 段本地钱包刹车均已由产品负责人验收通过。3A 已完成平台合计预算纠偏和 mock 验证：平台月度总预算政策上限 50 USD，所有 provider/模型合计的模型调用硬上限 40 USD，基础设施及价格波动预留 10 USD；Managed Proxy 使用整数 micro-USD，在调用 provider 前按模型价格保守预留，由 `monthly_platform_budget(month_key)` 平台总账执行唯一 D1 条件原子更新，成功后才允许上游调用。`monthly_model_budget(month_key, model)` 只做模型明细账和审计用途，不决定硬上限。失败/超时/500 不退款，缺价格或预算账本不可用时 fail closed。证据见 `verification/monthly-budget-circuit-breaker-local/summary.json`。
+
+第 3B-1 段生产预检与远端 D1 部署前备份已完成：生产变更前必须核对 Cloudflare 身份、Worker、D1 binding、目标数据库和既有生产 evidence，并在仓库外完成远端 D1 完整导出备份。当前备份位于 `D:\AI-Workbench-Backups\2026-07-24-managed-proxy-budget-predeploy\`，证据见 `verification/monthly-budget-production-preflight/summary.json`。本轮未执行远端 D1 migration，未部署生产 Cloudflare Worker，未修改 Secrets，未调用真实 provider。
 
 ## 当前架构
 
@@ -46,7 +48,7 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 详细未完成清单以 `CURRENT_PROGRESS_AUDIT.md` 为唯一权威。本文件只展示摘要：
 
 - 电脑环境治理审计已完成；第一批安全清理仍为 partial，用户 npm 缓存仍因 `EPERM` 未清理，Windows 临时文件仍需产品负责人手动确认。
-- 第 3A 段本地钱包刹车已完成本地验证，当前等待产品负责人验收；未经批准不得部署生产环境或进入第 3B 段。
+- 第 3B-1 段生产预检与远端 D1 备份已完成，当前等待产品负责人验收；未经批准不得执行远端 migration 或部署 Worker。
 - 首屏 3-5 条示例指令、反馈入口、安全和隐私告知尚未完成。
 - 3-5 名真实用户测试尚未开始。
 - 长期记忆、任务历史和状态卡、质量检查层、自动任务拆解和分配尚未完成。
@@ -56,9 +58,9 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 
 当前唯一下一步以 `NEXT_STEP.md` 为唯一权威：
 
-等待产品负责人验收第 3A 段本地钱包刹车。未经批准不得部署生产环境。
+等待产品负责人验收第 3B-1 段生产预检与远端 D1 备份。未经批准不得执行远端 migration 或部署 Worker。
 
-不得部署 Cloudflare 生产环境、执行远端 D1 migration、修改 Secrets、进入第 3B 段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发。
+不得执行远端 D1 migration、部署 Cloudflare Worker、修改 Secrets、进入第 3B-2 段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发。
 
 ## 产品方向文件索引
 

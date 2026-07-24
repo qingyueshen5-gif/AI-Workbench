@@ -1,0 +1,23 @@
+{
+  "created_at": "2026-07-24T22:46:30+08:00",
+  "backup_status": "passed",
+  "database_name": "aiw-managed-proxy",
+  "database_id_masked": "202583b9...3de8",
+  "backup_directory": "D:\\AI-Workbench-Backups\\2026-07-24-managed-proxy-budget-predeploy",
+  "backup_file": "aiw-managed-proxy-predeploy-20260724.sql",
+  "backup_external_path": "D:\\AI-Workbench-Backups\\2026-07-24-managed-proxy-budget-predeploy\\aiw-managed-proxy-predeploy-20260724.sql",
+  "backup_size_bytes": 20253,
+  "backup_sha256": "0D0A554C9BB655578FF747FB04F0B3407874A9022A1B6A9617F800C27AC54AAD",
+  "sha256_recalculated_matches": true,
+  "file_exists": true,
+  "file_readable": true,
+  "file_size_gt_zero": true,
+  "contains_schema": true,
+  "contains_data": true,
+  "contains_existing_key_tables": true,
+  "contains_monthly_platform_budget": false,
+  "contains_monthly_model_budget": false,
+  "backup_sql_committed_to_git": false,
+  "backup_sql_copied_to_verification": false,
+  "local_restore_test": "passed"
+}

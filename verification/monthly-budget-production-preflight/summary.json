@@ -1,0 +1,31 @@
+{
+  "task": "monthly-budget-production-preflight",
+  "execution_status": "preflight_and_backup_passed",
+  "repository_head_before": "5a334ac8910d04727baaa8885dae86f48ad3400e",
+  "wrangler_version": "4.113.0",
+  "cloudflare_identity_confirmed": true,
+  "target_database_confirmed": true,
+  "remote_schema_checked": true,
+  "platform_budget_table_exists_before_migration": false,
+  "model_budget_table_exists_before_migration": false,
+  "backup_status": "passed",
+  "backup_external_path": "D:\\AI-Workbench-Backups\\2026-07-24-managed-proxy-budget-predeploy\\aiw-managed-proxy-predeploy-20260724.sql",
+  "backup_size_bytes": 20253,
+  "backup_sha256": "0D0A554C9BB655578FF747FB04F0B3407874A9022A1B6A9617F800C27AC54AAD",
+  "local_restore_test": "passed",
+  "remote_migration_status": "not_run",
+  "worker_deployment_status": "not_deployed",
+  "secrets_modified": false,
+  "real_provider_called": false,
+  "blocked_items": [],
+  "evidence_files": [
+    "verification/monthly-budget-production-preflight/summary.json",
+    "verification/monthly-budget-production-preflight/report.md",
+    "verification/monthly-budget-production-preflight/commands.log",
+    "verification/monthly-budget-production-preflight/account-check.json",
+    "verification/monthly-budget-production-preflight/remote-schema.json",
+    "verification/monthly-budget-production-preflight/backup-manifest.json",
+    "verification/monthly-budget-production-preflight/artifact-manifest.json"
+  ],
+  "next_action": "Wait for product owner acceptance of 3B-1 production preflight and remote D1 backup. Do not run remote migration or deploy Worker without approval."
+}

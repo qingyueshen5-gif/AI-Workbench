@@ -1,0 +1,20 @@
+{
+  "checked_at": "2026-07-24T22:46:30+08:00",
+  "wrangler_version": "4.113.0",
+  "wrangler_logged_in": true,
+  "auth_type": "OAuth Token",
+  "email_masked": "q***@gmail.com",
+  "account_name_masked": "Qingyueshen5@gmail.com's Account",
+  "account_id_masked": "351b5cce...7f30",
+  "account_count": 1,
+  "target_worker": "ai-workbench-managed-proxy",
+  "target_d1_binding": "DB",
+  "target_database_name": "aiw-managed-proxy",
+  "target_database_id_masked": "202583b9...3de8",
+  "config_database_id_matches_existing_production_verification": true,
+  "config_database_name_matches_existing_production_verification": true,
+  "worker_name_matches_existing_production_verification": true,
+  "identity_confirmed": true,
+  "target_database_confirmed": true,
+  "blocked_reason": ""
+}

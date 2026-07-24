@@ -4,7 +4,7 @@
 - package.json.version：0.4.6
 - CONTEXT.md 版本：0.4.6
 - Release 版本：v0.4.6
-- 当前唯一下一步：等待产品负责人重新验收第 3A 段本地钱包刹车。未经批准不得部署生产环境。
+- 当前唯一下一步：等待产品负责人验收第 3B-1 段生产预检与远端 D1 备份。未经批准不得执行远端 migration 或部署 Worker。
 - Handoff 生成校验：passed
 - Handoff 幂等校验：passed
 

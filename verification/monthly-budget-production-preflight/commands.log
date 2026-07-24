@@ -1,0 +1,28 @@
+2026-07-24T22:31+08:00 | git status --short --branch | exit 0 | output: ## main...origin/main
+2026-07-24T22:31+08:00 | git rev-parse HEAD | exit 0 | output: 5a334ac8910d04727baaa8885dae86f48ad3400e
+2026-07-24T22:31+08:00 | git rev-parse origin/main | exit 0 | output: 5a334ac8910d04727baaa8885dae86f48ad3400e
+2026-07-24T22:31+08:00 | git log -5 --oneline --decorate | exit 0 | output: baseline includes 5a334ac
+2026-07-24T22:33+08:00 | read managed-proxy/wrangler.jsonc and verification/managed-proxy-production | exit 0 | output: Worker ai-workbench-managed-proxy, binding DB, database aiw-managed-proxy, database id 202583b9...3de8 matched existing production evidence
+2026-07-24T22:34+08:00 | npx.cmd wrangler --version | exit 0 | output: 4.113.0; sandbox log write warning observed
+2026-07-24T22:34+08:00 | npx.cmd wrangler whoami | exit 124 | output: showed logged-in OAuth identity q***@gmail.com and account 351b5cce...7f30 before timing out due Wrangler log write issue
+2026-07-24T22:42+08:00 | WRANGLER_LOG=none npx.cmd wrangler whoami --json | exit 0 | output: loggedIn=true, OAuth Token, one account q***@gmail.com, account id 351b5cce...7f30
+2026-07-24T22:43+08:00 | WRANGLER_LOG=none npx.cmd wrangler d1 execute aiw-managed-proxy --remote --command SELECT... | exit 0 | output: command produced no capturable SELECT output in this shell; no write SQL was executed
+2026-07-24T22:44+08:00 | New-Item D:\AI-Workbench-Backups\2026-07-24-managed-proxy-budget-predeploy | exit 0 | output: external backup directory created
+2026-07-24T22:44+08:00 | WRANGLER_LOG=none npx.cmd wrangler d1 export aiw-managed-proxy --remote --skip-confirmation --output D:\AI-Workbench-Backups\2026-07-24-managed-proxy-budget-predeploy\aiw-managed-proxy-predeploy-20260724.sql | exit 0 | output: remote D1 export completed; SQL content not printed
+2026-07-24T22:45+08:00 | Get-Item backup SQL | exit 0 | output: file exists, size 20253 bytes
+2026-07-24T22:45+08:00 | Get-FileHash backup SQL | exit 0 | output: SHA256 0D0A554C9BB655578FF747FB04F0B3407874A9022A1B6A9617F800C27AC54AAD
+2026-07-24T22:45+08:00 | Get-FileHash backup SQL second pass | exit 0 | output: SHA256 matched first pass
+2026-07-24T22:45+08:00 | keyword-only backup schema check | exit 0 | output: contains CREATE TABLE, INSERT, installations, daily_usage, revoked_tokens; monthly_platform_budget=false; monthly_model_budget=false
+2026-07-24T22:46+08:00 | sqlite3 temp restore check | exit 0 | output: restored tables daily_usage,installations,revoked_tokens; row counts daily_usage=33, installations=33, revoked_tokens=0; temp DB removed
+2026-07-24T22:49+08:00 | sqlite3 temp schema structure check | exit 0 | output: daily_usage, installations and revoked_tokens column names/types verified from restored temp DB; row contents not printed; temp DB removed
+2026-07-24T23:05+08:00 | resume after platform transient error | exit 0 | output: preserved existing evidence; did not rerun remote export or expand task
+2026-07-24T23:08+08:00 | update authoritative docs for 3B-1 | exit 0 | output: DECISIONS, CURRENT_PROGRESS_AUDIT, CONTEXT, TASKLOG, CURRENT_TASK and NEXT_STEP moved to 3B-1 waiting-for-acceptance state
+2026-07-24T23:11+08:00 | npm.cmd run docs:generate-handoff | exit 0 | output: AI-Workbench-Handoff.md regenerated
+2026-07-24T23:11+08:00 | npm.cmd run verify:docs-consistency | exit 1 | output: DECISIONS still had old 3A next-step wording; corrected historical wording
+2026-07-24T23:13+08:00 | npm.cmd run docs:generate-handoff | exit 0 | output: AI-Workbench-Handoff.md regenerated after DECISIONS correction
+2026-07-24T23:13+08:00 | npm.cmd run verify:docs-consistency | exit 0 | output: passed
+2026-07-24T23:15+08:00 | JSON parse verification/monthly-budget-production-preflight and docs-consistency summaries | exit 0 | output: all JSON parsed
+2026-07-24T23:15+08:00 | final external backup metadata and SHA256 check | exit 0 | output: backup exists, size 20253 bytes, SHA256 0D0A554C9BB655578FF747FB04F0B3407874A9022A1B6A9617F800C27AC54AAD
+2026-07-24T23:16+08:00 | git ls-files backup SQL check | exit 1 | output: no SQL backup path found in tracked files
+2026-07-24T23:16+08:00 | sensitive information scan | exit 0 | output: no secret/token/private-key matches; broad scan only matched recorded SHA256 and schema-keyword summary, not database row contents
+2026-07-24T23:16+08:00 | git diff --check | exit 0 | output: no whitespace errors; CRLF warnings only

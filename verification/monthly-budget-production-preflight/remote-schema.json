@@ -1,0 +1,57 @@
+{
+  "checked_at": "2026-07-24T22:46:30+08:00",
+  "method": "remote D1 export followed by local schema-only inspection and isolated sqlite restore",
+  "remote_select_output_note": "wrangler d1 execute SELECT commands exited 0 but produced no capturable output in this shell; schema facts were verified from the successful remote export backup instead.",
+  "database_name": "aiw-managed-proxy",
+  "database_id_masked": "202583b9...3de8",
+  "tables": [
+    "daily_usage",
+    "installations",
+    "revoked_tokens"
+  ],
+  "table_structures": {
+    "daily_usage": [
+      "usage_date:TEXT",
+      "installation_hash:TEXT",
+      "ip_hash:TEXT",
+      "request_count:INTEGER",
+      "input_tokens:INTEGER",
+      "output_tokens:INTEGER",
+      "updated_at:TEXT"
+    ],
+    "installations": [
+      "installation_hash:TEXT",
+      "status:TEXT",
+      "created_at:TEXT",
+      "last_seen_at:TEXT",
+      "revoked_at:TEXT",
+      "revoked_reason:TEXT"
+    ],
+    "revoked_tokens": [
+      "jti:TEXT",
+      "revoked_at:TEXT",
+      "reason:TEXT"
+    ]
+  },
+  "row_counts": {
+    "daily_usage": 33,
+    "installations": 33,
+    "revoked_tokens": 0
+  },
+  "migration_table_exists": false,
+  "migration_records": "not_available_no_migrations_table",
+  "monthly_platform_budget_exists": false,
+  "monthly_model_budget_exists": false,
+  "schema_restore_check": {
+    "sqlite_available": true,
+    "sqlite_source": "D:\\Anaconda\\Library\\bin\\sqlite3.exe",
+    "restore_exit_code": 0,
+    "restored_tables": [
+      "daily_usage",
+      "installations",
+      "revoked_tokens"
+    ],
+    "temporary_database_removed": true
+  },
+  "data_content_recorded_in_git": false
+}
