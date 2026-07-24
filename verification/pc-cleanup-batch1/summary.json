@@ -1,7 +1,7 @@
 {
   "task": "AI Workbench pc cleanup batch one",
   "status": "partial",
-  "generatedAt": "2026-07-24T10:55:00.000Z",
+  "generatedAt": "2026-07-24T11:11:36.908Z",
   "headBeforeDocumentation": "11fd38e8e5f86d39f93709991982b242d21884c4",
   "scope": {
     "allowed": [
@@ -30,15 +30,18 @@
       "fFreeGB": 1610.62
     },
     "batch1CumulativeFreedGB": 3.06,
-    "resumeAdditionalFreedGB": 0.0
+    "resumeAdditionalFreedGB": 12.39,
+    "postRebootAdditionalFreedGiB": 11.54,
+    "postRebootAdditionalFreedBytes": 12388942216
   },
   "npmCache": {
     "path": "%LOCALAPPDATA%\\npm-cache",
     "sizeBeforeMB": 3427.3,
     "sizeAfterMB": 3427.3,
-    "verifyStatus": "failed_eprem",
-    "cleanStatus": "failed_eprem",
-    "nextAction": "retry npm cache verify and npm cache clean --force after reboot; do not modify ACLs"
+    "verifyStatus": "failed_eperm_after_reboot",
+    "verifyError": "EPERM: operation not permitted, unlink C:\\Users\\胖胖虎\\AppData\\Local\\npm-cache\\_cacache\\content-v2\\sha512\\ff\\ee\\ba6a3b4252da771390e49c5406b58aae1345100c34f6cc1cd67351cb545c5ecd786cf2ae435df6c793ffcbefd9ff6b88c24d11dd6f879152560b4600744b",
+    "cleanStatus": "skipped_because_verify_failed",
+    "nextAction": "Record failure only; do not continue force processing without product owner approval."
   },
   "windowsTemporaryFiles": {
     "status": "manual_owner_action_required",
@@ -58,27 +61,19 @@
   "skipped": [
     ".strict-chrome-profile* directories, because they are browser profile data and file names matched cookie/token-like content",
     "verification/pc-environment-governance/restore-check, because it is a permission-abnormal leftover from the earlier backup restore check and this round did not modify verification evidence",
-    "Windows Temporary Files, pending product owner manual review in Windows Settings"
+    "Windows Temporary Files, pending product owner manual review in Windows Settings; do not clean Downloads"
   ],
   "failedOrDeferred": {
-    "reason": "ordinary one-time deletion attempts returned Access denied or directory is not empty; this round did not modify ACLs, take ownership, force-unlock, or kill processes",
-    "nextAction": "reboot the computer, then retry exact deletion of the remaining empty or partially cleaned directories"
+    "reason": "Post-reboot directory deletion attempts succeeded for the specified leftover directories. User npm cache verify still failed with EPERM, so npm cache clean --force was not run.",
+    "nextAction": "Product owner manually reviews Windows Settings > System > Storage > Temporary files and avoids Downloads."
   },
   "remainingApprovedScope": {
-    "remainingDirectoryCount": 96,
-    "remainingTotalMB": 12410.2,
-    "notableRemaining": [
-      ".npm-cache: 259.2 MB",
-      ".npm-cache-r21c: 106.4 MB",
-      "release-v0.4.0-final: 454.0 MB",
-      "release-v0.4.0-installer: 454.0 MB",
-      "release-v0.4.1-installer-final: 454.7 MB",
-      "release-v0.4.2-installer-final: 454.8 MB",
-      "release-v0.4.3* and release-v0.4.4* build directories: mostly about 455 MB each"
-    ]
+    "remainingDirectoryCount": 0,
+    "remainingTotalMB": 0,
+    "notableRemaining": []
   },
   "verification": {
-    "aiWorkbench": "npm run verify passed",
+    "aiWorkbench": "npm.cmd run verify passed after post-reboot cleanup",
     "git": "git version 2.54.0.windows.1 available",
     "node": "v24.18.0 available",
     "npm": "11.16.0 available",
@@ -90,9 +85,64 @@
     "fDriveUsedGBWasWholeDriveNotRepo": true
   },
   "git": {
-    "preReportTrackedDiff": false,
-    "diffStatBeforeReport": "",
+    "preReportTrackedDiff": true,
+    "diffStatBeforeReport": "verification/docs-consistency/summary.json timestamp-only verifiedAt change existed before this cleanup turn",
+    "headEqualsOriginMainAtStart": true,
+    "headAtStart": "373d57d0164324ec91f36be6e6619401fe42935e",
     "permissionWarningsExpected": true
   },
-  "nextStep": "重启后处理第一批遗留空目录，并由产品负责人决定Windows临时文件及第二批软件清理。"
+  "postRebootLeftoverProcessing": {
+    "status": "directory_leftovers_removed_npm_cache_verify_failed",
+    "deletedDirectoryCount": 44,
+    "failedDirectoryCount": 0,
+    "deletedDirectories": [
+      "verification/pc-environment-governance/restore-check",
+      ".verify-runtime",
+      ".verify-fc-runtime",
+      ".verify-fc-runtime2",
+      ".verify-fc-runtime3",
+      ".verify-fc-runtime4",
+      ".verify-v042-runtime",
+      ".verify-clean-model-proxy-runtime",
+      ".verify-clean-model-proxy-runtime-1784698476105",
+      ".verify-unified-runtime-1784699242110",
+      ".tmp-managed-proxy-runtime-1784787478375-13924",
+      ".tmp-managed-proxy-runtime-1784803994852-10300",
+      ".tmp-managed-proxy-production-runtime-1784804003041-10300",
+      "release-v0.4.0",
+      "release-v0.4.0-build",
+      "release-v0.4.0-final",
+      "release-v0.4.0-installer",
+      "release-v0.4.1-installer",
+      "release-v0.4.1-installer-final",
+      "release-v0.4.2-installer",
+      "release-v0.4.2-installer-final",
+      "release-v0.4.3-installer",
+      "release-v0.4.3-installer-final",
+      "release-v0.4.3-installer-final2",
+      "release-v0.4.3-installer-final3",
+      "release-v0.4.3-installer-final4",
+      "release-v0.4.3-installer-final5",
+      "release-v0.4.4-installer",
+      "release-v0.4.4-installer-final",
+      "release-v0.4.4-installer-final2",
+      "release-v0.4.4-installer-final3",
+      "release-v0.4.4-installer-final4",
+      "release-v0.4.4-installer-final5",
+      "release-v0.4.4-installer-final6",
+      "release-v0.4.4-installer-final7",
+      "release-v0.4.4-installer-final8",
+      "release-v0.4.4-installer-final9",
+      "release-v0.4.4-installer-final10",
+      "release-v0.4.4-installer-final11",
+      "release-v0.4.4-installer-final12",
+      "release-v0.4.4-installer-final13",
+      "release-v0.4.4-installer-final14",
+      "release-v0.4.4-installer-final15",
+      "release-v0.4.4-installer-final16"
+    ],
+    "failedDirectories": [],
+    "forbiddenActionsPerformed": []
+  },
+  "nextStep": "Stop after committing and pushing this report update. Do not start batch two, uninstall software, or adjust startup items."
 }

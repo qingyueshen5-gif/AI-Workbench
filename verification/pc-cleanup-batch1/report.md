@@ -20,9 +20,86 @@
 
 第一批累计释放空间：约 3.06 GB。
 
-本次续接新增释放空间：约 0 GB。
+本次续接新增释放空间：约 11.54 GiB / 12.39 GB（按删除前文件长度合计）。
 
 复核 `F:\AI-Workbench` 当前真实目录大小：约 13.57 GB。此前 255.4 GB 是整个 F 盘已用空间，不是仓库本身大小。
+
+## 重启后遗留处理记录
+
+执行时间：2026-07-24 19:11 +08:00
+
+前置核对：
+
+- `HEAD` 与 `origin/main` 一致：`373d57d0164324ec91f36be6e6619401fe42935e`。
+- 工作区在本轮开始前存在 1 个未提交 tracked diff：`verification/docs-consistency/summary.json` 仅 `verifiedAt` 时间戳变化，非本轮清理产生；本轮未覆盖该文件。
+- 未发现 `npm`、Electron、安装器或清理任务进程；可见进程中有普通 `node.exe`、Codex `node_repl.exe` 与 AI Link 桌面进程。
+
+本轮只重新处理指定遗留内容。每个目录只做一次普通 `Remove-Item -Recurse` 删除尝试；未修改权限，未取得所有权，未强制结束进程，未触碰浏览器 profile、verification 正式证据、`release-v0.4.6*`、`node_modules`、源码、账号凭据或外部备份。
+
+本轮成功删除：
+
+- `verification/pc-environment-governance/restore-check`
+- `.verify-runtime`
+- `.verify-fc-runtime`
+- `.verify-fc-runtime2`
+- `.verify-fc-runtime3`
+- `.verify-fc-runtime4`
+- `.verify-v042-runtime`
+- `.verify-clean-model-proxy-runtime`
+- `.verify-clean-model-proxy-runtime-1784698476105`
+- `.verify-unified-runtime-1784699242110`
+- `.tmp-managed-proxy-runtime-1784787478375-13924`
+- `.tmp-managed-proxy-runtime-1784803994852-10300`
+- `.tmp-managed-proxy-production-runtime-1784804003041-10300`
+- `release-v0.4.0`
+- `release-v0.4.0-build`
+- `release-v0.4.0-final`
+- `release-v0.4.0-installer`
+- `release-v0.4.1-installer`
+- `release-v0.4.1-installer-final`
+- `release-v0.4.2-installer`
+- `release-v0.4.2-installer-final`
+- `release-v0.4.3-installer`
+- `release-v0.4.3-installer-final`
+- `release-v0.4.3-installer-final2`
+- `release-v0.4.3-installer-final3`
+- `release-v0.4.3-installer-final4`
+- `release-v0.4.3-installer-final5`
+- `release-v0.4.4-installer`
+- `release-v0.4.4-installer-final`
+- `release-v0.4.4-installer-final2`
+- `release-v0.4.4-installer-final3`
+- `release-v0.4.4-installer-final4`
+- `release-v0.4.4-installer-final5`
+- `release-v0.4.4-installer-final6`
+- `release-v0.4.4-installer-final7`
+- `release-v0.4.4-installer-final8`
+- `release-v0.4.4-installer-final9`
+- `release-v0.4.4-installer-final10`
+- `release-v0.4.4-installer-final11`
+- `release-v0.4.4-installer-final12`
+- `release-v0.4.4-installer-final13`
+- `release-v0.4.4-installer-final14`
+- `release-v0.4.4-installer-final15`
+- `release-v0.4.4-installer-final16`
+
+本轮仍然失败项：
+
+- 无目录删除失败项；指定遗留目录复查为空。
+- 用户 npm 缓存：`npm.cmd cache verify` 失败，错误为 `EPERM: operation not permitted, unlink`，路径位于 `C:\Users\胖胖虎\AppData\Local\npm-cache\_cacache\content-v2\sha512\ff\ee\...`。按约束未继续执行 `npm cache clean --force`，未修改权限，未强制处理。
+
+Windows 临时文件：
+
+- 本轮未自动删除。需要产品负责人手动进入：Windows 设置 -> 系统 -> 存储 -> 临时文件。
+- 不得清理“下载”目录。
+
+AI Workbench 状态：
+
+- `npm.cmd run verify` passed：`MVP verification passed`。
+
+Git 状态：
+
+- 本轮报告更新前：`main...origin/main`，并存在预先的 `verification/docs-consistency/summary.json` 时间戳变更。
 
 ## 已成功清理
 
