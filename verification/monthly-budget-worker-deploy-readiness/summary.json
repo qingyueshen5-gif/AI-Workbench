@@ -1,0 +1,39 @@
+{
+  "task": "monthly-budget-worker-deploy-readiness",
+  "execution_status": "deployment_candidate_ready",
+  "repository_head_before": "900661a120690743990b134e6ff58fc9f8eb12f1",
+  "budget_policy_cap_micro_usd": 50000000,
+  "model_hard_cap_micro_usd": 40000000,
+  "pricing_config_explicit": true,
+  "pricing_models": [
+    "deepseek-chat"
+  ],
+  "local_tests": {
+    "command": "npm.cmd test",
+    "tests": 12,
+    "passed": 12,
+    "failed": 0
+  },
+  "remote_budget_tables_confirmed": true,
+  "remote_budget_table_row_counts": {
+    "monthly_platform_budget": 0,
+    "monthly_model_budget": 0
+  },
+  "current_worker_version_confirmed": true,
+  "rollback_target_confirmed": true,
+  "deployment_status": "not_deployed",
+  "secrets_modified": false,
+  "real_provider_called": false,
+  "blocked_items": [],
+  "evidence_files": [
+    "verification/monthly-budget-worker-deploy-readiness/summary.json",
+    "verification/monthly-budget-worker-deploy-readiness/report.md",
+    "verification/monthly-budget-worker-deploy-readiness/commands.log",
+    "verification/monthly-budget-worker-deploy-readiness/config-check.json",
+    "verification/monthly-budget-worker-deploy-readiness/test-results.json",
+    "verification/monthly-budget-worker-deploy-readiness/current-production-version.json",
+    "verification/monthly-budget-worker-deploy-readiness/deployment-candidate-manifest.json",
+    "verification/monthly-budget-worker-deploy-readiness/artifact-manifest.json"
+  ],
+  "next_action": "Wait for product owner acceptance of 3B-2b1 deployment candidate. Do not deploy Worker or enter 3B-2b2 without approval."
+}

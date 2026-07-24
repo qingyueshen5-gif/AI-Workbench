@@ -25,6 +25,8 @@ AI Workbench v0.4.6 Alpha 已公开发布。③A 总验收和 ③B GitHub Releas
 
 第 3B-2a 段远端 D1 migration 已完成：生产 D1 `aiw-managed-proxy` 现已存在 `monthly_platform_budget` 和 `monthly_model_budget` 两张预算表，原有 `daily_usage`、`installations`、`revoked_tokens` 保持存在；两张预算表当前行数均为 0。证据见 `verification/monthly-budget-production-migration/summary.json`。本轮未部署 Worker，未修改 Secrets，未调用真实 provider；预算表已创建但生产钱包刹车尚未生效。
 
+第 3B-2b1 段部署候选已锁定：生产部署前必须保存当前稳定 Worker version 和回滚目标。本轮已确认当前生产流量版本 `16333442-925a-4b11-a3d1-d6249d2492ba`、当前 deployment `61aa34dd-c20a-42b4-a3c6-1ca474a81e5e`，并以当前稳定版本作为回滚目标；`/health` 和 `/v1/models` 均 HTTP 200。`managed-proxy/wrangler.jsonc` 已显式配置 50 USD 平台政策上限、40 USD 模型硬上限和 `deepseek-chat` 公开价格参数。证据见 `verification/monthly-budget-worker-deploy-readiness/summary.json`。本轮未部署 Worker，未修改 Secrets，未调用真实 provider；部署候选已锁定但生产钱包刹车尚未生效。
+
 ## 当前架构
 
 ```text
@@ -50,7 +52,7 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 详细未完成清单以 `CURRENT_PROGRESS_AUDIT.md` 为唯一权威。本文件只展示摘要：
 
 - 电脑环境治理审计已完成；第一批安全清理仍为 partial，用户 npm 缓存仍因 `EPERM` 未清理，Windows 临时文件仍需产品负责人手动确认。
-- 第 3B-2a 段远端 D1 migration 已完成，当前等待产品负责人验收；未经批准不得部署 Worker 或进入第 3B-2b 段。
+- 第 3B-2b1 段部署候选已锁定，当前等待产品负责人验收；未经批准不得部署 Worker 或进入第 3B-2b2 段。
 - 首屏 3-5 条示例指令、反馈入口、安全和隐私告知尚未完成。
 - 3-5 名真实用户测试尚未开始。
 - 长期记忆、任务历史和状态卡、质量检查层、自动任务拆解和分配尚未完成。
@@ -60,9 +62,9 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 
 当前唯一下一步以 `NEXT_STEP.md` 为唯一权威：
 
-等待产品负责人验收第 3B-2a 段远端 D1 migration。未经批准不得部署 Worker 或进入第 3B-2b 段。
+等待产品负责人验收第 3B-2b1 段部署候选。未经批准不得部署 Worker 或进入第 3B-2b2 段。
 
-不得部署 Cloudflare Worker、修改 Secrets、进入第 3B-2b 段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发。
+不得部署 Cloudflare Worker、修改 Secrets、进入第 3B-2b2 段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发。
 
 ## 产品方向文件索引
 

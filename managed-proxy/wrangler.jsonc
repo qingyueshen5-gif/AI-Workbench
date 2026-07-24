@@ -18,6 +18,9 @@
     "MAX_INPUT_CHARS": "30000",
     "MAX_OUTPUT_TOKENS": "2048",
     "UPSTREAM_TIMEOUT_MS": "60000",
+    "PLATFORM_MONTHLY_BUDGET_MICRO_USD": "50000000",
+    "MONTHLY_MODEL_HARD_CAP_MICRO_USD": "40000000",
+    "MODEL_PRICE_CONFIG_JSON": "{\"deepseek-chat\":{\"provider\":\"deepseek\",\"inputCacheMissMicroUsdPerMillionTokens\":140000,\"outputMicroUsdPerMillionTokens\":280000}}",
     "DEEPSEEK_BASE_URL": "https://api.deepseek.com/v1"
   },
   "d1_databases": [

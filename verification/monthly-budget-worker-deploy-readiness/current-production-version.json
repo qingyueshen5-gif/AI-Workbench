@@ -1,0 +1,30 @@
+{
+  "checked_at": "2026-07-24T23:55:00+08:00",
+  "method": "Cloudflare API read-only query using existing Wrangler OAuth credentials; no deployment, rollback, traffic change or Secret change",
+  "worker": "ai-workbench-managed-proxy",
+  "account_id_masked": "351b5cce...7f30",
+  "current_deployment_id": "61aa34dd-c20a-42b4-a3c6-1ca474a81e5e",
+  "current_deployment_created_on": "2026-07-23T09:57:15.724674Z",
+  "current_traffic_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "current_traffic_percentage": 100,
+  "current_version_number": 10,
+  "current_version_created_on": "2026-07-23T09:57:13.181688Z",
+  "current_version_health": "healthy_by_read_only_http_checks",
+  "rollback_target_confirmed": true,
+  "rollback_target_type": "current_stable_version",
+  "rollback_target_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "previous_version_available": true,
+  "previous_version_id": "be24a4ff-6253-4883-a162-10dd04d91490",
+  "previous_deployment_id": "3c22389a-bb55-49ae-82d4-33eec10d393a",
+  "health_endpoint": {
+    "url": "https://ai-workbench-managed-proxy.qingyueshen5.workers.dev/health",
+    "http_status": 200
+  },
+  "models_endpoint": {
+    "url": "https://ai-workbench-managed-proxy.qingyueshen5.workers.dev/v1/models",
+    "http_status": 200
+  },
+  "chat_endpoint_called": false,
+  "installation_registered": false,
+  "model_cost_incurred": false
+}

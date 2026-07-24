@@ -1,0 +1,42 @@
+{
+  "generated_at": "2026-07-24T23:55:00+08:00",
+  "candidate_git_commit": "a2c6b2f0ad206a4b727742cb0f5c740d694206c0",
+  "source_hashes": {
+    "managed-proxy/src/index.ts": "25BDB1272B285D2A9EAD989997573501305240DB61FE304026F063A44ED7855E",
+    "managed-proxy/wrangler.jsonc": "FD872C04C03A418CEED01C6BC6C91A9BEB62F8C82BA90E1AD606DA5FE367EAB6",
+    "managed-proxy/schema.sql": "819C9718EAF5970A01387EB4C74F7CC747F88D55F5B1CCD1B3F1F129C92ECE97"
+  },
+  "test_result": {
+    "command": "npm.cmd test",
+    "tests": 12,
+    "passed": 12,
+    "failed": 0
+  },
+  "budget_config_summary": {
+    "platform_monthly_budget_micro_usd": 50000000,
+    "monthly_model_hard_cap_micro_usd": 40000000,
+    "pricing_models": [
+      "deepseek-chat"
+    ],
+    "deepseek_chat_input_cache_miss_micro_usd_per_million_tokens": 140000,
+    "deepseek_chat_output_micro_usd_per_million_tokens": 280000
+  },
+  "target_worker": "ai-workbench-managed-proxy",
+  "target_d1": {
+    "binding": "DB",
+    "database_name": "aiw-managed-proxy",
+    "database_id_masked": "202583b9...3de8"
+  },
+  "current_production_stable_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "rollback_target_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "previous_version_id": "be24a4ff-6253-4883-a162-10dd04d91490",
+  "d1_backup": {
+    "path": "D:\\AI-Workbench-Backups\\2026-07-24-managed-proxy-budget-predeploy\\aiw-managed-proxy-predeploy-20260724.sql",
+    "sha256": "0D0A554C9BB655578FF747FB04F0B3407874A9022A1B6A9617F800C27AC54AAD",
+    "size_bytes": 20253
+  },
+  "real_provider_called": false,
+  "deployed": false,
+  "secrets_modified": false,
+  "candidate_git_commit_note": "Captured immediately after creating the deployment-candidate commit; source file SHA256 values are the immutable deployable content lock. The final pushed commit is reported separately after push."
+}

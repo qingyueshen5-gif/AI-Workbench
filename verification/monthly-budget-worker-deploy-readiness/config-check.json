@@ -1,0 +1,31 @@
+{
+  "checked_at": "2026-07-24T23:55:00+08:00",
+  "wrangler_config": "managed-proxy/wrangler.jsonc",
+  "explicit_budget_policy_cap_micro_usd": 50000000,
+  "explicit_model_hard_cap_micro_usd": 40000000,
+  "pricing_config_explicit": true,
+  "pricing_models": [
+    "deepseek-chat"
+  ],
+  "model_price_config": {
+    "deepseek-chat": {
+      "provider": "deepseek",
+      "input_cache_miss_micro_usd_per_million_tokens": 140000,
+      "output_micro_usd_per_million_tokens": 280000
+    }
+  },
+  "safe_integer_checks": {
+    "platform_monthly_budget_micro_usd": true,
+    "monthly_model_hard_cap_micro_usd": true,
+    "deepseek_chat_input_price": true,
+    "deepseek_chat_output_price": true
+  },
+  "floating_point_budget_control_used": false,
+  "allowed_models_unchanged": true,
+  "allowed_models": "deepseek-chat",
+  "daily_limits_changed": false,
+  "managed_proxy_enabled_changed": false,
+  "d1_database_id_changed": false,
+  "secrets_in_config": false,
+  "budget_algorithm_changed": false
+}

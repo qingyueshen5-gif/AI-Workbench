@@ -1,0 +1,37 @@
+{
+  "generated_at": "2026-07-24T23:55:00+08:00",
+  "command": "npm.cmd test",
+  "working_directory": "managed-proxy",
+  "exit_code": 0,
+  "real_provider_called": false,
+  "deployment_status": "not_deployed",
+  "summary": {
+    "tests": 12,
+    "passed": 12,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "covered_checks": [
+    "worker_source_does_not_allow_client_upstream_override",
+    "schema_contains_required_tables",
+    "budget_below_cap_allows_mock_upstream",
+    "exact_cap_allows_once_and_next_call_rejected_before_upstream",
+    "single_model_concurrent_25_requests_only_10_upstream_calls",
+    "upstream_timeout_and_500_do_not_refund_reservation",
+    "d1_budget_failure_fails_closed_before_upstream",
+    "unknown_model_or_missing_price_fails_closed_before_upstream",
+    "month_switch_uses_new_ledger_row",
+    "multibyte_input_uses_utf8_request_bytes",
+    "cross_model_sequential_calls_share_one_platform_cap",
+    "cross_model_concurrent_calls_share_one_aggregate_cap",
+    "model_detail_write_failure_returns_503_and_upstream_calls_zero"
+  ],
+  "configuration_parse_validation": {
+    "exit_code": 0,
+    "policy_cap_micro_usd": 50000000,
+    "model_hard_cap_micro_usd": 40000000,
+    "deepseek_chat_price_parsed": true,
+    "all_amounts_safe_integers": true
+  }
+}

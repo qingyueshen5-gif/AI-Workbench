@@ -1,0 +1,45 @@
+{
+  "generated_at": "2026-07-25T00:12:00+08:00",
+  "artifacts": [
+    {
+      "path": "verification/monthly-budget-worker-deploy-readiness/summary.json",
+      "exists": true,
+      "bytes": 1605
+    },
+    {
+      "path": "verification/monthly-budget-worker-deploy-readiness/report.md",
+      "exists": true,
+      "bytes": 2655
+    },
+    {
+      "path": "verification/monthly-budget-worker-deploy-readiness/commands.log",
+      "exists": true,
+      "bytes": 3682
+    },
+    {
+      "path": "verification/monthly-budget-worker-deploy-readiness/config-check.json",
+      "exists": true,
+      "bytes": 989
+    },
+    {
+      "path": "verification/monthly-budget-worker-deploy-readiness/test-results.json",
+      "exists": true,
+      "bytes": 1299
+    },
+    {
+      "path": "verification/monthly-budget-worker-deploy-readiness/current-production-version.json",
+      "exists": true,
+      "bytes": 1379
+    },
+    {
+      "path": "verification/monthly-budget-worker-deploy-readiness/deployment-candidate-manifest.json",
+      "exists": true,
+      "bytes": 1848
+    },
+    {
+      "path": "verification/monthly-budget-worker-deploy-readiness/artifact-manifest.json",
+      "exists": true,
+      "bytes": 1224
+    }
+  ]
+}

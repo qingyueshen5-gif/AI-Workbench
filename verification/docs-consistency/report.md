@@ -4,7 +4,7 @@
 - package.json.version：0.4.6
 - CONTEXT.md 版本：0.4.6
 - Release 版本：v0.4.6
-- 当前唯一下一步：等待产品负责人验收第 3B-2a 段远端 D1 migration。未经批准不得部署 Worker 或进入第 3B-2b 段。
+- 当前唯一下一步：等待产品负责人验收第 3B-2b1 段部署候选。未经批准不得部署 Worker 或进入第 3B-2b2 段。
 - Handoff 生成校验：passed
 - Handoff 幂等校验：passed
 

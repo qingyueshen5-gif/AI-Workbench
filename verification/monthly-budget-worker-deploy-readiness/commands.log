@@ -1,0 +1,23 @@
+2026-07-24T23:50+08:00 | git status --short --branch | exit 0 | output: ## main...origin/main
+2026-07-24T23:50+08:00 | git rev-parse HEAD | exit 0 | output: 900661a120690743990b134e6ff58fc9f8eb12f1
+2026-07-24T23:50+08:00 | git rev-parse origin/main | exit 0 | output: 900661a120690743990b134e6ff58fc9f8eb12f1
+2026-07-24T23:50+08:00 | git log -5 --oneline --decorate | exit 0 | output: baseline includes 900661a
+2026-07-24T23:51+08:00 | git fetch origin --prune | exit 1 | output: failed with SEC_E_NO_CREDENTIALS; no credential changes made
+2026-07-24T23:51+08:00 | verify 3B-1 external backup | exit 0 | output: size 20253 bytes; SHA256 0D0A554C9BB655578FF747FB04F0B3407874A9022A1B6A9617F800C27AC54AAD
+2026-07-24T23:52+08:00 | remote D1 budget table read-only check | exit 0 | output: monthly_platform_budget exists with 0 rows; monthly_model_budget exists with 0 rows; temporary SQL/SQLite files removed
+2026-07-24T23:53+08:00 | update managed-proxy/wrangler.jsonc | exit 0 | output: added explicit non-secret 50/40 USD budget vars and one-model deepseek-chat price config; did not change ALLOWED_MODELS, daily limits, database id or MANAGED_PROXY_ENABLED
+2026-07-24T23:54+08:00 | code consistency grep | exit 0 | output: index.ts contains platform ledger, model detail ledger, pre-upstream reservation, monthly_budget_exhausted, missing-price fail closed, default 40000000 and safe-integer checks
+2026-07-24T23:55+08:00 | npm.cmd test | exit 0 | output: 12 tests passed, 0 failed; mock fetch only; no real provider called
+2026-07-24T23:55+08:00 | Wrangler config parse validation | exit 0 | output: policy cap 50000000, model hard cap 40000000, pricing model deepseek-chat, all amounts safe integers
+2026-07-24T23:56+08:00 | wrangler versions/deployments list | exit 0 | output: commands returned no capturable output in this shell; switched to read-only Cloudflare API
+2026-07-24T23:57+08:00 | Cloudflare API read-only Worker deployment/version query | exit 0 | output: current deployment 61aa34dd-c20a-42b4-a3c6-1ca474a81e5e; current traffic version 16333442-925a-4b11-a3d1-d6249d2492ba; previous version be24a4ff-6253-4883-a162-10dd04d91490; token not printed
+2026-07-24T23:57+08:00 | GET /health and /v1/models | exit 0 | output: both returned HTTP 200; no /v1/chat/completions call; no installation registration
+2026-07-24T23:58+08:00 | candidate source SHA256 | exit 0 | output: index.ts 25BDB1272B285D2A9EAD989997573501305240DB61FE304026F063A44ED7855E; wrangler.jsonc FD872C04C03A418CEED01C6BC6C91A9BEB62F8C82BA90E1AD606DA5FE367EAB6; schema.sql 819C9718EAF5970A01387EB4C74F7CC747F88D55F5B1CCD1B3F1F129C92ECE97
+2026-07-25T00:05+08:00 | npm.cmd run docs:generate-handoff | exit 0 | output: AI-Workbench-Handoff.md regenerated
+2026-07-25T00:05+08:00 | npm.cmd run verify:docs-consistency | exit 0 | output: passed
+2026-07-25T00:06+08:00 | JSON parse readiness evidence and docs-consistency summary | exit 0 | output: all JSON parsed
+2026-07-25T00:06+08:00 | git diff --check | exit 0 | output: no whitespace errors; CRLF warnings only
+2026-07-25T00:06+08:00 | sensitive information scan | exit 0 | output: no secret/token/private-key/Authorization matches
+2026-07-25T00:07+08:00 | deployment boundary scan | exit 0 | output: matches were only prohibited-command text and read-only rollback/version evidence; no deploy, traffic change, rollback, Secret modification, chat call or installation registration command executed
+2026-07-25T00:07+08:00 | git ls-files backup SQL check | exit 1 | output: no backup SQL path found in tracked files
+2026-07-25T00:07+08:00 | managed-proxy diff scope check | exit 0 | output: only managed-proxy/wrangler.jsonc changed under managed-proxy
