@@ -15,6 +15,7 @@
 | `CHANGELOG.md` | 存在 | 17978 bytes |
 | `TASKLOG.md` | 存在 | 任务总账本，记录任务状态、验收产物和缺失文件原因。 |
 | `EXECUTION_PROTOCOL.md` | 存在 | GPT / Codex / Claude / 其他执行助手的任务执行与验收协议。 |
+| `THINKING.md` | 存在 | 产品负责人判断依据，帮助新对话理解结论背后的原因。 |
 
 版本号：
 
@@ -58,8 +59,8 @@
 
 - Windows 安装、启动、快捷方式和卸载。
 - 陌生机器不崩：缺依赖、端口异常、18800/Hermes/OpenClaw 未就绪时给中文降级说明。
-- 无用户 Key 真实模型调用：安装后无需用户填写 DeepSeek API Key。
-- Cloudflare Managed Proxy 生产部署：Worker、D1、Secrets、生产 URL、真实 DeepSeek 上游、限流、预算、令牌刷新/吊销、紧急关闭和安全扫描已通过。
+- 无用户 Key 真实模型调用：安装后无需用户配置模型 API Key；当前生产 provider 为 DeepSeek，架构保持多 provider 可替换。
+- Cloudflare Managed Proxy 生产部署：Worker、D1、Secrets、生产 URL、当前真实 DeepSeek 上游、限流、预算、令牌刷新/吊销、紧急关闭和安全扫描已通过；这是当前生产实现，不是产品定位。
 - ③A 总验收 passed。
 - ③B GitHub Release passed，v0.4.6 Alpha 已公开下载并完成下载回测。
 - 产品方向收口 completed。
@@ -93,7 +94,7 @@
 - 任务账本：`TASKLOG.md` 已补齐，后续每次任务都必须同步更新。
 - 执行协议：`EXECUTION_PROTOCOL.md` 已补齐，所有新 AI / Codex 接手前必须读取。
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
-- 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；DeepSeek、Hermes、OpenClaw 三员工都已通过 `18800` 调用模型，验收摘要在 `verification/unified-model-proxy/summary.json`。
+- 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；Workbench、Hermes、OpenClaw 三类执行入口都已通过 `18800` 调用当前生产 provider DeepSeek，验收摘要在 `verification/unified-model-proxy/summary.json`。DeepSeek 是当前实现细节，后续 provider 必须可替换。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
 - 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。电脑环境治理审计已完成，第一批安全清理为 partial；下一步是重启后处理第一批遗留空目录，并由产品负责人决定Windows临时文件及第二批软件清理。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
@@ -120,7 +121,7 @@
 ## 6. 当前未解决风险
 
 - 成本失控：当前尚未完成月度总上限、模型分层和上下文压缩。
-- 上游账号合规：单一 DeepSeek 账户服务陌生用户的许可边界仍需确认。
+- 上游账号合规：当前生产 DeepSeek provider 使用单一上游账户服务陌生用户的许可边界仍需确认；这是当前实现风险，不改变产品的多 provider 框架定位。
 - 账号单点故障：GitHub、Cloudflare 和关键开发账号的恢复方案尚未核查。
 - 本机执行安全：未来在用户电脑执行操作前必须建立权限、确认和回滚机制。
 - 尚无真实用户使用数据。

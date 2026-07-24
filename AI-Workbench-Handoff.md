@@ -6,8 +6,8 @@
 
 ## 新对话交接规则
 
-- 普通新对话：提供 `AI-Workbench-Handoff.md`。
-- 需要继续执行任务：再提供 `NEXT_STEP.md`。
+- 普通新对话：提供 `AI-Workbench-Handoff.md`、`NEXT_STEP.md` 和 `THINKING.md`。
+- 新对话如需理解决策背景，应阅读 `THINKING.md`。
 - 需要判断某项验收：再提供对应 `verification/<task>/summary.json`。
 - 对方无法访问本机仓库时，必须提供文件内容或 GitHub 链接，不能只给本地路径。
 - 任何新决策、任务结论和验收结果都必须回写仓库，不得只留在聊天里。
@@ -19,7 +19,7 @@
 
 ## 项目是什么
 
-AI Workbench 是一个面向普通人和专业人的 Windows 桌面 AI 工作台。用户只通过一个输入框表达目标，工作台负责上下文读取、任务拆解、模型和工具调用、质量检查、失败恢复、证据留存和最终交付。
+AI Workbench 是一个面向普通人和专业人的 Windows 桌面 AI 工作台，也是模型与 Agent 无关的调度框架。用户只通过一个输入框表达目标，工作台负责上下文读取、任务拆解、模型和工具调用、质量检查、失败恢复、证据留存和最终交付。
 
 长期方向是全球产品，不只服务某一个国家或地区；不同语言、模型、平台规则和合规差异由后台逐步适配。
 
@@ -34,16 +34,16 @@ AI Workbench 是一个面向普通人和专业人的 Windows 桌面 AI 工作台
 
 ## 当前架构
 
-Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> Cloudflare Managed Proxy -> DeepSeek 官方 API
+Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware Managed Proxy -> 当前生产 provider
 
-真实 DeepSeek Key 只存在 Cloudflare Secret，不进入安装包、用户电脑、前端、员工配置或公开仓库。
+DeepSeek 是当前唯一已接入的生产实现，属于可替换的实现细节，不是产品定位。真实 DeepSeek Key 只存在 Cloudflare Secret，不进入安装包、用户电脑、前端、员工配置或公开仓库。
 
 ## 已完成能力摘要
 
 - Windows 安装、启动、快捷方式和卸载。
 - 陌生机器不崩：缺依赖、端口异常、18800/Hermes/OpenClaw 未就绪时给中文降级说明。
-- 无用户 Key 真实模型调用：安装后无需用户填写 DeepSeek API Key。
-- Cloudflare Managed Proxy 生产部署：Worker、D1、Secrets、生产 URL、真实 DeepSeek 上游、限流、预算、令牌刷新/吊销、紧急关闭和安全扫描已通过。
+- 无用户 Key 真实模型调用：安装后无需用户配置模型 API Key；当前生产 provider 为 DeepSeek，架构保持多 provider 可替换。
+- Cloudflare Managed Proxy 生产部署：Worker、D1、Secrets、生产 URL、当前真实 DeepSeek 上游、限流、预算、令牌刷新/吊销、紧急关闭和安全扫描已通过；这是当前生产实现，不是产品定位。
 - ③A 总验收 passed。
 - ③B GitHub Release passed，v0.4.6 Alpha 已公开下载并完成下载回测。
 - 产品方向收口 completed。
@@ -92,8 +92,8 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> Cloudflare Managed Proxy -> 
 
 ## 新对话交接方法
 
-- 普通新对话：提供本文件。
-- 需要继续执行任务：再提供 NEXT_STEP.md。
+- 普通新对话：提供 AI-Workbench-Handoff.md、NEXT_STEP.md 和 THINKING.md。
+- 新对话如需理解决策背景，应阅读 THINKING.md。
 - 需要判断某项验收：再提供对应 verification/<task>/summary.json。
 - 对方无法访问本机仓库时，必须提供文件内容或 GitHub 链接，不能只给本地路径。
 - 任何新决策、任务结论和验收结果都必须回写仓库，不得只留在聊天里。
@@ -106,6 +106,7 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> Cloudflare Managed Proxy -> 
 - `CURRENT_PROGRESS_AUDIT.md`：已完成/未完成能力唯一权威。
 - `PRODUCT.md`：产品定义、用户、场景、一个输入框和产品边界。
 - `VISION.md`：全球愿景、质量基线、人机共同成长和长期方向。
+- `THINKING.md`：产品负责人判断依据，解释关键结论背后的原因。
 - `PRINCIPLES.md`：简单、高质量、快速、低损耗、真实完成和透明可追溯。
 - `DECISIONS.md`：已锁定决策。
 - `CONTEXT.md`：项目基准和协作背景。

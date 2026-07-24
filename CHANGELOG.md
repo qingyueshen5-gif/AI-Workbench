@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Unreleased - 产品定位修正与判断依据文档
+
+- 在 `PRODUCT.md` 顶部加入模型与 Agent 无关的调度框架定位声明，明确 DeepSeek 是当前唯一生产实现和可替换实现细节，不是产品定位。
+- 扫描并修正 `PRODUCT.md`、`CONTEXT.md`、`CURRENT_PROGRESS_AUDIT.md`、`AI-Workbench-Handoff.md` 中容易把产品误读为 DeepSeek 客户端的当前状态表述。
+- 新增 `THINKING.md`，按“主张 + 为什么”记录一个输入框、零门槛、胖东来路线、知名度优先、合规边界、框架定位、用户能力放大、借用生态和决策人状态等判断依据。
+- 更新 `EXECUTION_PROTOCOL.md` 和 `AI-Workbench-Handoff.md`：新对话默认提供 `AI-Workbench-Handoff.md`、`NEXT_STEP.md`、`THINKING.md` 三份；需要判断验收时再补对应 `verification/<task>/summary.json`。
+- 本轮只改文档和文档生成模板，未修改产品功能代码、Cloudflare 配置、限流数值、版本号、安装包或 Release。
+
 ## Unreleased - 电脑环境治理第一批安全清理
 
 - 第一批安全清理状态为 `partial`：累计释放 F 盘约 3.06 GB。

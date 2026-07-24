@@ -80,7 +80,7 @@ export function buildHandoffSnapshot() {
 
 ## 项目是什么
 
-AI Workbench 是一个面向普通人和专业人的 Windows 桌面 AI 工作台。用户只通过一个输入框表达目标，工作台负责上下文读取、任务拆解、模型和工具调用、质量检查、失败恢复、证据留存和最终交付。
+AI Workbench 是一个面向普通人和专业人的 Windows 桌面 AI 工作台，也是模型与 Agent 无关的调度框架。用户只通过一个输入框表达目标，工作台负责上下文读取、任务拆解、模型和工具调用、质量检查、失败恢复、证据留存和最终交付。
 
 长期方向是全球产品，不只服务某一个国家或地区；不同语言、模型、平台规则和合规差异由后台逐步适配。
 
@@ -95,9 +95,9 @@ AI Workbench 是一个面向普通人和专业人的 Windows 桌面 AI 工作台
 
 ## 当前架构
 
-Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> Cloudflare Managed Proxy -> DeepSeek 官方 API
+Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware Managed Proxy -> 当前生产 provider
 
-真实 DeepSeek Key 只存在 Cloudflare Secret，不进入安装包、用户电脑、前端、员工配置或公开仓库。
+DeepSeek 是当前唯一已接入的生产实现，属于可替换的实现细节，不是产品定位。真实 DeepSeek Key 只存在 Cloudflare Secret，不进入安装包、用户电脑、前端、员工配置或公开仓库。
 
 ## 已完成能力摘要
 
@@ -125,8 +125,8 @@ ${directionHints.join('\n')}
 
 ## 新对话交接方法
 
-- 普通新对话：提供本文件。
-- 需要继续执行任务：再提供 NEXT_STEP.md。
+- 普通新对话：提供 AI-Workbench-Handoff.md、NEXT_STEP.md 和 THINKING.md。
+- 新对话如需理解决策背景，应阅读 THINKING.md。
 - 需要判断某项验收：再提供对应 verification/<task>/summary.json。
 - 对方无法访问本机仓库时，必须提供文件内容或 GitHub 链接，不能只给本地路径。
 - 任何新决策、任务结论和验收结果都必须回写仓库，不得只留在聊天里。`;

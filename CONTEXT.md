@@ -1,6 +1,6 @@
 # AI Workbench 项目基准文档 (CONTEXT.md)
 
-> 使用方法：新对话需要完整基准时，提供本文件内容或 GitHub 链接；需要快速交接时优先提供 `AI-Workbench-Handoff.md`。
+> 使用方法：新对话需要完整基准时，提供本文件内容或 GitHub 链接；需要快速交接时优先提供 `AI-Workbench-Handoff.md`、`NEXT_STEP.md` 和 `THINKING.md`。
 > 当前版本号以 `package.json` 的 `version` 为唯一权威，本文件只展示脚本可校验的当前口径。
 > 新电脑迁移或重装环境时，先看仓库根目录的 `SETUP.md`。
 
@@ -20,10 +20,12 @@ AI Workbench v0.4.6 Alpha 已公开发布。③A 总验收和 ③B GitHub Releas
 ## 当前架构
 
 ```text
-Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> Cloudflare Managed Proxy -> DeepSeek 官方 API
+Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware Managed Proxy -> 当前生产 provider
 ```
 
-真实 DeepSeek Key 只存在 Cloudflare Secret，不进入安装包、用户电脑、前端、员工配置、日志或公开仓库。
+产品定位是模型与 Agent 无关的调度框架，不是 DeepSeek 客户端。DeepSeek 是当前唯一已接入的生产实现；架构必须保持 provider registry 和 Managed Proxy 可替换，后续可接入其他模型 provider、Agent 和成熟工具。
+
+当前生产链路的真实 DeepSeek Key 只存在 Cloudflare Secret，不进入安装包、用户电脑、前端、员工配置、日志或公开仓库。
 
 ## 已完成能力摘要
 
@@ -31,7 +33,7 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> Cloudflare Managed Proxy -> 
 
 - Windows 安装、启动、快捷方式和卸载已通过真实验收。
 - 陌生机器缺依赖时不白屏、不崩栈，提供中文未就绪说明。
-- 用户安装后无需填写 DeepSeek API Key，即可通过 AI Workbench Managed Proxy 调用 `deepseek-chat`。
+- 用户安装后无需填写模型 API Key；当前生产实现通过 AI Workbench Managed Proxy 调用 DeepSeek `deepseek-chat`，架构保持多 provider 可替换。
 - Cloudflare Managed Proxy 生产部署、D1、Secrets、限流、预算、令牌刷新/吊销和紧急关闭已通过验证。
 - ③A 总验收 passed，③B GitHub Release passed，v0.4.6 Alpha 已公开下载。
 
@@ -58,6 +60,7 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> Cloudflare Managed Proxy -> 
 
 - `PRODUCT.md`：产品定义、目标用户、一个输入框、产品边界和阶段路线。
 - `VISION.md`：全球愿景、质量基线、人机共同打磨和长期方向。
+- `THINKING.md`：产品负责人判断依据，解释关键结论背后的原因。
 - `PRINCIPLES.md`：简单、高质量、快速、低损耗、真实完成和透明可追溯。
 - `DECISIONS.md`：已锁定决策，包括借用生态但掌握控制层、跨平台执行边界和用户状态波动补偿。
 - `CURRENT_PROGRESS_AUDIT.md`：已完成/未完成能力的唯一权威。
@@ -123,5 +126,5 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> Cloudflare Managed Proxy -> 
 
 - 不依赖任何 AI 记住整段对话历史。
 - 一个对话框只聊一个主线任务。
-- 新对话先提供 `AI-Workbench-Handoff.md`；需要完整基准时再提供本文件。
+- 新对话默认提供 `AI-Workbench-Handoff.md`、`NEXT_STEP.md` 和 `THINKING.md`；需要完整基准时再提供本文件。
 - 任何决策、结论、进度变化必须写回仓库。
