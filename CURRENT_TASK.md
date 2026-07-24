@@ -6,6 +6,8 @@
 
 ## 当前阶段：让工作台从“只会指路”变成“真会干活”
 
+当前主线：v0.4.6 Alpha 已公开发布，产品方向已收口；下一任务是产品资产备份与电脑清理审计。
+
 ## 上线硬骨头
 
 - [x] 硬骨头1：陌生机器不崩。启动路径改为缺依赖降级，config/data/logs/evidence 首次运行自动创建，18800/Hermes/OpenClaw/端口异常统一返回中文未就绪状态；自动验收证据见 `verification/clean-machine/summary.json`。
@@ -28,6 +30,7 @@
 - 3A-R2.1 最新结论：passed。Cloudflare Worker 已部署到 `https://ai-workbench-managed-proxy.qingyueshen5.workers.dev`；D1 `aiw-managed-proxy` 已建表并读写通过；三个 Secret 只存在 Cloudflare；无本机 Key 的 18800 和安装版均通过生产 Worker 调用 DeepSeek，返回“生产共享模型调用成功”；刷新、吊销、限流、预算、紧急关闭、中文降级和安全扫描均通过。证据见 `verification/managed-proxy-production/summary.json` 和 `verification/managed-proxy-production/report.md`。
 - ③A 总验收结论：passed。Actions Run `30001627121` 候选安装包 `AI-Workbench-Setup-v0.4.6-x64.exe` SHA256 `b8de2e3f90c0063b8b3003c09de0b0886cc1861f4e8091df5f09994bdf6573f9` 已完成真实安装、快捷方式、安装版后端启动、`managed_remote` 生产对话、中文降级、安全扫描、真实卸载和恢复日常安装版；证据见 `verification/3a-final/summary.json` 和 `verification/3a-final/report.md`。该阶段当时未创建 Release/tag，后续已进入并通过 ③B。
 - ③B 最新结论：passed。已创建 annotated tag `v0.4.6`，公开 prerelease `AI Workbench v0.4.6 Alpha`，上传安装包和 SHA256 文件；从公开下载链接回测大小与 SHA256 完全一致。Release URL：`https://github.com/qingyueshen5-gif/AI-Workbench/releases/tag/v0.4.6`。安装包直接下载链接：`https://github.com/qingyueshen5-gif/AI-Workbench/releases/download/v0.4.6/AI-Workbench-Setup-v0.4.6-x64.exe`。证据见 `verification/3b-release/summary.json` 和 `verification/3b-release/report.md`。
+- 产品方向收口最新结论：completed。全球产品、一个输入框、质量基线托底、人机共同打磨、借用生态但掌握控制层、跨平台执行边界和阶段路线已整合进现有文档；未创建第二套产品定义，未改功能代码。
 
 ## 明天路线图（2026-07-19）
 
@@ -131,7 +134,7 @@
 - [x] 共享 key 验收：`npm.cmd run verify:shared-key` 在无 `DEEPSEEK_API_KEY` 的临时环境下通过共享托管 key 调通 18800，确认 health、日志和进程输出不泄露 key
 
 ### 下一步
-1. 产品方向收口与首批用户准备。
+1. 产品资产备份与电脑清理审计。
 2. 对失败和卡壳场景补齐自愈、重试和人话解释。
 3. 模型分层、手机端、情报流水线暂不抢跑。
 

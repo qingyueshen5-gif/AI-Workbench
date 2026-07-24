@@ -6,7 +6,7 @@
 
 交接必读文件：`EXECUTION_PROTOCOL.md`、`PRODUCT.md`、`VISION.md`、`CURRENT_TASK.md`、`LAUNCH.md`、`TASKLOG.md`、`CHANGELOG.md`、`CURRENT_PROGRESS_AUDIT.md`、`verification/install-release/repair1-3-summary.json`、`verification/managed-proxy-production/summary.json`、`verification/3a-final/summary.json`、`verification/3b-release/summary.json`、`research/self-hosting-plan.md`、`research/unified-model-proxy-plan.md`、`research/managed-proxy-production-plan.md`、`research/release-plan.md`。
 
-最新状态：③B 已 passed，AI Workbench v0.4.6 Alpha 已公开发布。Release 页面：`https://github.com/qingyueshen5-gif/AI-Workbench/releases/tag/v0.4.6`；安装包直接下载：`https://github.com/qingyueshen5-gif/AI-Workbench/releases/download/v0.4.6/AI-Workbench-Setup-v0.4.6-x64.exe`；大小 `111524004` bytes；SHA256 `b8de2e3f90c0063b8b3003c09de0b0886cc1861f4e8091df5f09994bdf6573f9`。上线三大硬骨头整体完成；下一步是产品方向收口与首批用户准备。
+最新状态：③B 已 passed，AI Workbench v0.4.6 Alpha 已公开发布。Release 页面：`https://github.com/qingyueshen5-gif/AI-Workbench/releases/tag/v0.4.6`；安装包直接下载：`https://github.com/qingyueshen5-gif/AI-Workbench/releases/download/v0.4.6/AI-Workbench-Setup-v0.4.6-x64.exe`；大小 `111524004` bytes；SHA256 `b8de2e3f90c0063b8b3003c09de0b0886cc1861f4e8091df5f09994bdf6573f9`。上线三大硬骨头整体完成；产品方向已收口；下一步是产品资产备份与电脑清理审计。
 
 # 第一部分：当前真实进度
 
@@ -70,14 +70,14 @@
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；DeepSeek、Hermes、OpenClaw 三员工都已通过 `18800` 调用模型，验收摘要在 `verification/unified-model-proxy/summary.json`。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。下一步是产品方向收口与首批用户准备。
+- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。下一步是产品资产备份与电脑清理审计。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
 ## 5. 下一步
 
-1. 产品方向收口与首批用户准备。
-2. 补齐首屏 3-5 条示例指令、反馈出口、一句安全告知和首批用户说明。
+1. 产品资产备份与电脑清理审计。
+2. 审计关键资产、发布证据、临时目录、下载缓存和旧构建产物。
 3. 模型分层、手机端、情报流水线暂不抢跑。
 
 ## 交接重点
@@ -88,7 +88,7 @@
 - Codex 执行器已经恢复，不再卡在 PowerShell/WSL spawn 超时。
 - 统一模型入口已经完成：Workbench、Hermes、OpenClaw 三员工模型调用已统一经过本机 `18800` 代理。
 - 共享 key 生产注入已通过 R2.1：真实 key 只在 Cloudflare Secret，前端、员工和安装版本机均不保存真实 key；本机 18800 使用安装实例 token 连接远程 Managed Proxy。
-- 下一步不是继续修 OpenClaw，也不是情报流水线；下一步唯一主线是产品方向收口与首批用户准备。
+- 下一步不是继续修 OpenClaw，也不是情报流水线；下一步唯一主线是产品资产备份与电脑清理审计。
 
 # 第二部分：产品战略（核心理解）
 
@@ -743,11 +743,11 @@ OpenClaw 保持它熟悉的模型命名：
 
 # 第五部分：下一步指令
 
-## 下一步：产品方向收口与首批用户准备
+## 下一步：产品资产备份与电脑清理审计
 
 当前状态：上线硬骨头1“陌生机器不崩”和硬骨头2“共享 key 落地”已完成；Workbench/Hermes/OpenClaw 三个员工的模型调用已统一到 18800 代理，真实 key 只在 18800 服务端边界内读取。
 
-下一步：围绕已公开的 v0.4.6 Alpha，补齐首批用户能理解、敢安装、能反馈的最小材料。
+下一步：先保护关键产品资产和发布证据，再审计电脑与仓库里的临时目录、下载缓存、旧构建产物和可能误导接手的残留状态。
 
 - 确认安装包包含 `dist/**`、Electron、`server.mjs`、`model-proxy.mjs`、`readiness.mjs`、`runtime-paths.mjs` 和必要运行目录。
 - 在发布流程里明确共享 key 注入方式，不能把真实 key 写进仓库、前端、员工配置或公开日志。
@@ -758,5 +758,5 @@ OpenClaw 保持它熟悉的模型命名：
 新对话框的任务：
 
 1. 确认能读这个综合文件。
-2. 用大白话讲出：产品现在在哪（v0.4.6 Alpha 已公开发布，三大硬骨头已完成）、下一步要做什么（产品方向收口与首批用户准备）。
+2. 用大白话讲出：产品现在在哪（v0.4.6 Alpha 已公开发布，三大硬骨头已完成，产品方向已收口）、下一步要做什么（产品资产备份与电脑清理审计）。
 3. 不自动进入模型分层、手机端、情报流水线或大规模功能改造。

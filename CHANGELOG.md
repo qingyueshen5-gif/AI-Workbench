@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Unreleased - AI Workbench 产品方向收口
+
+- 将全球产品、一个输入框、用户状态波动补偿、人机共同打磨、借用生态但掌握控制层、跨平台执行边界和高质量低损耗原则分别整合进 `VISION.md`、`PRODUCT.md`、`PRINCIPLES.md` 和 `DECISIONS.md`。
+- 将阶段路线固化为：已完成、近期、下一阶段、长期；明确模型分层、手机端和复杂多 Agent 仍不是当前已完成项，也不是立即开发项。
+- 更新 `NEXT_STEP.md`，下一任务固定为“产品资产备份与电脑清理审计”。
+- 本轮只改文档，不修改功能代码、安装包、Release、Cloudflare 配置或模型白名单。
+
 ## Unreleased - 上线硬骨头3B：v0.4.6 Alpha Release
 
 - 创建 annotated tag `v0.4.6`，指向 ③A 验收提交 `dbe48d6f29a4fbea02370fe699ed4e7ff837f38b`。
@@ -126,7 +133,7 @@
 
 - 更新 `CURRENT_TASK.md`、`CURRENT_PROGRESS_AUDIT.md` 和 `AI-Workbench-Handoff.md`，把 `TASKLOG.md` 纳入交接必读文件。
 - 明确 `verification/model-router/summary.json` 当前不存在，因为模型分层/模型路由任务尚未正式执行；已有 `verification/unified-model-proxy/summary.json` 只代表统一模型入口验收，不能冒充模型分层验收。
-- 明确下一步仍是上线硬骨头3：打安装包并挂 GitHub Release 下载链接。
+- 当时明确下一步仍是上线硬骨头3：打安装包并挂 GitHub Release 下载链接；该任务现已在 v0.4.6 Alpha Release 中完成。
 
 ### 验收
 

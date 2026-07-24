@@ -19,7 +19,7 @@
 版本号：
 
 - `package.json` 当前版本：`0.4.6`
-- `CHANGELOG.md` 最新版本条目：`Unreleased - 上线硬骨头3B：v0.4.6 Alpha Release`
+- `CHANGELOG.md` 最新版本条目：`Unreleased - AI Workbench 产品方向收口`
 
 ## 2. `research/` 真实存在文件
 
@@ -58,12 +58,12 @@
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；DeepSeek、Hermes、OpenClaw 三员工都已通过 `18800` 调用模型，验收摘要在 `verification/unified-model-proxy/summary.json`。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。下一步是产品方向收口与首批用户准备。
+- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。下一步是产品资产备份与电脑清理审计。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
 ## 5. 下一步
 
-1. 产品方向收口与首批用户准备。
-2. 补齐首屏 3-5 条示例指令、反馈出口、一句安全告知和首批用户说明。
+1. 产品资产备份与电脑清理审计。
+2. 审计关键资产、发布证据、临时目录、下载缓存和旧构建产物。
 3. 模型分层、手机端、情报流水线暂不抢跑。

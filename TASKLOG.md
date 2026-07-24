@@ -6,7 +6,7 @@
 
 ## 当前一句话状态
 
-AI Workbench 已完成统一模型入口、上线硬骨头1“陌生机器不崩”、上线硬骨头2“共享 key 落地”和上线硬骨头3“能下载能安装”；v0.4.6 Alpha 已公开发布并完成下载回测。下一任务是产品方向收口与首批用户准备。
+AI Workbench 已完成统一模型入口、上线三大硬骨头和 v0.4.6 Alpha 公开发布；产品方向已收口为全球产品、一个输入框、借用生态但掌握控制层、质量基线托底和可追溯执行。下一任务是产品资产备份与电脑清理审计。
 
 ## 已完成任务
 
@@ -23,18 +23,20 @@ AI Workbench 已完成统一模型入口、上线硬骨头1“陌生机器不崩
 | 3A-R2.1：Cloudflare 生产部署与真实验证 | 已完成 | Cloudflare Worker、D1、Secrets、生产 URL、真实 DeepSeek 调用、安装版零配置、刷新/吊销/限流/预算/紧急关闭/中文降级和安全扫描均通过；本阶段当时未创建 Release/tag，后续已进入并通过 ③A 总验收。 | `verification/managed-proxy-production/summary.json`、`verification/managed-proxy-production/report.md` |
 | ③A 总验收 | 已完成 | 真实安装候选包、检查快捷方式、启动安装版后端、通过 `managed_remote` 生产链路完成模型对话、验证中文降级、安全扫描、真实卸载并恢复日常安装版。 | `verification/3a-final/summary.json`、`verification/3a-final/report.md` |
 | ③B：v0.4.6 Alpha GitHub Release | 已完成 | 创建 annotated tag `v0.4.6`，创建公开 prerelease，上传安装包和 SHA256 文件，并从公开链接下载回测通过。 | `verification/3b-release/summary.json`、`verification/3b-release/report.md` |
+| AI Workbench 产品方向收口 | 已完成 | 将全球愿景、一个输入框、用户状态波动补偿、借用生态但掌握控制层、跨平台执行边界和阶段路线整合进现有文档；未创建平行路线图。 | `tasks/2026-07-24-AI-Workbench产品方向收口.md` |
 
 ## 当前未完成任务
 
 | 任务 | 当前状态 | 下一步 |
 | --- | --- | --- |
-| 硬骨头3：能下载能安装 | 已完成；v0.4.6 Alpha Release 已公开发布，下载回测通过 | 下一任务转入产品方向收口与首批用户准备。 |
+| 硬骨头3：能下载能安装 | 已完成；v0.4.6 Alpha Release 已公开发布，下载回测通过 | 下一任务转入产品资产备份与电脑清理审计。 |
 | 打开后知道能干嘛 | 未完成 | 首屏放 3-5 条能点即跑的示例指令。 |
 | 办不成时是人话不是崩 | 部分完成 | 已有 readiness 降级说明；后续继续补失败自愈、重试和人话解释。 |
 | 反馈出口 + 一句安全告知 | 未完成 | 增加反馈渠道和基础安全告知。 |
 | 模型分层调用 | 未开始/暂缓 | 等上线最小集前三条稳定后再做；不要抢跑。 |
 | 手机端 | 未开始 | 等桌面上线闭环后再排期。 |
 | 自动情报流水线 | 未开始/P3 | 后续再做，不阻塞上线。 |
+| 产品资产备份与电脑清理审计 | 未开始 | 下一任务；只做资产备份、临时目录/缓存/旧构建产物审计和可回滚清理建议。 |
 
 ## 最新 3A-R1.3 结果
 
@@ -77,4 +79,4 @@ AI Workbench 已完成统一模型入口、上线硬骨头1“陌生机器不崩
 - GitHub Actions：Run `29919498085` failure，失败在 build；Run `29919834193` 和 `29920088772` build 成功但 preflight 被 skipped；Run `29920336923` build 失败根因已定位；Run `29933834029` preflight passed 但隐式 publish 失败；Run `29935231224` 已真实 success。
 - ③A 总验收：passed。候选安装包来自 Actions Run `30001627121` artifact，SHA256 `b8de2e3f90c0063b8b3003c09de0b0886cc1861f4e8091df5f09994bdf6573f9`；真实安装、快捷方式、安装版后端启动、生产对话、中文降级、安全扫描、卸载和恢复安装版均通过。
 - ③B GitHub Release：passed。公开 Release、安装包、SHA256 文件和下载回测均已完成；上线硬骨头3已完成。
-- 结论：3A-R1.3 已通过；本机安装版已恢复；3A-R2.0 架构核验已通过；3A-R2.1 Cloudflare 生产部署与真实验证已通过；③A 总验收已通过；③B GitHub Alpha Release 已通过。下一任务是产品方向收口与首批用户准备。
+- 结论：3A-R1.3 已通过；本机安装版已恢复；3A-R2.0 架构核验已通过；3A-R2.1 Cloudflare 生产部署与真实验证已通过；③A 总验收已通过；③B GitHub Alpha Release 已通过；产品方向已收口。下一任务是产品资产备份与电脑清理审计。
