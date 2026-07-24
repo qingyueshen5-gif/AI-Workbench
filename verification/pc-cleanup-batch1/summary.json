@@ -1,0 +1,98 @@
+{
+  "task": "AI Workbench pc cleanup batch one",
+  "status": "partial",
+  "generatedAt": "2026-07-24T10:55:00.000Z",
+  "headBeforeDocumentation": "11fd38e8e5f86d39f93709991982b242d21884c4",
+  "scope": {
+    "allowed": [
+      "workspace .tmp-* old verification runtime directories",
+      "workspace .verify-* old verification runtime directories",
+      "workspace .strict-* old verification runtime directories except browser profiles",
+      "workspace .electron-cache",
+      "workspace .npm-cache and .npm-cache-r21*",
+      "user npm cache via npm official commands",
+      "Windows user temporary files via manual Windows Storage UI only",
+      "release-v0.4.0 through release-v0.4.4 local build output directories"
+    ],
+    "forbiddenActionsPerformed": []
+  },
+  "space": {
+    "beforeBatch1": {
+      "cFreeGB": 31.86,
+      "fFreeGB": 1607.56
+    },
+    "resumeStart": {
+      "cFreeGB": 31.60,
+      "fFreeGB": 1610.62
+    },
+    "afterBatch1": {
+      "cFreeGB": 31.60,
+      "fFreeGB": 1610.62
+    },
+    "batch1CumulativeFreedGB": 3.06,
+    "resumeAdditionalFreedGB": 0.0
+  },
+  "npmCache": {
+    "path": "%LOCALAPPDATA%\\npm-cache",
+    "sizeBeforeMB": 3427.3,
+    "sizeAfterMB": 3427.3,
+    "verifyStatus": "failed_eprem",
+    "cleanStatus": "failed_eprem",
+    "nextAction": "retry npm cache verify and npm cache clean --force after reboot; do not modify ACLs"
+  },
+  "windowsTemporaryFiles": {
+    "status": "manual_owner_action_required",
+    "reason": "This round did not run broad force deletion. Product owner should use Windows Settings > System > Storage > Temporary files and avoid Downloads, browser data, passwords, account data, or personal files."
+  },
+  "deletedOrFullyRemoved": [
+    ".electron-cache",
+    ".tmp-3b-release-download-24928",
+    ".strict-acceptance-runtime",
+    "multiple zero-size .tmp-* runtime shells"
+  ],
+  "partiallyCleaned": [
+    "release-v0.4.0 through release-v0.4.4 local build directories: large files were removed before interruption, but directory skeletons and app.asar.unpacked/resource paths remain because of Access denied",
+    ".tmp-3a-actions-30001627121: reduced to about 0.5 MB but directory remains",
+    ".npm-cache-r21c: reduced from about 134.7 MB to about 106.4 MB"
+  ],
+  "skipped": [
+    ".strict-chrome-profile* directories, because they are browser profile data and file names matched cookie/token-like content",
+    "verification/pc-environment-governance/restore-check, because it is a permission-abnormal leftover from the earlier backup restore check and this round did not modify verification evidence",
+    "Windows Temporary Files, pending product owner manual review in Windows Settings"
+  ],
+  "failedOrDeferred": {
+    "reason": "ordinary one-time deletion attempts returned Access denied or directory is not empty; this round did not modify ACLs, take ownership, force-unlock, or kill processes",
+    "nextAction": "reboot the computer, then retry exact deletion of the remaining empty or partially cleaned directories"
+  },
+  "remainingApprovedScope": {
+    "remainingDirectoryCount": 96,
+    "remainingTotalMB": 12410.2,
+    "notableRemaining": [
+      ".npm-cache: 259.2 MB",
+      ".npm-cache-r21c: 106.4 MB",
+      "release-v0.4.0-final: 454.0 MB",
+      "release-v0.4.0-installer: 454.0 MB",
+      "release-v0.4.1-installer-final: 454.7 MB",
+      "release-v0.4.2-installer-final: 454.8 MB",
+      "release-v0.4.3* and release-v0.4.4* build directories: mostly about 455 MB each"
+    ]
+  },
+  "verification": {
+    "aiWorkbench": "npm run verify passed",
+    "git": "git version 2.54.0.windows.1 available",
+    "node": "v24.18.0 available",
+    "npm": "11.16.0 available",
+    "codex": "codex-cli 0.144.4 available via codex.cmd",
+    "wrangler": "4.113.0 available; version command returns version but still reports log-file EPERM warning",
+    "externalBackupExists": true,
+    "externalBackupSha256": "37157BD16891AA2527F88CC6A1ACFEF0ABA235AE14ED389C76D8A5208D50D291",
+    "workspaceSizeGB": 13.57,
+    "fDriveUsedGBWasWholeDriveNotRepo": true
+  },
+  "git": {
+    "preReportTrackedDiff": false,
+    "diffStatBeforeReport": "",
+    "permissionWarningsExpected": true
+  },
+  "nextStep": "重启后处理第一批遗留空目录，并由产品负责人决定Windows临时文件及第二批软件清理。"
+}

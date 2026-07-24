@@ -3,7 +3,7 @@
   "packageVersion": "0.4.6",
   "contextVersion": "0.4.6",
   "releaseVersion": "v0.4.6",
-  "nextStep": "电脑环境治理：产品资产备份、单点故障核查和清理候选盘点",
+  "nextStep": "重启后处理第一批遗留空目录，并由产品负责人决定Windows临时文件及第二批软件清理。",
   "capabilityStatusChecks": [
     {
       "name": "模型分层 未标记为已完成",
@@ -62,5 +62,5 @@
   ],
   "errors": [],
   "warnings": [],
-  "verifiedAt": "2026-07-24T08:13:59.247Z"
+  "verifiedAt": "2026-07-24T10:55:59.550Z"
 }

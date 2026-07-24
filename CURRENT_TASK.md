@@ -5,13 +5,13 @@
 
 ## 当前主线
 
-本轮唯一任务：统一 AI Workbench 文档基准，建立防漂移机制与自动生成交接快照。
+本轮唯一任务：电脑环境治理第一批安全清理收尾。
 
 边界：
 
-- 只修文档、协议和文档工具。
-- 不修改产品功能代码、安装包、Release、Cloudflare 配置、Worker Secrets 或模型白名单。
-- 不执行产品资产备份、电脑清理、删除文件、卸载软件或任何后续阶段任务。
+- 只处理已批准的旧临时目录、旧 release 构建目录、npm 缓存官方清理命令和清理报告留痕。
+- 不卸载软件、不结束进程、不修改 ACL、不取得所有权、不迁移仓库。
+- 不清理浏览器账号/缓存、GitHub/Cloudflare/Windows 凭据、`managed-proxy`、`node_modules`、`release-v0.4.6-installer` 或 verification 正式证据。
 
 ## 最近完成
 
@@ -19,6 +19,8 @@
 - ③B GitHub Release：passed。AI Workbench v0.4.6 Alpha 已公开发布为 public prerelease，证据见 `verification/3b-release/summary.json`。
 - 产品方向收口：completed。全球产品、一个输入框、质量基线托底、人机共同打磨、借用生态但掌握控制层、跨平台执行边界和阶段路线已整合进现有文档。
 - 文档基准纠偏与防漂移机制：completed。已纠正当前状态漂移，建立 Handoff 自动生成和文档一致性校验，故障注入已证明可检出版本漂移。
+- 电脑环境治理审计：completed。证据见 `verification/pc-environment-governance/summary.json`。
+- 电脑环境治理第一批安全清理：partial。累计释放 F 盘约 3.06 GB；npm 缓存、Windows 临时文件和权限异常遗留目录仍需后续处理。证据见 `verification/pc-cleanup-batch1/summary.json`。
 
 ## 当前事实
 
@@ -40,8 +42,9 @@
 
 以下能力仍未实施，不得写成当前已完成：
 
-- 产品资产备份与电脑清理审计。
-- 实际电脑清理。
+- 第一批遗留空目录重启后复核。
+- Windows 临时文件人工确认。
+- 自启项调整和闲置软件卸载决策。
 - 首屏示例指令、反馈入口、安全和隐私告知。
 - 3-5 名真实用户测试。
 - 长期记忆、任务历史和状态卡、质量检查层、自动任务拆解和分配。
@@ -49,6 +52,6 @@
 
 ## 当前唯一下一步
 
-当前唯一下一步以 `NEXT_STEP.md` 为准：产品资产备份与电脑清理审计。
+当前唯一下一步以 `NEXT_STEP.md` 为准：重启后处理第一批遗留空目录，并由产品负责人决定Windows临时文件及第二批软件清理。
 
-完成本轮文档基准纠偏后必须停止，等待产品负责人批准，不自动进入下一步。
+完成本轮第一批安全清理收尾后必须停止，等待产品负责人批准，不自动进入第二批清理。

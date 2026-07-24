@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Unreleased - 电脑环境治理第一批安全清理
+
+- 第一批安全清理状态为 `partial`：累计释放 F 盘约 3.06 GB。
+- 已清理 `.electron-cache`、`.tmp-3b-release-download-24928`、部分旧 `.tmp-*` runtime 和部分旧 release 构建内容。
+- `npm cache verify` 和 `npm cache clean --force` 均因用户 npm 缓存目录 `EPERM` 失败；未修改 ACL、未取得所有权、未强制解除占用。
+- Windows 临时文件未自动清理，改为产品负责人在 Windows 设置中手动确认。
+- 保留 `release-v0.4.6-installer`、当前正式安装包、外部备份、`managed-proxy`、`node_modules`、verification 正式证据、浏览器资料、凭据和自启项。
+- 下一任务调整为“重启后处理第一批遗留空目录，并由产品负责人决定Windows临时文件及第二批软件清理。”
+
 ## Unreleased - 产品决策更新与任务顺序调整
 
 - 在 `PRODUCT.md` 写入产品效果与用户水平的关系：系统托底、提质和放大强用户能力是逐级放大的过程，不承诺所有用户获得完全相同结果。
