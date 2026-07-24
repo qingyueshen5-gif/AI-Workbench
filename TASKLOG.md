@@ -33,6 +33,7 @@ AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 
 | 生存体检 | 已完成并修正场景边界 | 在 SSE 中断后先盘点现场，保护半成品，只做验证和交付收尾；随后修正 5/50/100 场景边界。当前限额正常路径月平台成本上界约 40.76 CNY，现金跑道约 7.96 个月；原 199.12 / 1686.24 / 3338.61 CNY 保留为 `uncapped_demand_pressure`，不代表当前生产限额下实际可发生的正常路径成本。钱包安全状态 unsafe，理论最坏成本 `unbounded` 的依据是失败/超时/并发逃逸路径不能证明 fail-closed。 | `verification/survival-cost-audit/summary.json`、`verification/survival-cost-audit/report.md` |
 | 第 3A 段：本地钱包刹车 | 已完成平台合计预算纠偏和本地验证 | 产品负责人验收发现首次实现按模型分别执行 40 USD 硬上限，未来多模型会突破“所有模型合计 40 USD”的政策；现已修正为 `monthly_platform_budget` 平台总账执行唯一条件原子预留，`monthly_model_budget` 只做模型明细。单模型、跨模型顺序、跨模型并发、模型明细失败 fail-closed、失败不退款和缺价格/D1 失败不上游均通过本地 mock 测试；未部署 Cloudflare、未执行远端 D1 migration、未调用真实 provider。 | `verification/monthly-budget-circuit-breaker-local/summary.json`、`verification/monthly-budget-circuit-breaker-local/report.md` |
 | 第 3B-1 段：生产预检与远端 D1 备份 | 已完成预检与备份 | 产品负责人验收通过 3A 后批准进入 3B-1。本轮只读核对 Wrangler 身份、Worker、D1 binding、生产数据库和既有 production evidence；远端 D1 已完整导出到仓库外备份目录，SHA256 二次一致，并通过临时 SQLite 恢复 schema 验证。未执行远端 migration，未部署 Worker，未修改 Secrets，未调用真实 provider。 | `verification/monthly-budget-production-preflight/summary.json`、`verification/monthly-budget-production-preflight/report.md` |
+| 第 3B-2a 段：远端 D1 migration | 已完成远端预算表 migration | 产品负责人验收通过 3B-1 后批准进入 3B-2a。本轮复核 3B-1 外部备份大小和 SHA256，一次性执行远端 D1 `CREATE TABLE IF NOT EXISTS` migration，创建 `monthly_platform_budget` 和 `monthly_model_budget`；只读验证原三张业务表仍存在，两张预算表存在且行数均为 0。未部署 Worker，未修改 Secrets，未调用真实 provider，未执行回滚。 | `verification/monthly-budget-production-migration/summary.json`、`verification/monthly-budget-production-migration/report.md` |
 
 ## 当前未完成任务
 
@@ -47,7 +48,7 @@ AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 
 | 自动情报流水线 | 未开始/P3 | 后续再做，不阻塞上线。 |
 | 电脑环境治理：产品资产备份、单点故障核查和清理候选盘点 | 已完成 | 已进入第一批安全清理，当前清理结果为 partial。 |
 | 重启后处理第一批遗留空目录，并由产品负责人决定Windows临时文件及第二批软件清理 | 部分完成 | 已处理批准遗留目录；用户 npm 缓存仍因 `EPERM` 失败，Windows 临时文件仍需产品负责人手动确认；不得自动进入第二批清理。 |
-| 第 3B-2 段：远端 D1 migration 与 Worker 部署 | 未开始 | 只能在产品负责人验收第 3B-1 段并明确批准后执行；本轮未执行 migration，未部署 Worker。 |
+| 第 3B-2b 段：Worker 部署和生产验证 | 未开始 | 只能在产品负责人验收第 3B-2a 段并明确批准后执行；预算表已创建但生产钱包刹车尚未生效。 |
 
 ## 最新 3A-R1.3 结果
 

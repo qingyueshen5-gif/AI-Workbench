@@ -3,7 +3,7 @@
   "packageVersion": "0.4.6",
   "contextVersion": "0.4.6",
   "releaseVersion": "v0.4.6",
-  "nextStep": "等待产品负责人验收第 3B-1 段生产预检与远端 D1 备份。未经批准不得执行远端 migration 或部署 Worker。",
+  "nextStep": "等待产品负责人验收第 3B-2a 段远端 D1 migration。未经批准不得部署 Worker 或进入第 3B-2b 段。",
   "capabilityStatusChecks": [
     {
       "name": "模型分层 未标记为已完成",
@@ -62,5 +62,5 @@
   ],
   "errors": [],
   "warnings": [],
-  "verifiedAt": "2026-07-24T15:06:59.970Z"
+  "verifiedAt": "2026-07-24T15:29:17.976Z"
 }

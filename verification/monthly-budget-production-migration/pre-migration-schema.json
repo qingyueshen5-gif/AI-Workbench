@@ -1,0 +1,39 @@
+{
+  "checked_at": "2026-07-24T23:35:00+08:00",
+  "method": "remote D1 schema-only export to temporary SQL, local SQLite restore, then temporary files removed",
+  "database_name": "aiw-managed-proxy",
+  "database_id_masked": "202583b9...3de8",
+  "tables": [
+    "daily_usage",
+    "installations",
+    "revoked_tokens"
+  ],
+  "table_structures": {
+    "daily_usage": [
+      "usage_date:TEXT:pk=1",
+      "installation_hash:TEXT:pk=2",
+      "ip_hash:TEXT:pk=3",
+      "request_count:INTEGER:pk=0",
+      "input_tokens:INTEGER:pk=0",
+      "output_tokens:INTEGER:pk=0",
+      "updated_at:TEXT:pk=0"
+    ],
+    "installations": [
+      "installation_hash:TEXT:pk=1",
+      "status:TEXT:pk=0",
+      "created_at:TEXT:pk=0",
+      "last_seen_at:TEXT:pk=0",
+      "revoked_at:TEXT:pk=0",
+      "revoked_reason:TEXT:pk=0"
+    ],
+    "revoked_tokens": [
+      "jti:TEXT:pk=1",
+      "revoked_at:TEXT:pk=0",
+      "reason:TEXT:pk=0"
+    ]
+  },
+  "monthly_platform_budget_exists": false,
+  "monthly_model_budget_exists": false,
+  "temporary_files_removed": true,
+  "business_row_contents_recorded": false
+}

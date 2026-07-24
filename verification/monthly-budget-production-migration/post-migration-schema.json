@@ -1,0 +1,63 @@
+{
+  "checked_at": "2026-07-24T23:38:00+08:00",
+  "method": "remote D1 export to temporary SQL, local SQLite restore, schema and row-count inspection, then temporary files removed",
+  "database_name": "aiw-managed-proxy",
+  "database_id_masked": "202583b9...3de8",
+  "tables": [
+    "daily_usage",
+    "installations",
+    "monthly_model_budget",
+    "monthly_platform_budget",
+    "revoked_tokens"
+  ],
+  "table_structures": {
+    "daily_usage": [
+      "usage_date:TEXT:notnull=1:default=:pk=1",
+      "installation_hash:TEXT:notnull=1:default=:pk=2",
+      "ip_hash:TEXT:notnull=1:default=:pk=3",
+      "request_count:INTEGER:notnull=1:default=0:pk=0",
+      "input_tokens:INTEGER:notnull=1:default=0:pk=0",
+      "output_tokens:INTEGER:notnull=1:default=0:pk=0",
+      "updated_at:TEXT:notnull=1:default=:pk=0"
+    ],
+    "installations": [
+      "installation_hash:TEXT:notnull=0:default=:pk=1",
+      "status:TEXT:notnull=1:default='active':pk=0",
+      "created_at:TEXT:notnull=1:default=:pk=0",
+      "last_seen_at:TEXT:notnull=1:default=:pk=0",
+      "revoked_at:TEXT:notnull=0:default=:pk=0",
+      "revoked_reason:TEXT:notnull=0:default=:pk=0"
+    ],
+    "monthly_model_budget": [
+      "month_key:TEXT:notnull=1:default=:pk=1",
+      "model:TEXT:notnull=1:default=:pk=2",
+      "reserved_micro_usd:INTEGER:notnull=1:default=0:pk=0",
+      "call_count:INTEGER:notnull=1:default=0:pk=0",
+      "updated_at:TEXT:notnull=1:default=:pk=0"
+    ],
+    "monthly_platform_budget": [
+      "month_key:TEXT:notnull=0:default=:pk=1",
+      "reserved_micro_usd:INTEGER:notnull=1:default=0:pk=0",
+      "call_count:INTEGER:notnull=1:default=0:pk=0",
+      "updated_at:TEXT:notnull=1:default=:pk=0"
+    ],
+    "revoked_tokens": [
+      "jti:TEXT:notnull=0:default=:pk=1",
+      "revoked_at:TEXT:notnull=1:default=:pk=0",
+      "reason:TEXT:notnull=1:default=:pk=0"
+    ]
+  },
+  "row_counts": {
+    "daily_usage": 33,
+    "installations": 33,
+    "monthly_model_budget": 0,
+    "monthly_platform_budget": 0,
+    "revoked_tokens": 0
+  },
+  "platform_budget_table_created": true,
+  "model_budget_table_created": true,
+  "existing_tables_preserved": true,
+  "budget_tables_empty": true,
+  "temporary_files_removed": true,
+  "business_row_contents_recorded": false
+}

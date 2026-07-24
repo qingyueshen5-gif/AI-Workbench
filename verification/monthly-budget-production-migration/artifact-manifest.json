@@ -1,0 +1,45 @@
+{
+  "generated_at": "2026-07-24T23:48:00+08:00",
+  "artifacts": [
+    {
+      "path": "verification/monthly-budget-production-migration/summary.json",
+      "exists": true,
+      "bytes": 1678
+    },
+    {
+      "path": "verification/monthly-budget-production-migration/report.md",
+      "exists": true,
+      "bytes": 2766
+    },
+    {
+      "path": "verification/monthly-budget-production-migration/commands.log",
+      "exists": true,
+      "bytes": 3211
+    },
+    {
+      "path": "verification/monthly-budget-production-migration/pre-migration-schema.json",
+      "exists": true,
+      "bytes": 1098
+    },
+    {
+      "path": "verification/monthly-budget-production-migration/post-migration-schema.json",
+      "exists": true,
+      "bytes": 2258
+    },
+    {
+      "path": "verification/monthly-budget-production-migration/migration-result.json",
+      "exists": true,
+      "bytes": 717
+    },
+    {
+      "path": "verification/monthly-budget-production-migration/backup-reference.json",
+      "exists": true,
+      "bytes": 575
+    },
+    {
+      "path": "verification/monthly-budget-production-migration/artifact-manifest.json",
+      "exists": true,
+      "bytes": 1193
+    }
+  ]
+}

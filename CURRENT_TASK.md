@@ -5,15 +5,15 @@
 
 ## 当前主线
 
-本轮唯一任务：第 3B-1 段生产预检与远端 D1 部署前备份。
+本轮唯一任务：第 3B-2a 段远端 D1 migration。
 
 边界：
 
-- 只做 Cloudflare 身份预检、远端 D1 只读核对和部署前备份。
-- 不执行远端 D1 migration，不部署 Cloudflare Worker，不修改 Secrets。
+- 只在已确认的生产 D1 数据库中创建平台月度预算总账和模型明细账。
+- 不部署 Cloudflare Worker，不修改 Secrets。
 - 不调用真实模型，不产生模型费用。
-- 不修改生产功能代码，不进入第 3B-2 段、模型分层、上下文压缩或 v0.4.7。
-- 完成后停止，等待产品负责人验收第 3B-1 段。
+- 不修改生产功能代码，不进入第 3B-2b 段、模型分层、上下文压缩或 v0.4.7。
+- 完成后停止，等待产品负责人验收第 3B-2a 段。
 
 ## 最近完成
 
@@ -27,6 +27,7 @@
 - 生存体检：passed。当前没有真实用户用量；5/50/100 用户平台月成本规划值约为 199.12 / 1686.24 / 3338.61 CNY，现金跑道约 7.81 / 6.64 / 5.69 个月。钱包安全状态 unsafe，理论最坏成本 `unbounded`，证据见 `verification/survival-cost-audit/summary.json`。
 - 第 3A 段本地钱包刹车：local_passed_after_platform_aggregate_correction。首次实现被发现按模型分别执行 40 USD 硬上限；现已修正为所有 provider/模型合计 40 USD 的平台总账硬上限，模型账只做明细。单模型、跨模型顺序、跨模型并发、模型明细失败 fail-closed、缺价格/D1 失败不上游等 mock 测试通过；未部署生产，证据见 `verification/monthly-budget-circuit-breaker-local/summary.json`。
 - 第 3B-1 段生产预检与远端 D1 备份：preflight_and_backup_passed。已确认 Cloudflare 身份、Worker、D1 binding、生产数据库和既有 production evidence；远端 D1 已完整导出到仓库外备份目录，SHA256 二次一致，并通过临时 SQLite 恢复 schema 验证。未执行远端 migration，未部署 Worker，未修改 Secrets，未调用真实 provider。证据见 `verification/monthly-budget-production-preflight/summary.json`。
+- 第 3B-2a 段远端 D1 migration：remote_migration_passed。已在生产 D1 `aiw-managed-proxy` 创建 `monthly_platform_budget` 和 `monthly_model_budget`；原三张业务表仍存在，两张预算表行数均为 0。未部署 Worker，未修改 Secrets，未调用真实 provider。证据见 `verification/monthly-budget-production-migration/summary.json`。
 
 ## 当前事实
 
@@ -50,7 +51,7 @@
 
 - Windows 临时文件人工确认。
 - 自启项调整和闲置软件卸载决策。
-- 第 3B-2 段远端 D1 migration 与 Worker 部署。
+- 第 3B-2b 段 Worker 部署和生产验证。
 - 首屏示例指令、反馈入口、安全和隐私告知。
 - 3-5 名真实用户测试。
 - 长期记忆、任务历史和状态卡、质量检查层、自动任务拆解和分配。
@@ -58,6 +59,6 @@
 
 ## 当前唯一下一步
 
-当前唯一下一步以 `NEXT_STEP.md` 为准：等待产品负责人验收第 3B-1 段生产预检与远端 D1 备份。未经批准不得执行远端 migration 或部署 Worker。
+当前唯一下一步以 `NEXT_STEP.md` 为准：等待产品负责人验收第 3B-2a 段远端 D1 migration。未经批准不得部署 Worker 或进入第 3B-2b 段。
 
-完成本轮后必须停止，等待产品负责人验收第 3B-1 段，不自动执行远端 migration、不部署 Worker、不进入第 3B-2 段、第二批清理或其他任务。
+完成本轮后必须停止，等待产品负责人验收第 3B-2a 段，不自动部署 Worker、不进入第 3B-2b 段、第二批清理或其他任务。

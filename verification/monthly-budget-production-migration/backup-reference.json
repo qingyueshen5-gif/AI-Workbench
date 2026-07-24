@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-07-24T23:34:00+08:00",
+  "backup_reverified": true,
+  "backup_path": "D:\\AI-Workbench-Backups\\2026-07-24-managed-proxy-budget-predeploy\\aiw-managed-proxy-predeploy-20260724.sql",
+  "backup_size_bytes": 20253,
+  "backup_sha256": "0D0A554C9BB655578FF747FB04F0B3407874A9022A1B6A9617F800C27AC54AAD",
+  "sha256_matches_3b1_manifest": true,
+  "backup_sql_committed_to_git": false,
+  "rollback_executed": false,
+  "rollback_note": "Backup exists for product-owner-approved recovery planning only. This task did not validate remote production rollback."
+}

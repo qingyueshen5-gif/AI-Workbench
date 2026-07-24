@@ -1,0 +1,21 @@
+2026-07-24T23:30+08:00 | git status --short --branch | exit 0 | output: ## main...origin/main
+2026-07-24T23:30+08:00 | git rev-parse HEAD | exit 0 | output: b85a73ab93ac23d95d3e884eef69c535b1da333d
+2026-07-24T23:30+08:00 | git rev-parse origin/main | exit 0 | output: b85a73ab93ac23d95d3e884eef69c535b1da333d
+2026-07-24T23:30+08:00 | git log -5 --oneline --decorate | exit 0 | output: baseline includes b85a73a and 5a334ac
+2026-07-24T23:31+08:00 | git fetch origin --prune | exit 1 | output: failed with SEC_E_NO_CREDENTIALS; no credential changes made
+2026-07-24T23:31+08:00 | git -c http.sslBackend=openssl fetch origin --prune | exit 1 | output: failed with TLS unexpected EOF; no credential changes made
+2026-07-24T23:31+08:00 | Get-Item 3B-1 backup SQL | exit 0 | output: external backup exists, size 20253 bytes
+2026-07-24T23:31+08:00 | Get-FileHash 3B-1 backup SQL | exit 0 | output: SHA256 0D0A554C9BB655578FF747FB04F0B3407874A9022A1B6A9617F800C27AC54AAD
+2026-07-24T23:33+08:00 | read managed-proxy/wrangler.jsonc and 3B-1 evidence | exit 0 | output: Worker ai-workbench-managed-proxy, binding DB, database aiw-managed-proxy, database id 202583b9...3de8 matched
+2026-07-24T23:34+08:00 | WRANGLER_LOG=none npx.cmd wrangler whoami --json | exit 0 | output: loggedIn=true, OAuth Token, one account q***@gmail.com, account id 351b5cce...7f30
+2026-07-24T23:35+08:00 | remote D1 schema-only export before migration and temporary SQLite restore | exit 0 | output: tables daily_usage, installations, revoked_tokens; monthly_platform_budget=false; monthly_model_budget=false; temp files removed
+2026-07-24T23:37+08:00 | WRANGLER_LOG=none npx.cmd wrangler d1 execute aiw-managed-proxy --remote --file temp-budget-migration.sql | exit 0 | output: applied CREATE TABLE IF NOT EXISTS monthly_model_budget and monthly_platform_budget; temp migration file removed
+2026-07-24T23:38+08:00 | remote D1 full export after migration and temporary SQLite restore | exit 0 | output: tables daily_usage, installations, monthly_model_budget, monthly_platform_budget, revoked_tokens; monthly_model_budget=0 rows; monthly_platform_budget=0 rows; temp files removed
+2026-07-24T23:45+08:00 | npm.cmd run docs:generate-handoff | exit 0 | output: AI-Workbench-Handoff.md regenerated
+2026-07-24T23:45+08:00 | npm.cmd run verify:docs-consistency | exit 0 | output: passed
+2026-07-24T23:46+08:00 | JSON parse migration evidence and docs-consistency summary | exit 0 | output: all JSON parsed
+2026-07-24T23:46+08:00 | final Get-FileHash 3B-1 backup SQL | exit 0 | output: SHA256 0D0A554C9BB655578FF747FB04F0B3407874A9022A1B6A9617F800C27AC54AAD
+2026-07-24T23:46+08:00 | git ls-files backup SQL check | exit 1 | output: no backup SQL path found in tracked files
+2026-07-24T23:47+08:00 | managed-proxy code diff check | exit 0 | output: no Managed Proxy source/config/package/model-proxy/server diffs
+2026-07-24T23:47+08:00 | sensitive information scan | exit 0 | output: no secret/token/private-key/Authorization matches; boundary scan only matched historical text and this migration command log, no deploy or secret modification command
+2026-07-24T23:47+08:00 | git diff --check | exit 0 | output: no whitespace errors; CRLF warnings only

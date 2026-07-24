@@ -1,0 +1,23 @@
+{
+  "executed_at": "2026-07-24T23:37:00+08:00",
+  "migration_status": "passed",
+  "database_name": "aiw-managed-proxy",
+  "database_id_masked": "202583b9...3de8",
+  "source_schema": "managed-proxy/schema.sql budget table definitions",
+  "sql_operations": [
+    "CREATE TABLE IF NOT EXISTS monthly_model_budget",
+    "CREATE TABLE IF NOT EXISTS monthly_platform_budget"
+  ],
+  "forbidden_operations_used": {
+    "insert": false,
+    "update": false,
+    "delete": false,
+    "drop": false,
+    "alter_existing_business_tables": false
+  },
+  "command_exit_code": 0,
+  "temporary_migration_file_removed": true,
+  "worker_deployment_status": "not_deployed",
+  "secrets_modified": false,
+  "real_provider_called": false
+}

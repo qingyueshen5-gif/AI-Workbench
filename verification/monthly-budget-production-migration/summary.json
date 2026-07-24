@@ -1,0 +1,34 @@
+{
+  "task": "monthly-budget-production-migration",
+  "execution_status": "remote_migration_passed",
+  "repository_head_before": "b85a73ab93ac23d95d3e884eef69c535b1da333d",
+  "cloudflare_identity_confirmed": true,
+  "target_database_confirmed": true,
+  "backup_reverified": true,
+  "backup_path": "D:\\AI-Workbench-Backups\\2026-07-24-managed-proxy-budget-predeploy\\aiw-managed-proxy-predeploy-20260724.sql",
+  "backup_sha256": "0D0A554C9BB655578FF747FB04F0B3407874A9022A1B6A9617F800C27AC54AAD",
+  "migration_status": "passed",
+  "platform_budget_table_created": true,
+  "model_budget_table_created": true,
+  "existing_tables_preserved": true,
+  "new_budget_table_row_counts": {
+    "monthly_platform_budget": 0,
+    "monthly_model_budget": 0
+  },
+  "worker_deployment_status": "not_deployed",
+  "secrets_modified": false,
+  "real_provider_called": false,
+  "rollback_executed": false,
+  "blocked_items": [],
+  "evidence_files": [
+    "verification/monthly-budget-production-migration/summary.json",
+    "verification/monthly-budget-production-migration/report.md",
+    "verification/monthly-budget-production-migration/commands.log",
+    "verification/monthly-budget-production-migration/pre-migration-schema.json",
+    "verification/monthly-budget-production-migration/post-migration-schema.json",
+    "verification/monthly-budget-production-migration/migration-result.json",
+    "verification/monthly-budget-production-migration/backup-reference.json",
+    "verification/monthly-budget-production-migration/artifact-manifest.json"
+  ],
+  "next_action": "Wait for product owner acceptance of 3B-2a remote D1 migration. Do not deploy Worker or enter 3B-2b without approval."
+}

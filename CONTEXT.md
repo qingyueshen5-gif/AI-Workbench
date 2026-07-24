@@ -23,6 +23,8 @@ AI Workbench v0.4.6 Alpha 已公开发布。③A 总验收和 ③B GitHub Releas
 
 第 3B-1 段生产预检与远端 D1 部署前备份已完成：生产变更前必须核对 Cloudflare 身份、Worker、D1 binding、目标数据库和既有生产 evidence，并在仓库外完成远端 D1 完整导出备份。当前备份位于 `D:\AI-Workbench-Backups\2026-07-24-managed-proxy-budget-predeploy\`，证据见 `verification/monthly-budget-production-preflight/summary.json`。本轮未执行远端 D1 migration，未部署生产 Cloudflare Worker，未修改 Secrets，未调用真实 provider。
 
+第 3B-2a 段远端 D1 migration 已完成：生产 D1 `aiw-managed-proxy` 现已存在 `monthly_platform_budget` 和 `monthly_model_budget` 两张预算表，原有 `daily_usage`、`installations`、`revoked_tokens` 保持存在；两张预算表当前行数均为 0。证据见 `verification/monthly-budget-production-migration/summary.json`。本轮未部署 Worker，未修改 Secrets，未调用真实 provider；预算表已创建但生产钱包刹车尚未生效。
+
 ## 当前架构
 
 ```text
@@ -48,7 +50,7 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 详细未完成清单以 `CURRENT_PROGRESS_AUDIT.md` 为唯一权威。本文件只展示摘要：
 
 - 电脑环境治理审计已完成；第一批安全清理仍为 partial，用户 npm 缓存仍因 `EPERM` 未清理，Windows 临时文件仍需产品负责人手动确认。
-- 第 3B-1 段生产预检与远端 D1 备份已完成，当前等待产品负责人验收；未经批准不得执行远端 migration 或部署 Worker。
+- 第 3B-2a 段远端 D1 migration 已完成，当前等待产品负责人验收；未经批准不得部署 Worker 或进入第 3B-2b 段。
 - 首屏 3-5 条示例指令、反馈入口、安全和隐私告知尚未完成。
 - 3-5 名真实用户测试尚未开始。
 - 长期记忆、任务历史和状态卡、质量检查层、自动任务拆解和分配尚未完成。
@@ -58,9 +60,9 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 
 当前唯一下一步以 `NEXT_STEP.md` 为唯一权威：
 
-等待产品负责人验收第 3B-1 段生产预检与远端 D1 备份。未经批准不得执行远端 migration 或部署 Worker。
+等待产品负责人验收第 3B-2a 段远端 D1 migration。未经批准不得部署 Worker 或进入第 3B-2b 段。
 
-不得执行远端 D1 migration、部署 Cloudflare Worker、修改 Secrets、进入第 3B-2 段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发。
+不得部署 Cloudflare Worker、修改 Secrets、进入第 3B-2b 段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发。
 
 ## 产品方向文件索引
 

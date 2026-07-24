@@ -71,10 +71,11 @@
 - 生存体检 completed_after_boundary_correction：分析任务 passed_after_boundary_correction。当前无真实用户用量；当前限额正常路径在 8000 input + 2048 output token 假设下先撞 `DAILY_TOKEN_LIMIT`，平台每天约 20 次成功模型调用、若每任务 2 次调用则每天约 10 个完整前端任务，月平台成本上界约 40.76 CNY，现金跑道约 7.96 个月。原 5/50/100 用户平台月成本 199.12 / 1686.24 / 3338.61 CNY 保留为 `uncapped_demand_pressure`，不代表当前生产限额下实际可发生的正常路径成本。钱包安全状态 unsafe；理论最坏成本 `unbounded` 的依据是失败/超时/并发逃逸路径不能证明 fail-closed。证据见 `verification/survival-cost-audit/summary.json`。
 - 第 3A 段本地钱包刹车 local_passed_after_platform_aggregate_correction：首次实现被发现按模型分别执行 40 USD 硬上限，不满足所有 provider/模型合计 40 USD 的政策；现已修正为 `monthly_platform_budget(month_key)` 平台总账执行唯一条件原子预留，`monthly_model_budget(month_key, model)` 仅记录模型明细，不决定硬上限。单模型、跨模型顺序、跨模型并发、模型明细写入失败 fail-closed、超时/500 不退款、D1/缺价格不上游等本地 mock 测试通过。本轮未部署生产，未调用真实 provider，证据见 `verification/monthly-budget-circuit-breaker-local/summary.json`。
 - 第 3B-1 段生产预检与远端 D1 备份 preflight_and_backup_passed：产品负责人已验收第 3A 段并批准进入 3B-1。本轮确认 Wrangler 4.113.0、既有 Cloudflare OAuth 身份、Worker `ai-workbench-managed-proxy`、D1 binding `DB`、生产数据库 `aiw-managed-proxy` 和脱敏 database ID 均与仓库配置及既有生产 verification 一致。远端 D1 已完整导出到仓库外 `D:\AI-Workbench-Backups\2026-07-24-managed-proxy-budget-predeploy\aiw-managed-proxy-predeploy-20260724.sql`，大小 20253 bytes，SHA256 `0D0A554C9BB655578FF747FB04F0B3407874A9022A1B6A9617F800C27AC54AAD`，并通过临时 SQLite 恢复 schema 验证。migration 未执行，Worker 未部署，Secrets 未修改，真实 provider 未调用。证据见 `verification/monthly-budget-production-preflight/summary.json`。
+- 第 3B-2a 段远端 D1 migration remote_migration_passed：产品负责人已验收第 3B-1 段并批准进入 3B-2a。本轮在生产 D1 `aiw-managed-proxy` 中仅创建预算表 `monthly_platform_budget` 和 `monthly_model_budget`。migration 前复核外部备份大小 20253 bytes、SHA256 `0D0A554C9BB655578FF747FB04F0B3407874A9022A1B6A9617F800C27AC54AAD` 一致；migration 前只有 `daily_usage`、`installations`、`revoked_tokens`；migration 后原三张表仍存在，两张预算表存在且行数均为 0。未部署 Worker，未修改 Secrets，未调用真实 provider，未写入测试预算数据，未执行回滚。证据见 `verification/monthly-budget-production-migration/summary.json`。预算表已创建但生产钱包刹车尚未生效。
 
 未完成：
 
-- 等待产品负责人验收第 3B-1 段生产预检与远端 D1 备份。未经批准不得执行远端 migration 或部署 Worker。
+- 等待产品负责人验收第 3B-2a 段远端 D1 migration。未经批准不得部署 Worker 或进入第 3B-2b 段。
 - 实际电脑清理。
 - 首屏 3-5 条示例指令。
 - 反馈入口和安全/隐私告知。
@@ -90,7 +91,7 @@
 - 跨网站复杂执行。
 - 国际化和区域合规。
 
-当前唯一下一步：等待产品负责人验收第 3B-1 段生产预检与远端 D1 备份。未经批准不得执行远端 migration 或部署 Worker。
+当前唯一下一步：等待产品负责人验收第 3B-2a 段远端 D1 migration。未经批准不得部署 Worker 或进入第 3B-2b 段。
 
 <!-- AIW_CAPABILITY_STATUS_END -->
 
@@ -100,14 +101,14 @@
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；Workbench、Hermes、OpenClaw 三类执行入口都已通过 `18800` 调用当前生产 provider DeepSeek，验收摘要在 `verification/unified-model-proxy/summary.json`。DeepSeek 是当前实现细节，后续 provider 必须可替换。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。阶段性总审核、生存体检和第 3A 段本地钱包刹车均已由产品负责人验收通过。第 3B-1 段生产预检与远端 D1 部署前备份已完成但未执行 migration、未部署 Worker；当前唯一下一步是等待产品负责人验收第 3B-1 段，未经批准不得执行远端 migration 或部署 Worker。
+- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。阶段性总审核、生存体检、第 3A 段本地钱包刹车和第 3B-1 段生产预检备份均已由产品负责人验收通过。第 3B-2a 段远端 D1 migration 已完成但未部署 Worker；当前唯一下一步是等待产品负责人验收第 3B-2a 段，未经批准不得部署 Worker 或进入第 3B-2b 段。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
 ## 5. 近期优先级
 
-1. 等待产品负责人验收第 3B-1 段生产预检与远端 D1 备份。
-2. 第 3B-2 段远端 D1 migration 和 Worker 部署。该项只能在产品负责人验收 3B-1 并明确批准后执行。
+1. 等待产品负责人验收第 3B-2a 段远端 D1 migration。
+2. 第 3B-2b 段 Worker 部署和生产验证。该项只能在产品负责人验收 3B-2a 并明确批准后执行。
 3. 模型分层调度与上下文压缩。
 4. v0.4.7 首屏示例、反馈入口和安全告知。
 5. 3-5 名真实用户测试。
@@ -123,7 +124,7 @@
 
 ## 6. 当前未解决风险
 
-- 成本失控：生存体检已确认当前钱包安全状态 unsafe；第 3A 本地钱包刹车已通过，但生产环境尚未执行远端 D1 migration 和 Worker 部署，模型分层和上下文压缩仍未完成。
+- 成本失控：生存体检已确认当前钱包安全状态 unsafe；第 3A 本地钱包刹车已通过，生产 D1 预算表已创建，但 Worker 尚未部署，生产钱包刹车尚未生效；模型分层和上下文压缩仍未完成。
 - 上游账号合规：当前生产 DeepSeek provider 使用单一上游账户服务陌生用户的许可边界仍需确认；这是当前实现风险，不改变产品的多 provider 框架定位。
 - 账号单点故障：GitHub、Cloudflare 和关键开发账号的恢复方案尚未核查。
 - 本机执行安全：未来在用户电脑执行操作前必须建立权限、确认和回滚机制。
