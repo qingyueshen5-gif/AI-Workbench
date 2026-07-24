@@ -8,6 +8,14 @@
   },
   "current_hard_monthly_cap": null,
   "theoretical_worst_case": "unbounded",
+  "theoretical_worst_case_basis": "failure_or_concurrency_escape_risk",
+  "failure_or_concurrency_escape_risk": {
+    "limit_check_timing": "Managed Proxy reads accumulated usage before the upstream call and records usage after upstream returns.",
+    "failed_or_timeout_recording": "If the upstream request throws before a response body is parsed, chatCompletions returns 502 without recordUsage. Provider-side billing for such attempts cannot be determined from repository evidence.",
+    "local_proxy_retries": 3,
+    "concurrent_requests": "Concurrent requests can pass pre-call checks against the same historical D1 totals before any of them records usage.",
+    "conclusion": "cannot_determine_but_not_fail_closed"
+  },
   "current_code_reference_limits": {
     "source_files": [
       "managed-proxy/src/index.ts",
@@ -43,11 +51,99 @@
     "conclusion": "尚无真实用户，无法形成真实用户平均成本。",
     "test_data_note": "verification/managed-proxy-production contains production verification calls and limit tests, but they are test samples and not real user traffic."
   },
-  "marginal_high_active_user_monthly_model_cost_usd": 4.877107,
-  "marginal_high_active_user_monthly_model_cost_cny": 33.05,
-  "results": [
+  "current_enforced_normal_path": [
     {
-      "scenario": "planning_pressure_5_users",
+      "scenario": "current_enforced_normal_path_5_registered_users",
+      "scenario_group": "current_enforced_normal_path",
+      "registered_users": 5,
+      "daily_platform_managed_proxy_request_limit": 200,
+      "daily_install_managed_proxy_request_limit": 40,
+      "daily_platform_token_limit": 200000,
+      "registration_requests_on_first_day": 5,
+      "assumed_model_calls_per_complete_frontend_task": [
+        1,
+        2
+      ],
+      "assumed_tokens_per_managed_model_call": 10048,
+      "sequential_token_limited_model_calls_per_day": 20,
+      "steady_state_successful_model_calls_per_day_upper_bound": 20,
+      "first_day_successful_model_calls_upper_bound_after_registration": 20,
+      "max_complete_frontend_tasks_per_day_if_one_call_each": 20,
+      "max_complete_frontend_tasks_per_day_if_two_calls_each": 10,
+      "bottleneck_under_current_token_assumption": "DAILY_TOKEN_LIMIT",
+      "monthly_successful_model_calls_upper_bound": 600,
+      "single_upstream_call_cost_usd": 0.001693,
+      "monthly_model_cost_usd_upper_bound": 1.016064,
+      "monthly_infrastructure_cost_usd": 5,
+      "monthly_platform_total_usd_upper_bound": 6.016064,
+      "monthly_platform_total_cny_upper_bound": 40.76,
+      "total_monthly_burn_with_current_8200_cny": 8240.76,
+      "estimated_runway_months": 7.96,
+      "why_not_linear_with_users": "The shared DAILY_GLOBAL_LIMIT and DAILY_TOKEN_LIMIT cap the platform before 5/50/100 users can each consume the uncapped high-active plan."
+    },
+    {
+      "scenario": "current_enforced_normal_path_50_registered_users",
+      "scenario_group": "current_enforced_normal_path",
+      "registered_users": 50,
+      "daily_platform_managed_proxy_request_limit": 200,
+      "daily_install_managed_proxy_request_limit": 40,
+      "daily_platform_token_limit": 200000,
+      "registration_requests_on_first_day": 50,
+      "assumed_model_calls_per_complete_frontend_task": [
+        1,
+        2
+      ],
+      "assumed_tokens_per_managed_model_call": 10048,
+      "sequential_token_limited_model_calls_per_day": 20,
+      "steady_state_successful_model_calls_per_day_upper_bound": 20,
+      "first_day_successful_model_calls_upper_bound_after_registration": 20,
+      "max_complete_frontend_tasks_per_day_if_one_call_each": 20,
+      "max_complete_frontend_tasks_per_day_if_two_calls_each": 10,
+      "bottleneck_under_current_token_assumption": "DAILY_TOKEN_LIMIT",
+      "monthly_successful_model_calls_upper_bound": 600,
+      "single_upstream_call_cost_usd": 0.001693,
+      "monthly_model_cost_usd_upper_bound": 1.016064,
+      "monthly_infrastructure_cost_usd": 5,
+      "monthly_platform_total_usd_upper_bound": 6.016064,
+      "monthly_platform_total_cny_upper_bound": 40.76,
+      "total_monthly_burn_with_current_8200_cny": 8240.76,
+      "estimated_runway_months": 7.96,
+      "why_not_linear_with_users": "The shared DAILY_GLOBAL_LIMIT and DAILY_TOKEN_LIMIT cap the platform before 5/50/100 users can each consume the uncapped high-active plan."
+    },
+    {
+      "scenario": "current_enforced_normal_path_100_registered_users",
+      "scenario_group": "current_enforced_normal_path",
+      "registered_users": 100,
+      "daily_platform_managed_proxy_request_limit": 200,
+      "daily_install_managed_proxy_request_limit": 40,
+      "daily_platform_token_limit": 200000,
+      "registration_requests_on_first_day": 100,
+      "assumed_model_calls_per_complete_frontend_task": [
+        1,
+        2
+      ],
+      "assumed_tokens_per_managed_model_call": 10048,
+      "sequential_token_limited_model_calls_per_day": 20,
+      "steady_state_successful_model_calls_per_day_upper_bound": 20,
+      "first_day_successful_model_calls_upper_bound_after_registration": 20,
+      "max_complete_frontend_tasks_per_day_if_one_call_each": 20,
+      "max_complete_frontend_tasks_per_day_if_two_calls_each": 10,
+      "bottleneck_under_current_token_assumption": "DAILY_TOKEN_LIMIT",
+      "monthly_successful_model_calls_upper_bound": 600,
+      "single_upstream_call_cost_usd": 0.001693,
+      "monthly_model_cost_usd_upper_bound": 1.016064,
+      "monthly_infrastructure_cost_usd": 5,
+      "monthly_platform_total_usd_upper_bound": 6.016064,
+      "monthly_platform_total_cny_upper_bound": 40.76,
+      "total_monthly_burn_with_current_8200_cny": 8240.76,
+      "estimated_runway_months": 7.96,
+      "why_not_linear_with_users": "The shared DAILY_GLOBAL_LIMIT and DAILY_TOKEN_LIMIT cap the platform before 5/50/100 users can each consume the uncapped high-active plan."
+    }
+  ],
+  "uncapped_demand_pressure": [
+    {
+      "scenario": "uncapped_demand_pressure_5_users",
+      "scenario_group": "uncapped_demand_pressure",
       "users": 5,
       "requests_per_user_per_day": 40,
       "input_tokens_per_request": 8000,
@@ -65,10 +161,11 @@
       "estimated_runway_months": 7.81,
       "data_type": "规划假设",
       "confidence": "medium",
-      "primary_risk": "No real user average exists; high-active behavior and retry rate are assumptions."
+      "primary_risk": "This is demand pressure after future expansion or relaxed limits; it is not currently achievable under enforced production limits."
     },
     {
-      "scenario": "planning_pressure_50_users",
+      "scenario": "uncapped_demand_pressure_50_users",
+      "scenario_group": "uncapped_demand_pressure",
       "users": 50,
       "requests_per_user_per_day": 40,
       "input_tokens_per_request": 8000,
@@ -86,10 +183,11 @@
       "estimated_runway_months": 6.64,
       "data_type": "规划假设",
       "confidence": "medium",
-      "primary_risk": "No real user average exists; high-active behavior and retry rate are assumptions."
+      "primary_risk": "This is demand pressure after future expansion or relaxed limits; it is not currently achievable under enforced production limits."
     },
     {
-      "scenario": "planning_pressure_100_users",
+      "scenario": "uncapped_demand_pressure_100_users",
+      "scenario_group": "uncapped_demand_pressure",
       "users": 100,
       "requests_per_user_per_day": 40,
       "input_tokens_per_request": 8000,
@@ -107,7 +205,77 @@
       "estimated_runway_months": 5.69,
       "data_type": "规划假设",
       "confidence": "medium",
-      "primary_risk": "No real user average exists; high-active behavior and retry rate are assumptions."
+      "primary_risk": "This is demand pressure after future expansion or relaxed limits; it is not currently achievable under enforced production limits."
+    }
+  ],
+  "marginal_high_active_user_monthly_model_cost_usd": 4.877107,
+  "marginal_high_active_user_monthly_model_cost_cny": 33.05,
+  "results": [
+    {
+      "scenario": "uncapped_demand_pressure_5_users",
+      "scenario_group": "uncapped_demand_pressure",
+      "users": 5,
+      "requests_per_user_per_day": 40,
+      "input_tokens_per_request": 8000,
+      "output_tokens_per_request": 2048,
+      "upstream_calls_per_user_request": 2,
+      "retry_multiplier": 1.2,
+      "cache_hit_rate": 0,
+      "single_upstream_call_cost_usd": 0.001693,
+      "single_user_request_cost_usd": 0.004064,
+      "monthly_model_cost_usd": 24.385536,
+      "monthly_infrastructure_cost_usd": 5,
+      "monthly_platform_total_usd": 29.385536,
+      "monthly_platform_total_cny": 199.12,
+      "total_monthly_burn_with_current_8200_cny": 8399.12,
+      "estimated_runway_months": 7.81,
+      "data_type": "规划假设",
+      "confidence": "medium",
+      "primary_risk": "This is demand pressure after future expansion or relaxed limits; it is not currently achievable under enforced production limits."
+    },
+    {
+      "scenario": "uncapped_demand_pressure_50_users",
+      "scenario_group": "uncapped_demand_pressure",
+      "users": 50,
+      "requests_per_user_per_day": 40,
+      "input_tokens_per_request": 8000,
+      "output_tokens_per_request": 2048,
+      "upstream_calls_per_user_request": 2,
+      "retry_multiplier": 1.2,
+      "cache_hit_rate": 0,
+      "single_upstream_call_cost_usd": 0.001693,
+      "single_user_request_cost_usd": 0.004064,
+      "monthly_model_cost_usd": 243.85536,
+      "monthly_infrastructure_cost_usd": 5,
+      "monthly_platform_total_usd": 248.85536,
+      "monthly_platform_total_cny": 1686.24,
+      "total_monthly_burn_with_current_8200_cny": 9886.24,
+      "estimated_runway_months": 6.64,
+      "data_type": "规划假设",
+      "confidence": "medium",
+      "primary_risk": "This is demand pressure after future expansion or relaxed limits; it is not currently achievable under enforced production limits."
+    },
+    {
+      "scenario": "uncapped_demand_pressure_100_users",
+      "scenario_group": "uncapped_demand_pressure",
+      "users": 100,
+      "requests_per_user_per_day": 40,
+      "input_tokens_per_request": 8000,
+      "output_tokens_per_request": 2048,
+      "upstream_calls_per_user_request": 2,
+      "retry_multiplier": 1.2,
+      "cache_hit_rate": 0,
+      "single_upstream_call_cost_usd": 0.001693,
+      "single_user_request_cost_usd": 0.004064,
+      "monthly_model_cost_usd": 487.71072,
+      "monthly_infrastructure_cost_usd": 5,
+      "monthly_platform_total_usd": 492.71072,
+      "monthly_platform_total_cny": 3338.61,
+      "total_monthly_burn_with_current_8200_cny": 11538.61,
+      "estimated_runway_months": 5.69,
+      "data_type": "规划假设",
+      "confidence": "medium",
+      "primary_risk": "This is demand pressure after future expansion or relaxed limits; it is not currently achievable under enforced production limits."
     }
   ]
 }

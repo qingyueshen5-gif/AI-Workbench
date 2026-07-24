@@ -19,7 +19,7 @@ AI Workbench v0.4.6 Alpha 已公开发布。③A 总验收和 ③B GitHub Releas
 
 当前尚无真实用户。模型调用成本由平台承担，且平台月度金额硬上限尚未建立；现金跑道约 8 个月，月支出约 8200。当前目标是盈亏平衡和知名度，不是收费或利润最大化。
 
-生存体检已完成：分析任务 passed，但钱包安全状态 unsafe。当前无真实用户用量，无法形成真实用户平均成本；5/50/100 用户结果属于规划压力场景。当前理论最坏月度成本为 `unbounded`，因为没有平台月度金额硬上限或自动成本熔断。按当前生产实现价格与压力假设，5/50/100 用户平台月成本约为 199.12 / 1686.24 / 3338.61 CNY，对应现金跑道约 7.81 / 6.64 / 5.69 个月。证据见 `verification/survival-cost-audit/summary.json`。
+生存体检已完成场景边界修正：分析任务 passed_after_boundary_correction，但钱包安全状态 unsafe。当前无真实用户用量，无法形成真实用户平均成本。当前限额正常路径受 `DAILY_TOKEN_LIMIT=200000` 和 `DAILY_GLOBAL_LIMIT=200` 约束，在 8000 input + 2048 output token 假设下先撞 `DAILY_TOKEN_LIMIT`，平台每天约 20 次成功模型调用、若每任务 2 次调用则每天约 10 个完整前端任务，月平台成本上界约 40.76 CNY，现金跑道约 7.96 个月。原 5/50/100 用户平台月成本 199.12 / 1686.24 / 3338.61 CNY 已重新命名为 `uncapped_demand_pressure`，只表示未来扩容或放宽限额后的需求压力，不代表当前生产限额下可实际发生的正常路径成本。当前理论最坏成本仍为 `unbounded`，依据是失败/超时/并发逃逸路径不能证明 fail-closed，证据见 `verification/survival-cost-audit/summary.json`。
 
 ## 当前架构
 

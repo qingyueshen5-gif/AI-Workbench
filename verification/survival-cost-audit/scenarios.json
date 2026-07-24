@@ -1,8 +1,14 @@
 {
   "generated_at": "2026-07-24T20:40:00+08:00",
+  "current_enforced_normal_path": {
+    "description": "Current production-code limits are applied to Managed Proxy requests, not frontend user inputs. Registration also consumes request_count. Cost is therefore shared-platform capped and does not scale linearly with registered users once platform limits are hit.",
+    "input_tokens_per_upstream_call": 8000,
+    "output_tokens_per_upstream_call": 2048,
+    "cache_hit_rate": 0
+  },
   "scenarios": [
     {
-      "name": "planning_pressure_5_users",
+      "name": "uncapped_demand_pressure_5_users",
       "users": 5,
       "requests_per_user_per_day": 40,
       "input_tokens_per_upstream_call": 8000,
@@ -13,10 +19,10 @@
       "failed_requests_billable_assumption": "Only attempts that reach the upstream provider are counted; retry_multiplier covers billable retry exposure.",
       "data_type": "规划假设",
       "confidence": "medium",
-      "primary_risk": "No real user average exists; high-active behavior and retry rate are assumptions."
+      "primary_risk": "This is demand pressure after future expansion or relaxed limits; it is not currently achievable under enforced production limits."
     },
     {
-      "name": "planning_pressure_50_users",
+      "name": "uncapped_demand_pressure_50_users",
       "users": 50,
       "requests_per_user_per_day": 40,
       "input_tokens_per_upstream_call": 8000,
@@ -27,10 +33,10 @@
       "failed_requests_billable_assumption": "Only attempts that reach the upstream provider are counted; retry_multiplier covers billable retry exposure.",
       "data_type": "规划假设",
       "confidence": "medium",
-      "primary_risk": "No real user average exists; high-active behavior and retry rate are assumptions."
+      "primary_risk": "This is demand pressure after future expansion or relaxed limits; it is not currently achievable under enforced production limits."
     },
     {
-      "name": "planning_pressure_100_users",
+      "name": "uncapped_demand_pressure_100_users",
       "users": 100,
       "requests_per_user_per_day": 40,
       "input_tokens_per_upstream_call": 8000,
@@ -41,7 +47,7 @@
       "failed_requests_billable_assumption": "Only attempts that reach the upstream provider are counted; retry_multiplier covers billable retry exposure.",
       "data_type": "规划假设",
       "confidence": "medium",
-      "primary_risk": "No real user average exists; high-active behavior and retry rate are assumptions."
+      "primary_risk": "This is demand pressure after future expansion or relaxed limits; it is not currently achievable under enforced production limits."
     }
   ]
 }

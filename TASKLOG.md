@@ -30,7 +30,7 @@ AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 
 | 电脑环境治理第一批安全清理 | 部分完成 | 已释放 F 盘约 3.06 GB；npm 缓存因 `EPERM` 未清理，Windows 临时文件改为人工确认，权限异常旧目录待重启后精确处理。 | `verification/pc-cleanup-batch1/summary.json`、`verification/pc-cleanup-batch1/report.md`、`tasks/2026-07-24-电脑环境治理第一批安全清理.md` |
 | 产品定位修正与判断依据文档 | 已完成 | 将当前状态文档统一为“AI Workbench 是模型与 Agent 无关的调度框架；DeepSeek 是当前唯一生产实现且可替换”的口径；新增 `THINKING.md` 记录产品负责人判断依据；交接文件清单改为三份。 | `THINKING.md`、`tasks/2026-07-24-产品定位修正与判断依据文档.md` |
 | 阶段性总审核（砍薄版） | 已完成 | 隔离恢复最新外部备份；扫描当前 Git tracked 内容和完整本地可达历史的凭据泄漏；核对 completed/passed/已完成声明与证据是否匹配；未发现确认的 Git 凭据泄漏或 confirmed fake completion，已修正 README、当前进度和 CONTEXT 的非关键过期表述。 | `verification/thin-stage-audit/summary.json`、`verification/thin-stage-audit/report.md` |
-| 生存体检 | 已完成 | 在 SSE 中断后先盘点现场，保护半成品，只做验证和交付收尾；确认当前无真实用户用量，5/50/100 用户平台月成本规划值约 199.12 / 1686.24 / 3338.61 CNY，现金跑道约 7.81 / 6.64 / 5.69 个月；分析任务 passed，但钱包安全状态 unsafe，当前无平台月度金额硬上限或自动熔断，理论最坏成本 `unbounded`。 | `verification/survival-cost-audit/summary.json`、`verification/survival-cost-audit/report.md` |
+| 生存体检 | 已完成并修正场景边界 | 在 SSE 中断后先盘点现场，保护半成品，只做验证和交付收尾；随后修正 5/50/100 场景边界。当前限额正常路径月平台成本上界约 40.76 CNY，现金跑道约 7.96 个月；原 199.12 / 1686.24 / 3338.61 CNY 保留为 `uncapped_demand_pressure`，不代表当前生产限额下实际可发生的正常路径成本。钱包安全状态 unsafe，理论最坏成本 `unbounded` 的依据是失败/超时/并发逃逸路径不能证明 fail-closed。 | `verification/survival-cost-audit/summary.json`、`verification/survival-cost-audit/report.md` |
 
 ## 当前未完成任务
 

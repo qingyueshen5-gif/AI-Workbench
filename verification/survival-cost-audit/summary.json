@@ -1,9 +1,9 @@
 {
   "task": "survival-cost-audit",
   "started_at": "2026-07-24T20:38:00+08:00",
-  "completed_at": "2026-07-24T20:58:00+08:00",
+  "completed_at": "2026-07-24T21:34:00+08:00",
   "repository_head_before": "79cd0290feaf5d422b75eae060a3b0a70e024f57",
-  "execution_status": "passed",
+  "execution_status": "passed_after_boundary_correction",
   "wallet_safety_status": "unsafe",
   "current_provider": "DeepSeek as current production implementation; provider-neutral framework remains the product positioning",
   "current_model": "deepseek-chat in code; priced as DeepSeek official current compatibility target deepseek-v4-flash non-thinking mode",
@@ -12,20 +12,42 @@
   "current_hard_monthly_cap": null,
   "automatic_cost_circuit_breaker": false,
   "theoretical_worst_case": "unbounded",
-  "scenario_5_users": {
-    "monthly_platform_total_usd": 29.385536,
-    "monthly_platform_total_cny": 199.12,
-    "estimated_runway_months": 7.81
+  "theoretical_worst_case_basis": "failure_or_concurrency_escape_risk",
+  "current_enforced_normal_path": {
+    "daily_managed_proxy_successful_model_calls_upper_bound": 20,
+    "daily_complete_frontend_tasks_if_1_call_each": 20,
+    "daily_complete_frontend_tasks_if_2_calls_each": 10,
+    "bottleneck_under_current_token_assumption": "DAILY_TOKEN_LIMIT",
+    "monthly_platform_total_usd_upper_bound": 6.016064,
+    "monthly_platform_total_cny_upper_bound": 40.76,
+    "estimated_runway_months": 7.96,
+    "applies_to_registered_user_counts": [5, 50, 100],
+    "why_not_linear_with_users": "Current shared platform request/token limits are hit before 5/50/100 users can each receive 40 frontend tasks per day."
   },
-  "scenario_50_users": {
-    "monthly_platform_total_usd": 248.85536,
-    "monthly_platform_total_cny": 1686.24,
-    "estimated_runway_months": 6.64
+  "uncapped_demand_pressure": {
+    "meaning": "Future expansion or relaxed-limit planning cost if high-active user demand is fully served; not currently achievable under enforced production limits.",
+    "scenario_5_users": {
+      "monthly_platform_total_usd": 29.385536,
+      "monthly_platform_total_cny": 199.12,
+      "estimated_runway_months": 7.81
+    },
+    "scenario_50_users": {
+      "monthly_platform_total_usd": 248.85536,
+      "monthly_platform_total_cny": 1686.24,
+      "estimated_runway_months": 6.64
+    },
+    "scenario_100_users": {
+      "monthly_platform_total_usd": 492.71072,
+      "monthly_platform_total_cny": 3338.61,
+      "estimated_runway_months": 5.69
+    }
   },
-  "scenario_100_users": {
-    "monthly_platform_total_usd": 492.71072,
-    "monthly_platform_total_cny": 3338.61,
-    "estimated_runway_months": 5.69
+  "failure_or_concurrency_escape_risk": {
+    "limit_check_timing": "D1 usage is checked before upstream call; usage is recorded after upstream returns.",
+    "failed_or_timeout_recording": "If upstream throws or times out before a response is parsed, recordUsage is not called in the Worker catch path.",
+    "local_proxy_retries": 3,
+    "concurrent_requests": "Concurrent requests may pass checks against the same previous D1 total before any request records usage.",
+    "provider_billing_for_failed_attempts": "cannot_determine_but_not_fail_closed"
   },
   "runway_impact": {
     "baseline_monthly_burn_cny": 8200,
@@ -33,18 +55,19 @@
     "estimated_cash_reserve_cny": 65600,
     "method": "estimated_cash_reserve_cny / (baseline_monthly_burn_cny + monthly_platform_total_cny)"
   },
-  "main_cost_driver": "request volume multiplied by upstream model calls per user request, output token ceiling, and retry multiplier; provider unit price is replaceable but remains a direct multiplier",
+  "main_cost_driver": "Under current enforced normal path, DAILY_TOKEN_LIMIT is the bottleneck for the 8000 input + 2048 output token assumption. Under uncapped demand pressure, request volume multiplied by upstream calls, output token ceiling, retry multiplier and provider unit price drive cost.",
   "critical_findings": [
-    "No platform monthly currency cap exists in the verified code or evidence.",
-    "No automatic monthly spend circuit breaker is implemented.",
-    "No real user usage data exists; 5/50/100 user results are planning pressure scenarios, not observed averages."
+    "Original 5/50/100 demand-pressure numbers are not current production-limit worst-case costs.",
+    "Current enforced normal path is capped by shared daily request/token limits and does not scale linearly with registered users.",
+    "Wallet safety remains unsafe because failure/concurrency escape paths are not fail-closed and no monthly amount circuit breaker exists.",
+    "No real user usage data exists; all 5/50/100 results remain planning scenarios."
   ],
   "assumptions": {
-    "requests_per_user_per_day": 40,
+    "requests_per_user_per_day_uncapped_pressure": 40,
     "input_tokens_per_upstream_call": 8000,
     "output_tokens_per_upstream_call": 2048,
-    "upstream_calls_per_user_request": 2,
-    "retry_multiplier": 1.2,
+    "upstream_calls_per_user_request_uncapped_pressure": 2,
+    "retry_multiplier_uncapped_pressure": 1.2,
     "monthly_days": 30,
     "cache_hit_rate": 0,
     "usd_to_cny": 6.776
@@ -59,5 +82,5 @@
     "verification/survival-cost-audit/commands.log",
     "verification/survival-cost-audit/artifact-manifest.json"
   ],
-  "next_action": "Wait for product owner acceptance of the survival cost audit. After approval, the next task should be platform monthly total spend cap and automatic circuit breaker, but this audit did not implement it."
+  "next_action": "Wait for product owner re-acceptance of the corrected survival cost audit. Do not implement platform monthly total spend cap or automatic circuit breaker without approval."
 }

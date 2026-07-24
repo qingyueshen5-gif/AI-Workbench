@@ -68,7 +68,7 @@
 - 电脑环境治理审计 completed：产品资产备份、恢复性验证、账号登录状态核查和清理候选清单已完成。
 - 电脑环境治理第一批安全清理 partial：累计释放 F 盘约 3.06 GB，重启后指定遗留目录已删除并新增释放约 11.54 GiB；用户 npm 缓存仍因 `EPERM` 未清理，Windows 临时文件仍需产品负责人手动确认。
 - 阶段性总审核（砍薄版） completed：备份隔离恢复、Git 凭据扫描和文档假完成核对均已通过，证据见 `verification/thin-stage-audit/summary.json`。
-- 生存体检 completed：分析任务 passed；当前无真实用户用量，5/50/100 用户平台月成本规划值约为 199.12 / 1686.24 / 3338.61 CNY，现金跑道约 7.81 / 6.64 / 5.69 个月。钱包安全状态 unsafe，因为没有平台月度金额硬上限或自动成本熔断；理论最坏成本 `unbounded`。证据见 `verification/survival-cost-audit/summary.json`。
+- 生存体检 completed_after_boundary_correction：分析任务 passed_after_boundary_correction。当前无真实用户用量；当前限额正常路径在 8000 input + 2048 output token 假设下先撞 `DAILY_TOKEN_LIMIT`，平台每天约 20 次成功模型调用、若每任务 2 次调用则每天约 10 个完整前端任务，月平台成本上界约 40.76 CNY，现金跑道约 7.96 个月。原 5/50/100 用户平台月成本 199.12 / 1686.24 / 3338.61 CNY 保留为 `uncapped_demand_pressure`，不代表当前生产限额下实际可发生的正常路径成本。钱包安全状态 unsafe；理论最坏成本 `unbounded` 的依据是失败/超时/并发逃逸路径不能证明 fail-closed。证据见 `verification/survival-cost-audit/summary.json`。
 
 未完成：
 

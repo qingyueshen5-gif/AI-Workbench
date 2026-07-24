@@ -14,32 +14,32 @@
     {
       "path": "verification/survival-cost-audit/scenarios.json",
       "exists": true,
-      "bytes": 1985
+      "bytes": 2588
     },
     {
       "path": "verification/survival-cost-audit/cost-results.json",
       "exists": true,
-      "bytes": 5001
+      "bytes": 13537
     },
     {
       "path": "verification/survival-cost-audit/summary.json",
       "exists": true,
-      "bytes": 2927
+      "bytes": 4783
     },
     {
       "path": "verification/survival-cost-audit/report.md",
       "exists": true,
-      "bytes": 7316
+      "bytes": 7089
     },
     {
       "path": "verification/survival-cost-audit/commands.log",
       "exists": true,
-      "bytes": 3129
+      "bytes": 4778
     },
     {
       "path": "verification/survival-cost-audit/artifact-manifest.json",
       "exists": true,
-      "bytes": 1041
+      "bytes": 1042
     }
   ]
 }
