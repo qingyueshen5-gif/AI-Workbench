@@ -1,0 +1,66 @@
+{
+  "overallStatus": "passed",
+  "packageVersion": "0.4.6",
+  "contextVersion": "0.4.6",
+  "releaseVersion": "v0.4.6",
+  "nextStep": "产品资产备份与电脑清理审计",
+  "capabilityStatusChecks": [
+    {
+      "name": "模型分层 未标记为已完成",
+      "status": "passed",
+      "detail": "未完成口径正确"
+    },
+    {
+      "name": "手机端 未标记为已完成",
+      "status": "passed",
+      "detail": "未完成口径正确"
+    },
+    {
+      "name": "完整多 Agent 调度 未标记为已完成",
+      "status": "passed",
+      "detail": "未完成口径正确"
+    },
+    {
+      "name": "情报流水线 未标记为已完成",
+      "status": "passed",
+      "detail": "未完成口径正确"
+    },
+    {
+      "name": "跨网站复杂执行 未标记为已完成",
+      "status": "passed",
+      "detail": "未完成口径正确"
+    },
+    {
+      "name": "国际化和区域合规 未标记为已完成",
+      "status": "passed",
+      "detail": "未完成口径正确"
+    }
+  ],
+  "handoffGeneratedCheck": {
+    "status": "passed",
+    "detail": "自动生成区与权威文件一致"
+  },
+  "handoffIdempotentCheck": {
+    "status": "passed",
+    "detail": "生成结果幂等稳定"
+  },
+  "scannedFiles": [
+    "CONTEXT.md",
+    "CURRENT_TASK.md",
+    "CURRENT_PROGRESS_AUDIT.md",
+    "NEXT_STEP.md",
+    "AI-Workbench-Handoff.md",
+    "DECISIONS.md",
+    "LAUNCH.md"
+  ],
+  "ignoredHistoricalPaths": [
+    "CHANGELOG.md",
+    "TASKLOG.md",
+    "tasks/**",
+    "verification/**",
+    "research/**"
+  ],
+  "errors": [],
+  "warnings": [],
+  "verifiedAt": "2026-07-24T05:03:22.554Z"
+}

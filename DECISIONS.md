@@ -12,7 +12,7 @@
 - 去第三方依赖：三员工模型全经 18800。
 - 共享 key 边界：真实模型 key 只允许 18800 服务端读取；前端、员工配置、OpenClaw/Hermes 只使用本机占位 token。用户本机 `DEEPSEEK_API_KEY` 优先，共享托管 key 作为开箱即用兜底。
 - 上线最小集优先：先过 3 个硬骨头（陌生机器不崩 ✓、共享 key ✓、下载安装 ✓），模型分层/手机端/情报流水线可为上线让路。
-- 五步走：①修 OpenClaw ✓ ②统一模型入口 ✓ ③模型分层（待继续）④手机端 ⑤情报流水线。
+- 后续候选路线：模型分层、手机端和情报流水线仍未实施，不是当前唯一下一步；当前唯一下一步以 `NEXT_STEP.md` 为准。
 - 执行协议：所有大任务采用单一主线、分段执行、逐段验证、失败也留痕；产品负责人批准后才能进入下一阶段。固定规范见 `EXECUTION_PROTOCOL.md`。
 - 发布分段：硬骨头3拆成 3A 候选安装包预验收和 3B GitHub Release 正式发布。3A 未通过时禁止 Release、禁止 tag、禁止把 LAUNCH 硬骨头3标记完成。
 - 安装器策略：3A-R1.2 保持 NSIS oneClick per-user installer，不要求管理员权限；默认安装目录固定为 `%LOCALAPPDATA%\Programs\AIWorkbench`，避免中文用户名环境下默认 per-user 安装目录不稳定落盘。该策略已通过本地 `npm.cmd run verify:install-release` 和 GitHub Actions Run `29935231224` 云端预验收。

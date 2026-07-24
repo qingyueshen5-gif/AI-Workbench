@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Unreleased - 文档基准纠偏与防漂移机制
+
+- 将 `CONTEXT.md` 从旧 v0.2.0 当前口径纠正为 v0.4.6 Alpha 当前基准，并保留 v0.2.0 为历史版本记录。
+- 在 `EXECUTION_PROTOCOL.md` 固化事实单一归属规则：版本归 `package.json`，下一步归 `NEXT_STEP.md`，能力状态归 `CURRENT_PROGRESS_AUDIT.md`，Release 事实归 GitHub Release 和 `verification/3b-release/summary.json`。
+- 将 `AI-Workbench-Handoff.md` 改为固定说明 + 自动生成快照 + 权威文件索引，避免手工复制源文档正文造成漂移。
+- 新增 `scripts/generate-handoff.mjs` 和 `scripts/verify-docs-consistency.mjs`，并新增 `docs:generate-handoff`、`verify:docs-consistency` 脚本。
+- 新增 `verification/docs-consistency/summary.json`、`report.md` 和 `run.log` 作为文档一致性校验证据。
+- 本轮只改文档、协议和文档工具，未修改产品功能代码、安装包、Release、Cloudflare 配置或模型白名单。
+
 ## Unreleased - AI Workbench 产品方向收口
 
 - 将全球产品、一个输入框、用户状态波动补偿、人机共同打磨、借用生态但掌握控制层、跨平台执行边界和高质量低损耗原则分别整合进 `VISION.md`、`PRODUCT.md`、`PRINCIPLES.md` 和 `DECISIONS.md`。

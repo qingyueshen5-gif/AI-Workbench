@@ -6,7 +6,7 @@
 
 ## 当前一句话状态
 
-AI Workbench 已完成统一模型入口、上线三大硬骨头和 v0.4.6 Alpha 公开发布；产品方向已收口为全球产品、一个输入框、借用生态但掌握控制层、质量基线托底和可追溯执行。下一任务是产品资产备份与电脑清理审计。
+AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 公开发布、产品方向收口和文档基准防漂移机制。下一任务仍是产品资产备份与电脑清理审计。
 
 ## 已完成任务
 
@@ -24,6 +24,7 @@ AI Workbench 已完成统一模型入口、上线三大硬骨头和 v0.4.6 Alpha
 | ③A 总验收 | 已完成 | 真实安装候选包、检查快捷方式、启动安装版后端、通过 `managed_remote` 生产链路完成模型对话、验证中文降级、安全扫描、真实卸载并恢复日常安装版。 | `verification/3a-final/summary.json`、`verification/3a-final/report.md` |
 | ③B：v0.4.6 Alpha GitHub Release | 已完成 | 创建 annotated tag `v0.4.6`，创建公开 prerelease，上传安装包和 SHA256 文件，并从公开链接下载回测通过。 | `verification/3b-release/summary.json`、`verification/3b-release/report.md` |
 | AI Workbench 产品方向收口 | 已完成 | 将全球愿景、一个输入框、用户状态波动补偿、借用生态但掌握控制层、跨平台执行边界和阶段路线整合进现有文档；未创建平行路线图。 | `tasks/2026-07-24-AI-Workbench产品方向收口.md` |
+| 文档基准纠偏与防漂移机制 | 已完成 | 纠正当前状态文档漂移，建立事实单一归属规则，新增 Handoff 自动生成和文档一致性校验。 | `verification/docs-consistency/summary.json`、`verification/docs-consistency/report.md`、`tasks/2026-07-24-文档基准纠偏与防漂移机制.md` |
 
 ## 当前未完成任务
 

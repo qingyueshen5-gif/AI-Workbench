@@ -57,6 +57,27 @@ Codex / 执行助手：
 - 文件是否被 Git 跟踪；
 - 上次 push 是否已经到达 GitHub。
 
+## 2.1 事实单一归属规则
+
+当前状态不得在多个文件里各自维护独立事实。需要展示时只能引用或由脚本生成快照。
+
+- 当前版本：唯一权威是 `package.json` 的 `version`。`CONTEXT.md` 可展示当前版本，但必须自动校验一致；其他文件不得自行维护版本状态。
+- 当前唯一下一步：唯一权威是 `NEXT_STEP.md`。其他文件只能引用，不得另立；`CURRENT_TASK.md` 只描述正在执行或最近完成的任务，不定义后续路线。
+- 已完成/未完成能力：唯一权威是 `CURRENT_PROGRESS_AUDIT.md`。
+- 产品方向：`PRODUCT.md` 定义产品与边界，`VISION.md` 记录长期愿景，`PRINCIPLES.md` 记录铁律，`DECISIONS.md` 记录已锁定决策。
+- Release 事实：以 GitHub Release 和 `verification/3b-release/summary.json` 为准。
+- 历史记录：`TASKLOG.md`、`CHANGELOG.md`、`tasks/`、`verification/`、`research/` 属于历史证据，允许保留旧版本号和当时状态；严禁为统一当前口径而篡改历史。
+- Handoff 职责：`AI-Workbench-Handoff.md` 只承载自动生成的最小快照和权威文件索引，不承载任何独有事实，不手工复制源文档正文。
+- 文档防漂移：修改当前状态文件后必须运行 `npm.cmd run docs:generate-handoff` 和 `npm.cmd run verify:docs-consistency`。
+
+## 2.2 新对话交接规则
+
+- 普通新对话：只提供 `AI-Workbench-Handoff.md`。
+- 需要继续执行任务：再加 `NEXT_STEP.md`。
+- 需要判断某项验收：再加对应 `verification/<task>/summary.json`。
+- 对方无法访问本机仓库时，必须提供文件内容或 GitHub 链接，不能只给本地路径。
+- 任何新决策、任务结论和验收结果都必须回写仓库，不得只留在聊天里。
+
 ## 3. 单一主线原则
 
 每次只推进一个主线任务。

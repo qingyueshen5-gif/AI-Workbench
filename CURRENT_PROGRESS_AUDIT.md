@@ -52,6 +52,41 @@
 
 ## 4. 当前真实进度
 
+<!-- AIW_CAPABILITY_STATUS_START -->
+
+已完成：
+
+- Windows 安装、启动、快捷方式和卸载。
+- 陌生机器不崩：缺依赖、端口异常、18800/Hermes/OpenClaw 未就绪时给中文降级说明。
+- 无用户 Key 真实模型调用：安装后无需用户填写 DeepSeek API Key。
+- Cloudflare Managed Proxy 生产部署：Worker、D1、Secrets、生产 URL、真实 DeepSeek 上游、限流、预算、令牌刷新/吊销、紧急关闭和安全扫描已通过。
+- ③A 总验收 passed。
+- ③B GitHub Release passed，v0.4.6 Alpha 已公开下载并完成下载回测。
+- 产品方向收口 completed。
+- 文档基准纠偏与防漂移机制 completed：Handoff 已改为自动生成快照 + 权威索引，文档一致性校验脚本已建立。
+
+未完成：
+
+- 产品资产备份与电脑清理审计。
+- 实际电脑清理。
+- 首屏 3-5 条示例指令。
+- 反馈入口和安全/隐私告知。
+- 3-5 名真实用户测试。
+- 长期记忆。
+- 任务历史和状态卡。
+- 质量检查层。
+- 自动任务拆解和分配。
+- 模型分层。
+- 完整多 Agent 调度。
+- 手机端。
+- 情报流水线。
+- 跨网站复杂执行。
+- 国际化和区域合规。
+
+当前唯一下一步：产品资产备份与电脑清理审计。
+
+<!-- AIW_CAPABILITY_STATUS_END -->
+
 - 产品版本：`v0.4.6` Alpha，GitHub Release 已公开发布并完成下载回测。
 - 任务账本：`TASKLOG.md` 已补齐，后续每次任务都必须同步更新。
 - 执行协议：`EXECUTION_PROTOCOL.md` 已补齐，所有新 AI / Codex 接手前必须读取。

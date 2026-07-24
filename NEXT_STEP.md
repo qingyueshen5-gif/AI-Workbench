@@ -1,5 +1,9 @@
 # NEXT_STEP.md
 
+<!-- AIW_NEXT_STEP_START -->
+产品资产备份与电脑清理审计
+<!-- AIW_NEXT_STEP_END -->
+
 当前状态：上线硬骨头3B 已 passed，AI Workbench v0.4.6 Alpha 已公开发布；产品方向收口已完成。
 
 Release：
