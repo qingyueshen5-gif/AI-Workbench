@@ -1,7 +1,7 @@
 # NEXT_STEP.md
 
 <!-- AIW_NEXT_STEP_START -->
-等待产品负责人验收 DeepSeek V4 Flash 修复 Worker Preview。未经批准不得把新修复 version 加入 production deployment，不得注册 installation，不得发起真实模型调用。
+等待产品负责人验收 DeepSeek V4 Flash 非思考兼容本地候选。未经批准不得上传新 Worker version，不得将 version 12 加入 production deployment，不得注册 installation或发起真实模型调用。
 <!-- AIW_NEXT_STEP_END -->
 
 ## 当前状态
@@ -23,22 +23,27 @@
 - 新修复 version 未加入 active production deployment，正常生产流量仍为 0%。
 - Preview `/health` HTTP 200，`/v1/models` HTTP 200，未认证聊天 HTTP 401 `missing_token`。
 - 本轮未注册 installation，未发起已认证聊天，未调用真实 provider，两张预算表仍保持 21 micro-USD / call_count 1。
+- 产品负责人已验收第 3B-2b2e Worker Preview 上传验证通过。
+- 付费验证前复核发现 version 12 未显式固定 `deepseek-chat` 的非思考语义；version 12 不用于付费真实验证。
+- 本地已新增 `thinkingMode: "disabled"` 路由配置，服务端强制向上游发送 `thinking: { "type": "disabled" }`，当前尚未上传新 Worker version。
 
-## 为什么停在 DeepSeek V4 Flash 修复 Worker Preview 验收
+## 为什么停在 DeepSeek V4 Flash 非思考兼容本地候选验收
 
 - 真实预算预留已验证，但 provider 成功返回因已退役上游模型名失败。
 - 本轮已先执行生产风险收敛：旧稳定 version 100%，失败候选 version 0%。
 - 本地修复保持客户端逻辑模型 `deepseek-chat` 兼容，内部路由到 `deepseek-v4-flash`。
 - 预算明细新路径按实际计费模型 `deepseek-v4-flash` 记录，既有 `deepseek-chat` 21 micro-USD 历史行保留。
-- 本轮只上传新 Worker version 并做无付费 Preview 检查，没有创建 production deployment，没有修改正常生产流量。
-- 新 version 尚未验证真实 provider 成功链路，不得写成生产修复已上线。
+- version 12 已通过无付费 Preview，但缺少显式非思考模式，不能代表 `deepseek-chat` 历史语义完整兼容。
+- 本轮只在本地修正 `thinkingMode` 配置、上游 payload 构造和测试，没有上传新 Worker version。
+- 新本地候选尚未上传、未 Preview、未验证真实 provider 成功链路，不得写成生产修复已上线。
 - 本轮未修改 Secrets 或 D1 schema，未注册 installation，未发起真实模型调用。
 
 ## 本轮允许范围
 
 当前只允许：
 
-- 等待产品负责人验收 DeepSeek V4 Flash 修复 Worker Preview；
+- 等待产品负责人验收 DeepSeek V4 Flash 非思考兼容本地候选；
+- 查阅 `verification/deepseek-v4-flash-nonthinking-compatibility/summary.json` 和 `report.md`；
 - 查阅 `verification/deepseek-v4-flash-worker-preview-upload/summary.json` 和 `report.md`；
 - 查阅 `verification/deepseek-v4-flash-route-migration/summary.json` 和 `report.md`；
 - 查阅 `verification/monthly-budget-worker-controlled-real-canary/summary.json` 和 `report.md`；
@@ -49,6 +54,7 @@
 - 把新预算 Worker 切换到 100% 正常生产流量；
 - 执行 `wrangler deploy`、`wrangler versions upload` 或新的 `wrangler versions deploy`；
 - 把新修复 version 加入 production deployment；
+- 使用 version 12 发起付费真实验证；
 - 修改 Worker 流量；
 - 执行 rollback；
 - 修改 Cloudflare Secrets；
@@ -64,4 +70,4 @@
 
 ## 验收后
 
-验收批准后的候选下一步可能是新候选单笔真实链路验证、1% 灰度或其他生产推进步骤。它不是本轮已执行内容，未经产品负责人批准不得开始。
+验收批准后的候选下一步可能是上传新的非思考兼容 Worker version、无付费 Preview 验证或后续真实链路验证。它不是本轮已执行内容，未经产品负责人批准不得开始。

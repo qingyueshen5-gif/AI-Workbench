@@ -1,0 +1,16 @@
+{
+  "logical_model": "deepseek-chat",
+  "budget_detail_model": "deepseek-v4-flash",
+  "price_config": {
+    "inputCacheMissMicroUsdPerMillionTokens": 140000,
+    "outputMicroUsdPerMillionTokens": 280000
+  },
+  "expected_reserved_micro_usd_for_existing_fixture": 21,
+  "platform_budget_call_count_increment": 1,
+  "model_budget_call_count_increment": 1,
+  "deepseek_chat_new_detail_row": false,
+  "duplicate_reservation": false,
+  "upstream_400_no_refund_regression": true,
+  "upstream_timeout_no_refund_regression": true,
+  "passed": true
+}

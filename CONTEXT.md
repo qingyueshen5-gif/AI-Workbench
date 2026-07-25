@@ -31,6 +31,8 @@ AI Workbench v0.4.6 Alpha 已公开发布。③A 总验收和 ③B GitHub Releas
 
 第 3B-2b2e 段 DeepSeek V4 Flash 修复 Worker Preview 已完成无付费验证：产品负责人验收本地候选后批准只上传新 Worker version 并做 Preview 检查。新修复 version `a7eb385b-84df-4a45-b554-0aca40b6b407` / version number `12` 已上传，Preview alias 为 `budget-v4-flash-candidate`。active deployment 仍为 `d9acb146-b720-4e09-b2b8-0257b93fc407`；旧稳定 version 仍为 100%，已知失败候选仍为 0%，新修复 version 正常生产流量为 0%。Preview `/health` HTTP 200，`/v1/models` HTTP 200 并显示 `deepseek-chat` 为逻辑 alias、上游为 `deepseek-v4-flash`；未认证聊天 HTTP 401 `missing_token`。本轮未注册 installation，未发起已认证聊天，未调用真实 provider，两张预算表仍保持 21 micro-USD / call_count 1，Secrets 和 D1 schema 未修改。证据见 `verification/deepseek-v4-flash-worker-preview-upload/summary.json`。
 
+DeepSeek V4 Flash 非思考兼容本地候选已完成：产品负责人验收第 3B-2b2e Preview 上传通过后，付费验证前确认 version 12 未显式固定 `deepseek-chat` 历史非思考语义，因此 version 12 不用于付费真实验证。本地修正为 `deepseek-chat` 路由新增 `thinkingMode: "disabled"`，服务端强制向上游发送 `model: deepseek-v4-flash` 和 `thinking: { "type": "disabled" }`，并覆盖客户端试图传入的 `thinking.type: enabled`。Managed Proxy 19 项测试和 TypeScript 检查通过。新修正尚未上传，未部署，未注册 installation，未发起真实 provider 调用；生产仍为旧稳定 version 100%，version 12 正常生产流量 0%。证据见 `verification/deepseek-v4-flash-nonthinking-compatibility/summary.json`。
+
 ## 当前架构
 
 ```text
@@ -56,7 +58,7 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 详细未完成清单以 `CURRENT_PROGRESS_AUDIT.md` 为唯一权威。本文件只展示摘要：
 
 - 电脑环境治理审计已完成；第一批安全清理仍为 partial，用户 npm 缓存仍因 `EPERM` 未清理，Windows 临时文件仍需产品负责人手动确认。
-- DeepSeek V4 Flash 修复 Worker Preview 已完成无付费验证，当前等待产品负责人验收；未经批准不得把新修复 version 加入 production deployment，不得注册 installation，不得发起真实模型调用。
+- DeepSeek V4 Flash 非思考兼容本地候选已完成，当前等待产品负责人验收；未经批准不得上传新 Worker version，不得将 version 12 加入 production deployment，不得注册 installation或发起真实模型调用。
 - 首屏 3-5 条示例指令、反馈入口、安全和隐私告知尚未完成。
 - 3-5 名真实用户测试尚未开始。
 - 长期记忆、任务历史和状态卡、质量检查层、自动任务拆解和分配尚未完成。
@@ -66,9 +68,9 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 
 当前唯一下一步以 `NEXT_STEP.md` 为唯一权威：
 
-等待产品负责人验收 DeepSeek V4 Flash 修复 Worker Preview。未经批准不得把新修复 version 加入 production deployment，不得注册 installation，不得发起真实模型调用。
+等待产品负责人验收 DeepSeek V4 Flash 非思考兼容本地候选。未经批准不得上传新 Worker version，不得将 version 12 加入 production deployment，不得注册 installation或发起真实模型调用。
 
-不得把新修复 version 加入 production deployment、注册 installation、发起真实模型调用、修改 Secrets、进入后续段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发。
+不得上传新 Worker version、把 version 12 加入 production deployment、注册 installation、发起真实模型调用、修改 Secrets、进入后续段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发。
 
 ## 产品方向文件索引
 
@@ -130,6 +132,7 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 - 第 3B-2b2d 候选 Preview 单笔真实链路：改用候选 version Preview URL 后，注册成功，唯一真实聊天返回 HTTP 400 `invalid_request_error`；预算预留已在 provider 前写入，平台总账和模型明细各 +21 micro-USD、call_count +1。生产域名仍为旧版本 99%、新预算版本 1%，尚未切到 100%，本轮不得写成 passed。
 - 第 3B-2b2d 根因修复本地候选：已确认旧上游模型名退役，撤回失败候选 1% 流量；本地实现 `deepseek-chat` 逻辑模型到 `deepseek-v4-flash` 上游模型路由，预算明细按实际计费模型记录。该修复尚未上传或部署，不得写成 production fixed 或 real provider path passed。
 - 第 3B-2b2e 修复 Worker Preview：新修复 version `a7eb385b-84df-4a45-b554-0aca40b6b407` 已上传为 version number `12`，Preview 三项无付费检查通过；生产当前仍为旧稳定 version 100%，失败候选 0%，新修复 version 正常生产流量 0%。该修复尚未加入 production deployment，尚未执行修复后的真实模型调用，不得写成 production fixed、real provider path passed 或 wallet guard complete。
+- DeepSeek V4 Flash 非思考兼容本地候选：version 12 已验收但不用于付费验证；本地候选新增 `thinkingMode: "disabled"`，服务端强制上游非思考 payload。该修正尚未上传到 Cloudflare，不得写成 Preview passed、production fixed、real provider path passed 或 wallet guard complete。
 
 ## 第三方 Agent/工具升级管理规则
 

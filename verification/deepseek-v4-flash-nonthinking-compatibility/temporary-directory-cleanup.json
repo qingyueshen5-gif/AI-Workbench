@@ -1,0 +1,18 @@
+{
+  "checked_paths": [
+    {
+      "path": ".tmp-v4-flash-worker-upload-bundle",
+      "exists_after_cleanup": false,
+      "cleanup_result": "already_absent"
+    },
+    {
+      "path": "managed-proxy/.wrangler/tmp",
+      "exists_after_cleanup": true,
+      "cleanup_result": "access_denied"
+    }
+  ],
+  "bulk_process_termination_performed": false,
+  "git_ignored": true,
+  "committed": false,
+  "blocking": false
+}

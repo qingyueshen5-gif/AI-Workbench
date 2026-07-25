@@ -1,0 +1,21 @@
+{
+  "before": {
+    "logical_model": "deepseek-chat",
+    "provider": "deepseek",
+    "upstreamModel": "deepseek-v4-flash",
+    "thinkingMode": null,
+    "inputCacheMissMicroUsdPerMillionTokens": 140000,
+    "outputMicroUsdPerMillionTokens": 280000
+  },
+  "after": {
+    "logical_model": "deepseek-chat",
+    "provider": "deepseek",
+    "upstreamModel": "deepseek-v4-flash",
+    "thinkingMode": "disabled",
+    "inputCacheMissMicroUsdPerMillionTokens": 140000,
+    "outputMicroUsdPerMillionTokens": 280000
+  },
+  "wrangler_config_updated": true,
+  "client_model_compatibility_preserved": true,
+  "server_generates_thinking_mode": true
+}

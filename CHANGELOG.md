@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## Unreleased - DeepSeek V4 Flash 非思考兼容本地候选
+
+- 产品负责人验收第 3B-2b2e Worker Preview 上传验证通过，但付费验证前复核发现 version 12 未显式固定 `deepseek-chat` 的非思考兼容语义。
+- version 12 `a7eb385b-84df-4a45-b554-0aca40b6b407` 保持已上传、未部署、正常生产流量 0%，不得用于付费真实验证。
+- Managed Proxy 路由配置新增 `thinkingMode` 字段，当前 `deepseek-chat` 逻辑 alias 显式配置为 `disabled`。
+- 上游 payload 构造现在强制发送 `model: deepseek-v4-flash` 和 `thinking: { "type": "disabled" }`。
+- 客户端即使传入 `thinking.type: enabled`，服务端也会覆盖为 `disabled`，不直接转发到 provider。
+- `/v1/models` 增加非敏感 `thinking_mode` 字段，当前 `deepseek-chat` 返回 `disabled`。
+- 缺失或非法 `thinkingMode` 会在预算预留和 provider 调用前 fail closed。
+- Managed Proxy 测试 19/19 通过，TypeScript 检查通过；预算算法、D1 schema、Secrets 和历史 21 micro-USD 记录未修改。
+- 本轮未上传新 Worker version，未创建 deployment，未注册 installation，未发起真实模型调用。
+
 ## Unreleased - DeepSeek V4 Flash 修复 Worker Preview
 
 - 产品负责人验收通过 DeepSeek V4 Flash 路由迁移本地候选后，批准只上传新 Worker version 并执行无付费 Preview 验证。

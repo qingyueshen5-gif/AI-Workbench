@@ -198,24 +198,28 @@ function baseEnv(overrides = {}) {
       'deepseek-chat': {
         provider: 'deepseek',
         upstreamModel: 'deepseek-v4-flash',
+        thinkingMode: 'disabled',
         inputCacheMissMicroUsdPerMillionTokens: 1000000,
         outputMicroUsdPerMillionTokens: 1000000
       },
       'model-a': {
         provider: 'mock',
         upstreamModel: 'model-a',
+        thinkingMode: 'disabled',
         inputCacheMissMicroUsdPerMillionTokens: 1000000,
         outputMicroUsdPerMillionTokens: 1000000
       },
       'model-b': {
         provider: 'mock',
         upstreamModel: 'model-b',
+        thinkingMode: 'disabled',
         inputCacheMissMicroUsdPerMillionTokens: 1000000,
         outputMicroUsdPerMillionTokens: 1000000
       },
       'model-c': {
         provider: 'mock',
         upstreamModel: 'model-c',
+        thinkingMode: 'disabled',
         inputCacheMissMicroUsdPerMillionTokens: 1000000,
         outputMicroUsdPerMillionTokens: 1000000
       }
@@ -275,6 +279,7 @@ test('budget below cap allows mock upstream', async () => {
     assert.equal(upstreamCalls, 1);
     assert.equal(requestPayload.model, 'deepseek-chat');
     assert.equal(upstreamPayload.model, 'deepseek-v4-flash');
+    assert.equal(upstreamPayload.thinking.type, 'disabled');
     const row = [...env.DB.monthlyBudget.values()][0];
     assert.equal(row.call_count, 1);
     assert.ok(row.reserved_micro_usd > 0);
@@ -292,6 +297,7 @@ test('deepseek-chat logical model reserves v4 flash pricing and one upstream req
       'deepseek-chat': {
         provider: 'deepseek',
         upstreamModel: 'deepseek-v4-flash',
+        thinkingMode: 'disabled',
         inputCacheMissMicroUsdPerMillionTokens: 140000,
         outputMicroUsdPerMillionTokens: 280000
       }
@@ -314,6 +320,7 @@ test('deepseek-chat logical model reserves v4 flash pricing and one upstream req
     assert.equal(upstreamCalls, 1);
     assert.equal(p.model, 'deepseek-chat');
     assert.equal(upstreamPayload.model, 'deepseek-v4-flash');
+    assert.equal(upstreamPayload.thinking.type, 'disabled');
     assert.equal(env.DB.platformBudget.get('2026-07').reserved_micro_usd, 21);
     assert.equal(env.DB.monthlyBudget.get('2026-07|deepseek-v4-flash').reserved_micro_usd, 21);
     assert.equal(env.DB.platformBudget.get('2026-07').call_count, 1);
@@ -332,6 +339,52 @@ test('models endpoint exposes deepseek-chat as logical alias', async () => {
   assert.equal(body.data[0].id, 'deepseek-chat');
   assert.equal(body.data[0].model_type, 'logical_alias');
   assert.equal(body.data[0].upstream_model, 'deepseek-v4-flash');
+  assert.equal(body.data[0].thinking_mode, 'disabled');
+});
+
+test('deepseek-chat disables upstream thinking when client omits thinking', async () => {
+  const worker = await loadWorker();
+  const env = baseEnv();
+  const { token } = await register(worker, env);
+  let upstreamPayload = null;
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url, options = {}) => {
+    upstreamPayload = JSON.parse(String(options.body || '{}'));
+    return new Response(JSON.stringify({ usage: { completion_tokens: 1 }, choices: [] }), { status: 200 });
+  };
+  try {
+    const p = payload('non thinking compatibility');
+    assert.equal(Object.hasOwn(p, 'thinking'), false);
+    const response = await worker.default.fetch(chatRequest(token, p), env);
+    assert.equal(response.status, 200);
+    assert.equal(upstreamPayload.model, 'deepseek-v4-flash');
+    assert.deepEqual(upstreamPayload.thinking, { type: 'disabled' });
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('deepseek-chat overrides client thinking enabled before upstream', async () => {
+  const worker = await loadWorker();
+  const env = baseEnv();
+  const { token } = await register(worker, env);
+  let upstreamPayload = null;
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url, options = {}) => {
+    upstreamPayload = JSON.parse(String(options.body || '{}'));
+    return new Response(JSON.stringify({ usage: { completion_tokens: 1 }, choices: [] }), { status: 200 });
+  };
+  try {
+    const p = { ...payload('client asks for thinking'), thinking: { type: 'enabled' } };
+    const response = await worker.default.fetch(chatRequest(token, p), env);
+    assert.equal(response.status, 200);
+    assert.equal(upstreamPayload.model, 'deepseek-v4-flash');
+    assert.deepEqual(upstreamPayload.thinking, { type: 'disabled' });
+    assert.equal(env.DB.platformBudget.get('2026-07').call_count, 1);
+    assert.equal(env.DB.monthlyBudget.get('2026-07|deepseek-v4-flash').call_count, 1);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });
 
 test('exact cap allows once and next call is rejected before upstream', async () => {
@@ -464,6 +517,7 @@ test('missing or empty upstream model fails closed before upstream', async () =>
     MODEL_PRICE_CONFIG_JSON: JSON.stringify({
       'deepseek-chat': {
         provider: 'deepseek',
+        thinkingMode: 'disabled',
         inputCacheMissMicroUsdPerMillionTokens: 1000000,
         outputMicroUsdPerMillionTokens: 1000000
       }
@@ -485,6 +539,7 @@ test('missing or empty upstream model fails closed before upstream', async () =>
       'deepseek-chat': {
         provider: 'deepseek',
         upstreamModel: '   ',
+        thinkingMode: 'disabled',
         inputCacheMissMicroUsdPerMillionTokens: 1000000,
         outputMicroUsdPerMillionTokens: 1000000
       }
@@ -493,6 +548,53 @@ test('missing or empty upstream model fails closed before upstream', async () =>
     assert.equal(empty.status, 503);
     assert.equal((await empty.json()).error.code, 'model_price_unavailable');
     assert.equal(upstreamCalls, 0);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('missing or invalid thinking mode fails closed before budget and upstream', async () => {
+  const worker = await loadWorker();
+  const env = baseEnv({
+    MODEL_PRICE_CONFIG_JSON: JSON.stringify({
+      'deepseek-chat': {
+        provider: 'deepseek',
+        upstreamModel: 'deepseek-v4-flash',
+        inputCacheMissMicroUsdPerMillionTokens: 1000000,
+        outputMicroUsdPerMillionTokens: 1000000
+      }
+    })
+  });
+  const { token } = await register(worker, env);
+  let upstreamCalls = 0;
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => {
+    upstreamCalls += 1;
+    return new Response('{}', { status: 200 });
+  };
+  try {
+    const missing = await worker.default.fetch(chatRequest(token, payload()), env);
+    assert.equal(missing.status, 503);
+    assert.equal((await missing.json()).error.code, 'model_price_unavailable');
+    assert.equal(upstreamCalls, 0);
+    assert.equal(env.DB.platformBudget.size, 0);
+    assert.equal(env.DB.monthlyBudget.size, 0);
+
+    env.MODEL_PRICE_CONFIG_JSON = JSON.stringify({
+      'deepseek-chat': {
+        provider: 'deepseek',
+        upstreamModel: 'deepseek-v4-flash',
+        thinkingMode: 'default',
+        inputCacheMissMicroUsdPerMillionTokens: 1000000,
+        outputMicroUsdPerMillionTokens: 1000000
+      }
+    });
+    const invalid = await worker.default.fetch(chatRequest(token, payload()), env);
+    assert.equal(invalid.status, 503);
+    assert.equal((await invalid.json()).error.code, 'model_price_unavailable');
+    assert.equal(upstreamCalls, 0);
+    assert.equal(env.DB.platformBudget.size, 0);
+    assert.equal(env.DB.monthlyBudget.size, 0);
   } finally {
     globalThis.fetch = originalFetch;
   }

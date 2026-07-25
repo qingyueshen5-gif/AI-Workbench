@@ -1,0 +1,20 @@
+{
+  "managed_proxy_tests": {
+    "command": "npm.cmd test",
+    "tests": 19,
+    "passed": 19,
+    "failed": 0
+  },
+  "typescript": {
+    "command": "npx.cmd tsc --noEmit --skipLibCheck --moduleResolution node --module ES2022 --target ES2022 worker-configuration.d.ts src/index.ts",
+    "passed": true
+  },
+  "new_assertions": [
+    "upstream payload model is deepseek-v4-flash",
+    "upstream payload thinking.type is disabled when client omits thinking",
+    "client thinking.type enabled is overridden to disabled",
+    "models endpoint exposes thinking_mode disabled",
+    "missing thinkingMode fails closed before budget and provider",
+    "invalid thinkingMode fails closed before budget and provider"
+  ]
+}

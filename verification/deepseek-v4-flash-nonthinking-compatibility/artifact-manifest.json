@@ -1,0 +1,18 @@
+{
+  "files": [
+    "summary.json",
+    "report.md",
+    "commands.log",
+    "route-config-before-after.json",
+    "upstream-payload-test.json",
+    "client-thinking-override-test.json",
+    "fail-closed-test.json",
+    "budget-regression-test.json",
+    "test-results.json",
+    "temporary-directory-cleanup.json",
+    "artifact-manifest.json"
+  ],
+  "sensitive_data_policy": "No Secret values, installation tokens, Authorization headers, Cookie values, proxy credentials, full Preview URL, raw production logs, user data, or database export are recorded.",
+  "full_preview_url_committed": false,
+  "provider_called": false
+}

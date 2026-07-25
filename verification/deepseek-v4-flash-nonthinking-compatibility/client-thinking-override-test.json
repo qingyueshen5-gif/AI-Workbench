@@ -1,0 +1,15 @@
+{
+  "test_name": "deepseek-chat overrides client thinking enabled before upstream",
+  "client_payload_model": "deepseek-chat",
+  "client_payload_thinking": {
+    "type": "enabled"
+  },
+  "behavior": "server_override",
+  "upstream_payload_model": "deepseek-v4-flash",
+  "upstream_payload_thinking": {
+    "type": "disabled"
+  },
+  "budget_reserved_once": true,
+  "provider_received_client_enabled": false,
+  "passed": true
+}

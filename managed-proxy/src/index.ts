@@ -139,6 +139,7 @@ function tokenUsageFromPayload(payload: any) {
 type ModelPrice = {
   provider: string;
   upstreamModel: string;
+  thinkingMode: 'enabled' | 'disabled';
   inputCacheMissMicroUsdPerMillionTokens: number;
   outputMicroUsdPerMillionTokens: number;
 };
@@ -147,12 +148,14 @@ const defaultModelPrices: Record<string, ModelPrice> = {
   'deepseek-chat': {
     provider: 'deepseek',
     upstreamModel: 'deepseek-v4-flash',
+    thinkingMode: 'disabled',
     inputCacheMissMicroUsdPerMillionTokens: 140000,
     outputMicroUsdPerMillionTokens: 280000
   },
   'deepseek-v4-flash': {
     provider: 'deepseek',
     upstreamModel: 'deepseek-v4-flash',
+    thinkingMode: 'enabled',
     inputCacheMissMicroUsdPerMillionTokens: 140000,
     outputMicroUsdPerMillionTokens: 280000
   }
@@ -171,6 +174,9 @@ function priceForModel(env: Env, model: string) {
   if (!price) throw new Error('missing_model_price');
   if (typeof price.upstreamModel !== 'string' || !price.upstreamModel.trim()) {
     throw new Error('missing_upstream_model');
+  }
+  if (price.thinkingMode !== 'enabled' && price.thinkingMode !== 'disabled') {
+    throw new Error('missing_thinking_mode');
   }
   for (const [key, value] of Object.entries({
     inputCacheMissMicroUsdPerMillionTokens: price.inputCacheMissMicroUsdPerMillionTokens,
@@ -396,12 +402,19 @@ async function chatCompletions(request: Request, env: Env) {
       return json({ error: { message: '共享模型服务本月额度已用完，请稍后再试。', code: 'monthly_budget_exhausted' } }, { status: 429 });
     }
   } catch (error: any) {
-    const code = error?.message === 'missing_model_price' || error?.message === 'missing_upstream_model' || String(error?.message || '').startsWith('bad_model_price')
+    const code = error?.message === 'missing_model_price'
+      || error?.message === 'missing_upstream_model'
+      || error?.message === 'missing_thinking_mode'
+      || String(error?.message || '').startsWith('bad_model_price')
       ? 'model_price_unavailable'
       : 'monthly_budget_unavailable';
     return json({ error: { message: '共享模型服务预算系统暂时不可用，请稍后再试。', code } }, { status: 503 });
   }
-  const upstreamPayload = { ...payload, model: route.upstreamModel.trim() };
+  const upstreamPayload = {
+    ...payload,
+    model: route.upstreamModel.trim(),
+    thinking: { type: route.thinkingMode }
+  };
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort('upstream timeout'), configNumber(env.UPSTREAM_TIMEOUT_MS, 60000));
   try {
@@ -450,7 +463,8 @@ export default {
         object: 'model',
         owned_by: prices[id]?.provider || 'deepseek',
         model_type: prices[id]?.upstreamModel && prices[id].upstreamModel !== id ? 'logical_alias' : 'provider_model',
-        upstream_model: prices[id]?.upstreamModel || id
+        upstream_model: prices[id]?.upstreamModel || id,
+        thinking_mode: prices[id]?.thinkingMode || 'unconfigured'
       })) });
     }
     if (request.method === 'POST' && url.pathname === '/v1/install/register') return register(request, env);

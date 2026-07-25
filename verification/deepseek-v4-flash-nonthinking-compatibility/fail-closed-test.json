@@ -1,0 +1,37 @@
+{
+  "cases": [
+    {
+      "case": "thinkingMode missing",
+      "http_status": 503,
+      "error_code": "model_price_unavailable",
+      "provider_calls": 0,
+      "platform_budget_rows": 0,
+      "model_budget_rows": 0,
+      "passed": true
+    },
+    {
+      "case": "thinkingMode invalid",
+      "http_status": 503,
+      "error_code": "model_price_unavailable",
+      "provider_calls": 0,
+      "platform_budget_rows": 0,
+      "model_budget_rows": 0,
+      "passed": true
+    },
+    {
+      "case": "upstreamModel missing or empty",
+      "http_status": 503,
+      "error_code": "model_price_unavailable",
+      "provider_calls": 0,
+      "passed": true
+    },
+    {
+      "case": "missing price",
+      "http_status": 503,
+      "error_code": "model_price_unavailable",
+      "provider_calls": 0,
+      "passed": true
+    }
+  ],
+  "fallback_to_provider_default_thinking": false
+}

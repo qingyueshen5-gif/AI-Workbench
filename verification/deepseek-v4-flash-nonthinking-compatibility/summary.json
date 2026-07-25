@@ -1,0 +1,52 @@
+{
+  "task": "deepseek-v4-flash-nonthinking-compatibility",
+  "execution_status": "v4_flash_nonthinking_compatibility_candidate_ready_locally",
+  "repository_head_before": "31036c791434a5f06cd8a007a4dd1424052c5058",
+  "current_uploaded_candidate_version": "a7eb385b-84df-4a45-b554-0aca40b6b407",
+  "current_uploaded_candidate_version_number": 12,
+  "logical_model": "deepseek-chat",
+  "upstream_model": "deepseek-v4-flash",
+  "upstream_thinking_mode": "disabled",
+  "client_thinking_override_behavior": "server_overrides_client_thinking_to_disabled_for_deepseek_chat_alias",
+  "budget_detail_model": "deepseek-v4-flash",
+  "platform_budget_algorithm_modified": false,
+  "historical_reservation_modified": false,
+  "full_tests": {
+    "tests": 19,
+    "passed": 19,
+    "failed": 0
+  },
+  "typecheck_passed": true,
+  "provider_called": false,
+  "registration_attempts": 0,
+  "authenticated_chat_attempts": 0,
+  "new_version_uploaded": false,
+  "production_deployment_modified": false,
+  "production_traffic_modified": false,
+  "stable_traffic": 100,
+  "version12_traffic": 0,
+  "active_deployment": "d9acb146-b720-4e09-b2b8-0257b93fc407",
+  "secrets_modified": false,
+  "d1_schema_modified": false,
+  "temporary_directories_cleaned": false,
+  "temporary_directory_cleanup_note": ".tmp-v4-flash-worker-upload-bundle was absent; managed-proxy/.wrangler/tmp remained undeleted because Windows returned Access is denied. The path is Git ignored and not committed.",
+  "blocked_items": [
+    "The non-thinking compatibility candidate has not been uploaded as a new Worker version.",
+    "Version 12 must not be used for paid verification because it does not explicitly disable thinking mode.",
+    "The fixed route has not been verified with a real provider call."
+  ],
+  "evidence_files": [
+    "verification/deepseek-v4-flash-nonthinking-compatibility/summary.json",
+    "verification/deepseek-v4-flash-nonthinking-compatibility/report.md",
+    "verification/deepseek-v4-flash-nonthinking-compatibility/commands.log",
+    "verification/deepseek-v4-flash-nonthinking-compatibility/route-config-before-after.json",
+    "verification/deepseek-v4-flash-nonthinking-compatibility/upstream-payload-test.json",
+    "verification/deepseek-v4-flash-nonthinking-compatibility/client-thinking-override-test.json",
+    "verification/deepseek-v4-flash-nonthinking-compatibility/fail-closed-test.json",
+    "verification/deepseek-v4-flash-nonthinking-compatibility/budget-regression-test.json",
+    "verification/deepseek-v4-flash-nonthinking-compatibility/test-results.json",
+    "verification/deepseek-v4-flash-nonthinking-compatibility/temporary-directory-cleanup.json",
+    "verification/deepseek-v4-flash-nonthinking-compatibility/artifact-manifest.json"
+  ],
+  "next_action": "Wait for product owner acceptance of the DeepSeek V4 Flash non-thinking compatibility local candidate. Do not upload a new Worker version, do not add version 12 to production deployment, do not register an installation, and do not make a real model call without explicit approval."
+}

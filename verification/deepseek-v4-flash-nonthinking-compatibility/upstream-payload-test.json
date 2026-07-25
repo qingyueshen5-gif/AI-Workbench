@@ -1,0 +1,10 @@
+{
+  "test_name": "deepseek-chat disables upstream thinking when client omits thinking",
+  "client_payload_model": "deepseek-chat",
+  "client_payload_included_thinking": false,
+  "upstream_payload_model": "deepseek-v4-flash",
+  "upstream_payload_thinking": {
+    "type": "disabled"
+  },
+  "passed": true
+}
