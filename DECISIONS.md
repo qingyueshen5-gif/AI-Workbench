@@ -48,3 +48,43 @@
 - 2026-07-25 DeepSeek V4 Flash 非思考真实 Preview 链路结论：产品负责人确认上次阻断根因为 Windows Node 子进程错误调用 `.cmd` 文件，并批准复用现有 version 13 执行一次新的独立注册和一次真实聊天。本轮未上传新 version、未修改 Worker 代码或 Wrangler 配置、未修改 production deployment、未修改 Secrets 或 D1 schema。执行方式已改为：父级终端直接读 D1，Token 进程只做 undici ProxyAgent 网络注册和聊天，不调用任何子进程。run2 注册 HTTP 200，聊天 HTTP 200，provider model `deepseek-v4-flash`，回答 `OK`，`reasoning_content` 为空，usage 为 prompt 7 / completion 1 / total 8。预算按最终 payload 重新计算为 23 micro-USD；平台总账从 21/1 增至 44/2，`deepseek-v4-flash` 明细从不存在增至 23/1，历史 `deepseek-chat` 保持 21/1。active deployment 仍为 `d9acb146-b720-4e09-b2b8-0257b93fc407`，稳定 version 100%，version 13 正常生产流量 0%。状态为 `v4_flash_nonthinking_real_path_passed`，等待产品负责人验收；未经批准不得把 version 13 加入 production deployment、不得切换 1% 或 100%、不得发起新的主动真实模型调用。
 - 2026-07-25 version 13 的 1% 生产灰度决策：产品负责人已验收 version 13 DeepSeek V4 Flash 非思考真实 Preview 链路，并批准进入 1% 正常生产灰度。本轮复用现有 version `cf002344-57ee-4c3f-86a6-115ca66c8b5f`，只通过 `wrangler versions deploy` 调整 production deployment 流量：旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 承载 99%，version 13 承载 1%，新 active deployment 为 `9952d7cb-2d99-483a-85f7-c9ada1a09db4`。旧稳定 version 是技术回滚目标，但不得把它描述为已验证当前 DeepSeek V4 成功链路的版本。灰度期间不得主动增加付费调用；任何候选异常立即回滚。观察窗口完成且未触发回滚，但未捕获足够自然候选 invocation，状态为 `version13_one_percent_canary_observation_limited_by_low_traffic`。未经产品负责人验收和批准，不得将 version 13 切换到 100%，不得发起新的主动真实模型调用。
 - 2026-07-25 version 13 全量生产切换决策：产品负责人已验收 version 13 的 1% 正常生产灰度，并批准将 version 13 `cf002344-57ee-4c3f-86a6-115ca66c8b5f` 提升到 100% 正常生产流量。全量期间任何异常立即回滚，旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 继续作为明确技术回滚目标。本轮不得上传新 version、不得主动增加付费调用、不得修改 Worker 代码、Wrangler 配置、Secrets、D1 schema 或预算算法。全量切换已完成，新 active deployment 为 `0400b7aa-49fe-460d-ac6d-3ed5bfdb0480`，只包含 version 13 且承载 100%；30 分钟主动观察和 5 分钟指标缓冲完成，健康检查正常，预算账本未变化，未触发回滚。自然生产调用样本不足，状态为 `version13_full_production_active_observation_limited_by_low_traffic`；不得写成长周期真实用户规模稳定性已证明，也不得自动进入模型分层、上下文压缩或 v0.4.7。
+
+## v0.4.7 范围补充：产品内埋点与错误日志
+
+- v0.4.7 现阶段确定包含：首屏示例、用户反馈入口、安全与隐私告知、产品内部埋点、产品内部错误日志。
+- 该决定只锁定未来范围，不代表现在启动开发。第 3 阶段独立验收完成前，v0.4.7 仍不得开工。
+
+### v0.4.7 埋点和错误日志需求
+
+目的：大部分用户遇到问题时可能只会说“不好用”并离开，不会主动说明具体卡点。因此工作台需要通过产品自身的运行记录，帮助后续判断用户在哪一步失败、哪个功能失败、发生什么错误、响应耗时多久、哪些问题重复出现。
+
+当前拟记录范围仅限用户与 AI Workbench 本身的交互元数据：
+
+- 功能名称或功能 ID；
+- 操作阶段；
+- 成功或失败；
+- 错误类型或脱敏错误码；
+- 响应耗时；
+- 应用版本；
+- 必要且最小化的运行环境类别；
+- 事件时间。
+
+当前不批准默认采集：
+
+- 用户在其他软件中的行为；
+- 用户浏览的其他网页；
+- 键盘监听；
+- 屏幕内容；
+- 工作台之外的系统活动；
+- 完整 Token；
+- Secret；
+- Authorization Header；
+- 密码；
+- 未经批准的用户输入正文；
+- 未经批准的模型回答正文。
+
+默认规则：不采集原始正文，只记录完成排错所需的最小元数据。
+
+未来如确需扩大范围，必须单独提出产品方案，说明采集字段、用途、保存周期、访问权限、用户告知方式，并在需要时取得用户同意，通过产品负责人批准后才能实施。
+
+v0.4.7 的安全与隐私告知必须明确告诉用户：产品会记录哪些运行信息、记录目的、明确不记录哪些内容、数据是否发送到服务端、保存时间、谁可以访问、是否可以关闭或清除。这些具体数值和实现方式在 v0.4.7 正式设计阶段决定，本轮不得提前猜测保存周期或服务器架构。

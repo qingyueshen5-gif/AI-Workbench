@@ -117,11 +117,12 @@ ${nextStep}
 
 ${directionHints.join('\n')}
 
-## GPT、Claude、Codex 分工
+## 产品负责人、Claude、GPT、Codex 分工
 
-- GPT：产品方向、路线规划、任务拆分和验收结果复核。
-- Claude：口头想法结构化、代码调试、Review 和日常执行协调。
-- Codex：读取仓库、执行代码/文档修改、运行验证、生成证据、commit + push 和真实汇报。
+- 产品负责人：定产品方向、定优先级、决定是否改变当前唯一任务、接受或拒绝风险、最终拍板阶段是否通过。
+- Claude：帮助产品负责人梳理想法并结构化，从产品角度把关，对完整产品阶段基于 GitHub 可访问证据做独立验收并给出 PASS / CONDITIONAL_PASS / BLOCKED；不声称访问无权访问的本地或生产环境。
+- GPT：统一跨对话上下文、判断当前唯一任务、防止任务线漂移、把产品负责人决定转化为完整有边界的 Codex 指令，并根据 Codex 回报帮助理解进度；不替代最终拍板。
+- Codex：在授权范围内执行，修改代码或文档，运行测试，检查基线，发现基线冲突、证据不足或风险时停止，生成 verification，commit + push，如实汇报 passed / failed / blocked；不自行宣布完整产品阶段最终通过。
 
 ## 新对话交接方法
 

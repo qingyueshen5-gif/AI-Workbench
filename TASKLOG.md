@@ -2,7 +2,7 @@
 
 > 仓库文件是唯一事实来源。每个任务下达、完成、验收和交接都必须写回本仓库，不能只留在对话里。
 
-最新更新：2026-07-25
+最新更新：2026-07-26
 
 ## 当前一句话状态
 
@@ -40,6 +40,7 @@ AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 
 | 判断逻辑与学习记录 | 已完成 | 在 `PRINCIPLES.md` 写入简单粗暴模式与细致模式的切换原则：默认直接办事，遇到技术保护墙切换细致模式，遇到信息分散墙保持快速采集汇总；新建 `GROWTH_LOG.md` 记录具身智能长期了解和独立支付路径待办。本轮只改文档，未改功能代码，未改变 `NEXT_STEP.md`。 | `tasks/2026-07-24-判断逻辑与学习记录.md` |
 | 判断原则固化与信息收集排期 | 已完成 | 在 `PRINCIPLES.md` 固化简单粗暴/细致模式、单任务推进、借用生态扩大适用和支付路径范围划分四条原则；在 `GROWTH_LOG.md` 追加个人独立支付工具、具身智能长期了解、信息与用户反馈情报收集排期三条记录。信息收集能力确认重要但排在钱包刹车完全上线生效和找到真实用户之后，启动时优先复用现成开源工具。本轮只改文档，未改功能代码，未修改 `NEXT_STEP.md` 当前唯一下一步，未影响当前钱包刹车灰度任务。 | `tasks/2026-07-24-判断原则固化与信息收集排期.md` |
 | 产品判断原则、成长记录与新对话交接固化 | 已完成 | 固化六条原则：简单模式/细致模式切换、单任务推进、优先借用成熟生态、个人支付与产品支付分离、角色分工与阶段验收、防御性安全与攻击能力边界；在 `THINKING.md` 写入产品负责人长期判断框架；在 `GROWTH_LOG.md` 追加个人支付、具身智能、信息与用户反馈情报、防御性安全加固、产品负责人持续成长五类记录；新对话默认必读文件由三份更新为五份：`AI-Workbench-Handoff.md`、`NEXT_STEP.md`、`THINKING.md`、`PRINCIPLES.md`、`GROWTH_LOG.md`；明确 Codex、Claude/GPT 和产品负责人的角色分工，Claude/GPT 只能基于其实际可访问的 GitHub 证据做独立验收；补充执行验收和阶段验收规则。本轮只改文档和文档一致性工具，未修改当前 `NEXT_STEP.md`，未影响钱包刹车或当前生产任务，未启动信息收集、安全加固、支付或具身智能开发。 | `tasks/2026-07-25-产品判断原则成长记录与新对话交接固化.md` |
+| 用户试用门槛与 v0.4.7 埋点反馈机制固化 | 已完成 | 产品负责人确认用户试用前及格线与真实用户后的满分线分开，重要方向不自动插队；v0.4.7 未来范围增加产品内埋点和错误日志，但当前只允许记录最小化的工作台内部交互元数据，工作台外行为不在当前范围，原始用户输入和模型回答正文当前未批准采集。同步统一产品负责人、Claude、GPT、Codex 最新四方角色分工。本轮只改文档，未修改当前 `NEXT_STEP.md`，未启动 v0.4.7、信息收集、安全加固、支付、具身智能或其他新产品阶段。 | `tasks/2026-07-26-用户试用门槛与v0.4.7埋点反馈机制固化.md` |
 | 第 3B-2b2b 段：零流量 deployment | 已完成零流量验证 | 产品负责人验收通过 3B-2b2a 后批准进入 3B-2b2b，并在严格基线 blocked 后批准以文档提交 `37ab9c2` 为新基线继续。本轮用 `wrangler versions deploy` 将新预算 version 加入 active deployment，但流量为 0%；旧稳定 version 继续 100%。通过 production hostname version override 验证候选 version 的健康、模型列表和未认证聊天拒绝路径；预算表仍为空。未使用真实安装 Token，未调用真实 provider，未修改 Secrets，未执行回滚。上一段完整 Preview URL 当前文件已脱敏，历史不重写。 | `verification/monthly-budget-worker-zero-traffic-deployment/summary.json`、`verification/monthly-budget-worker-zero-traffic-deployment/report.md` |
 | DeepSeek V4 Flash 路由迁移本地候选 | 本地候选完成，等待验收 | 产品负责人确认 3B-2b2d HTTP 400 根因高度确定为旧 DeepSeek 上游模型名退役；本轮先将失败候选 version 从 1% 撤回到 0%，旧稳定 version 恢复 100%。本地实现逻辑模型 `deepseek-chat` 到上游正式模型 `deepseek-v4-flash` 的显式路由，预算明细按实际计费模型记录；16 项 Managed Proxy 测试和 TypeScript 检查通过。既有 21 micro-USD 失败预留保留，未上传新 Worker version，未部署生产修复，未修改 Secrets/D1 schema，未发起新的真实 provider 调用。 | `verification/deepseek-v4-flash-route-migration/summary.json`、`verification/deepseek-v4-flash-route-migration/report.md` |
 | DeepSeek V4 Flash 修复 Worker Preview | Preview 已上传并通过无付费验证，等待验收 | 产品负责人验收本地候选后批准只上传新 Worker version 并执行无付费 Preview 验证。新修复 Worker version `a7eb385b-84df-4a45-b554-0aca40b6b407` / version number `12` 已上传，Preview alias 为 `budget-v4-flash-candidate`；Preview `/health` 200、`/v1/models` 200、未认证聊天 401 `missing_token`。active deployment 和正常生产流量未变化，旧稳定 version 100%，失败候选 0%，新修复 version 0%。既有 21 micro-USD 预算历史保留，未注册 installation，未调用真实 provider，未修改 Secrets/D1 schema。 | `verification/deepseek-v4-flash-worker-preview-upload/summary.json`、`verification/deepseek-v4-flash-worker-preview-upload/report.md` |
@@ -62,6 +63,7 @@ AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 
 | 打开后知道能干嘛 | 未完成 | 首屏放 3-5 条能点即跑的示例指令。 |
 | 办不成时是人话不是崩 | 部分完成 | 已有 readiness 降级说明；后续继续补失败自愈、重试和人话解释。 |
 | 反馈出口 + 一句安全告知 | 未完成 | 增加反馈渠道和基础安全告知。 |
+| v0.4.7 产品内埋点与错误日志 | 未开始 | 需求已确认，等待第 3 阶段验收后排期；只允许最小化工作台内部交互元数据，原始用户输入和模型回答正文当前未批准采集。 |
 | 模型分层调用 | 未开始/暂缓 | 等上线最小集前三条稳定后再做；不要抢跑。 |
 | 手机端 | 未开始 | 等桌面上线闭环后再排期。 |
 | 自动情报流水线 | 未开始/P3 | 后续再做，不阻塞上线。 |
