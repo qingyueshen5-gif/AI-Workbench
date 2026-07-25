@@ -1,7 +1,7 @@
 {
   "task": "monthly-budget-worker-controlled-real-canary",
-  "execution_status": "blocked_before_paid_call",
-  "repository_head_before": "db4e055273c4cd8a3639fe61e322644d5ed5a908",
+  "execution_status": "blocked_transport_cause_unresolved",
+  "repository_head_before": "a36dfc0acb53bc8a636a5fcf7ce605c118156199",
   "accepted_previous_stage": "3B-2b2c accepted by product owner at db4e055273c4cd8a3639fe61e322644d5ed5a908",
   "worker_name": "ai-workbench-managed-proxy",
   "stable_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
@@ -10,9 +10,17 @@
   "active_deployment_after": "55b20f6c-1a50-446b-95cc-18ebf0e6cbe1",
   "stable_traffic_percentage": 99,
   "candidate_traffic_percentage": 1,
+  "previous_registration_attempts": 1,
+  "diagnostic_request_count": 12,
+  "new_registration_attempts": 0,
   "controlled_registration_attempts": 1,
+  "cumulative_registration_attempts": 1,
   "controlled_real_chat_attempts": 0,
   "client_retry_enabled": false,
+  "root_cause_category": "system_proxy_error",
+  "previous_exception_details": "previous_exception_details_missing",
+  "http_status_obtained_for_previous_registration": false,
+  "http_status_obtained_for_new_registration": null,
   "version_override_confirmed": false,
   "version_override_header_sent": true,
   "model": "deepseek-chat",
@@ -42,6 +50,7 @@
   "model_budget_delta": 0,
   "platform_call_count_delta": 0,
   "model_call_count_delta": 0,
+  "budget_written": false,
   "real_provider_called_by_codex": false,
   "provider_call_status": "not_called_no_registration_token",
   "provider_usage": null,
@@ -60,12 +69,14 @@
   "rollback_ready": true,
   "rollback_executed": false,
   "critical_findings": [
-    "The one-time Node script attempted registration once but did not receive an HTTP status.",
-    "No token was returned, so the controlled real chat request was not attempted.",
-    "The no-retry boundary was honored; no provider call was made."
+    "The prior evidence did not preserve detailed exception fields for the first registration attempt.",
+    "This run reproduced the transport failure class with Node built-in fetch: no response headers, TypeError fetch failed, cause UND_ERR_CONNECT_TIMEOUT.",
+    "Using undici ProxyAgent fixed no-fee Node probes, but independent confirmation that version override hit the candidate version was not obtained.",
+    "No second registration attempt was made."
   ],
   "blocked_items": [
-    "Controlled registration did not produce an HTTP response status in the one allowed attempt."
+    "Version override hit could not be independently confirmed beyond request header and successful endpoint responses.",
+    "The allow-to-register conditions were not all satisfied."
   ],
   "evidence_files": [
     "verification/monthly-budget-worker-controlled-real-canary/summary.json",
@@ -84,7 +95,11 @@
     "verification/monthly-budget-worker-controlled-real-canary/rollback-readiness.json",
     "verification/monthly-budget-worker-controlled-real-canary/rollback-result.json",
     "verification/monthly-budget-worker-controlled-real-canary/temporary-artifact-cleanup.json",
+    "verification/monthly-budget-worker-controlled-real-canary/transport-diagnosis.json",
+    "verification/monthly-budget-worker-controlled-real-canary/version-override-check.json",
+    "verification/monthly-budget-worker-controlled-real-canary/registration-retry-result.json",
+    "verification/monthly-budget-worker-controlled-real-canary/budget-before-after.json",
     "verification/monthly-budget-worker-controlled-real-canary/artifact-manifest.json"
   ],
-  "next_action": "Wait for product owner acceptance or instruction for the 3B-2b2d blocked-before-paid-call result. Do not retry registration or send a real chat request without explicit approval."
+  "next_action": "Wait for product owner acceptance of the 3B-2b2d blocked recovery result. Do not retry registration or send a real chat request without explicit approval."
 }

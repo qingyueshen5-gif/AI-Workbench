@@ -5,6 +5,8 @@
 - 产品负责人验收通过第 3B-2b2c 段后，批准在 99%/1% 灰度下尝试一笔受控真实预算链路验证，不直接切 100%。
 - 固定请求的预算预留按生产公式计算为 21 micro-USD，低于 100 micro-USD 安全门槛。
 - 一次性临时 Node 脚本只尝试 1 次注册；该注册未返回 HTTP 状态且未取得 Token，因此没有执行真实聊天请求。
+- 阻塞恢复诊断确认本地 Node 内置 fetch 未显式使用代理时发生 `UND_ERR_CONNECT_TIMEOUT`；显式 undici `ProxyAgent` 后无付费探针可取得 HTTP 响应。
+- 因未取得独立证据证明 version override 命中新预算 version，本轮没有进行第二次注册。
 - 本轮未调用真实 provider，未写入预算记录，`installations` 和 `daily_usage` 无增量，未执行回滚。
 - 生产流量仍为旧稳定 version 99%、新预算 version 1%；不得描述成 100% 全量上线、真实预算链路通过或真实耗尽 40 USD 上限。
 

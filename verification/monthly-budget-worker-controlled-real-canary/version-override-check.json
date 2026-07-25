@@ -1,0 +1,24 @@
+{
+  "task": "monthly-budget-worker-controlled-real-canary-version-override-check",
+  "worker_name": "ai-workbench-managed-proxy",
+  "candidate_version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+  "candidate_in_active_deployment": true,
+  "candidate_traffic_percentage": 1,
+  "header_name": "Cloudflare-Workers-Version-Overrides",
+  "header_value_redacted": "ai-workbench-managed-proxy=\"<candidate-version-id>\"",
+  "header_format_checked": true,
+  "preview_header_used": false,
+  "version_affinity_header_used": false,
+  "plain_custom_header_used": false,
+  "node_fetch_with_proxy_health_status": 200,
+  "node_fetch_with_proxy_models_status": 200,
+  "powershell_health_status": 200,
+  "powershell_models_status": 200,
+  "independent_version_hit_confirmation": false,
+  "confirmation_attempt": {
+    "method": "wrangler tail --version-id",
+    "result": "not_confirmed",
+    "details": "sampling-rate 1 was rejected by Wrangler; sampling-rate 0.999 did not produce usable version-hit evidence in this run."
+  },
+  "reason_registration_not_retried": "The task required proof that GET hit the new version beyond merely sending the header; that proof was not obtained."
+}

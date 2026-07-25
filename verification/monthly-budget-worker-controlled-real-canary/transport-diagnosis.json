@@ -1,0 +1,39 @@
+{
+  "task": "monthly-budget-worker-controlled-real-canary-transport-diagnosis",
+  "previous_exception_details": "previous_exception_details_missing",
+  "previous_registration_attempts": 1,
+  "node_version": "v24.18.0",
+  "fetch_implementation": "Node.js built-in fetch (undici)",
+  "proxy_environment": {
+    "HTTP_PROXY_present": true,
+    "HTTPS_PROXY_present": true,
+    "proxy_values_logged": false
+  },
+  "without_explicit_proxy_agent": {
+    "diagnostic_request_count": 4,
+    "all_failed_before_response_headers": true,
+    "error_name": "TypeError",
+    "error_message": "fetch failed",
+    "cause_name": "ConnectTimeoutError",
+    "cause_code": "UND_ERR_CONNECT_TIMEOUT"
+  },
+  "with_explicit_undici_proxy_agent": {
+    "diagnostic_request_count": 4,
+    "proxy_value_logged": false,
+    "health_http_status": 200,
+    "models_http_status": 200,
+    "register_options_http_status": 404,
+    "stateless_missing_post_http_status": 404,
+    "registration_side_effect_expected": false
+  },
+  "cross_check": {
+    "tool": "PowerShell Invoke-WebRequest",
+    "candidate_override_health_status": 200,
+    "candidate_override_models_status": 200
+  },
+  "root_cause_category": "system_proxy_error",
+  "root_cause_evidence": "Node built-in fetch timed out before response headers without an explicit proxy dispatcher, while the same Node runtime with undici ProxyAgent and PowerShell both received HTTP responses.",
+  "real_provider_called": false,
+  "registration_performed_in_diagnosis": false,
+  "chat_performed_in_diagnosis": false
+}

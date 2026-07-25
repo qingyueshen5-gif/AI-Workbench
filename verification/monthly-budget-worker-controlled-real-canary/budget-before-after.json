@@ -1,0 +1,32 @@
+{
+  "task": "monthly-budget-worker-controlled-real-canary-budget-before-after",
+  "before_recovery_diagnosis": {
+    "monthly_platform_budget": {
+      "row_count": 0,
+      "reserved_micro_usd_sum": 0,
+      "call_count_sum": 0
+    },
+    "monthly_model_budget": {
+      "row_count": 0,
+      "reserved_micro_usd_sum": 0,
+      "call_count_sum": 0
+    }
+  },
+  "after_recovery_diagnosis": {
+    "monthly_platform_budget": {
+      "row_count": 0,
+      "reserved_micro_usd_sum": 0,
+      "call_count_sum": 0
+    },
+    "monthly_model_budget": {
+      "row_count": 0,
+      "reserved_micro_usd_sum": 0,
+      "call_count_sum": 0
+    }
+  },
+  "platform_reserved_delta": 0,
+  "model_reserved_delta": 0,
+  "platform_call_count_delta": 0,
+  "model_call_count_delta": 0,
+  "budget_written": false
+}

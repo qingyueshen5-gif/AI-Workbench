@@ -17,6 +17,10 @@
     "rollback-readiness.json",
     "rollback-result.json",
     "temporary-artifact-cleanup.json",
+    "transport-diagnosis.json",
+    "version-override-check.json",
+    "registration-retry-result.json",
+    "budget-before-after.json",
     "artifact-manifest.json"
   ],
   "sensitive_data_policy": "No token, authorization header, secret value, full installation ID, full production hostname, full request body, raw production log, database export, or user data is recorded."

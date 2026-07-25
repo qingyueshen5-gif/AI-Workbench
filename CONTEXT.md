@@ -62,7 +62,7 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 
 当前唯一下一步以 `NEXT_STEP.md` 为唯一权威：
 
-等待产品负责人验收第 3B-2b2d 段调用前阻塞结果。未经批准不得将新预算 Worker 切换到 100% 流量，不得重试注册或发起真实模型调用。
+等待产品负责人验收第 3B-2b2d 阻塞恢复结果。未经批准不得将新预算 Worker 切换到 100% 流量，不得重试注册或发起真实模型调用。
 
 不得把新预算 Worker 切换到 100% 流量、重试注册、主动执行真实模型调用、修改 Secrets、进入后续段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发。
 
@@ -122,6 +122,7 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 - 远端 `monthly_platform_budget` 和 `monthly_model_budget` 仍为空。
 - 新预算 Worker 已开始承载 1% 正常生产流量，但尚未全量；本轮未主动真实模型调用。100% 切换必须等待产品负责人批准后进入后续段。
 - 第 3B-2b2d 段尝试单笔受控真实预算链路验证：预留金额按生产公式计算为 21 micro-USD，但一次性临时脚本的唯一注册尝试未返回 HTTP 状态、未取得 Token，因此没有执行真实聊天请求，没有取得真实调用前预算预留证据。新预算 Worker 仍只承载 1%，尚未切到 100%；40 USD 耗尽路径仍由本地并发和边界测试证明，不会在生产主动消耗到上限。
+- 第 3B-2b2d 阻塞恢复诊断：本地 Node 内置 fetch 未显式使用代理时对生产 Worker 在响应头前连接超时，显式 undici `ProxyAgent` 后无付费 GET/OPTIONS/无状态 POST 可取得 HTTP 响应。但未取得独立证据证明 version override 命中新预算 version，因此本轮未再次注册、未发起聊天、未调用 provider、未写预算。
 
 ## 第三方 Agent/工具升级管理规则
 

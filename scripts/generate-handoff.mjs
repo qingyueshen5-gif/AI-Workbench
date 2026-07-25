@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 
 const root = process.cwd();
 
@@ -151,6 +151,6 @@ function main() {
   console.log('已生成 AI-Workbench-Handoff.md 自动交接快照。');
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   main();
 }
