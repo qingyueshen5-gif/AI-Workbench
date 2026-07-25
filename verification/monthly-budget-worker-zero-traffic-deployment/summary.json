@@ -1,0 +1,62 @@
+{
+  "task": "monthly-budget-worker-zero-traffic-deployment",
+  "execution_status": "zero_traffic_deployment_verified",
+  "repository_head_before": "37ab9c28a451dcdc858ce783293ef09448b7bc34",
+  "accepted_previous_stage": "3B-2b2a accepted by product owner at 657ace41faf534ede8f7f50df5153ecc6d9d2733; product owner then approved 37ab9c28a451dcdc858ce783293ef09448b7bc34 as the new 3B-2b2b execution baseline after a docs-only commit.",
+  "baseline_blocked_then_resumed": true,
+  "managed_proxy_unchanged_since_preview_acceptance": true,
+  "stable_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "candidate_version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+  "active_deployment_before": "61aa34dd-c20a-42b4-a3c6-1ca474a81e5e",
+  "active_deployment_after": "063b83c3-974f-43fb-84f2-9da0d574f745",
+  "stable_version_traffic_percentage": 100,
+  "candidate_version_traffic_percentage": 0,
+  "production_normal_traffic_changed": false,
+  "version_override_health": {
+    "http_status": 200,
+    "passed": true
+  },
+  "version_override_models": {
+    "http_status": 200,
+    "passed": true
+  },
+  "version_override_unauthenticated_chat": {
+    "http_status": 401,
+    "code": "missing_token",
+    "passed": true,
+    "provider_call_possible": false
+  },
+  "provider_called": false,
+  "budget_rows_before": {
+    "monthly_platform_budget": 0,
+    "monthly_model_budget": 0
+  },
+  "budget_rows_after": {
+    "monthly_platform_budget": 0,
+    "monthly_model_budget": 0
+  },
+  "budget_reserved_micro_usd_after": {
+    "monthly_platform_budget": 0,
+    "monthly_model_budget": 0
+  },
+  "secrets_modified": false,
+  "rollback_executed": false,
+  "preview_url_current_files_redacted": true,
+  "git_history_rewritten": false,
+  "deployment_status": "candidate_deployed_at_zero_percent",
+  "budget_circuit_breaker_active_for_normal_production_traffic": false,
+  "blocked_items": [],
+  "evidence_files": [
+    "verification/monthly-budget-worker-zero-traffic-deployment/summary.json",
+    "verification/monthly-budget-worker-zero-traffic-deployment/report.md",
+    "verification/monthly-budget-worker-zero-traffic-deployment/commands.log",
+    "verification/monthly-budget-worker-zero-traffic-deployment/pre-deployment-state.json",
+    "verification/monthly-budget-worker-zero-traffic-deployment/deployment-result.json",
+    "verification/monthly-budget-worker-zero-traffic-deployment/version-override-smoke-test.json",
+    "verification/monthly-budget-worker-zero-traffic-deployment/post-deployment-state.json",
+    "verification/monthly-budget-worker-zero-traffic-deployment/budget-table-check.json",
+    "verification/monthly-budget-worker-zero-traffic-deployment/preview-url-redaction-check.json",
+    "verification/monthly-budget-worker-zero-traffic-deployment/artifact-manifest.json"
+  ],
+  "next_action": "Wait for product owner acceptance of 3B-2b2b zero-traffic deployment. Do not move candidate version above 0% normal production traffic without approval."
+}

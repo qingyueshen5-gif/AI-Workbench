@@ -74,10 +74,11 @@
 - 第 3B-2a 段远端 D1 migration remote_migration_passed：产品负责人已验收第 3B-1 段并批准进入 3B-2a。本轮在生产 D1 `aiw-managed-proxy` 中仅创建预算表 `monthly_platform_budget` 和 `monthly_model_budget`。migration 前复核外部备份大小 20253 bytes、SHA256 `0D0A554C9BB655578FF747FB04F0B3407874A9022A1B6A9617F800C27AC54AAD` 一致；migration 前只有 `daily_usage`、`installations`、`revoked_tokens`；migration 后原三张表仍存在，两张预算表存在且行数均为 0。未部署 Worker，未修改 Secrets，未调用真实 provider，未写入测试预算数据，未执行回滚。证据见 `verification/monthly-budget-production-migration/summary.json`。预算表已创建但生产钱包刹车尚未生效。
 - 第 3B-2b1 段部署候选 deployment_candidate_ready：产品负责人已验收第 3B-2a 段并批准进入 3B-2b1。本轮在 `managed-proxy/wrangler.jsonc` 显式补齐 50 USD 平台政策上限、40 USD 模型硬上限和 `deepseek-chat` 公开价格配置，不再依赖代码 fallback；Managed Proxy 12 项本地回归通过。远端预算表仍存在且为空；当前生产 Worker 流量版本 `16333442-925a-4b11-a3d1-d6249d2492ba`、当前 deployment `61aa34dd-c20a-42b4-a3c6-1ca474a81e5e` 和回滚目标已只读确认，`/health` 与 `/v1/models` 均 HTTP 200。未部署 Worker，未修改 Secrets，未调用真实 provider。证据见 `verification/monthly-budget-worker-deploy-readiness/summary.json`。部署候选已锁定但生产钱包刹车尚未生效。
 - 第 3B-2b2a 段 Preview 上传验证 preview_upload_verified：产品负责人已验收第 3B-2b1 段并批准进入 3B-2b2a。本轮仅上传已锁定候选为新的 Worker Preview version `483e4fae-3af8-40fa-ab83-4551f08b519e`，Preview URL `/health` 和 `/v1/models` 均 HTTP 200，未认证 `/v1/chat/completions` HTTP 401 `missing_token` 并在 provider 前拒绝。active deployment 仍为 `61aa34dd-c20a-42b4-a3c6-1ca474a81e5e`，100% 生产流量仍指向 version `16333442-925a-4b11-a3d1-d6249d2492ba`；远端 `monthly_platform_budget` 和 `monthly_model_budget` 行数仍为 0。未部署 Worker，未修改 Secrets，未使用真实安装 Token，未调用真实 provider。证据见 `verification/monthly-budget-worker-preview-upload/summary.json`。Preview 版本已上传但生产钱包刹车尚未生效。
+- 第 3B-2b2b 段零流量 deployment zero_traffic_deployment_verified：产品负责人验收通过 3B-2b2a 后批准执行。本轮用 `wrangler versions deploy` 创建 active deployment `063b83c3-974f-43fb-84f2-9da0d574f745`：旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 为 100%，新预算 version `483e4fae-3af8-40fa-ab83-4551f08b519e` 为 0%。通过 production hostname 的 version override 定向验证新预算 version：`/health` HTTP 200，`/v1/models` HTTP 200，未认证聊天 HTTP 401 `missing_token`；预算表仍为空，未使用真实安装 Token，未调用真实 provider，未修改 Secrets，未执行回滚。上一段完整 Preview URL 当前文件已脱敏，历史不重写。证据见 `verification/monthly-budget-worker-zero-traffic-deployment/summary.json`。新预算 Worker 已加入 deployment，但正常生产流量仍为 0%，生产钱包刹车尚未对正常流量生效。
 
 未完成：
 
-- 等待产品负责人验收第 3B-2b2a 段 Preview 上传验证。未经批准不得部署 Worker 或进入第 3B-2b2b 段。
+- 等待产品负责人验收第 3B-2b2b 段零流量 deployment。未经批准不得把新预算 Worker 切换到正常生产流量。
 - 实际电脑清理。
 - 首屏 3-5 条示例指令。
 - 反馈入口和安全/隐私告知。
@@ -93,7 +94,7 @@
 - 跨网站复杂执行。
 - 国际化和区域合规。
 
-当前唯一下一步：等待产品负责人验收第 3B-2b2a 段 Preview 上传验证。未经批准不得部署 Worker 或进入第 3B-2b2b 段。
+当前唯一下一步：等待产品负责人验收第 3B-2b2b 段零流量 deployment。未经批准不得把新预算 Worker 切换到正常生产流量。
 
 <!-- AIW_CAPABILITY_STATUS_END -->
 
@@ -103,14 +104,14 @@
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；Workbench、Hermes、OpenClaw 三类执行入口都已通过 `18800` 调用当前生产 provider DeepSeek，验收摘要在 `verification/unified-model-proxy/summary.json`。DeepSeek 是当前实现细节，后续 provider 必须可替换。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。阶段性总审核、生存体检、第 3A 段本地钱包刹车、第 3B-1 段生产预检备份、第 3B-2a 段远端 D1 migration 和第 3B-2b1 段部署候选均已由产品负责人验收通过。第 3B-2b2a 段 Preview 版本已上传并验证，但未部署 Worker；当前唯一下一步是等待产品负责人验收第 3B-2b2a 段，未经批准不得部署 Worker 或进入第 3B-2b2b 段。
+- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。阶段性总审核、生存体检、第 3A 段本地钱包刹车、第 3B-1 段生产预检备份、第 3B-2a 段远端 D1 migration、第 3B-2b1 段部署候选和第 3B-2b2a 段 Preview 上传验证均已由产品负责人验收通过。第 3B-2b2b 段已把新预算 Worker 加入 active deployment 但正常生产流量仍为 0%；当前唯一下一步是等待产品负责人验收第 3B-2b2b 段，未经批准不得把新预算 Worker 切换到正常生产流量。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
 ## 5. 近期优先级
 
-1. 等待产品负责人验收第 3B-2b2a 段 Preview 上传验证。
-2. 第 3B-2b2b 段生产 Worker 部署和生产验证。该项只能在产品负责人验收 3B-2b2a 并明确批准后执行。
+1. 等待产品负责人验收第 3B-2b2b 段零流量 deployment。
+2. 后续生产流量切换只能在产品负责人验收 3B-2b2b 并明确批准后执行。
 3. 模型分层调度与上下文压缩。
 4. v0.4.7 首屏示例、反馈入口和安全告知。
 5. 3-5 名真实用户测试。
@@ -126,7 +127,7 @@
 
 ## 6. 当前未解决风险
 
-- 成本失控：生存体检已确认当前钱包安全状态 unsafe；第 3A 本地钱包刹车已通过，生产 D1 预算表已创建，部署候选已锁定并上传为 Preview version，但 Worker 尚未部署，生产钱包刹车尚未生效；模型分层和上下文压缩仍未完成。
+- 成本失控：生存体检已确认当前钱包安全状态 unsafe；第 3A 本地钱包刹车已通过，生产 D1 预算表已创建，部署候选已锁定并加入 active deployment，但新预算 Worker 正常生产流量仍为 0%，生产钱包刹车尚未对正常流量生效；模型分层和上下文压缩仍未完成。
 - 上游账号合规：当前生产 DeepSeek provider 使用单一上游账户服务陌生用户的许可边界仍需确认；这是当前实现风险，不改变产品的多 provider 框架定位。
 - 账号单点故障：GitHub、Cloudflare 和关键开发账号的恢复方案尚未核查。
 - 本机执行安全：未来在用户电脑执行操作前必须建立权限、确认和回滚机制。

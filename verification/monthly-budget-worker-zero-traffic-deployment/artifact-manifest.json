@@ -1,0 +1,58 @@
+{
+  "task": "monthly-budget-worker-zero-traffic-deployment",
+  "generated_at": "2026-07-25T13:20:00+08:00",
+  "artifact_count": 10,
+  "artifacts": [
+    {
+      "path": "verification/monthly-budget-worker-zero-traffic-deployment/summary.json",
+      "bytes": 2961,
+      "sha256": "D29AC3938EB1EDDE4A9A7BC53FF97778B70ED9C78491F5A3A29928370287733A"
+    },
+    {
+      "path": "verification/monthly-budget-worker-zero-traffic-deployment/report.md",
+      "bytes": 3385,
+      "sha256": "0D3DAFB0385A7A30729ACAC5EBC7BFC069E2EC97E196029D49B239101B2F0158"
+    },
+    {
+      "path": "verification/monthly-budget-worker-zero-traffic-deployment/commands.log",
+      "bytes": 4429,
+      "sha256": "68EBE5CFCDF0B45B9C80607CD2FCA60E075806518EEC3303E972A17186609229"
+    },
+    {
+      "path": "verification/monthly-budget-worker-zero-traffic-deployment/pre-deployment-state.json",
+      "bytes": 1342,
+      "sha256": "ED998C4F8E2C1207D1069AB84736E98C581A735C25887160BA904E39A1684FAF"
+    },
+    {
+      "path": "verification/monthly-budget-worker-zero-traffic-deployment/deployment-result.json",
+      "bytes": 1169,
+      "sha256": "787F2A37A0E5C64FB0FAEE544F493394D24BD723842A1FA99415D34181AA0CB1"
+    },
+    {
+      "path": "verification/monthly-budget-worker-zero-traffic-deployment/version-override-smoke-test.json",
+      "bytes": 1608,
+      "sha256": "459E2083FC01C3418A70D600212FE599C53F1ACE03FD5998BC49669DD71C0DF0"
+    },
+    {
+      "path": "verification/monthly-budget-worker-zero-traffic-deployment/post-deployment-state.json",
+      "bytes": 794,
+      "sha256": "00E7BBAB5710D1C576B606BC2E2DF6ECDB3979C28CBB3FD4C785CD97430E21B1"
+    },
+    {
+      "path": "verification/monthly-budget-worker-zero-traffic-deployment/budget-table-check.json",
+      "bytes": 1021,
+      "sha256": "966D19F7E203AA5A19FC14B0460F899BBB4B435A4FDF4ECAF1C70120C3F2D272"
+    },
+    {
+      "path": "verification/monthly-budget-worker-zero-traffic-deployment/preview-url-redaction-check.json",
+      "bytes": 696,
+      "sha256": "FC886AA4BCEE5F6D825493757F2CEC7813E29857BEE77D261D92CEE3D2F3DAE2"
+    },
+    {
+      "path": "verification/monthly-budget-worker-zero-traffic-deployment/artifact-manifest.json",
+      "bytes": null,
+      "sha256": "self-referential-hash-not-recorded"
+    }
+  ],
+  "sensitive_data_policy": "No API token, Secret, Cookie, Authorization header, installation token, full Preview URL, full production hostname, database content, or user content is recorded."
+}

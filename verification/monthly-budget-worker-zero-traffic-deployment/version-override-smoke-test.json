@@ -1,0 +1,46 @@
+{
+  "task": "monthly-budget-worker-version-override-smoke-test",
+  "checked_at": "2026-07-25T13:11:30+08:00",
+  "production_host_redacted": "ai-workbench-managed-proxy.<redacted>.workers.dev",
+  "production_host_logged_in_full": false,
+  "version_override_header_name": "Cloudflare-Workers-Version-Overrides",
+  "version_override_target": {
+    "worker": "ai-workbench-managed-proxy",
+    "version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e"
+  },
+  "hit_evidence": {
+    "active_deployment_contains_candidate_version": true,
+    "candidate_version_traffic_percentage": 0,
+    "request_used_official_version_override_header": true,
+    "response_level_version_stamp_available": false,
+    "note": "The Worker response does not expose a version stamp. The reproducible routing evidence is the official version override header targeting the candidate version that is present in the active deployment, plus successful endpoint responses and unchanged normal traffic split."
+  },
+  "checks": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "http_status": 200,
+      "passed": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/models",
+      "http_status": 200,
+      "passed": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "auth": "none",
+      "http_status": 401,
+      "error_code": "missing_token",
+      "passed": true,
+      "provider_call_possible": false
+    }
+  ],
+  "real_installation_token_used": false,
+  "installation_registered": false,
+  "authenticated_chat_called": false,
+  "provider_called": false,
+  "model_cost_incurred": false
+}

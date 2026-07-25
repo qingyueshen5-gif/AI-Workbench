@@ -7,7 +7,9 @@
   "uploaded_version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
   "uploaded_version_number": 11,
   "preview_alias": "budget-candidate-3b2b2a",
-  "preview_url": "https://budget-candidate-3b2b2a-ai-workbench-managed-proxy.qingyueshen5.workers.dev",
+  "preview_host_redacted": "budget-candidate-3b2b2a-ai-workbench-managed-proxy.<redacted>.workers.dev",
+  "preview_host_sha256": "8E0B40C5A1D58A94FE1FBF2EF67E5EFDABFB89D4FD72A3EA45F882AF8C7318B2",
+  "preview_url_redaction_note": "The full Preview URL existed in pushed history before 3B-2b2b. This commit redacts current files only; Git history was not rewritten and force push was not used. Preview URL is not a Secret, but full Preview URLs must not be written to public verification evidence going forward.",
   "preview_checks": {
     "health": {
       "http_status": 200,

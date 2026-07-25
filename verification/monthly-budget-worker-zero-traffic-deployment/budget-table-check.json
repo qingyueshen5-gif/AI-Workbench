@@ -1,0 +1,41 @@
+{
+  "task": "monthly-budget-worker-zero-traffic-budget-table-check",
+  "database_name": "aiw-managed-proxy",
+  "database_id_masked": "202583b9...3de8",
+  "before": {
+    "checked_at": "2026-07-25T13:06:00+08:00",
+    "monthly_platform_budget": {
+      "row_count": 0,
+      "reserved_micro_usd": 0
+    },
+    "monthly_model_budget": {
+      "row_count": 0,
+      "reserved_micro_usd": 0
+    }
+  },
+  "after_deployment": {
+    "checked_at": "2026-07-25T13:10:45+08:00",
+    "monthly_platform_budget": {
+      "row_count": 0,
+      "reserved_micro_usd": 0
+    },
+    "monthly_model_budget": {
+      "row_count": 0,
+      "reserved_micro_usd": 0
+    }
+  },
+  "after_version_override": {
+    "checked_at": "2026-07-25T13:12:14+08:00",
+    "monthly_platform_budget": {
+      "row_count": 0,
+      "reserved_micro_usd": 0
+    },
+    "monthly_model_budget": {
+      "row_count": 0,
+      "reserved_micro_usd": 0
+    }
+  },
+  "rows_written_by_checks": 0,
+  "test_budget_rows_inserted": false,
+  "production_d1_modified": false
+}

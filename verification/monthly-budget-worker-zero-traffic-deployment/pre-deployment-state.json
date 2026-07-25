@@ -1,0 +1,41 @@
+{
+  "task": "monthly-budget-worker-zero-traffic-deployment-pre-state",
+  "checked_at": "2026-07-25T13:05:40+08:00",
+  "repository_head": "37ab9c28a451dcdc858ce783293ef09448b7bc34",
+  "original_accepted_preview_commit": "657ace41faf534ede8f7f50df5153ecc6d9d2733",
+  "new_execution_baseline_approved": true,
+  "managed_proxy_diff_from_original_preview_commit": "no diff under managed-proxy",
+  "wrangler_version": "4.113.0",
+  "wrangler_logged_in": true,
+  "account_id_masked": "351b5cce...7f30",
+  "worker": "ai-workbench-managed-proxy",
+  "stable_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "candidate_version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+  "candidate_version_present": true,
+  "stable_version_present": true,
+  "active_deployment_before": {
+    "deployment_id": "61aa34dd-c20a-42b4-a3c6-1ca474a81e5e",
+    "created_on": "2026-07-23T09:57:15.724674Z",
+    "versions": [
+      {
+        "version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+        "percentage": 100
+      }
+    ]
+  },
+  "budget_rows_before": {
+    "monthly_platform_budget": {
+      "row_count": 0,
+      "reserved_micro_usd": 0
+    },
+    "monthly_model_budget": {
+      "row_count": 0,
+      "reserved_micro_usd": 0
+    }
+  },
+  "production_health_before": {
+    "health_http_status": 200,
+    "models_http_status": 200
+  },
+  "blocked": false
+}

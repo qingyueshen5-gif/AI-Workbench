@@ -5,18 +5,18 @@
   "artifacts": [
     {
       "path": "verification/monthly-budget-worker-preview-upload/summary.json",
-      "bytes": 2358,
-      "sha256": "931019114411CD716003AFB647B4D490CE7EB210B0C9623862C4DAB0B0F27AEB"
+      "bytes": 2766,
+      "sha256": "A443D85C320563E5C89E8D45AD370979065837ECD65E1266834EF53E8EC2A801"
     },
     {
       "path": "verification/monthly-budget-worker-preview-upload/report.md",
-      "bytes": 2384,
-      "sha256": "82D47E6566BE481BC365291AAF324B01B35A86BFF8C905A088E7556160903982"
+      "bytes": 2718,
+      "sha256": "133E99CB80B7E97EE5C9FC23995AFCD4EEBB7B3023400DB1E077BF19C0A54DA9"
     },
     {
       "path": "verification/monthly-budget-worker-preview-upload/commands.log",
-      "bytes": 3318,
-      "sha256": "6683826B7192C7ED633AE3778F4F9BC6AA1BC2396BB8A71FDD83CDA15E9F5DD3"
+      "bytes": 3427,
+      "sha256": "715CB1E53D06F2EA2F52B76336EC0F0D0910DB497CA020293B7CF59A07A05337"
     },
     {
       "path": "verification/monthly-budget-worker-preview-upload/version-upload-result.json",
@@ -25,8 +25,8 @@
     },
     {
       "path": "verification/monthly-budget-worker-preview-upload/preview-checks.json",
-      "bytes": 1118,
-      "sha256": "C6E689FCF9643217B8EB951E8445842E0B66E45172577BA4AB50EF7952B7EDA4"
+      "bytes": 1252,
+      "sha256": "A51EB2B2B58A4AF4CF42102EF18C4A88EBC163489717774758FFC5DB726169B8"
     },
     {
       "path": "verification/monthly-budget-worker-preview-upload/active-deployment-check.json",

@@ -5,15 +5,15 @@
 
 ## 当前主线
 
-本轮唯一任务：等待产品负责人验收第 3B-2b2a 段 Preview 上传验证。
+本轮唯一任务：等待产品负责人验收第 3B-2b2b 段零流量 deployment。
 
 边界：
 
-- 本轮已上传已锁定候选为新的 Cloudflare Worker Preview version，并只验证 Preview URL。
+- 本轮已将新预算 Worker version 加入 active deployment，但正常生产流量为 0%。
 - 不部署 Cloudflare Worker，不修改 Secrets。
 - 不调用真实模型，不产生模型费用，不使用真实安装 Token。
-- 不修改生产功能代码，不进入第 3B-2b2b 段、模型分层、上下文压缩或 v0.4.7。
-- 完成后停止，等待产品负责人验收第 3B-2b2a 段。
+- 不修改生产功能代码，不进入后续流量切换、模型分层、上下文压缩或 v0.4.7。
+- 完成后停止，等待产品负责人验收第 3B-2b2b 段。
 
 ## 最近完成
 
@@ -30,6 +30,7 @@
 - 第 3B-2a 段远端 D1 migration：remote_migration_passed。已在生产 D1 `aiw-managed-proxy` 创建 `monthly_platform_budget` 和 `monthly_model_budget`；原三张业务表仍存在，两张预算表行数均为 0。未部署 Worker，未修改 Secrets，未调用真实 provider。证据见 `verification/monthly-budget-production-migration/summary.json`。
 - 第 3B-2b1 段部署候选：deployment_candidate_ready。`wrangler.jsonc` 已显式补齐 50/40 USD 预算 vars 和 `deepseek-chat` 公开价格配置；Managed Proxy 12 项本地测试通过；远端预算表仍为空；当前生产 Worker 版本和回滚目标已只读确认。未部署 Worker，未修改 Secrets，未调用真实 provider。证据见 `verification/monthly-budget-worker-deploy-readiness/summary.json`。
 - 第 3B-2b2a 段 Preview 上传验证：preview_upload_verified。已上传 Worker Preview version `483e4fae-3af8-40fa-ab83-4551f08b519e`；Preview `/health` 与 `/v1/models` 均 HTTP 200，未认证聊天请求 HTTP 401 `missing_token` 且在 provider 前拒绝。active deployment、生产流量和原稳定 version 未变；预算表仍为空。未部署 Worker，未修改 Secrets，未调用真实 provider。证据见 `verification/monthly-budget-worker-preview-upload/summary.json`。
+- 第 3B-2b2b 段零流量 deployment：zero_traffic_deployment_verified。新 active deployment `063b83c3-974f-43fb-84f2-9da0d574f745` 中旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 为 100%，新预算 version `483e4fae-3af8-40fa-ab83-4551f08b519e` 为 0%。version override 三项验证通过，预算表仍为空，未调用真实 provider，未修改 Secrets。证据见 `verification/monthly-budget-worker-zero-traffic-deployment/summary.json`。
 
 ## 当前事实
 
@@ -53,7 +54,7 @@
 
 - Windows 临时文件人工确认。
 - 自启项调整和闲置软件卸载决策。
-- 第 3B-2b2b 段 Worker 部署和生产验证。
+- 新预算 Worker 正常生产流量切换。
 - 首屏示例指令、反馈入口、安全和隐私告知。
 - 3-5 名真实用户测试。
 - 长期记忆、任务历史和状态卡、质量检查层、自动任务拆解和分配。
@@ -61,6 +62,6 @@
 
 ## 当前唯一下一步
 
-当前唯一下一步以 `NEXT_STEP.md` 为准：等待产品负责人验收第 3B-2b2a 段 Preview 上传验证。未经批准不得部署 Worker 或进入第 3B-2b2b 段。
+当前唯一下一步以 `NEXT_STEP.md` 为准：等待产品负责人验收第 3B-2b2b 段零流量 deployment。未经批准不得把新预算 Worker 切换到正常生产流量。
 
-完成本轮后必须停止，等待产品负责人验收第 3B-2b2a 段，不自动部署 Worker、不进入第 3B-2b2b 段、第二批清理或其他任务。
+完成本轮后必须停止，等待产品负责人验收第 3B-2b2b 段，不自动切换正常生产流量、不进入后续段、第二批清理或其他任务。

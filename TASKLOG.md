@@ -37,6 +37,7 @@ AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 
 | 第 3B-2b1 段：部署候选锁定 | 已完成部署候选锁定 | 产品负责人验收通过 3B-2a 后批准进入 3B-2b1。本轮显式补齐生产 Wrangler 预算 vars 和 `deepseek-chat` 价格配置；Managed Proxy 12 项本地回归通过；远端预算表仍为空；只读确认当前生产 Worker 版本、健康状态和回滚目标。未部署 Worker，未修改 Secrets，未调用真实 provider。 | `verification/monthly-budget-worker-deploy-readiness/summary.json`、`verification/monthly-budget-worker-deploy-readiness/report.md` |
 | 第 3B-2b2a 段：Preview 上传验证 | 已完成 Preview 上传验证 | 产品负责人验收通过 3B-2b1 后批准进入 3B-2b2a。本轮仅上传已锁定候选为 Worker Preview version `483e4fae-3af8-40fa-ab83-4551f08b519e`，验证 Preview URL 的 `/health`、`/v1/models` 和未认证聊天拒绝路径；active deployment 和 100% 生产流量仍指向原稳定 version，远端预算表仍为空。未部署 Worker，未修改 Secrets，未使用真实安装 Token，未调用真实 provider。 | `verification/monthly-budget-worker-preview-upload/summary.json`、`verification/monthly-budget-worker-preview-upload/report.md` |
 | 产品战略与升级路径 | 已完成 | 将“省时间”作为产品单点核心价值写入 `PRODUCT.md`，补充双人群价值、人机分工闭环、技术够用原则和长期升级路径；在 `PRINCIPLES.md` 写入“了解与开发分离”，明确前沿方向可以学习但不得在地基稳固、成本可控、有真实用户前启动工程开发。本轮只改文档，未改功能代码，未改变 `NEXT_STEP.md` 当前唯一下一步。 | `tasks/2026-07-24-产品战略与升级路径.md` |
+| 第 3B-2b2b 段：零流量 deployment | 已完成零流量验证 | 产品负责人验收通过 3B-2b2a 后批准进入 3B-2b2b，并在严格基线 blocked 后批准以文档提交 `37ab9c2` 为新基线继续。本轮用 `wrangler versions deploy` 将新预算 version 加入 active deployment，但流量为 0%；旧稳定 version 继续 100%。通过 production hostname version override 验证候选 version 的健康、模型列表和未认证聊天拒绝路径；预算表仍为空。未使用真实安装 Token，未调用真实 provider，未修改 Secrets，未执行回滚。上一段完整 Preview URL 当前文件已脱敏，历史不重写。 | `verification/monthly-budget-worker-zero-traffic-deployment/summary.json`、`verification/monthly-budget-worker-zero-traffic-deployment/report.md` |
 
 ## 当前未完成任务
 
@@ -51,7 +52,7 @@ AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 
 | 自动情报流水线 | 未开始/P3 | 后续再做，不阻塞上线。 |
 | 电脑环境治理：产品资产备份、单点故障核查和清理候选盘点 | 已完成 | 已进入第一批安全清理，当前清理结果为 partial。 |
 | 重启后处理第一批遗留空目录，并由产品负责人决定Windows临时文件及第二批软件清理 | 部分完成 | 已处理批准遗留目录；用户 npm 缓存仍因 `EPERM` 失败，Windows 临时文件仍需产品负责人手动确认；不得自动进入第二批清理。 |
-| 第 3B-2b2b 段：Worker 部署和生产验证 | 未开始 | 只能在产品负责人验收第 3B-2b2a 段并明确批准后执行；Preview 版本已上传但生产钱包刹车尚未生效。 |
+| 新预算 Worker 正常生产流量切换 | 未开始 | 只能在产品负责人验收第 3B-2b2b 段并明确批准后执行；新预算 Worker 已加入 deployment 但正常生产流量仍为 0%，生产钱包刹车尚未对正常流量生效。 |
 
 ## 最新 3A-R1.3 结果
 

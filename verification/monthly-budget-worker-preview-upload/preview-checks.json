@@ -1,7 +1,9 @@
 {
   "task": "monthly-budget-worker-preview-checks",
   "checked_at": "2026-07-25T12:25:00+08:00",
-  "preview_base_url": "https://budget-candidate-3b2b2a-ai-workbench-managed-proxy.qingyueshen5.workers.dev",
+  "preview_alias": "budget-candidate-3b2b2a",
+  "preview_host_redacted": "budget-candidate-3b2b2a-ai-workbench-managed-proxy.<redacted>.workers.dev",
+  "preview_host_sha256": "8E0B40C5A1D58A94FE1FBF2EF67E5EFDABFB89D4FD72A3EA45F882AF8C7318B2",
   "checks": [
     {
       "method": "GET",

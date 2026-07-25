@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Unreleased - 3B-2b2b 零流量 deployment
+
+- 产品负责人验收通过第 3B-2b2a 段，并在严格基线检查 blocked 后批准以文档提交 `37ab9c28a451dcdc858ce783293ef09448b7bc34` 作为新执行基线。
+- 使用 `wrangler versions deploy` 创建新 active deployment：旧稳定 Worker version `16333442-925a-4b11-a3d1-d6249d2492ba` 继续 100% 正常生产流量，新预算 Worker version `483e4fae-3af8-40fa-ab83-4551f08b519e` 加入 deployment 但为 0%。
+- 通过 production hostname 的 version override 验证新预算 version：`/health` HTTP 200、`/v1/models` HTTP 200、未认证聊天 HTTP 401 `missing_token`。
+- 远端 `monthly_platform_budget` 和 `monthly_model_budget` 在 deployment 前后及 version override 后仍为 0 行、0 预留。
+- 纠正上一段公开 evidence 中完整 Preview URL：当前文件只保留 alias、脱敏 host 和 host SHA256；不重写 Git 历史，不 force push。
+- 本轮未修改功能代码、Wrangler 配置、D1 schema、Secrets，未使用真实安装 Token，未调用真实 provider。生产钱包刹车尚未对正常生产流量生效。
+
 ## Unreleased - 产品战略与升级路径
 
 - 在 `PRODUCT.md` 写入产品战略 v3：核心价值聚焦“帮人省时间”，不追求全能、精密或一次性通用。
