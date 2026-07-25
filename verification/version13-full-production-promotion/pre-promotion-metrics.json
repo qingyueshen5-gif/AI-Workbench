@@ -1,0 +1,37 @@
+{
+  "time_range": "pre-promotion baseline before 2026-07-25T15:07:27Z deployment",
+  "active_deployment": "9952d7cb-2d99-483a-85f7-c9ada1a09db4",
+  "traffic": {
+    "stable_version": 99,
+    "version13": 1
+  },
+  "historical_metrics_status": "historical_metrics_unavailable",
+  "realtime_observability": "bounded wrangler tail windows available",
+  "overall_invocations_observed": 0,
+  "worker_runtime_errors_observed": 0,
+  "script_threw_exception_observed": 0,
+  "exceeded_resources_observed": 0,
+  "internal_error_observed": 0,
+  "http_5xx_observed": 0,
+  "production_health_status": 200,
+  "production_models_status": 200,
+  "budget": {
+    "platform": {
+      "reserved_micro_usd": 44,
+      "call_count": 2
+    },
+    "deepseek-chat": {
+      "reserved_micro_usd": 21,
+      "call_count": 1
+    },
+    "deepseek-v4-flash": {
+      "reserved_micro_usd": 23,
+      "call_count": 1
+    }
+  },
+  "natural_provider_activity_observed": false,
+  "metrics_limitations": [
+    "historical Workers metrics were not available from the current CLI flow",
+    "runtime error observation used bounded realtime wrangler tail windows"
+  ]
+}

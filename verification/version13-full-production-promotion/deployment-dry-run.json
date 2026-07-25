@@ -1,0 +1,25 @@
+{
+  "command_family": "wrangler versions deploy",
+  "dry_run": true,
+  "command_redacted": "npx.cmd wrangler versions deploy <version13>@100% --message <full-production-message> --dry-run -y",
+  "target_versions": [
+    {
+      "version_id": "cf002344-57ee-4c3f-86a6-115ca66c8b5f",
+      "percentage": 100
+    }
+  ],
+  "stable_version_included": false,
+  "failed_candidate_included": false,
+  "version12_included": false,
+  "third_version_present": false,
+  "new_version_upload": false,
+  "ordinary_wrangler_deploy_used": false,
+  "secrets_modified": false,
+  "routes_modified": false,
+  "domains_modified": false,
+  "triggers_modified": false,
+  "d1_modified": false,
+  "wrangler_output_result": "dry-run output selected only version 13 at 100%",
+  "process_exit_observation": "Wrangler emitted expected success content, then the parent command timed out because of local Wrangler process/log handling; no production change happened during dry-run.",
+  "passed": true
+}

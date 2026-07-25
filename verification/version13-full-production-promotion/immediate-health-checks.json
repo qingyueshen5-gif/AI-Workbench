@@ -1,0 +1,36 @@
+{
+  "after_deployment": "0400b7aa-49fe-460d-ac6d-3ed5bfdb0480",
+  "rounds": [
+    {
+      "round": 1,
+      "production_health": 200,
+      "production_models": 200,
+      "preview_health": 200,
+      "preview_models": 200
+    },
+    {
+      "round": 2,
+      "production_health": 200,
+      "production_models": 200,
+      "preview_health": 200,
+      "preview_models": 200
+    },
+    {
+      "round": 3,
+      "production_health": 200,
+      "production_models": 200,
+      "preview_health": 200,
+      "preview_models": 200
+    }
+  ],
+  "models_route": {
+    "logical_model": "deepseek-chat",
+    "model_type": "logical_alias",
+    "upstream_model": "deepseek-v4-flash",
+    "thinking_mode": "disabled"
+  },
+  "failures": 0,
+  "active_registration_attempts": 0,
+  "active_chat_attempts": 0,
+  "provider_calls_by_codex": 0
+}

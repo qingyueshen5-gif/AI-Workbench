@@ -5,7 +5,7 @@
 
 ## 当前主线
 
-本轮唯一任务：等待产品负责人验收 version 13 的 1% 生产灰度。
+本轮唯一任务：等待产品负责人验收 version 13 全量生产切换与第 3 阶段生产结果。
 
 边界：
 
@@ -38,7 +38,13 @@
 - 20 分钟主动观察和 5 分钟指标缓冲已完成；生产 `/health`、`/v1/models` 和 version 13 Preview GET 检查均保持 HTTP 200。
 - 候选 tail/error tail 窗口未观察到 JSON invocation 或 runtime error；由于未捕获自然候选 invocation，状态为 `version13_one_percent_canary_observation_limited_by_low_traffic`。
 - 本轮 Codex 主动注册 0 次、聊天 0 次、provider 调用 0 次；预算保持平台 44/2、历史 `deepseek-chat` 21/1、`deepseek-v4-flash` 23/1。
-- 完成后停止，等待产品负责人验收；未经批准不得将 version 13 切换到 100%，不得发起新的主动真实模型调用。
+- 产品负责人已验收 version 13 的 1% 正常生产灰度，并批准 version 13 全量生产切换。
+- 本轮未上传新 version，未修改 Worker、Wrangler 配置、Secrets 或 D1 schema；只用 `wrangler versions deploy` 将 version 13 提升到 100%。
+- 当前 active deployment 为 `0400b7aa-49fe-460d-ac6d-3ed5bfdb0480`，只包含 version 13 `cf002344-57ee-4c3f-86a6-115ca66c8b5f`，承载 100% 正常生产流量；旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 已退出正常流量但继续作为回滚目标。
+- 30 分钟主动观察和 5 分钟指标缓冲已完成；生产 `/health`、`/v1/models` 和 version 13 Preview GET 检查均保持 HTTP 200。
+- bounded error tail 未观察到 JSON runtime error；由于未捕获足够自然生产 invocation，状态为 `version13_full_production_active_observation_limited_by_low_traffic`。
+- 本轮 Codex 主动注册 0 次、聊天 0 次、provider 调用 0 次；预算保持平台 44/2、历史 `deepseek-chat` 21/1、`deepseek-v4-flash` 23/1。
+- 完成后停止，等待产品负责人验收；未经批准不得进入模型分层、上下文压缩、v0.4.7 或其他新阶段，不得发起新的主动真实模型调用。
 
 ## 最近完成
 
@@ -64,6 +70,7 @@
 - DeepSeek V4 Flash 非思考真实 Preview 验证：blocked_after_single_registration_before_real_call。新 version 13 已上传并通过无付费 Preview；唯一一次注册后脚本崩溃，真实聊天未执行。证据见 `verification/deepseek-v4-flash-nonthinking-real-preview/summary.json`。
 - DeepSeek V4 Flash 非思考真实 Preview 链路：v4_flash_nonthinking_real_path_passed。run2 复用 version 13，注册和真实聊天各 1 次均成功，预算和 V4 Flash 明细一致，生产流量未变化。证据见 `verification/deepseek-v4-flash-nonthinking-real-preview/summary.json`。
 - version 13 的 1% 生产灰度：version13_one_percent_canary_observation_limited_by_low_traffic。active deployment `9952d7cb-2d99-483a-85f7-c9ada1a09db4` 中旧稳定 version 为 99%，version 13 为 1%；观察窗口完成，健康检查正常，预算、Secrets 和 D1 schema 未变，未主动真实模型调用。证据见 `verification/version13-one-percent-production-canary/summary.json`。
+- version 13 全量生产切换：version13_full_production_active_observation_limited_by_low_traffic。active deployment `0400b7aa-49fe-460d-ac6d-3ed5bfdb0480` 只包含 version 13，承载 100%；30+5 分钟观察完成，健康检查正常，预算、Secrets、D1 schema、Worker 代码和 Wrangler 配置未变，未主动注册或真实模型调用，未触发回滚。证据见 `verification/version13-full-production-promotion/summary.json`。
 
 ## 当前事实
 
@@ -87,8 +94,6 @@
 
 - Windows 临时文件人工确认。
 - 自启项调整和闲置软件卸载决策。
-- 新预算 Worker 100% 全量切换。
-- DeepSeek V4 Flash version 13 100% 全量切换。
 - 首屏示例指令、反馈入口、安全和隐私告知。
 - 3-5 名真实用户测试。
 - 长期记忆、任务历史和状态卡、质量检查层、自动任务拆解和分配。
@@ -96,6 +101,6 @@
 
 ## 当前唯一下一步
 
-当前唯一下一步以 `NEXT_STEP.md` 为准：等待产品负责人验收 version 13 的 1% 生产灰度。未经批准不得将 version 13 切换到 100%，不得发起新的主动真实模型调用。
+当前唯一下一步以 `NEXT_STEP.md` 为准：等待产品负责人验收 version 13 全量生产切换与第 3 阶段生产结果。未经批准不得进入模型分层、上下文压缩、v0.4.7 或其他新阶段，不得主动发起新的真实模型调用。
 
-完成本轮后必须停止，等待产品负责人验收；version 13 当前仅 1% 灰度，不进入 100% 全量、第二批清理或其他任务。
+完成本轮后必须停止，等待产品负责人验收；version 13 当前 100% active production，不进入模型分层、上下文压缩、v0.4.7、第二批清理或其他任务。

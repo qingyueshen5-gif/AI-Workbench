@@ -1,0 +1,91 @@
+{
+  "task": "version13-full-production-promotion",
+  "execution_status": "version13_full_production_active_observation_limited_by_low_traffic",
+  "repository_head_before": "825012558d9e1b54dee0cc7dc554ca45a67b759f",
+  "accepted_canary_commit": "04a73359f079ac207f017774e61a71ddea29392a",
+  "worker_name": "ai-workbench-managed-proxy",
+  "stable_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "target_version_id": "cf002344-57ee-4c3f-86a6-115ca66c8b5f",
+  "active_deployment_before": "9952d7cb-2d99-483a-85f7-c9ada1a09db4",
+  "active_deployment_after": "0400b7aa-49fe-460d-ac6d-3ed5bfdb0480",
+  "stable_traffic_before": 99,
+  "target_traffic_before": 1,
+  "stable_traffic_after": 0,
+  "target_traffic_after": 100,
+  "single_version_deployment": true,
+  "observation_minutes": 30,
+  "metrics_buffer_minutes": 5,
+  "production_health_checks": {
+    "count": 11,
+    "failures": 0
+  },
+  "production_models_checks": {
+    "count": 11,
+    "failures": 0,
+    "logical_model": "deepseek-chat",
+    "upstream_model": "deepseek-v4-flash",
+    "thinking_mode": "disabled"
+  },
+  "overall_invocations_observed": 0,
+  "overall_runtime_errors": 0,
+  "natural_production_traffic_observed": false,
+  "organic_provider_activity_observed": false,
+  "codex_registration_attempts": 0,
+  "codex_chat_attempts": 0,
+  "platform_budget_before": {
+    "reserved_micro_usd": 44,
+    "call_count": 2
+  },
+  "platform_budget_after": {
+    "reserved_micro_usd": 44,
+    "call_count": 2
+  },
+  "deepseek_chat_budget_before": {
+    "reserved_micro_usd": 21,
+    "call_count": 1
+  },
+  "deepseek_chat_budget_after": {
+    "reserved_micro_usd": 21,
+    "call_count": 1
+  },
+  "v4_flash_budget_before": {
+    "reserved_micro_usd": 23,
+    "call_count": 1
+  },
+  "v4_flash_budget_after": {
+    "reserved_micro_usd": 23,
+    "call_count": 1
+  },
+  "budget_ledgers_consistent": true,
+  "rollback_ready": true,
+  "rollback_executed": false,
+  "production_wallet_guard_active": true,
+  "production_v4_flash_route_active": true,
+  "real_provider_path_previously_verified": true,
+  "platform_budget_ledger_previously_verified": true,
+  "model_budget_ledger_previously_verified": true,
+  "full_production_deployment_active": true,
+  "natural_user_traffic_validation_limited": true,
+  "secrets_modified": false,
+  "d1_schema_modified": false,
+  "worker_code_modified": false,
+  "routes_modified": false,
+  "domains_modified": false,
+  "blocked_items": [],
+  "critical_findings": [],
+  "evidence_files": [
+    "verification/version13-full-production-promotion/pre-promotion-state.json",
+    "verification/version13-full-production-promotion/pre-promotion-metrics.json",
+    "verification/version13-full-production-promotion/deployment-dry-run.json",
+    "verification/version13-full-production-promotion/deployment-result.json",
+    "verification/version13-full-production-promotion/immediate-health-checks.json",
+    "verification/version13-full-production-promotion/observation-snapshots.json",
+    "verification/version13-full-production-promotion/runtime-error-observation.json",
+    "verification/version13-full-production-promotion/budget-before-after.json",
+    "verification/version13-full-production-promotion/secret-schema-route-check.json",
+    "verification/version13-full-production-promotion/rollback-readiness.json",
+    "verification/version13-full-production-promotion/rollback-result.json",
+    "verification/version13-full-production-promotion/stage3-production-readiness.json"
+  ],
+  "next_action": "等待产品负责人验收 version 13 全量生产切换与第 3 阶段生产结果。未经批准不得进入模型分层、上下文压缩、v0.4.7 或其他新阶段，不得主动发起新的真实模型调用。"
+}

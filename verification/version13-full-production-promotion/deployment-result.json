@@ -1,0 +1,25 @@
+{
+  "command_family": "wrangler versions deploy",
+  "command_redacted": "npx.cmd wrangler versions deploy <version13>@100% --message <full-production-message> -y",
+  "message": "version 13 V4 Flash wallet guard full production",
+  "started_at": "2026-07-25T15:07:00Z",
+  "completed_at": "2026-07-25T15:07:27Z",
+  "wrangler_success_line_observed": true,
+  "wrangler_success_line_summary": "Deployed ai-workbench-managed-proxy version cf002344-57ee-4c3f-86a6-115ca66c8b5f at 100%",
+  "process_exit_code": 124,
+  "process_exit_note": "The command timed out after Wrangler printed the success line; post-deploy read-only status confirmed the deployment.",
+  "ordinary_wrangler_deploy_used": false,
+  "version_upload_used": false,
+  "active_deployment_before": "9952d7cb-2d99-483a-85f7-c9ada1a09db4",
+  "active_deployment_after": "0400b7aa-49fe-460d-ac6d-3ed5bfdb0480",
+  "versions_after": [
+    {
+      "version_id": "cf002344-57ee-4c3f-86a6-115ca66c8b5f",
+      "percentage": 100
+    }
+  ],
+  "single_version_deployment": true,
+  "stable_version_normal_traffic_after": 0,
+  "third_version_present": false,
+  "passed": true
+}

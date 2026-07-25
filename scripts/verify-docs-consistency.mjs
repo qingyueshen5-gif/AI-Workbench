@@ -36,7 +36,7 @@ const scannedFiles = [
 ];
 
 const ignoredHistoricalPaths = ['CHANGELOG.md', 'TASKLOG.md', 'tasks/**', 'verification/**', 'research/**'];
-const expectedNextStep = '等待产品负责人验收 version 13 的 1% 生产灰度。未经批准不得将 version 13 切换到 100%，不得发起新的主动真实模型调用。';
+const expectedNextStep = '等待产品负责人验收 version 13 全量生产切换与第 3 阶段生产结果。未经批准不得进入模型分层、上下文压缩、v0.4.7 或其他新阶段，不得主动发起新的真实模型调用。';
 
 function readText(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');

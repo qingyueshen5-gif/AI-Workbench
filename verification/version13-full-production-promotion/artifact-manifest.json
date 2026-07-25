@@ -1,0 +1,31 @@
+{
+  "artifact_dir": "verification/version13-full-production-promotion",
+  "created_at": "2026-07-25T15:55:00Z",
+  "files": [
+    "summary.json",
+    "report.md",
+    "commands.log",
+    "pre-promotion-state.json",
+    "pre-promotion-metrics.json",
+    "deployment-dry-run.json",
+    "deployment-result.json",
+    "immediate-health-checks.json",
+    "observation-snapshots.json",
+    "runtime-error-observation.json",
+    "budget-before-after.json",
+    "secret-schema-route-check.json",
+    "rollback-readiness.json",
+    "rollback-result.json",
+    "stage3-production-readiness.json",
+    "artifact-manifest.json"
+  ],
+  "sensitive_data_policy": {
+    "full_preview_url_recorded": false,
+    "token_recorded": false,
+    "authorization_header_recorded": false,
+    "cookie_recorded": false,
+    "secret_values_recorded": false,
+    "proxy_credentials_recorded": false,
+    "raw_production_user_data_recorded": false
+  }
+}

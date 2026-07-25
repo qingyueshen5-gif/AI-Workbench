@@ -1,0 +1,23 @@
+2026-07-25T22:40:00+08:00 | command: git status --short --branch | exit_code: 0 | output: clean main...origin/main
+2026-07-25T22:40:00+08:00 | command: git rev-parse HEAD and origin/main | exit_code: 0 | output: both 825012558d9e1b54dee0cc7dc554ca45a67b759f
+2026-07-25T22:40:00+08:00 | command: git merge-base --is-ancestor <accepted-canary-commit> HEAD | exit_code: 0 | output: accepted canary commit is ancestor
+2026-07-25T22:40:00+08:00 | command: git diff <accepted-canary-commit>..HEAD -- managed-proxy | exit_code: 0 | output: empty
+2026-07-25T22:41:00+08:00 | command: git fetch origin --prune | exit_code: failed | output: SEC_E_NO_CREDENTIALS; credentials not modified
+2026-07-25T22:43:00+08:00 | command: wrangler version/whoami/deployments/secrets/D1 read-only checks | exit_code: 0 | output: Wrangler 4.113.0; active deployment 9952d7cb...; traffic 99/1; budget 44/2, 21/1, 23/1
+2026-07-25T22:50:00+08:00 | command: wrangler rollback --help and wrangler versions deploy --help | exit_code: 0 | output: rollback and deploy command families available
+2026-07-25T22:54:00+08:00 | command: wrangler versions deploy <version13>@100% --dry-run -y | exit_code: timeout_after_expected_output | output: dry-run selected only version 13 at 100%
+2026-07-25T23:07:27+08:00 | command: wrangler versions deploy <version13>@100% -y | exit_code: timeout_after_success_output | output: success line observed; post-status confirmed deployment 0400b7aa...
+2026-07-25T23:08:00+08:00 | command: wrangler deployments status --json | exit_code: 0 | output: active deployment 0400b7aa..., version 13 at 100%
+2026-07-25T23:08:00+08:00 | command: no-cost production and Preview GET checks, 3 rounds | exit_code: 0 | output: all health/models HTTP 200; route deepseek-chat -> deepseek-v4-flash disabled
+2026-07-25T23:12:00+08:00 | command: bounded wrangler tail error window | exit_code: timeout | output: no JSON error event observed
+2026-07-25T23:17:00+08:00 | command: T+10 status and no-cost GET checks | exit_code: 0 | output: version 13 remained 100%; health/models HTTP 200
+2026-07-25T23:22:00+08:00 | command: T+15 status and no-cost GET checks | exit_code: 0 | output: version 13 remained 100%; health/models HTTP 200
+2026-07-25T23:27:00+08:00 | command: T+20 status and no-cost GET checks | exit_code: 0 | output: version 13 remained 100%; health/models HTTP 200
+2026-07-25T23:32:00+08:00 | command: T+25 status and no-cost GET checks | exit_code: 0 | output: version 13 remained 100%; health/models HTTP 200
+2026-07-25T23:37:00+08:00 | command: T+30 status and no-cost GET checks | exit_code: 0 | output: version 13 remained 100%; health/models HTTP 200; no JSON error event observed
+2026-07-25T23:48:00+08:00 | command: T+35 wrangler deployments status --json | exit_code: 0 | output: active deployment 0400b7aa..., single version 13 at 100%
+2026-07-25T23:49:00+08:00 | command: PowerShell no-cost GET check | exit_code: client_error | output: local PowerShell object reference error; not classified as production failure
+2026-07-25T23:49:00+08:00 | command: Node --use-env-proxy no-cost production and Preview GET checks | exit_code: 0 | output: all health/models HTTP 200; route deepseek-chat -> deepseek-v4-flash disabled
+2026-07-25T23:50:00+08:00 | command: bounded wrangler tail error window | exit_code: timeout | output: no JSON error event observed
+2026-07-25T23:51:00+08:00 | command: D1 read-only budget and schema checks | exit_code: 0 | output: budget unchanged; schema unchanged; installations and daily_usage unchanged
+2026-07-25T23:52:00+08:00 | command: wrangler secret list --format json | exit_code: 0 | output: expected three Secret names only; values not read

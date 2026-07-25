@@ -1,0 +1,8 @@
+{
+  "executed": false,
+  "reason": "no rollback condition triggered",
+  "stable_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "target_version_id": "cf002344-57ee-4c3f-86a6-115ca66c8b5f",
+  "active_deployment_at_stop": "0400b7aa-49fe-460d-ac6d-3ed5bfdb0480",
+  "target_traffic_at_stop": 100
+}

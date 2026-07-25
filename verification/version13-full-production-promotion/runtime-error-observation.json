@@ -1,0 +1,22 @@
+{
+  "method": "bounded wrangler tail realtime windows",
+  "version_id": "cf002344-57ee-4c3f-86a6-115ca66c8b5f",
+  "status_filter": "error",
+  "windows": [
+    "T+5",
+    "T+10",
+    "T+15",
+    "T+20",
+    "T+25",
+    "T+30",
+    "T+35"
+  ],
+  "json_error_events_observed": 0,
+  "script_threw_exception_observed": 0,
+  "exceeded_resources_observed": 0,
+  "internal_error_observed": 0,
+  "http_5xx_observed": 0,
+  "tail_exit_behavior": "bounded windows timed out or ended without JSON error event output",
+  "wrangler_local_warning": "non-blocking local Wrangler proxy/log warnings observed",
+  "runtime_error_condition_triggered": false
+}

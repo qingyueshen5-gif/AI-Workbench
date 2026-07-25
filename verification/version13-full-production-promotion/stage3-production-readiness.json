@@ -1,0 +1,20 @@
+{
+  "production_wallet_guard_active": true,
+  "production_v4_flash_route_active": true,
+  "real_provider_path_previously_verified": true,
+  "platform_budget_ledger_previously_verified": true,
+  "model_budget_ledger_previously_verified": true,
+  "full_production_deployment_active": true,
+  "natural_user_traffic_validation_limited": true,
+  "long_term_production_stability_proven": false,
+  "real_user_scale_validated": false,
+  "all_provider_ecosystem_complete": false,
+  "model_tiering_complete": false,
+  "product_finished": false,
+  "notes": [
+    "Version 13 is the active production version at 100%.",
+    "This promotion did not include an active Codex registration, chat, or provider call.",
+    "The real provider and budget ledger path was previously verified through the version 13 Versioned Preview single call.",
+    "Natural production invocation sample was insufficient during the bounded observation window."
+  ]
+}

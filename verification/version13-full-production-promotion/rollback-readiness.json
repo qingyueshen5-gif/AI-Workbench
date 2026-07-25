@@ -1,0 +1,31 @@
+{
+  "rollback_ready": true,
+  "rollback_target_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "rollback_target_exists": true,
+  "primary_command_redacted": "npx.cmd wrangler rollback <stable-version-id> --message <version-13-full-production-rollback-reason> -y",
+  "fallback_command_redacted": "npx.cmd wrangler versions deploy <stable-version-id>@100% --message <fallback-rollback-message> -y",
+  "help_checked": [
+    "wrangler rollback --help",
+    "wrangler versions deploy --help"
+  ],
+  "post_rollback_checks": [
+    "active deployment contains stable version at 100%",
+    "version 13 exits active production deployment",
+    "GET /health returns HTTP 200",
+    "GET /v1/models returns HTTP 200",
+    "budget tables are not deleted or modified by rollback",
+    "Secrets and D1 schema remain unchanged"
+  ],
+  "rollback_trigger_conditions": [
+    "version 13 not exactly 100%",
+    "active deployment contains any other version",
+    "confirmed Worker/runtime 5xx",
+    "two consecutive health or models failures",
+    "Script Threw Exception",
+    "Exceeded Resources",
+    "persistent Internal Error",
+    "D1 or Secret binding anomaly",
+    "budget ledger mismatch",
+    "unauthorized Secrets, D1 schema, routes, or domains change"
+  ]
+}

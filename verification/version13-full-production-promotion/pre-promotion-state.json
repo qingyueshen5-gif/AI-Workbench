@@ -1,0 +1,71 @@
+{
+  "checked_at": "2026-07-25T14:55:00Z",
+  "repository": {
+    "status_short_branch": "## main...origin/main",
+    "head": "825012558d9e1b54dee0cc7dc554ca45a67b759f",
+    "origin_main": "825012558d9e1b54dee0cc7dc554ca45a67b759f",
+    "accepted_canary_commit_is_ancestor": true,
+    "managed_proxy_diff_after_accepted_canary_commit": "empty",
+    "post_canary_commits": "documentation-only audited"
+  },
+  "git_fetch_origin_prune": {
+    "attempted": true,
+    "status": "failed",
+    "error_code": "SEC_E_NO_CREDENTIALS",
+    "credentials_modified": false,
+    "auto_login_attempted": false
+  },
+  "cloudflare": {
+    "wrangler_version": "4.113.0",
+    "logged_in": true,
+    "identity_recorded": "existing OAuth account; email not repeated in final report",
+    "worker_name": "ai-workbench-managed-proxy"
+  },
+  "deployment_before": {
+    "active_deployment_id": "9952d7cb-2d99-483a-85f7-c9ada1a09db4",
+    "versions": [
+      {
+        "version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+        "percentage": 99
+      },
+      {
+        "version_id": "cf002344-57ee-4c3f-86a6-115ca66c8b5f",
+        "percentage": 1
+      }
+    ],
+    "third_version_present": false
+  },
+  "health_before": {
+    "production_health_status": 200,
+    "production_models_status": 200,
+    "preview_health_status": 200,
+    "preview_models_status": 200,
+    "models_logical_model": "deepseek-chat",
+    "models_upstream_model": "deepseek-v4-flash",
+    "models_thinking_mode": "disabled"
+  },
+  "budget_before": {
+    "month_key": "2026-07",
+    "monthly_platform_budget": {
+      "reserved_micro_usd": 44,
+      "call_count": 2
+    },
+    "monthly_model_budget": {
+      "deepseek-chat": {
+        "reserved_micro_usd": 21,
+        "call_count": 1
+      },
+      "deepseek-v4-flash": {
+        "reserved_micro_usd": 23,
+        "call_count": 1
+      }
+    },
+    "installations_count": 36,
+    "daily_usage_today": {
+      "usage_date": "2026-07-25",
+      "request_count": 5,
+      "input_tokens": 4,
+      "output_tokens": 1
+    }
+  }
+}

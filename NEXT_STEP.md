@@ -1,7 +1,7 @@
 # NEXT_STEP.md
 
 <!-- AIW_NEXT_STEP_START -->
-等待产品负责人验收 version 13 的 1% 生产灰度。未经批准不得将 version 13 切换到 100%，不得发起新的主动真实模型调用。
+等待产品负责人验收 version 13 全量生产切换与第 3 阶段生产结果。未经批准不得进入模型分层、上下文压缩、v0.4.7 或其他新阶段，不得主动发起新的真实模型调用。
 <!-- AIW_NEXT_STEP_END -->
 
 ## 当前状态
@@ -40,8 +40,14 @@
 - 已完成 20 分钟主动观察和 5 分钟指标缓冲；生产 `/health` 和 `/v1/models` 均保持 HTTP 200，version 13 Preview GET 检查保持 HTTP 200。
 - 未观察到候选 version 的自然 invocation，状态为 `version13_one_percent_canary_observation_limited_by_low_traffic`。
 - 本轮 Codex 未主动注册 installation、未主动发起聊天或真实模型调用；预算仍为平台 44/2、历史 `deepseek-chat` 21/1、`deepseek-v4-flash` 23/1。
+- 产品负责人已验收 version 13 的 1% 正常生产灰度，并批准执行 100% 全量生产切换。
+- 本轮复用现有 version 13，未上传新 version，未修改 Worker 代码、Wrangler 配置、Secrets 或 D1 schema。
+- active deployment 已更新为 `0400b7aa-49fe-460d-ac6d-3ed5bfdb0480`；version 13 `cf002344-57ee-4c3f-86a6-115ca66c8b5f` 当前承载 100% 正常生产流量，旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 已退出正常流量但继续保留为回滚目标。
+- 已完成 30 分钟主动观察和 5 分钟指标缓冲；生产 `/health` 和 `/v1/models` 均保持 HTTP 200，version 13 Preview GET 检查保持 HTTP 200。
+- 未观察到自然生产 provider 活动，状态为 `version13_full_production_active_observation_limited_by_low_traffic`。
+- 本轮 Codex 未主动注册 installation、未主动发起聊天或真实模型调用；预算仍为平台 44/2、历史 `deepseek-chat` 21/1、`deepseek-v4-flash` 23/1。
 
-## 为什么停在 version 13 的 1% 生产灰度验收
+## 为什么停在 version 13 全量生产切换验收
 
 - 真实预算预留已验证，但 provider 成功返回因已退役上游模型名失败。
 - 本轮已先执行生产风险收敛：旧稳定 version 100%，失败候选 version 0%。
@@ -50,15 +56,15 @@
 - version 12 已通过无付费 Preview，但缺少显式非思考模式，不能代表 `deepseek-chat` 历史语义完整兼容。
 - 新非思考兼容 version 已上传并通过无付费 Preview 和真实 Preview 链路。
 - 真实 Preview 验证只证明 version 13 在专属 Preview URL 上可注册、可调用 DeepSeek V4 Flash、可写入预算账本。
-- version 13 已加入 active production deployment，但仅承载 1% 正常生产流量。
+- version 13 已成为 active production deployment 的唯一版本，承载 100% 正常生产流量。
 - 本轮未修改 Secrets 或 D1 schema，未发起新的主动注册或真实聊天。
-- 观察窗口没有发现候选异常，但也没有捕获足够自然候选 invocation，不能写成全量完成。
+- 观察窗口没有发现候选异常，但也没有捕获足够自然生产 invocation，不能写成长周期真实用户规模稳定性已证明。
 
 ## 本轮允许范围
 
 当前只允许：
 
-- 等待产品负责人验收 version 13 的 1% 生产灰度；
+- 等待产品负责人验收 version 13 全量生产切换与第 3 阶段生产结果；
 - 查阅 `verification/deepseek-v4-flash-nonthinking-real-preview/summary.json` 和 `report.md`；
 - 查阅 `verification/deepseek-v4-flash-nonthinking-compatibility/summary.json` 和 `report.md`；
 - 查阅 `verification/deepseek-v4-flash-worker-preview-upload/summary.json` 和 `report.md`；
@@ -68,9 +74,7 @@
 
 禁止：
 
-- 把新预算 Worker 切换到 100% 正常生产流量；
 - 执行 `wrangler deploy`、新的 `wrangler versions upload` 或 `wrangler versions deploy`；
-- 将 version 13 切换到 100%；
 - 使用 version 12 发起付费真实验证；
 - 修改 Worker 流量；
 - 执行 rollback；
@@ -80,11 +84,11 @@
 - 注册测试安装；
 - 写入预算表；
 - 修改生产 D1；
-- 自动进入 100% 全量切换、模型分层、上下文压缩或 v0.4.7；
+- 自动进入模型分层、上下文压缩或 v0.4.7；
 - 自动进入首屏示例、反馈入口、安全告知、真实用户测试、手机端、完整多 Agent 调度或生态扩张；
 - 删除文件、卸载软件、迁移活跃仓库或批量结束进程；
 - 清理浏览器账号/缓存、GitHub/Cloudflare/Windows 凭据、`managed-proxy`、`node_modules`、`release-v0.4.6-installer` 或 verification 正式证据。
 
 ## 验收后
 
-验收批准后的候选下一步可能是将 version 13 切换到 100% 或其他处理方案。它不是本轮已执行内容，未经产品负责人批准不得开始。
+验收批准后的候选下一步可能是模型分层、上下文压缩、v0.4.7 或其他处理方案。它不是本轮已执行内容，未经产品负责人批准不得开始。

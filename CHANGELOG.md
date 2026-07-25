@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Unreleased - Version 13 全量生产切换
+
+- 产品负责人验收 version 13 的 1% 正常生产灰度后，批准将 version 13 提升到 100% 正常生产流量。
+- 使用现有 Worker version `cf002344-57ee-4c3f-86a6-115ca66c8b5f`，未上传新 version，未修改 Worker 代码、Wrangler 配置、Secrets、D1 schema、routes 或 domains。
+- 新 active deployment `0400b7aa-49fe-460d-ac6d-3ed5bfdb0480` 只包含 version 13，承载 100%；旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 已退出正常流量但继续作为回滚目标。
+- 完成 30 分钟主动观察和 5 分钟指标缓冲；生产与 Preview 无付费 GET 健康检查均 HTTP 200，未观察到 runtime error，未触发回滚。
+- 本轮未主动注册 installation，未主动发起真实聊天或 provider 调用；预算保持平台 44/2、历史 `deepseek-chat` 21/1、`deepseek-v4-flash` 23/1。
+- 钱包刹车与 V4 Flash 非思考路由已处于 active production version；自然生产 invocation 样本不足，不能写成长周期真实用户规模稳定性已证明。
+
 ## Unreleased - 判断原则固化与信息收集排期
 
 - 在 `PRINCIPLES.md` 固化四条产品判断原则：简单粗暴模式与细致模式切换、单任务推进、借用生态扩大适用、支付路径范围划分。
