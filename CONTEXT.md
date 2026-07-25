@@ -19,7 +19,7 @@ AI Workbench v0.4.6 Alpha 已公开发布。③A 总验收和 ③B GitHub Releas
 
 当前尚无真实用户。模型调用成本由平台承担，且平台月度金额硬上限尚未建立；现金跑道约 8 个月，月支出约 8200。当前目标是盈亏平衡和知名度，不是收费或利润最大化。
 
-生存体检和第 3A 段本地钱包刹车均已由产品负责人验收通过。3A 已完成平台合计预算纠偏和 mock 验证：平台月度总预算政策上限 50 USD，所有 provider/模型合计的模型调用硬上限 40 USD，基础设施及价格波动预留 10 USD；Managed Proxy 使用整数 micro-USD，在调用 provider 前按模型价格保守预留，由 `monthly_platform_budget(month_key)` 平台总账执行唯一 D1 条件原子更新，成功后才允许上游调用。`monthly_model_budget(month_key, model)` 只做模型明细账和审计用途，不决定硬上限。失败/超时/500 不退款，缺价格或预算账本不可用时 fail closed。证据见 `verification/monthly-budget-circuit-breaker-local/summary.json`。
+生存体检和第 3A 段本地钱包刹车均已由产品负责人验收通过。3A 已完成平台合计预算纠偏和 mock 验证：平台月度总预算政策上限 50 USD，所有 provider/模型合计的模型调用硬上限 40 USD，基础设施及价格波动预留 10 USD；Managed Proxy 使用整数 micro-USD，在调用 provider 前按模型价格保守预留。平台总账的硬上限预留通过 `monthly_platform_budget(month_key)` 带额度条件的单条更新完成，属于硬刹车所依赖的条件原子操作；`monthly_model_budget(month_key, model)` 模型明细账在平台预留成功后单独更新，不与平台总账构成一个整体原子事务。模型明细只做审计和分类统计，不决定硬上限。如果模型明细账更新失败，请求会 fail closed，provider 不会被调用；平台总账已产生的保守预留保持不退款，可能导致预算更早耗尽，但不会导致预算绕过或超支。失败/超时/500 不退款，缺价格或预算账本不可用时 fail closed。证据见 `verification/monthly-budget-circuit-breaker-local/summary.json`。
 
 第 3B-1 段生产预检与远端 D1 部署前备份已完成：生产变更前必须核对 Cloudflare 身份、Worker、D1 binding、目标数据库和既有生产 evidence，并在仓库外完成远端 D1 完整导出备份。当前备份位于 `D:\AI-Workbench-Backups\2026-07-24-managed-proxy-budget-predeploy\`，证据见 `verification/monthly-budget-production-preflight/summary.json`。本轮未执行远端 D1 migration，未部署生产 Cloudflare Worker，未修改 Secrets，未调用真实 provider。
 
@@ -31,7 +31,7 @@ AI Workbench v0.4.6 Alpha 已公开发布。③A 总验收和 ③B GitHub Releas
 
 第 3B-2b2e 段 DeepSeek V4 Flash 修复 Worker Preview 已完成无付费验证：产品负责人验收本地候选后批准只上传新 Worker version 并做 Preview 检查。新修复 version `a7eb385b-84df-4a45-b554-0aca40b6b407` / version number `12` 已上传，Preview alias 为 `budget-v4-flash-candidate`。active deployment 仍为 `d9acb146-b720-4e09-b2b8-0257b93fc407`；旧稳定 version 仍为 100%，已知失败候选仍为 0%，新修复 version 正常生产流量为 0%。Preview `/health` HTTP 200，`/v1/models` HTTP 200 并显示 `deepseek-chat` 为逻辑 alias、上游为 `deepseek-v4-flash`；未认证聊天 HTTP 401 `missing_token`。本轮未注册 installation，未发起已认证聊天，未调用真实 provider，两张预算表仍保持 21 micro-USD / call_count 1，Secrets 和 D1 schema 未修改。证据见 `verification/deepseek-v4-flash-worker-preview-upload/summary.json`。
 
-DeepSeek V4 Flash 非思考兼容 version 13 已通过真实 Preview 链路、1% 正常生产灰度，并已提升为 100% active production version：客户端逻辑模型仍为 `deepseek-chat`，Worker 内部路由到上游 `deepseek-v4-flash` 并强制 `thinking: { "type": "disabled" }`。真实 Preview run2 注册和聊天各 1 次均 HTTP 200，provider model `deepseek-v4-flash`，回答 `OK`，预算平台总账 21/1 -> 44/2，V4 Flash 明细不存在 -> 23/1，历史 `deepseek-chat` 保持 21/1。1% 灰度由产品负责人验收后，本轮用 `wrangler versions deploy` 将 version 13 `cf002344-57ee-4c3f-86a6-115ca66c8b5f` 提升到 100%，新 active deployment 为 `0400b7aa-49fe-460d-ac6d-3ed5bfdb0480`，只包含 version 13。30 分钟主动观察和 5 分钟指标缓冲完成，生产与 Preview 健康检查正常，未观察到 runtime error，预算保持平台 44/2、历史 `deepseek-chat` 21/1、`deepseek-v4-flash` 23/1。本轮没有主动注册或真实模型调用；自然生产 invocation 样本不足，因此不能声称长期真实用户规模稳定性已证明。证据见 `verification/version13-full-production-promotion/summary.json`。
+DeepSeek V4 Flash 非思考兼容 version 13 已通过真实 Preview 链路、1% 正常生产灰度，并已提升为 100% active production version：客户端逻辑模型仍为 `deepseek-chat`，Worker 内部路由到上游 `deepseek-v4-flash` 并强制 `thinking: { "type": "disabled" }`。真实 Preview run2 注册和聊天各 1 次均 HTTP 200，provider model `deepseek-v4-flash`，回答 `OK`，预算平台总账 21/1 -> 44/2，V4 Flash 明细不存在 -> 23/1，历史 `deepseek-chat` 保持 21/1。1% 灰度由产品负责人验收后，本轮用 `wrangler versions deploy` 将 version 13 `cf002344-57ee-4c3f-86a6-115ca66c8b5f` 提升到 100%，新 active deployment 为 `0400b7aa-49fe-460d-ac6d-3ed5bfdb0480`，只包含 version 13。30 分钟主动观察和 5 分钟指标缓冲完成，生产与 Preview 健康检查正常，未观察到 runtime error，预算保持平台 44/2、历史 `deepseek-chat` 21/1、`deepseek-v4-flash` 23/1。本轮没有主动注册或真实模型调用；自然生产 invocation 样本不足，因此不能声称长期真实用户规模稳定性已证明。GPT 技术验收和 Claude 逻辑复核后的文档条件已解决，产品负责人批准 `ACCEPT_CONDITIONAL_PASS`，第 3 阶段最终状态为 `PASS_AFTER_CONDITIONS_RESOLVED`。证据见 `verification/version13-full-production-promotion/summary.json`。
 
 ## 当前架构
 
@@ -58,7 +58,7 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 详细未完成清单以 `CURRENT_PROGRESS_AUDIT.md` 为唯一权威。本文件只展示摘要：
 
 - 电脑环境治理审计已完成；第一批安全清理仍为 partial，用户 npm 缓存仍因 `EPERM` 未清理，Windows 临时文件仍需产品负责人手动确认。
-- DeepSeek V4 Flash 非思考兼容 version 13 已通过真实 Preview 链路、1% 生产灰度，并已成为 100% active production version；当前等待产品负责人验收全量生产切换与第 3 阶段生产结果。未经批准不得进入模型分层、上下文压缩、v0.4.7 或其他新阶段，不得注册 installation 或发起新的主动真实模型调用。
+- DeepSeek V4 Flash 非思考兼容 version 13 已通过真实 Preview 链路、1% 生产灰度，并已成为 100% active production version；第 3 阶段钱包刹车与 version 13 全量生产已正式封板。未经批准不得进入模型分层、上下文压缩、v0.4.7 或其他新阶段，不得注册 installation 或发起新的主动真实模型调用。
 - 首屏 3-5 条示例指令、反馈入口、安全和隐私告知尚未完成；v0.4.7 产品内埋点与错误日志需求已确认但尚未设计和开发，不属于当前第 3 阶段完成条件。
 - 3-5 名真实用户测试尚未开始。
 - 长期记忆、任务历史和状态卡、质量检查层、自动任务拆解和分配尚未完成。
@@ -68,9 +68,9 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 
 当前唯一下一步以 `NEXT_STEP.md` 为唯一权威：
 
-等待产品负责人验收 version 13 全量生产切换与第 3 阶段生产结果。未经批准不得进入模型分层、上下文压缩、v0.4.7 或其他新阶段，不得主动发起新的真实模型调用。
+等待产品负责人批准下一阶段范围和执行指令。
 
-不得上传新 Worker version、注册 installation、发起真实模型调用、修改 Secrets、进入后续段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发。
+不得上传新 Worker version、注册 installation、发起真实模型调用、修改 Secrets、进入后续段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发，除非产品负责人明确批准对应下一阶段任务。
 
 ## 产品方向文件索引
 
@@ -137,7 +137,7 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 - DeepSeek V4 Flash 非思考兼容本地候选：version 12 已验收但不用于付费验证；本地候选新增 `thinkingMode: "disabled"`，服务端强制上游非思考 payload。该修正尚未上传到 Cloudflare，不得写成 Preview passed、production fixed、real provider path passed 或 wallet guard complete。
 - DeepSeek V4 Flash 非思考真实 Preview 阻断：非思考兼容新 Worker version `cf002344-57ee-4c3f-86a6-115ca66c8b5f` / version number `13` 已上传并通过无付费 Preview 安全门；未加入 active deployment，正常生产流量 0%。唯一一次注册已消耗，D1 确认 installations +1、daily_usage +1；一次性脚本随后在聊天前预算读取阶段崩溃，Token 未打印未持久化且不可恢复，真实聊天 0 次、provider 调用 0 次、预算预留 0。不得写成 real path passed；未经产品负责人重新批准不得第二次注册或真实调用。
 - DeepSeek V4 Flash 非思考真实 Preview 链路：产品负责人批准 run2 后，复用现有 version 13，移除 Token 进程中的所有子进程调用，完成一次注册和一次真实聊天。聊天 HTTP 200，provider model `deepseek-v4-flash`，回答 `OK`，`reasoning_content` 为空；平台总账 21/1 -> 44/2，`deepseek-v4-flash` 明细不存在 -> 23/1，历史 `deepseek-chat` 保持 21/1。version 13 未加入 active deployment，正常生产流量仍为 0%；等待产品负责人验收，不得自动进入 production deployment、1% 或 100%。
-- Version 13 全量生产切换：产品负责人验收 1% 灰度后批准 100% 全量；当前 active deployment `0400b7aa-49fe-460d-ac6d-3ed5bfdb0480` 只包含 version 13 `cf002344-57ee-4c3f-86a6-115ca66c8b5f`，承载 100% 正常生产流量。观察窗口正常但受低自然生产流量限制；本轮未主动注册或聊天，预算仍为平台 44/2、历史 `deepseek-chat` 21/1、`deepseek-v4-flash` 23/1。未经批准不得进入模型分层、上下文压缩、v0.4.7 或其他新阶段。
+- Version 13 全量生产切换与第 3 阶段封板：产品负责人验收 1% 灰度后批准 100% 全量；当前 active deployment `0400b7aa-49fe-460d-ac6d-3ed5bfdb0480` 只包含 version 13 `cf002344-57ee-4c3f-86a6-115ca66c8b5f`，承载 100% 正常生产流量。观察窗口正常但受低自然生产流量限制；本轮未主动注册或聊天，预算仍为平台 44/2、历史 `deepseek-chat` 21/1、`deepseek-v4-flash` 23/1。第 3 阶段已在 GPT 技术验收 `CONDITIONAL_PASS`、Claude 逻辑复核和产品负责人 `ACCEPT_CONDITIONAL_PASS` 后正式封板；自然用户规模稳定性尚未证明。未经批准不得进入模型分层、上下文压缩、v0.4.7 或其他新阶段。
 
 ## 第三方 Agent/工具升级管理规则
 

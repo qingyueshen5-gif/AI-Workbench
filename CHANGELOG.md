@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Unreleased - 第 3 阶段钱包刹车正式封板
+
+- 产品负责人批准 `ACCEPT_CONDITIONAL_PASS`，第 3 阶段钱包刹车与 version 13 全量生产最终状态记录为 `PASS_AFTER_CONDITIONS_RESOLVED`。
+- 修正预算原子性口径：平台总账的硬上限预留是带额度条件的单条更新，模型明细账在平台预留成功后单独更新，两张账本不构成一个整体原子事务。
+- 明确模型明细写入失败边界：请求 fail closed，provider 不会被调用，平台总账保守预留不退款，只可能更早耗尽预算，不会导致 40 USD 硬上限被绕过。
+- 整理 `verification/deepseek-v4-flash-nonthinking-real-preview/report.md` 的 run1/run2 标题，避免把 run1 阻断状态误读为最终验收结论。
+- 记录自然用户规模稳定性尚未证明，以及桌面端预算到顶提示展示需放入 v0.4.7 或首批真人试用前检查。
+- 本轮只改文档、verification 表述、Handoff 和文档一致性证据；未修改功能代码、Cloudflare、D1、预算、模型路由或生产流量，未启动新阶段。
+
 ## Unreleased - 用户试用门槛与 v0.4.7 埋点反馈机制
 
 - 固化用户试用前的及格线和真实用户之后的满分线，明确钱包刹车属于首批真人试用前的关键生产安全能力。

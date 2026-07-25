@@ -1,11 +1,11 @@
 # CURRENT_TASK.md — 当前任务
 
-> 最新更新：2026-07-25
+> 最新更新：2026-07-26
 > 当前任务文件只描述正在执行或最近完成的任务，不定义后续路线；当前唯一下一步以 `NEXT_STEP.md` 为准。
 
 ## 当前主线
 
-本轮唯一任务：等待产品负责人验收 version 13 全量生产切换与第 3 阶段生产结果。
+本轮唯一任务：第 3 阶段钱包刹车正式封板已完成，等待产品负责人批准下一阶段范围和执行指令。
 
 边界：
 
@@ -44,7 +44,14 @@
 - 30 分钟主动观察和 5 分钟指标缓冲已完成；生产 `/health`、`/v1/models` 和 version 13 Preview GET 检查均保持 HTTP 200。
 - bounded error tail 未观察到 JSON runtime error；由于未捕获足够自然生产 invocation，状态为 `version13_full_production_active_observation_limited_by_low_traffic`。
 - 本轮 Codex 主动注册 0 次、聊天 0 次、provider 调用 0 次；预算保持平台 44/2、历史 `deepseek-chat` 21/1、`deepseek-v4-flash` 23/1。
-- 完成后停止，等待产品负责人验收；未经批准不得进入模型分层、上下文压缩、v0.4.7 或其他新阶段，不得发起新的主动真实模型调用。
+- GPT 技术验收初始结论为 `CONDITIONAL_PASS`；Claude 逻辑复核提出需要确认两张账本非整体原子是否可能绕过硬上限。
+- 代码和测试复核确认属于安全的情况 A：平台总账 `monthly_platform_budget` 是唯一用于决定是否允许继续调用 provider 的硬刹车，模型明细 `monthly_model_budget` 只用于审计和分类统计。
+- 平台总账的硬上限预留通过带额度条件的单条更新完成，属于硬刹车所依赖的条件原子操作；模型明细账在平台预留成功后单独更新，不与平台总账构成一个整体原子事务。
+- 如果模型明细账更新失败，请求会 fail closed，provider 不会被调用；平台总账已产生的保守预留保持不退款，后续请求仍以平台总账判断剩余额度，因此只可能更早停止，不可能突破 40 USD 模型调用硬上限。
+- 产品负责人正式批准 `ACCEPT_CONDITIONAL_PASS`，第 3 阶段最终状态为 `PASS_AFTER_CONDITIONS_RESOLVED`。
+- 自然用户规模稳定性尚未证明；后续由真实用户试用和产品埋点继续验证。
+- 后端已有预算到顶错误码 `monthly_budget_exhausted` 和中文提示“共享模型服务本月额度已用完，请稍后再试。”；桌面端是否清晰、友好展示尚未独立证明，记录到 v0.4.7 或首批真人试用前检查。
+- 当前唯一下一步是等待产品负责人批准下一阶段范围和执行指令；未经批准不得进入模型分层、上下文压缩、v0.4.7 或其他新阶段，不得发起新的主动真实模型调用。
 
 ## 最近完成
 
@@ -71,6 +78,7 @@
 - DeepSeek V4 Flash 非思考真实 Preview 链路：v4_flash_nonthinking_real_path_passed。run2 复用 version 13，注册和真实聊天各 1 次均成功，预算和 V4 Flash 明细一致，生产流量未变化。证据见 `verification/deepseek-v4-flash-nonthinking-real-preview/summary.json`。
 - version 13 的 1% 生产灰度：version13_one_percent_canary_observation_limited_by_low_traffic。active deployment `9952d7cb-2d99-483a-85f7-c9ada1a09db4` 中旧稳定 version 为 99%，version 13 为 1%；观察窗口完成，健康检查正常，预算、Secrets 和 D1 schema 未变，未主动真实模型调用。证据见 `verification/version13-one-percent-production-canary/summary.json`。
 - version 13 全量生产切换：version13_full_production_active_observation_limited_by_low_traffic。active deployment `0400b7aa-49fe-460d-ac6d-3ed5bfdb0480` 只包含 version 13，承载 100%；30+5 分钟观察完成，健康检查正常，预算、Secrets、D1 schema、Worker 代码和 Wrangler 配置未变，未主动注册或真实模型调用，未触发回滚。证据见 `verification/version13-full-production-promotion/summary.json`。
+- 第 3 阶段钱包刹车正式封板：PASS_AFTER_CONDITIONS_RESOLVED。产品负责人批准 `ACCEPT_CONDITIONAL_PASS`；平台总账硬刹车与模型明细审计账的非整体原子边界已写清，真实 Preview run1/run2 报告标题已整理，自然用户规模验证限制和桌面端预算到顶提示后续事项已记录。证据见 `tasks/2026-07-26-第3阶段钱包刹车正式封板.md`。
 
 ## 当前事实
 
@@ -101,6 +109,6 @@
 
 ## 当前唯一下一步
 
-当前唯一下一步以 `NEXT_STEP.md` 为准：等待产品负责人验收 version 13 全量生产切换与第 3 阶段生产结果。未经批准不得进入模型分层、上下文压缩、v0.4.7 或其他新阶段，不得主动发起新的真实模型调用。
+当前唯一下一步以 `NEXT_STEP.md` 为准：等待产品负责人批准下一阶段范围和执行指令。
 
 完成本轮后必须停止，等待产品负责人验收；version 13 当前 100% active production，不进入模型分层、上下文压缩、v0.4.7、第二批清理或其他任务。

@@ -86,14 +86,16 @@
 - DeepSeek V4 Flash 非思考真实 Preview 链路 v4_flash_nonthinking_real_path_passed：产品负责人确认 run1 阻断不是 Worker、D1、Secret、DeepSeek 或预算代码问题，而是 Windows Node 子进程错误调用 `.cmd` 文件，并批准 run2 复用现有 version 13。run2 未上传新 version，未修改 Worker/配置/Secrets/D1 schema/production deployment；父级终端直接读 D1，Token 进程移除所有子进程调用，只注册一次并聊天一次。注册 HTTP 200，聊天 HTTP 200，provider model `deepseek-v4-flash`，回答 `OK`，`reasoning_content` 为空，usage 为 prompt 7 / completion 1 / total 8。预算预留按最终 payload 计算为 23 micro-USD；平台总账 21/1 -> 44/2，`deepseek-v4-flash` 明细不存在 -> 23/1，历史 `deepseek-chat` 保持 21/1。version 13 仍未加入 active deployment，正常生产流量 0%。证据见 `verification/deepseek-v4-flash-nonthinking-real-preview/summary.json`。
 - Version 13 的 1% 生产灰度 version13_one_percent_canary_observation_limited_by_low_traffic：产品负责人验收通过 version 13 DeepSeek V4 Flash 非思考真实 Preview 链路后批准执行 1% 灰度。本轮先纠正旧 verification summary 中 run1/run2 顶层字段歧义；随后复用现有 version 13 `cf002344-57ee-4c3f-86a6-115ca66c8b5f`，未上传新 version，未修改 Worker、Wrangler 配置、Secrets 或 D1 schema。active deployment 更新为 `9952d7cb-2d99-483a-85f7-c9ada1a09db4`，旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 承载 99%，version 13 承载 1%。20 分钟主动观察和 5 分钟指标缓冲完成；生产 `/health`、`/v1/models` 和 Preview GET 检查均 HTTP 200，候选 tail/error tail 窗口未观察到 JSON invocation 或 runtime error，未触发回滚。因未捕获足够自然候选 invocation，观察可信度受低流量限制。预算保持平台 44/2、历史 `deepseek-chat` 21/1、`deepseek-v4-flash` 23/1；Codex 本轮主动注册 0 次、聊天 0 次、provider 调用 0 次。证据见 `verification/version13-one-percent-production-canary/summary.json`。
 - Version 13 全量生产切换 version13_full_production_active_observation_limited_by_low_traffic：产品负责人验收通过 version 13 的 1% 正常生产灰度后批准 100% 全量。本轮复用现有 version 13 `cf002344-57ee-4c3f-86a6-115ca66c8b5f`，未上传新 version，未修改 Worker、Wrangler 配置、Secrets、D1 schema、routes 或 domains；只用 `wrangler versions deploy` 将 active deployment 更新为 `0400b7aa-49fe-460d-ac6d-3ed5bfdb0480`，且该 deployment 只包含 version 13，承载 100% 正常生产流量。30 分钟主动观察和 5 分钟指标缓冲完成；生产 `/health`、`/v1/models` 和 Preview GET 检查均 HTTP 200，error tail 窗口未观察到 JSON runtime error，未触发回滚。预算保持平台 44/2、历史 `deepseek-chat` 21/1、`deepseek-v4-flash` 23/1；Codex 本轮主动注册 0 次、聊天 0 次、provider 调用 0 次。钱包刹车与 V4 Flash 非思考路由已处于 active production version，但未捕获足够自然生产 invocation，长期真实用户样本仍不足。证据见 `verification/version13-full-production-promotion/summary.json`。
+- 第 3 阶段钱包刹车正式封板 PASS_AFTER_CONDITIONS_RESOLVED：GPT 技术验收初始结论为 `CONDITIONAL_PASS`，Claude 逻辑复核提出需要确认两张账本非整体原子是否可能绕过硬上限；代码和测试复核确认属于安全的情况 A。平台总账 `monthly_platform_budget` 是唯一用于决定是否允许继续调用 provider 的硬刹车，模型明细 `monthly_model_budget` 只用于审计和分类统计。平台总账的硬上限预留通过带额度条件的单条更新完成，属于硬刹车所依赖的条件原子操作；模型明细账在平台预留成功后单独更新，不与平台总账构成一个整体原子事务。如果模型明细账更新失败，请求会 fail closed，provider 不会被调用；平台总账已产生的保守预留保持不退款，后续请求仍以平台总账判断剩余额度，因此只可能更早停止，不可能突破 40 USD 模型调用硬上限。产品负责人已批准正式结束第 3 阶段。
 
 未完成：
 
-- 等待产品负责人验收 version 13 全量生产切换与第 3 阶段生产结果。未经批准不得进入模型分层、上下文压缩、v0.4.7 或其他新阶段，不得主动发起新的真实模型调用。
+- 等待产品负责人批准下一阶段范围和执行指令。
 - 实际电脑清理。
 - 首屏 3-5 条示例指令。
 - 反馈入口和安全/隐私告知。
-- v0.4.7 产品内埋点与错误日志：需求已确认，尚未设计和开发；隐私告知需要覆盖埋点字段、目的、范围、保存方式和用户权利；不属于当前第 3 阶段完成条件，不阻塞钱包刹车阶段验收。
+- v0.4.7 产品内埋点与错误日志：需求已确认，尚未设计和开发；隐私告知需要覆盖埋点字段、目的、范围、保存方式和用户权利；第 3 阶段已封板，但 v0.4.7 仍未启动，需等待产品负责人批准下一阶段范围和执行指令。
+- 桌面端预算到顶错误展示与用户引导：后端已有错误码 `monthly_budget_exhausted` 和中文提示“共享模型服务本月额度已用完，请稍后再试。”；本阶段没有独立证明桌面端会以清晰、友好的方式展示该提示，记录到 v0.4.7 或首批真人试用前检查。
 - 3-5 名真实用户测试。
 - 长期记忆。
 - 任务历史和状态卡。
@@ -106,7 +108,7 @@
 - 跨网站复杂执行。
 - 国际化和区域合规。
 
-当前唯一下一步：等待产品负责人验收 version 13 全量生产切换与第 3 阶段生产结果。未经批准不得进入模型分层、上下文压缩、v0.4.7 或其他新阶段，不得主动发起新的真实模型调用。
+当前唯一下一步：等待产品负责人批准下一阶段范围和执行指令。
 
 <!-- AIW_CAPABILITY_STATUS_END -->
 
@@ -116,13 +118,13 @@
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；Workbench、Hermes、OpenClaw 三类执行入口都已通过 `18800` 调用当前生产 provider DeepSeek，验收摘要在 `verification/unified-model-proxy/summary.json`。DeepSeek 是当前实现细节，后续 provider 必须可替换。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。DeepSeek V4 Flash 非思考兼容 version 13 已通过真实 Preview 链路、1% 正常生产灰度，并已提升为 100% active production version。观察窗口正常但未捕获足够自然生产 invocation。唯一下一步是等待产品负责人验收；未经批准不得进入模型分层、上下文压缩、v0.4.7 或其他新阶段，不得发起新的主动真实模型调用。
+- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。第 3 阶段钱包刹车与 DeepSeek V4 Flash 非思考 version 13 全量生产已通过技术验收、逻辑复核和产品负责人最终批准，状态为 `PASS_AFTER_CONDITIONS_RESOLVED`。自然用户规模稳定性仍未证明；唯一下一步是等待产品负责人批准下一阶段范围和执行指令。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
 ## 5. 近期优先级
 
-1. 等待产品负责人验收 version 13 全量生产切换与第 3 阶段生产结果。
+1. 等待产品负责人批准下一阶段范围和执行指令。
 2. 模型分层调度与上下文压缩只能在产品负责人明确批准后执行。
 3. v0.4.7 首屏示例、反馈入口和安全告知。
 4. 3-5 名真实用户测试。
@@ -138,7 +140,7 @@
 
 ## 6. 当前未解决风险
 
-- 成本失控：生存体检曾确认钱包安全状态 unsafe；第 3A 本地钱包刹车已通过，生产 D1 预算表已创建，DeepSeek V4 Flash 非思考真实 Preview 链路已通过，version 13 已成为 100% active production version，钱包刹车处于生产生效路径；模型分层和上下文压缩仍未完成，且长期真实用户样本仍不足。
+- 成本失控：生存体检曾确认钱包安全状态 unsafe；第 3 阶段已正式封板，生产 D1 预算表已创建，DeepSeek V4 Flash 非思考真实 Preview 链路已通过，version 13 已成为 100% active production version，钱包刹车处于生产生效状态。模型分层和上下文压缩仍未完成，且大量真实用户长期稳定性仍未证明。
 - 上游账号合规：当前生产 DeepSeek provider 使用单一上游账户服务陌生用户的许可边界仍需确认；这是当前实现风险，不改变产品的多 provider 框架定位。
 - 账号单点故障：GitHub、Cloudflare 和关键开发账号的恢复方案尚未核查。
 - 本机执行安全：未来在用户电脑执行操作前必须建立权限、确认和回滚机制。

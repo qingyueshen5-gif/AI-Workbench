@@ -3,7 +3,7 @@
   "packageVersion": "0.4.6",
   "contextVersion": "0.4.6",
   "releaseVersion": "v0.4.6",
-  "nextStep": "等待产品负责人验收 version 13 全量生产切换与第 3 阶段生产结果。未经批准不得进入模型分层、上下文压缩、v0.4.7 或其他新阶段，不得主动发起新的真实模型调用。",
+  "nextStep": "等待产品负责人批准下一阶段范围和执行指令。",
   "capabilityStatusChecks": [
     {
       "name": "模型分层 未标记为已完成",
@@ -64,5 +64,5 @@
   ],
   "errors": [],
   "warnings": [],
-  "verifiedAt": "2026-07-25T16:43:47.578Z"
+  "verifiedAt": "2026-07-25T17:47:54.854Z"
 }

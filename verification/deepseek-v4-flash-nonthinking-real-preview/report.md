@@ -27,11 +27,13 @@ No-cost Preview gate passed:
 - Preview unauthenticated `POST /v1/chat/completions`: HTTP 401 `missing_token`
 - Budgets remained platform 21/1 and historical `deepseek-chat` 21/1; no `deepseek-v4-flash` row was created.
 
-The real-call phase did not complete. The one-time Node script sent the single approved registration request, then crashed while trying to read the pre-chat budget with `spawnSync npx.cmd EINVAL`. D1 confirms registration side effects: installations increased from 34 to 35 and today's daily usage request count increased from 2 to 3. Platform and model budget rows did not change, so no chat reservation and no provider call occurred.
+## Run 1 result: first attempt blocked before real chat
+
+The real-call phase did not complete in run1. The one-time Node script sent the single approved registration request, then crashed while trying to read the pre-chat budget with `spawnSync npx.cmd EINVAL`. D1 confirms registration side effects: installations increased from 34 to 35 and today's daily usage request count increased from 2 to 3. Platform and model budget rows did not change, so no chat reservation and no provider call occurred.
 
 The token existed only in the crashed process memory, was not printed, and was not persisted. Because the run allowed exactly one registration and it has been consumed, the real chat was not attempted and must not be retried without fresh product-owner approval.
 
-Final state:
+Run 1 result:
 
 - Registered installation attempts: 1
 - Authenticated chat attempts: 0
@@ -44,6 +46,8 @@ Final state:
 - D1 schema unchanged
 - Production traffic unchanged
 
+## Run 2 final acceptance result
+
 Run2 reused the existing version 13 and did not upload or deploy any Worker version. The Token-holding Node process was reduced to network-only work: register once, keep Token in memory, chat once, emit sanitized results, and exit. It did not call child processes, Wrangler, `npx.cmd`, `cmd.exe`, or PowerShell.
 
 Run2 result:
@@ -54,18 +58,21 @@ Run2 result:
 - Chat attempts: 1
 - Chat HTTP status: 200
 - Provider model: `deepseek-v4-flash`
+- Upstream thinking mode: `thinking.type = disabled`
 - Answer: `OK`
 - `finish_reason`: `stop`
 - Usage: prompt 7, completion 1, total 8
 - `reasoning_content`: absent/null/empty
 - Retries: 0
 
-Budget result:
+Budget result for the normal successful path:
 
 - Platform budget: 21/1 -> 44/2, delta +23 micro-USD and +1 call
 - `deepseek-v4-flash`: absent -> 23/1, delta +23 micro-USD and +1 call
 - Historical `deepseek-chat`: stayed 21/1
 - Installations: 35 -> 36
 - Daily usage: 3 requests / 2 input / 0 output -> 5 requests / 4 input / 1 output
+
+The successful run2 path shows platform ledger and model detail increments matching normally. This does not mean the two budget tables are one atomic transaction; the platform ledger hard cap is the conditional atomic operation used to decide whether provider calls may proceed, while the model detail ledger is an audit/detail update after platform reservation.
 
 Production state remained unchanged. Active deployment stayed `d9acb146-b720-4e09-b2b8-0257b93fc407`; stable version stayed 100%; version 13 stayed 0% normal production traffic. Secrets, D1 schema, Worker code, and Wrangler config were not modified.
