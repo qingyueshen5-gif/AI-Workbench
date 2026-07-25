@@ -1,0 +1,30 @@
+2026-07-25T18:20:02+08:00 | command: git status --short --branch | exit_code: 0 | output: clean; main...origin/main
+2026-07-25T18:20:02+08:00 | command: git rev-parse HEAD | exit_code: 0 | output: 4f6c0dda038c33f2a643ed113b9f9ef7d9401849
+2026-07-25T18:20:02+08:00 | command: git rev-parse origin/main | exit_code: 0 | output: 4f6c0dda038c33f2a643ed113b9f9ef7d9401849
+2026-07-25T18:20:02+08:00 | command: git log -8 --oneline --decorate | exit_code: 0 | output: latest 4f6c0dd fix: route legacy deepseek chat to v4 flash
+2026-07-25T18:20:02+08:00 | command: git merge-base --is-ancestor 4f6c0dda038c33f2a643ed113b9f9ef7d9401849 HEAD | exit_code: 0 | output: ancestor=true
+2026-07-25T18:20:02+08:00 | command: git diff 4f6c0dda038c33f2a643ed113b9f9ef7d9401849..HEAD -- managed-proxy | exit_code: 0 | output: no diff
+2026-07-25T18:20:02+08:00 | command: git fetch origin --prune | exit_code: 1 | output: SEC_E_NO_CREDENTIALS; no credential repair attempted
+2026-07-25T18:20:03+08:00 | command: npx.cmd wrangler --version | exit_code: 0 | output: 4.113.0; log file EPERM warning only
+2026-07-25T18:20:03+08:00 | command: npx.cmd wrangler whoami | exit_code: 0 | output: Cloudflare OAuth identity confirmed; identity redacted in evidence; log file EPERM warning only
+2026-07-25T18:20:03+08:00 | command: npx.cmd wrangler deployments list --json | exit_code: 0 | output: active d9acb146-b720-4e09-b2b8-0257b93fc407; stable 100; failed candidate 0
+2026-07-25T18:20:30+08:00 | command: npx.cmd wrangler secret list --format json | exit_code: 0 | output: DEEPSEEK_API_KEY, INSTALLATION_HASH_SALT, TOKEN_SIGNING_SECRET
+2026-07-25T18:20:30+08:00 | command: npx.cmd wrangler d1 execute schema query --json | exit_code: 0 | output: tables unchanged
+2026-07-25T18:20:30+08:00 | command: npx.cmd wrangler d1 execute budget query --json | exit_code: 0 | output: platform 21/1; model deepseek-chat 21/1; no deepseek-v4-flash row
+2026-07-25T18:20:30+08:00 | command: node --use-env-proxy production GET /health and /v1/models | exit_code: 0 | output: both HTTP 200; no provider call
+2026-07-25T18:20:50+08:00 | command: npm.cmd test | exit_code: 0 | output: tests 16; pass 16; fail 0
+2026-07-25T18:20:52+08:00 | command: npx.cmd wrangler types worker-configuration.d.ts | exit_code: 0 | output: temporary Worker runtime types generated; log file EPERM warning only
+2026-07-25T18:21:13+08:00 | command: npx.cmd tsc --noEmit --skipLibCheck --moduleResolution node --module ES2022 --target ES2022 worker-configuration.d.ts src/index.ts | exit_code: 0 | output: passed
+2026-07-25T18:20:50+08:00 | command: node parse wrangler config | exit_code: 0 | output: ALLOWED_MODELS deepseek-chat; upstreamModel deepseek-v4-flash; prices 140000/280000
+2026-07-25T18:20:50+08:00 | command: git diff --check | exit_code: 0 | output: passed
+2026-07-25T18:21:33+08:00 | command: npx.cmd wrangler versions upload --help | exit_code: 0 | output: supports --dry-run, --outdir, --tag, --message, --preview-alias
+2026-07-25T18:21:33+08:00 | command: npx.cmd wrangler versions upload dry-run with outdir | exit_code: 0 | output: total upload 20.13 KiB; gzip 5.56 KiB; no upload
+2026-07-25T18:21:40+08:00 | command: inspect dry-run bundle | exit_code: 0 | output: README.md 127 bytes; index.js 20609 bytes; index.js.map 33949 bytes; index.js SHA256 828AD0203C78177A01B16F970FC7AD865AFFA1DC25D7E2A985381FD14A0DF0BC
+2026-07-25T18:21:40+08:00 | command: scan dry-run bundle strings | exit_code: 0 | output: required strings present; only source variable names found, no secret values or full preview URL
+2026-07-25T18:24:30+08:00 | command: cleanup temporary Worker types and dry-run bundle | exit_code: 0 | output: cleanup ok
+2026-07-25T18:25:24+08:00 | command: npx.cmd wrangler versions upload with preview alias | exit_code: 0 | output: version a7eb385b-84df-4a45-b554-0aca40b6b407; number 12; alias budget-v4-flash-candidate; full preview URL not recorded in repository
+2026-07-25T18:26:04+08:00 | command: npx.cmd wrangler deployments list --json | exit_code: 0 | output: active unchanged d9acb146-b720-4e09-b2b8-0257b93fc407; stable 100; failed candidate 0; new version not in deployment
+2026-07-25T18:26:04+08:00 | command: npx.cmd wrangler versions list --json | exit_code: 0 | output: new version number 12; has_preview true; message and alias match
+2026-07-25T18:26:04+08:00 | command: post-upload secret and budget checks | exit_code: 0 | output: secrets unchanged; budget still platform 21/1 and model deepseek-chat 21/1
+2026-07-25T18:26:30+08:00 | command: node --use-env-proxy preview GET /health, GET /v1/models, unauthenticated POST /v1/chat/completions | exit_code: 0 | output: health 200; models 200 logical_alias upstream deepseek-v4-flash; unauthenticated chat 401 missing_token
+2026-07-25T18:26:45+08:00 | command: post-preview production, secret, schema, budget checks | exit_code: 0 | output: active deployment unchanged; traffic unchanged; secrets unchanged; schema unchanged; budget unchanged

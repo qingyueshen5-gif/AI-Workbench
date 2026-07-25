@@ -80,10 +80,11 @@
 - 第 3B-2b2d 段阻塞恢复诊断 blocked_transport_cause_unresolved：产品负责人确认上次阻塞处理正确后批准继续同一段，先诊断注册无 HTTP 状态原因。本轮仓库 clean，HEAD=origin/main=`a36dfc0acb53bc8a636a5fcf7ce605c118156199`，`managed-proxy` 无 diff；生产仍为旧稳定 99%、新预算 1%，预算表仍为空，Secrets 和 D1 schema 未变。上次 evidence 未保存异常详情，本轮无付费诊断确认 Node 内置 fetch 未显式使用代理时在响应头前连接超时，cause code `UND_ERR_CONNECT_TIMEOUT`；显式 undici `ProxyAgent` 后同一 Node 环境可取得 GET/OPTIONS/无状态 POST 的 HTTP 响应，根因分类 `system_proxy_error`。但未取得独立证据证明 version override 命中新预算 version，因此不满足再次注册条件；本轮新增注册 0 次，累计注册仍 1 次，聊天 0 次，provider 调用 0 次，预算写入 0，未回滚。证据见 `verification/monthly-budget-worker-controlled-real-canary/summary.json`。
 - 第 3B-2b2d 段候选 Versioned Preview 单笔真实链路 real_preview_call_failed_after_budget_reservation：产品负责人确认 transport 根因后批准改用候选 version Preview URL。本轮 Preview 无付费检查 `/health` 200、`/v1/models` 200、未认证聊天 401 `missing_token`；注册 1 次成功，唯一聊天 1 次返回 HTTP 400 `invalid_request_error`，无重试。预算账本已在 provider 前预留：平台总账 +21 micro-USD/+1 call，`deepseek-chat` 模型明细 +21 micro-USD/+1 call，增量等于预计算值；installations +1，daily_usage +2 requests/+2 input tokens/+0 output tokens。生产 active deployment 当时仍为旧版本 99%、新预算版本 1%，Secrets、D1 schema 和 Managed Proxy 代码未变，未回滚。证据见 `verification/monthly-budget-worker-controlled-real-canary/summary.json`。本轮不得写成 passed。
 - DeepSeek V4 Flash 路由迁移本地候选 new_provider_model_route_candidate_ready_locally：产品负责人确认 HTTP 400 根因为旧上游模型名 `deepseek-chat` 退役后，本轮先将已知失败候选 version `483e4fae-3af8-40fa-ab83-4551f08b519e` 从 1% 正常生产流量撤回到 0%，旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 恢复 100%，active deployment 为 `d9acb146-b720-4e09-b2b8-0257b93fc407`。本地代码实现逻辑模型 `deepseek-chat` 到上游正式模型 `deepseek-v4-flash` 的显式路由，预算明细改按实际计费模型 `deepseek-v4-flash` 记录；16 项 Managed Proxy 测试和 TypeScript 检查通过。既有 21 micro-USD 历史预留未修改。未上传新 Worker version，未部署生产修复，未修改 Secrets 或 D1 schema，未发起新的真实 provider 调用。证据见 `verification/deepseek-v4-flash-route-migration/summary.json`。
+- DeepSeek V4 Flash 修复 Worker Preview v4_flash_candidate_preview_verified：产品负责人验收本地候选后批准只上传新 Worker version 并执行无付费 Preview 验证。新修复 version `a7eb385b-84df-4a45-b554-0aca40b6b407` / version number `12` 已上传，Preview alias 为 `budget-v4-flash-candidate`。Preview `/health` HTTP 200，`/v1/models` HTTP 200 并确认 `deepseek-chat` 是逻辑 alias、上游为 `deepseek-v4-flash`；未认证聊天 HTTP 401 `missing_token`。active deployment 前后均为 `d9acb146-b720-4e09-b2b8-0257b93fc407`，旧稳定 version 100%，失败候选 0%，新修复 version 正常生产流量 0%。两张预算表仍保持 21 micro-USD / call_count 1，未出现 `deepseek-v4-flash` 真实调用明细，Secrets 和 D1 schema 未修改，未注册 installation，未调用真实 provider。证据见 `verification/deepseek-v4-flash-worker-preview-upload/summary.json`。
 
 未完成：
 
-- 等待产品负责人验收 DeepSeek V4 Flash 路由迁移本地候选。未经批准不得上传或部署新 Worker version，不得发起新的真实模型调用。
+- 等待产品负责人验收 DeepSeek V4 Flash 修复 Worker Preview。未经批准不得把新修复 version 加入 production deployment，不得注册 installation，不得发起真实模型调用。
 - 实际电脑清理。
 - 首屏 3-5 条示例指令。
 - 反馈入口和安全/隐私告知。
@@ -99,7 +100,7 @@
 - 跨网站复杂执行。
 - 国际化和区域合规。
 
-当前唯一下一步：等待产品负责人验收 DeepSeek V4 Flash 路由迁移本地候选。未经批准不得上传或部署新 Worker version，不得发起新的真实模型调用。
+当前唯一下一步：等待产品负责人验收 DeepSeek V4 Flash 修复 Worker Preview。未经批准不得把新修复 version 加入 production deployment，不得注册 installation，不得发起真实模型调用。
 
 <!-- AIW_CAPABILITY_STATUS_END -->
 
@@ -109,14 +110,14 @@
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；Workbench、Hermes、OpenClaw 三类执行入口都已通过 `18800` 调用当前生产 provider DeepSeek，验收摘要在 `verification/unified-model-proxy/summary.json`。DeepSeek 是当前实现细节，后续 provider 必须可替换。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。第 3B-2b2d 段候选 Preview 单笔真实链路已执行：注册成功，聊天 HTTP 400，预算预留已写入且两账一致；当前唯一下一步是等待产品负责人验收该失败后预留结果，未经批准不得发起第二笔主动真实模型调用或切到 100%。
+- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。第 3B-2b2e 段已上传 DeepSeek V4 Flash 修复 Worker version 并完成无付费 Preview 验证；当前唯一下一步是等待产品负责人验收该 Preview，未经批准不得把新修复 version 加入 production deployment、注册 installation 或发起真实模型调用。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
 ## 5. 近期优先级
 
-1. 等待产品负责人验收第 3B-2b2d 段候选 Versioned Preview 单笔真实预算链路失败后预留结果。
-2. 后续重试真实调用或 100% 全量切换只能在产品负责人明确批准后执行。
+1. 等待产品负责人验收 DeepSeek V4 Flash 修复 Worker Preview。
+2. 后续单笔真实调用、灰度或 100% 全量切换只能在产品负责人明确批准后执行。
 3. 模型分层调度与上下文压缩。
 4. v0.4.7 首屏示例、反馈入口和安全告知。
 5. 3-5 名真实用户测试。
@@ -132,7 +133,7 @@
 
 ## 6. 当前未解决风险
 
-- 成本失控：生存体检已确认当前钱包安全状态 unsafe；第 3A 本地钱包刹车已通过，生产 D1 预算表已创建，部署候选已锁定并进入 1% 正常生产灰度，但尚未全量；模型分层和上下文压缩仍未完成。
+- 成本失控：生存体检已确认当前钱包安全状态 unsafe；第 3A 本地钱包刹车已通过，生产 D1 预算表已创建，DeepSeek V4 Flash 修复 Worker 已上传并通过无付费 Preview，但尚未执行真实 provider 成功验证、灰度或全量；模型分层和上下文压缩仍未完成。
 - 上游账号合规：当前生产 DeepSeek provider 使用单一上游账户服务陌生用户的许可边界仍需确认；这是当前实现风险，不改变产品的多 provider 框架定位。
 - 账号单点故障：GitHub、Cloudflare 和关键开发账号的恢复方案尚未核查。
 - 本机执行安全：未来在用户电脑执行操作前必须建立权限、确认和回滚机制。

@@ -1,0 +1,93 @@
+{
+  "task": "deepseek-v4-flash-worker-preview-upload",
+  "execution_status": "v4_flash_candidate_preview_verified",
+  "repository_head_before": "4f6c0dda038c33f2a643ed113b9f9ef7d9401849",
+  "accepted_local_candidate_commit": "4f6c0dda038c33f2a643ed113b9f9ef7d9401849",
+  "worker_name": "ai-workbench-managed-proxy",
+  "stable_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "failed_candidate_version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+  "new_candidate_version_id": "a7eb385b-84df-4a45-b554-0aca40b6b407",
+  "new_candidate_version_number": 12,
+  "active_deployment_before": "d9acb146-b720-4e09-b2b8-0257b93fc407",
+  "active_deployment_after": "d9acb146-b720-4e09-b2b8-0257b93fc407",
+  "stable_traffic_before": 100,
+  "stable_traffic_after": 100,
+  "failed_candidate_traffic_before": 0,
+  "failed_candidate_traffic_after": 0,
+  "new_candidate_traffic": 0,
+  "new_candidate_in_active_deployment": false,
+  "logical_model": "deepseek-chat",
+  "upstream_model": "deepseek-v4-flash",
+  "local_tests": {
+    "tests": 16,
+    "passed": 16,
+    "failed": 0
+  },
+  "typecheck_passed": true,
+  "version_uploaded": true,
+  "version_deployed": false,
+  "version_message": "DeepSeek V4 Flash route migration candidate",
+  "version_tag": "v4-flash-route-candidate",
+  "preview_alias": "budget-v4-flash-candidate",
+  "preview_host_redacted": "budget-v4-flash-candidate-ai-workbench-managed-proxy.<redacted>.workers.dev",
+  "preview_host_sha256": "C7B2EF325BADFC314B024887CF25682062630F00E00FD5C376A13369BE4AA8C9",
+  "bundle_sha256": "828AD0203C78177A01B16F970FC7AD865AFFA1DC25D7E2A985381FD14A0DF0BC",
+  "preview_health_status": 200,
+  "preview_models_status": 200,
+  "preview_models_logical_alias_verified": true,
+  "preview_models_upstream_verified": true,
+  "unauthenticated_chat_status": 401,
+  "unauthenticated_chat_error_code": "missing_token",
+  "provider_called": false,
+  "registration_attempts": 0,
+  "authenticated_chat_attempts": 0,
+  "platform_budget_before": {
+    "reserved_micro_usd": 21,
+    "call_count": 1
+  },
+  "platform_budget_after": {
+    "reserved_micro_usd": 21,
+    "call_count": 1
+  },
+  "model_budget_before": [
+    {
+      "model": "deepseek-chat",
+      "reserved_micro_usd": 21,
+      "call_count": 1
+    }
+  ],
+  "model_budget_after": [
+    {
+      "model": "deepseek-chat",
+      "reserved_micro_usd": 21,
+      "call_count": 1
+    }
+  ],
+  "deepseek_v4_flash_budget_row_created": false,
+  "secrets_modified": false,
+  "d1_schema_modified": false,
+  "production_traffic_changed": false,
+  "full_preview_url_committed": false,
+  "temporary_bundle_cleaned": false,
+  "temporary_bundle_cleanup_note": "Cleanup was attempted for .tmp-v4-flash-worker-upload-bundle and managed-proxy/.wrangler/tmp, but Windows returned Access is denied. These paths are ignored by Git and were not committed.",
+  "blocked_items": [
+    "The new fixed version has not been added to production deployment.",
+    "The fixed route has not been verified with a real provider call.",
+    "No installation registration was performed in this run."
+  ],
+  "evidence_files": [
+    "verification/deepseek-v4-flash-worker-preview-upload/summary.json",
+    "verification/deepseek-v4-flash-worker-preview-upload/report.md",
+    "verification/deepseek-v4-flash-worker-preview-upload/commands.log",
+    "verification/deepseek-v4-flash-worker-preview-upload/pre-upload-state.json",
+    "verification/deepseek-v4-flash-worker-preview-upload/local-candidate-check.json",
+    "verification/deepseek-v4-flash-worker-preview-upload/bundle-manifest.json",
+    "verification/deepseek-v4-flash-worker-preview-upload/upload-result.json",
+    "verification/deepseek-v4-flash-worker-preview-upload/preview-smoke-test.json",
+    "verification/deepseek-v4-flash-worker-preview-upload/budget-before-after.json",
+    "verification/deepseek-v4-flash-worker-preview-upload/post-upload-production-state.json",
+    "verification/deepseek-v4-flash-worker-preview-upload/secret-and-schema-check.json",
+    "verification/deepseek-v4-flash-worker-preview-upload/artifact-manifest.json"
+  ],
+  "next_action": "Wait for product owner acceptance of the DeepSeek V4 Flash fixed Worker Preview. Do not add the new fixed version to production deployment, do not register an installation, and do not make a real model call without explicit approval."
+}

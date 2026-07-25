@@ -1,0 +1,22 @@
+{
+  "task": "deepseek-v4-flash-worker-preview-upload-post-upload-production-state",
+  "active_deployment_before": "d9acb146-b720-4e09-b2b8-0257b93fc407",
+  "active_deployment_after": "d9acb146-b720-4e09-b2b8-0257b93fc407",
+  "stable_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "stable_traffic_before": 100,
+  "stable_traffic_after": 100,
+  "failed_candidate_version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+  "failed_candidate_traffic_before": 0,
+  "failed_candidate_traffic_after": 0,
+  "new_candidate_version_id": "a7eb385b-84df-4a45-b554-0aca40b6b407",
+  "new_candidate_version_number": 12,
+  "new_candidate_traffic": 0,
+  "new_candidate_in_active_deployment": false,
+  "third_version_serving_production_after": false,
+  "production_traffic_changed": false,
+  "routes_modified": false,
+  "domains_modified": false,
+  "triggers_modified": false,
+  "new_worker_version_uploaded": true,
+  "production_code_deployed": false
+}

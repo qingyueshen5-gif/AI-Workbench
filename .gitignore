@@ -36,5 +36,7 @@ versions/backups/*.json
 .tmp-3a-*
 .tmp-3b-*/
 .tmp-3b-*
+.tmp-v4-*
+managed-proxy/.wrangler/
 .tmp-install-r1/
 verification/install-release/actions-*/

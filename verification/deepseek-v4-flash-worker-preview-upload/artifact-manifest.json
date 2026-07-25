@@ -1,0 +1,18 @@
+{
+  "task": "deepseek-v4-flash-worker-preview-upload",
+  "created_at": "2026-07-25T18:27:00+08:00",
+  "files": [
+    "verification/deepseek-v4-flash-worker-preview-upload/summary.json",
+    "verification/deepseek-v4-flash-worker-preview-upload/report.md",
+    "verification/deepseek-v4-flash-worker-preview-upload/commands.log",
+    "verification/deepseek-v4-flash-worker-preview-upload/pre-upload-state.json",
+    "verification/deepseek-v4-flash-worker-preview-upload/local-candidate-check.json",
+    "verification/deepseek-v4-flash-worker-preview-upload/bundle-manifest.json",
+    "verification/deepseek-v4-flash-worker-preview-upload/upload-result.json",
+    "verification/deepseek-v4-flash-worker-preview-upload/preview-smoke-test.json",
+    "verification/deepseek-v4-flash-worker-preview-upload/budget-before-after.json",
+    "verification/deepseek-v4-flash-worker-preview-upload/post-upload-production-state.json",
+    "verification/deepseek-v4-flash-worker-preview-upload/secret-and-schema-check.json"
+  ],
+  "sensitive_data_policy": "No Secret values, installation tokens, Authorization headers, Cookie values, proxy credentials, full Preview URL, raw production logs, user data, or database export are recorded."
+}

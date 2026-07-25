@@ -1,0 +1,42 @@
+{
+  "task": "deepseek-v4-flash-worker-preview-upload-bundle-manifest",
+  "dry_run": {
+    "command": "npx.cmd wrangler versions upload --message \"DeepSeek V4 Flash route migration candidate\" --tag v4-flash-route-candidate --preview-alias budget-v4-flash-candidate --dry-run --outdir ..\\.tmp-v4-flash-worker-upload-bundle",
+    "exit_code": 0,
+    "total_upload": "20.13 KiB",
+    "gzip_size": "5.56 KiB",
+    "uploaded": false
+  },
+  "files": [
+    {
+      "path": ".tmp-v4-flash-worker-upload-bundle/README.md",
+      "size_bytes": 127,
+      "sha256": "C571C46DAF9F1341849D8F9D92B425ACE95AB6EB429BEBF3DBF81E51568D1340"
+    },
+    {
+      "path": ".tmp-v4-flash-worker-upload-bundle/index.js",
+      "size_bytes": 20609,
+      "sha256": "828AD0203C78177A01B16F970FC7AD865AFFA1DC25D7E2A985381FD14A0DF0BC"
+    },
+    {
+      "path": ".tmp-v4-flash-worker-upload-bundle/index.js.map",
+      "size_bytes": 33949,
+      "sha256": "3314B6118199C492941F13A4AC74B3E62714B0C838A4354221B40AB5E645BE37"
+    }
+  ],
+  "bundle_sha256": "828AD0203C78177A01B16F970FC7AD865AFFA1DC25D7E2A985381FD14A0DF0BC",
+  "contains_required_strings": {
+    "deepseek-v4-flash": true,
+    "upstreamModel": true,
+    "deepseek-chat": true
+  },
+  "sensitive_scan": {
+    "secret_values_found": false,
+    "token_values_found": false,
+    "proxy_credentials_found": false,
+    "full_preview_url_found": false,
+    "local_absolute_user_path_found": false,
+    "notes": "Only source variable names such as DEEPSEEK_API_KEY and authorization handling were present; no secret values were present."
+  },
+  "temporary_bundle_cleaned": true
+}

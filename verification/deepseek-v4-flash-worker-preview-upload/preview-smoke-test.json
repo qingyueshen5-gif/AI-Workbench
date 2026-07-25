@@ -1,0 +1,39 @@
+{
+  "task": "deepseek-v4-flash-worker-preview-upload-preview-smoke-test",
+  "target": "new_candidate_version_preview_alias",
+  "preview_alias": "budget-v4-flash-candidate",
+  "preview_host_redacted": "budget-v4-flash-candidate-ai-workbench-managed-proxy.<redacted>.workers.dev",
+  "preview_host_sha256": "C7B2EF325BADFC314B024887CF25682062630F00E00FD5C376A13369BE4AA8C9",
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "status": 200,
+      "body_shape_valid": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/models",
+      "status": 200,
+      "logical_model_present": true,
+      "logical_model": "deepseek-chat",
+      "logical_alias_verified": true,
+      "upstream_model": "deepseek-v4-flash",
+      "upstream_verified": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "authenticated": false,
+      "status": 401,
+      "error_code": "missing_token",
+      "rejected_before_budget": true,
+      "rejected_before_provider": true
+    }
+  ],
+  "registration_attempts": 0,
+  "authenticated_chat_attempts": 0,
+  "provider_called": false,
+  "client_retry_enabled": false,
+  "retry_attempted": false
+}

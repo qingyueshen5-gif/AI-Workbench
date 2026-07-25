@@ -1,0 +1,19 @@
+{
+  "task": "deepseek-v4-flash-worker-preview-upload-upload-result",
+  "upload_started_at": "2026-07-25T18:25:24+08:00",
+  "upload_finished_at": "2026-07-25T18:25:37+08:00",
+  "command": "npx.cmd wrangler versions upload --message \"DeepSeek V4 Flash route migration candidate\" --tag v4-flash-route-candidate --preview-alias budget-v4-flash-candidate",
+  "exit_code": 0,
+  "worker_name": "ai-workbench-managed-proxy",
+  "new_candidate_version_id": "a7eb385b-84df-4a45-b554-0aca40b6b407",
+  "new_candidate_version_number": 12,
+  "version_message": "DeepSeek V4 Flash route migration candidate",
+  "version_tag": "v4-flash-route-candidate",
+  "preview_alias": "budget-v4-flash-candidate",
+  "preview_host_redacted": "budget-v4-flash-candidate-ai-workbench-managed-proxy.<redacted>.workers.dev",
+  "preview_host_sha256": "C7B2EF325BADFC314B024887CF25682062630F00E00FD5C376A13369BE4AA8C9",
+  "full_preview_url_committed": false,
+  "bundle_sha256": "828AD0203C78177A01B16F970FC7AD865AFFA1DC25D7E2A985381FD14A0DF0BC",
+  "version_uploaded": true,
+  "version_deployed": false
+}

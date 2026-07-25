@@ -1,0 +1,42 @@
+{
+  "task": "deepseek-v4-flash-worker-preview-upload-budget-before-after",
+  "before": {
+    "platform_budget": [
+      {
+        "month_key": "2026-07",
+        "reserved_micro_usd": 21,
+        "call_count": 1
+      }
+    ],
+    "model_budget": [
+      {
+        "model": "deepseek-chat",
+        "reserved_micro_usd": 21,
+        "call_count": 1
+      }
+    ],
+    "deepseek_v4_flash_budget_row_exists": false
+  },
+  "after": {
+    "platform_budget": [
+      {
+        "month_key": "2026-07",
+        "reserved_micro_usd": 21,
+        "call_count": 1
+      }
+    ],
+    "model_budget": [
+      {
+        "model": "deepseek-chat",
+        "reserved_micro_usd": 21,
+        "call_count": 1
+      }
+    ],
+    "deepseek_v4_flash_budget_row_exists": false
+  },
+  "platform_budget_changed": false,
+  "model_budget_changed": false,
+  "budget_delta_micro_usd": 0,
+  "call_count_delta": 0,
+  "existing_reservation_modified": false
+}

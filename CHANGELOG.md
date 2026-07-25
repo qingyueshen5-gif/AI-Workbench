@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Unreleased - DeepSeek V4 Flash 修复 Worker Preview
+
+- 产品负责人验收通过 DeepSeek V4 Flash 路由迁移本地候选后，批准只上传新 Worker version 并执行无付费 Preview 验证。
+- 上传新的 Worker version `a7eb385b-84df-4a45-b554-0aca40b6b407`，version number 为 `12`，message 为 `DeepSeek V4 Flash route migration candidate`，Preview alias 为 `budget-v4-flash-candidate`。
+- Preview `/health` HTTP 200，`/v1/models` HTTP 200，并确认 `deepseek-chat` 是逻辑 alias、上游模型为 `deepseek-v4-flash`。
+- 未认证 `/v1/chat/completions` HTTP 401 `missing_token`，在预算预留和 provider 调用前拒绝。
+- active deployment 仍为 `d9acb146-b720-4e09-b2b8-0257b93fc407`；旧稳定 version 仍为 100%，已知失败候选仍为 0%，新修复 version 正常生产流量为 0%。
+- 两张预算表仍保持既有 21 micro-USD / call_count 1；未注册 installation，未发起已认证聊天，未调用真实 provider，未修改 Secrets 或 D1 schema。
+- 本轮不得写成生产修复上线或真实 provider 成功。
+
 ## Unreleased - DeepSeek V4 Flash 路由迁移本地候选
 
 - 产品负责人确认第 3B-2b2d HTTP 400 根因为生产候选仍向 DeepSeek 发送已退役的 `deepseek-chat` 上游模型名。

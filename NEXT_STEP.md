@@ -1,7 +1,7 @@
 # NEXT_STEP.md
 
 <!-- AIW_NEXT_STEP_START -->
-等待产品负责人验收 DeepSeek V4 Flash 路由迁移本地候选。未经批准不得上传或部署新 Worker version，不得发起新的真实模型调用。
+等待产品负责人验收 DeepSeek V4 Flash 修复 Worker Preview。未经批准不得把新修复 version 加入 production deployment，不得注册 installation，不得发起真实模型调用。
 <!-- AIW_NEXT_STEP_END -->
 
 ## 当前状态
@@ -18,21 +18,28 @@
 - 第 3B-2b2c 段 1% 生产灰度已由产品负责人验收通过。
 - 第 3B-2b2d 段候选 Preview 单笔真实预算链路已执行，真实聊天返回 HTTP 400，预算预留已写入；产品负责人已确认根因为旧 DeepSeek 上游模型名退役。
 - 已将已知失败候选流量撤回到 0%，旧稳定 Worker 恢复 100%。
-- DeepSeek V4 Flash 路由迁移已在本地完成并通过测试，尚未上传或部署。
+- DeepSeek V4 Flash 路由迁移已在本地完成并通过测试。
+- 新修复 Worker version `a7eb385b-84df-4a45-b554-0aca40b6b407` 已上传，version number 为 `12`，Preview alias 为 `budget-v4-flash-candidate`。
+- 新修复 version 未加入 active production deployment，正常生产流量仍为 0%。
+- Preview `/health` HTTP 200，`/v1/models` HTTP 200，未认证聊天 HTTP 401 `missing_token`。
+- 本轮未注册 installation，未发起已认证聊天，未调用真实 provider，两张预算表仍保持 21 micro-USD / call_count 1。
 
-## 为什么停在 DeepSeek V4 Flash 路由迁移本地候选验收
+## 为什么停在 DeepSeek V4 Flash 修复 Worker Preview 验收
 
 - 真实预算预留已验证，但 provider 成功返回因已退役上游模型名失败。
 - 本轮已先执行生产风险收敛：旧稳定 version 100%，失败候选 version 0%。
 - 本地修复保持客户端逻辑模型 `deepseek-chat` 兼容，内部路由到 `deepseek-v4-flash`。
 - 预算明细新路径按实际计费模型 `deepseek-v4-flash` 记录，既有 `deepseek-chat` 21 micro-USD 历史行保留。
-- 本轮未上传新 Worker version，未部署生产修复，未修改 Secrets 或 D1 schema，未发起新的真实模型调用。
+- 本轮只上传新 Worker version 并做无付费 Preview 检查，没有创建 production deployment，没有修改正常生产流量。
+- 新 version 尚未验证真实 provider 成功链路，不得写成生产修复已上线。
+- 本轮未修改 Secrets 或 D1 schema，未注册 installation，未发起真实模型调用。
 
 ## 本轮允许范围
 
 当前只允许：
 
-- 等待产品负责人验收 DeepSeek V4 Flash 路由迁移本地候选；
+- 等待产品负责人验收 DeepSeek V4 Flash 修复 Worker Preview；
+- 查阅 `verification/deepseek-v4-flash-worker-preview-upload/summary.json` 和 `report.md`；
 - 查阅 `verification/deepseek-v4-flash-route-migration/summary.json` 和 `report.md`；
 - 查阅 `verification/monthly-budget-worker-controlled-real-canary/summary.json` 和 `report.md`；
 - 如产品负责人提出验收问题，只回答本轮证据范围内的问题。
@@ -41,6 +48,7 @@
 
 - 把新预算 Worker 切换到 100% 正常生产流量；
 - 执行 `wrangler deploy`、`wrangler versions upload` 或新的 `wrangler versions deploy`；
+- 把新修复 version 加入 production deployment；
 - 修改 Worker 流量；
 - 执行 rollback；
 - 修改 Cloudflare Secrets；
@@ -56,4 +64,4 @@
 
 ## 验收后
 
-验收批准后的候选下一步可能是上传新候选、Preview 验证或重新执行最多一笔真实链路验证。它不是本轮已执行内容，未经产品负责人批准不得开始。
+验收批准后的候选下一步可能是新候选单笔真实链路验证、1% 灰度或其他生产推进步骤。它不是本轮已执行内容，未经产品负责人批准不得开始。

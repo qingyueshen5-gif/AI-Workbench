@@ -1,0 +1,36 @@
+{
+  "task": "deepseek-v4-flash-worker-preview-upload-local-candidate-check",
+  "typecheck": {
+    "command": "npx.cmd tsc --noEmit --skipLibCheck --moduleResolution node --module ES2022 --target ES2022 worker-configuration.d.ts src/index.ts",
+    "exit_code": 0,
+    "passed": true
+  },
+  "managed_proxy_tests": {
+    "command": "npm.cmd test",
+    "exit_code": 0,
+    "tests": 16,
+    "passed": 16,
+    "failed": 0
+  },
+  "config_json_parse": {
+    "passed": true,
+    "allowed_models": "deepseek-chat",
+    "upstream_model": "deepseek-v4-flash",
+    "input_cache_miss_micro_usd_per_million_tokens": 140000,
+    "output_micro_usd_per_million_tokens": 280000
+  },
+  "route_assertions": {
+    "client_logical_model": "deepseek-chat",
+    "mock_upstream_payload_model": "deepseek-v4-flash",
+    "model_budget_identifier": "deepseek-v4-flash",
+    "platform_budget_is_only_hard_cap": true,
+    "missing_upstream_model_fails_closed": true,
+    "missing_price_fails_closed": true,
+    "upstream_failure_keeps_reservation": true,
+    "d1_schema_changed_by_local_candidate": false
+  },
+  "git_diff_check": {
+    "exit_code": 0,
+    "passed": true
+  }
+}

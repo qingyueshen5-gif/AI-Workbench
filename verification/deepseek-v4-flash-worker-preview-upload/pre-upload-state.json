@@ -1,0 +1,51 @@
+{
+  "task": "deepseek-v4-flash-worker-preview-upload-pre-upload-state",
+  "repository_head_before": "4f6c0dda038c33f2a643ed113b9f9ef7d9401849",
+  "origin_main_before": "4f6c0dda038c33f2a643ed113b9f9ef7d9401849",
+  "working_tree_clean_before": true,
+  "accepted_local_candidate_commit": "4f6c0dda038c33f2a643ed113b9f9ef7d9401849",
+  "accepted_local_candidate_ancestor": true,
+  "git_fetch_result": {
+    "exit_code": 1,
+    "error": "SEC_E_NO_CREDENTIALS",
+    "credential_repair_attempted": false
+  },
+  "wrangler_version": "4.113.0",
+  "cloudflare_identity_confirmed": true,
+  "cloudflare_identity_redacted": true,
+  "worker_name": "ai-workbench-managed-proxy",
+  "active_deployment_before": "d9acb146-b720-4e09-b2b8-0257b93fc407",
+  "stable_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "stable_traffic_before": 100,
+  "failed_candidate_version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+  "failed_candidate_traffic_before": 0,
+  "third_version_serving_production_before": false,
+  "production_health_status_before": 200,
+  "production_models_status_before": 200,
+  "secret_names_before": [
+    "DEEPSEEK_API_KEY",
+    "INSTALLATION_HASH_SALT",
+    "TOKEN_SIGNING_SECRET"
+  ],
+  "d1_tables_before": [
+    "_cf_KV",
+    "daily_usage",
+    "installations",
+    "monthly_model_budget",
+    "monthly_platform_budget",
+    "revoked_tokens"
+  ],
+  "platform_budget_before": {
+    "month_key": "2026-07",
+    "reserved_micro_usd": 21,
+    "call_count": 1
+  },
+  "model_budget_before": [
+    {
+      "model": "deepseek-chat",
+      "reserved_micro_usd": 21,
+      "call_count": 1
+    }
+  ],
+  "deepseek_v4_flash_budget_row_exists_before": false
+}

@@ -5,7 +5,7 @@
 
 ## 当前主线
 
-本轮唯一任务：等待产品负责人验收 DeepSeek V4 Flash 路由迁移本地候选。
+本轮唯一任务：等待产品负责人验收 DeepSeek V4 Flash 修复 Worker Preview。
 
 边界：
 
@@ -14,8 +14,12 @@
 - 当前 active deployment 为 `d9acb146-b720-4e09-b2b8-0257b93fc407`。
 - 本地修复已完成：客户端逻辑模型 `deepseek-chat` 通过 `upstreamModel` 路由到正式上游 `deepseek-v4-flash`。
 - 新预算明细将按实际计费模型 `deepseek-v4-flash` 记录；既有 `deepseek-chat` 21 micro-USD 历史预留不删除、不退款、不修改。
-- 本轮未上传新 Worker version，未部署生产修复，未修改 Secrets 或 D1 schema，未发起新的真实模型调用。
-- 完成后停止，等待产品负责人验收 DeepSeek V4 Flash 路由迁移本地候选。
+- 产品负责人已验收 DeepSeek V4 Flash 路由迁移本地候选，并批准只上传新 Worker version 和执行无付费 Preview 验证。
+- 新修复 Worker version `a7eb385b-84df-4a45-b554-0aca40b6b407` 已上传，version number 为 `12`，Preview alias 为 `budget-v4-flash-candidate`。
+- active deployment 仍为 `d9acb146-b720-4e09-b2b8-0257b93fc407`；旧稳定 version 仍为 100%，已知失败候选仍为 0%，新修复 version 正常生产流量为 0%。
+- Preview `/health` HTTP 200，`/v1/models` HTTP 200 且显示 `deepseek-chat` 为 logical alias、上游为 `deepseek-v4-flash`；未认证聊天 HTTP 401 `missing_token`。
+- 本轮未注册 installation，未发起已认证聊天，未调用真实 provider，未修改 Secrets 或 D1 schema，两张预算表仍保持既有 21 micro-USD / call_count 1。
+- 完成后停止，等待产品负责人验收 DeepSeek V4 Flash 修复 Worker Preview。
 
 ## 最近完成
 
@@ -36,6 +40,7 @@
 - 第 3B-2b2c 段 1% 生产灰度：one_percent_canary_observation_limited_by_low_traffic。active deployment `55b20f6c-1a50-446b-95cc-18ebf0e6cbe1` 中旧稳定 version 为 99%，新预算 version 为 1%。20 分钟观察和 5 分钟缓冲完成，健康检查均 200，预算表仍为空，未主动真实模型调用，未修改 Secrets 或 D1 schema，未触发回滚。证据见 `verification/monthly-budget-worker-one-percent-canary/summary.json`。
 - 第 3B-2b2d 候选 Preview 单笔真实链路：real_preview_call_failed_after_budget_reservation。注册成功，唯一真实聊天返回 HTTP 400 `invalid_request_error`；预算预留已写入且两账一致，未重试，生产流量仍 99%/1%。证据见 `verification/monthly-budget-worker-controlled-real-canary/summary.json`。
 - DeepSeek V4 Flash 路由迁移本地候选：new_provider_model_route_candidate_ready_locally。已撤回失败候选 1% 流量；本地实现 `deepseek-chat` 逻辑模型到 `deepseek-v4-flash` 上游模型路由，16 项 Managed Proxy 测试和 TypeScript 检查通过；未上传、未部署、未调用真实 provider。证据见 `verification/deepseek-v4-flash-route-migration/summary.json`。
+- DeepSeek V4 Flash 修复 Worker Preview：v4_flash_candidate_preview_verified。新修复 Worker version `a7eb385b-84df-4a45-b554-0aca40b6b407` / version number `12` 已上传为 Preview；无付费 Preview 三项检查通过，active deployment 和正常生产流量未变化；未注册 installation，未调用真实 provider。证据见 `verification/deepseek-v4-flash-worker-preview-upload/summary.json`。
 
 ## 当前事实
 
@@ -60,7 +65,7 @@
 - Windows 临时文件人工确认。
 - 自启项调整和闲置软件卸载决策。
 - 新预算 Worker 100% 全量切换。
-- DeepSeek V4 Flash 路由迁移生产上传、Preview 验证、真实 provider 成功链路和灰度/全量。
+- DeepSeek V4 Flash 修复 Worker 真实 provider 成功链路和灰度/全量。
 - 首屏示例指令、反馈入口、安全和隐私告知。
 - 3-5 名真实用户测试。
 - 长期记忆、任务历史和状态卡、质量检查层、自动任务拆解和分配。
@@ -68,6 +73,6 @@
 
 ## 当前唯一下一步
 
-当前唯一下一步以 `NEXT_STEP.md` 为准：等待产品负责人验收 DeepSeek V4 Flash 路由迁移本地候选。未经批准不得上传或部署新 Worker version，不得发起新的真实模型调用。
+当前唯一下一步以 `NEXT_STEP.md` 为准：等待产品负责人验收 DeepSeek V4 Flash 修复 Worker Preview。未经批准不得把新修复 version 加入 production deployment，不得注册 installation，不得发起真实模型调用。
 
-完成本轮后必须停止，等待产品负责人验收 DeepSeek V4 Flash 路由迁移本地候选，不自动上传、不部署、不发起真实调用、不进入后续段、第二批清理或其他任务。
+完成本轮后必须停止，等待产品负责人验收 DeepSeek V4 Flash 修复 Worker Preview，不把新修复 version 加入 production deployment，不注册 installation，不发起真实模型调用，不进入后续段、第二批清理或其他任务。
