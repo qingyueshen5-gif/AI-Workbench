@@ -53,7 +53,7 @@ DeepSeek 是当前唯一已接入的生产实现，属于可替换的实现细�
 
 ## 未完成能力摘要
 
-- 等待产品负责人验收 DeepSeek V4 Flash 非思考兼容本地候选。未经批准不得上传新 Worker version，不得将 version 12 加入 production deployment，不得注册 installation或发起真实模型调用。
+- 等待产品负责人处理 DeepSeek V4 Flash 非思考真实 Preview 验证阻断。新 version 13 已上传但未部署；本轮已消耗唯一一次注册且未执行真实聊天，未经批准不得第二次注册、不得发起真实模型调用、不得把新 version 加入 production deployment、不得切换 1% 或 100%。
 - 实际电脑清理。
 - 首屏 3-5 条示例指令。
 - 反馈入口和安全/隐私告知。
@@ -71,7 +71,7 @@ DeepSeek 是当前唯一已接入的生产实现，属于可替换的实现细�
 
 ## 当前唯一下一步
 
-等待产品负责人验收 DeepSeek V4 Flash 非思考兼容本地候选。未经批准不得上传新 Worker version，不得将 version 12 加入 production deployment，不得注册 installation或发起真实模型调用。
+等待产品负责人处理 DeepSeek V4 Flash 非思考真实 Preview 验证阻断。新 version 13 已上传但未加入 production deployment；本轮已消耗唯一一次注册且未执行真实聊天，未经批准不得第二次注册、不得发起真实模型调用、不得把新 version 加入 production deployment、不得切换 1% 或 100%。
 
 不得自动上传或部署新 Worker version、发起新的真实模型调用、电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发，除非产品负责人明确批准对应任务。
 

@@ -133,6 +133,7 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 - 第 3B-2b2d 根因修复本地候选：已确认旧上游模型名退役，撤回失败候选 1% 流量；本地实现 `deepseek-chat` 逻辑模型到 `deepseek-v4-flash` 上游模型路由，预算明细按实际计费模型记录。该修复尚未上传或部署，不得写成 production fixed 或 real provider path passed。
 - 第 3B-2b2e 修复 Worker Preview：新修复 version `a7eb385b-84df-4a45-b554-0aca40b6b407` 已上传为 version number `12`，Preview 三项无付费检查通过；生产当前仍为旧稳定 version 100%，失败候选 0%，新修复 version 正常生产流量 0%。该修复尚未加入 production deployment，尚未执行修复后的真实模型调用，不得写成 production fixed、real provider path passed 或 wallet guard complete。
 - DeepSeek V4 Flash 非思考兼容本地候选：version 12 已验收但不用于付费验证；本地候选新增 `thinkingMode: "disabled"`，服务端强制上游非思考 payload。该修正尚未上传到 Cloudflare，不得写成 Preview passed、production fixed、real provider path passed 或 wallet guard complete。
+- DeepSeek V4 Flash 非思考真实 Preview 阻断：非思考兼容新 Worker version `cf002344-57ee-4c3f-86a6-115ca66c8b5f` / version number `13` 已上传并通过无付费 Preview 安全门；未加入 active deployment，正常生产流量 0%。唯一一次注册已消耗，D1 确认 installations +1、daily_usage +1；一次性脚本随后在聊天前预算读取阶段崩溃，Token 未打印未持久化且不可恢复，真实聊天 0 次、provider 调用 0 次、预算预留 0。不得写成 real path passed；未经产品负责人重新批准不得第二次注册或真实调用。
 
 ## 第三方 Agent/工具升级管理规则
 

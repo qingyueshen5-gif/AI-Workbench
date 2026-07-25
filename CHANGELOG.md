@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Unreleased - DeepSeek V4 Flash 非思考真实 Preview 阻断
+
+- 上传新的非思考兼容 Worker version `cf002344-57ee-4c3f-86a6-115ca66c8b5f` / version 13，Preview alias 为 `budget-v4-nt-real-candidate`。
+- 无付费 Preview 安全门通过：`/health` 200，`/v1/models` 200 且 `deepseek-chat` 为 `deepseek-v4-flash` logical alias、`thinking_mode: disabled`，未认证聊天 401 `missing_token`。
+- 未部署新 version，未改变生产流量；active deployment 仍为旧稳定 100%。
+- 唯一一次注册后一次性脚本在聊天前预算读取阶段崩溃，Token 未打印未持久化且不可恢复；按边界停止，没有第二次注册。
+- 最终真实聊天 0 次、provider 调用 0 次、预算预留 0；平台预算仍 21/1，历史 `deepseek-chat` 仍 21/1，无 `deepseek-v4-flash` 行。
+
 ## Unreleased - 判断逻辑与学习记录
 
 - 在 `PRINCIPLES.md` 写入“简单粗暴模式与细致模式的切换原则”：默认直接办事，遇到技术保护墙切换细致模式，遇到信息分散墙仍保持快速采集和汇总。

@@ -1,0 +1,26 @@
+2026-07-25T19:19:00+08:00 | command: git status --short --branch | exit_code: 0 | output: clean; main...origin/main
+2026-07-25T19:19:00+08:00 | command: git rev-parse HEAD | exit_code: 0 | output: 3459e5ad9449afaf162f97eaf82bf9d7f9efd96d
+2026-07-25T19:19:00+08:00 | command: git rev-parse origin/main | exit_code: 0 | output: 3459e5ad9449afaf162f97eaf82bf9d7f9efd96d
+2026-07-25T19:19:00+08:00 | command: git merge-base --is-ancestor b024123aac66dc9de01102a61ed92ae8c57dbd0f HEAD | exit_code: 0 | output: ancestor=true
+2026-07-25T19:19:00+08:00 | command: git diff b024123aac66dc9de01102a61ed92ae8c57dbd0f..HEAD -- managed-proxy | exit_code: 0 | output: no diff
+2026-07-25T19:20:00+08:00 | command: git fetch origin --prune | exit_code: 1 | output: SEC_E_NO_CREDENTIALS; no credential repair attempted
+2026-07-25T19:32:00+08:00 | command: npm.cmd test | exit_code: 0 | output: tests 19; pass 19; fail 0
+2026-07-25T19:33:00+08:00 | command: npx.cmd wrangler types worker-configuration.d.ts | exit_code: 0 | output: runtime types generated; wrangler log EPERM warning only
+2026-07-25T19:33:00+08:00 | command: npx.cmd tsc --noEmit --skipLibCheck --moduleResolution node --module ES2022 --target ES2022 worker-configuration.d.ts src/index.ts | exit_code: 0 | output: passed
+2026-07-25T19:33:00+08:00 | command: parse wrangler.jsonc with JSON.parse | exit_code: 0 | output: allowed deepseek-chat; upstream deepseek-v4-flash; thinkingMode disabled
+2026-07-25T19:32:00+08:00 | command: git diff --check | exit_code: 0 | output: passed
+2026-07-25T19:34:00+08:00 | command: production baseline read-only checks | exit_code: 0 | output: active d9acb146-b720-4e09-b2b8-0257b93fc407; stable 100; failed candidate 0; version 12 0; secrets and D1 schema unchanged; budget platform 21/1 and deepseek-chat 21/1
+2026-07-25T19:36:00+08:00 | command: production GET /health and /v1/models with explicit ProxyAgent | exit_code: 0 | output: both HTTP 200
+2026-07-25T19:49:00+08:00 | command: wrangler versions upload dry-run with temporary outdir | exit_code: 0 | output: bundle SHA256 9ED565A41CE72D68D9D1194CBDDFF676F75EF1240BE28A1FD282AB475B803ABA
+2026-07-25T19:50:00+08:00 | command: npx.cmd wrangler versions upload --message ... --tag v4-flash-nonthinking-real-candidate --preview-alias budget-v4-nt-real-candidate | exit_code: 0 | output: version cf002344-57ee-4c3f-86a6-115ca66c8b5f uploaded; full Preview URL redacted
+2026-07-25T19:51:00+08:00 | command: post-upload deployment/version/secret/schema/budget read-only checks | exit_code: 0 | output: active unchanged; version 13 uploaded with has_preview; new version not in active deployment; budgets unchanged
+2026-07-25T19:52:00+08:00 | command: Preview no-cost gate through explicit undici ProxyAgent | exit_code: 0 | output: health 200; models 200 logical alias to deepseek-v4-flash thinking disabled; unauthenticated chat 401 missing_token
+2026-07-25T19:52:00+08:00 | command: post-gate budget read-only check | exit_code: 0 | output: platform 21/1; deepseek-chat 21/1; no deepseek-v4-flash row; installations 34
+2026-07-25T19:55:00+08:00 | command: one-time repository-external Node script register/pre-call-budget/chat | exit_code: -1073740791 | output: crashed after registration during pre-chat budget read with spawnSync npx.cmd EINVAL; token not printed; full Preview URL not printed
+2026-07-25T19:55:00+08:00 | command: post-crash budget/deployment/secret/schema read-only checks | exit_code: 0 | output: installations 35; daily_usage request_count 3; budget still platform 21/1 and deepseek-chat 21/1; no v4 flash row; active deployment unchanged
+2026-07-25T19:56:00+08:00 | command: temp artifact cleanup check | exit_code: 0 | output: no aiw-v4-nt-real temp scripts or aiw-v4-nt-bundle directories found
+2026-07-25T19:57:00+08:00 | command: T+0 GET health observation | exit_code: 0 | output: production health 200; production models 200; preview health 200
+2026-07-25T20:00:00+08:00 | command: T+2 GET health observation | exit_code: 0 | output: production health 200; production models 200; preview health 200
+2026-07-25T20:03:00+08:00 | command: T+5 GET health observation | exit_code: 1 | output: network-layer fetch failed
+2026-07-25T20:05:00+08:00 | command: T+5 PowerShell GET cross-check | exit_code: 0 | output: network timeout for production and preview GET
+2026-07-25T20:05:00+08:00 | command: final deployment/budget/secret/schema read-only checks | exit_code: 0 | output: active unchanged; stable 100; budgets unchanged after registration; secrets and D1 schema unchanged

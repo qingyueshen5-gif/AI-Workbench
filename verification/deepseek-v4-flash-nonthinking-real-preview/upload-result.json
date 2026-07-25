@@ -1,0 +1,18 @@
+{
+  "command_family": "wrangler versions upload",
+  "disallowed_commands_used": {
+    "wrangler_deploy": false,
+    "wrangler_versions_deploy": false,
+    "dashboard_deploy": false
+  },
+  "exit_code": 0,
+  "version_id": "cf002344-57ee-4c3f-86a6-115ca66c8b5f",
+  "version_number": 13,
+  "version_message": "DeepSeek V4 Flash non-thinking real validation candidate",
+  "version_tag": "v4-flash-nonthinking-real-candidate",
+  "preview_alias": "budget-v4-nt-real-candidate",
+  "preview_host_redacted": "budget-v4-nt-real-candidate-ai-workbench-managed-proxy.<redacted>.workers.dev",
+  "preview_host_sha256": "2FD6371B74E77EFB8F201E85D245C61D8F3C8358553C3D38330E422A8EB84048",
+  "bundle_sha256": "9ED565A41CE72D68D9D1194CBDDFF676F75EF1240BE28A1FD282AB475B803ABA",
+  "full_preview_url_recorded": false
+}

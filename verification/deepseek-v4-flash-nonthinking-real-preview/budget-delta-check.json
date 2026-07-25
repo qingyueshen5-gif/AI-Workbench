@@ -1,0 +1,22 @@
+{
+  "expected_if_chat_had_run": {
+    "platform_call_count_delta": 1,
+    "platform_reserved_micro_usd_delta": 23,
+    "deepseek_v4_flash_call_count_delta": 1,
+    "deepseek_v4_flash_reserved_micro_usd_delta": 23
+  },
+  "actual": {
+    "platform_call_count_delta": 0,
+    "platform_reserved_micro_usd_delta": 0,
+    "deepseek_v4_flash_call_count_delta": 0,
+    "deepseek_v4_flash_reserved_micro_usd_delta": 0,
+    "historical_deepseek_chat_reserved_micro_usd_delta": 0,
+    "historical_deepseek_chat_call_count_delta": 0,
+    "installations_delta": 1,
+    "daily_usage_request_delta": 1
+  },
+  "duplicate_reservation_detected": false,
+  "historical_deepseek_chat_modified": false,
+  "budget_increment_consistency_check": "not_applicable_no_chat_reservation",
+  "passed_real_call_budget_requirements": false
+}

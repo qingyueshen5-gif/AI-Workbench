@@ -1,0 +1,24 @@
+{
+  "no_additional_registration_or_chat_after_block": true,
+  "observations": [
+    { "label": "T+0", "production_health_status": 200, "production_models_status": 200, "preview_health_status": 200 },
+    { "label": "T+2", "production_health_status": 200, "production_models_status": 200, "preview_health_status": 200 },
+    {
+      "label": "T+5",
+      "production_health_status": "network_fetch_failed",
+      "production_models_status": "network_fetch_failed",
+      "preview_health_status": "network_fetch_failed",
+      "powershell_cross_check": "network_timeout"
+    }
+  ],
+  "final_deployment_state": {
+    "active_deployment": "d9acb146-b720-4e09-b2b8-0257b93fc407",
+    "stable_version_traffic": 100,
+    "failed_candidate_traffic": 0,
+    "version_12_traffic": 0,
+    "new_version_traffic": 0
+  },
+  "final_budget_state_unchanged_after_registration": true,
+  "secrets_unchanged": true,
+  "d1_schema_unchanged": true
+}

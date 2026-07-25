@@ -1,0 +1,20 @@
+{
+  "attempts": 0,
+  "http_status": null,
+  "valid_json": null,
+  "answer_non_empty": false,
+  "finish_reason": null,
+  "provider_model": null,
+  "usage": {
+    "prompt_tokens": null,
+    "completion_tokens": null,
+    "total_tokens": null
+  },
+  "reasoning_content_present_or_non_empty": null,
+  "shortest_necessary_answer": null,
+  "duration_ms": null,
+  "retries": 0,
+  "provider_calls": 0,
+  "status": "not_attempted",
+  "reason": "The single approved registration was consumed, then the one-time process crashed before chat. Token was not printed or persisted and could not be recovered without a second registration."
+}

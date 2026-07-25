@@ -1,0 +1,24 @@
+{
+  "artifacts": [
+    "summary.json",
+    "report.md",
+    "commands.log",
+    "local-candidate-check.json",
+    "upload-result.json",
+    "preview-no-cost-gate.json",
+    "reservation-calculation.json",
+    "registration-result.json",
+    "pre-call-budget-state.json",
+    "real-call-result.json",
+    "post-call-budget-state.json",
+    "budget-delta-check.json",
+    "post-call-observation.json",
+    "temporary-artifact-cleanup.json",
+    "artifact-manifest.json"
+  ],
+  "contains_full_preview_url": false,
+  "contains_token": false,
+  "contains_authorization_header": false,
+  "contains_proxy_credentials": false,
+  "contains_full_installation_id": false
+}

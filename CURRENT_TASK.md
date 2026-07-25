@@ -5,7 +5,7 @@
 
 ## 当前主线
 
-本轮唯一任务：等待产品负责人验收 DeepSeek V4 Flash 非思考兼容本地候选。
+本轮唯一任务：等待产品负责人处理 DeepSeek V4 Flash 非思考真实 Preview 验证阻断。
 
 边界：
 
@@ -22,8 +22,13 @@
 - 产品负责人已验收第 3B-2b2e Worker Preview 上传验证通过。
 - 付费验证前复核发现 version 12 未显式固定 `deepseek-chat` 非思考兼容语义，因此 version 12 不用于付费真实验证。
 - 本地候选已修正：`deepseek-chat` 路由新增 `thinkingMode: "disabled"`，上游 payload 强制包含 `model: deepseek-v4-flash` 和 `thinking: { "type": "disabled" }`；客户端传入 `thinking.type: enabled` 会被服务端覆盖为 `disabled`。
-- 本轮未上传新 Worker version，未部署，未注册 installation，未发起真实 provider 调用，未修改生产流量。
-- 完成后停止，等待产品负责人验收 DeepSeek V4 Flash 非思考兼容本地候选。
+- 产品负责人已验收 DeepSeek V4 Flash 非思考兼容本地候选，并批准上传新的非思考兼容 Worker version、无付费 Preview 安全门、一次注册和一次真实聊天。
+- 新 Worker version `cf002344-57ee-4c3f-86a6-115ca66c8b5f` / version number `13` 已上传，Preview alias 为 `budget-v4-nt-real-candidate`。
+- 新 version 未加入 active deployment，正常生产流量为 0%；active deployment 仍为 `d9acb146-b720-4e09-b2b8-0257b93fc407`，旧稳定 version 100%。
+- 无付费 Preview 安全门通过：`/health` 200、`/v1/models` 200、未认证聊天 401 `missing_token`，预算未变化。
+- 唯一一次注册已消耗，D1 确认 installations +1、daily_usage +1；随后一次性脚本在聊天前预算读取阶段崩溃，Token 未打印未持久化且不可恢复。
+- 真实聊天 0 次，provider 调用 0 次，预算预留 0；平台预算仍 21/1，历史 `deepseek-chat` 仍 21/1，无 `deepseek-v4-flash` 行。
+- 完成后停止，等待产品负责人处理阻断；未经批准不得第二次注册、不得发起真实模型调用、不得把新 version 加入 production deployment、不得切换 1% 或 100%。
 
 ## 最近完成
 
@@ -46,6 +51,7 @@
 - DeepSeek V4 Flash 路由迁移本地候选：new_provider_model_route_candidate_ready_locally。已撤回失败候选 1% 流量；本地实现 `deepseek-chat` 逻辑模型到 `deepseek-v4-flash` 上游模型路由，16 项 Managed Proxy 测试和 TypeScript 检查通过；未上传、未部署、未调用真实 provider。证据见 `verification/deepseek-v4-flash-route-migration/summary.json`。
 - DeepSeek V4 Flash 修复 Worker Preview：v4_flash_candidate_preview_verified。新修复 Worker version `a7eb385b-84df-4a45-b554-0aca40b6b407` / version number `12` 已上传为 Preview；无付费 Preview 三项检查通过，active deployment 和正常生产流量未变化；未注册 installation，未调用真实 provider。证据见 `verification/deepseek-v4-flash-worker-preview-upload/summary.json`。
 - DeepSeek V4 Flash 非思考兼容本地候选：v4_flash_nonthinking_compatibility_candidate_ready_locally。version 12 已验收但不用于付费验证；本地新增 `thinkingMode: "disabled"` 并强制上游 payload 非思考模式，客户端 enabled 会被覆盖；Managed Proxy 19 项测试和 TypeScript 检查通过。证据见 `verification/deepseek-v4-flash-nonthinking-compatibility/summary.json`。
+- DeepSeek V4 Flash 非思考真实 Preview 验证：blocked_after_single_registration_before_real_call。新 version 13 已上传并通过无付费 Preview；唯一一次注册后脚本崩溃，真实聊天未执行。证据见 `verification/deepseek-v4-flash-nonthinking-real-preview/summary.json`。
 
 ## 当前事实
 
@@ -70,7 +76,7 @@
 - Windows 临时文件人工确认。
 - 自启项调整和闲置软件卸载决策。
 - 新预算 Worker 100% 全量切换。
-- DeepSeek V4 Flash 非思考兼容本地候选上传、Preview、真实 provider 成功链路和灰度/全量。
+- DeepSeek V4 Flash 非思考真实 provider 成功链路和灰度/全量。
 - 首屏示例指令、反馈入口、安全和隐私告知。
 - 3-5 名真实用户测试。
 - 长期记忆、任务历史和状态卡、质量检查层、自动任务拆解和分配。
@@ -78,6 +84,6 @@
 
 ## 当前唯一下一步
 
-当前唯一下一步以 `NEXT_STEP.md` 为准：等待产品负责人验收 DeepSeek V4 Flash 非思考兼容本地候选。未经批准不得上传新 Worker version，不得将 version 12 加入 production deployment，不得注册 installation或发起真实模型调用。
+当前唯一下一步以 `NEXT_STEP.md` 为准：等待产品负责人处理 DeepSeek V4 Flash 非思考真实 Preview 验证阻断。未经批准不得第二次注册、不得发起真实模型调用、不得把新 version 加入 production deployment、不得切换 1% 或 100%。
 
-完成本轮后必须停止，等待产品负责人验收 DeepSeek V4 Flash 非思考兼容本地候选，不上传新 Worker version，不把 version 12 加入 production deployment，不注册 installation，不发起真实模型调用，不进入后续段、第二批清理或其他任务。
+完成本轮后必须停止，等待产品负责人处理阻断；新 version 已上传但未部署，本轮已消耗唯一一次注册且没有真实聊天，不进入后续段、第二批清理或其他任务。

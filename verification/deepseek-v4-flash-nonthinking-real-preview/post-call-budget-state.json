@@ -1,0 +1,21 @@
+{
+  "note": "No chat call was attempted; this is the post-registration blocked state.",
+  "monthly_platform_budget": {
+    "month_key": "2026-07",
+    "reserved_micro_usd": 21,
+    "call_count": 1,
+    "updated_at": "2026-07-25T08:18:17.578Z"
+  },
+  "monthly_model_budget": [
+    {
+      "month_key": "2026-07",
+      "model": "deepseek-chat",
+      "reserved_micro_usd": 21,
+      "call_count": 1,
+      "updated_at": "2026-07-25T08:18:17.578Z"
+    }
+  ],
+  "deepseek_v4_flash_row_exists": false,
+  "installations_count": 35,
+  "daily_usage_today": { "request_count": 3, "input_tokens": 2, "output_tokens": 0 }
+}

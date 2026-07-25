@@ -1,0 +1,44 @@
+{
+  "preview_alias": "budget-v4-nt-real-candidate",
+  "preview_host_redacted": "budget-v4-nt-real-candidate-ai-workbench-managed-proxy.<redacted>.workers.dev",
+  "preview_host_sha256": "2FD6371B74E77EFB8F201E85D245C61D8F3C8358553C3D38330E422A8EB84048",
+  "used_explicit_undici_proxy_agent": true,
+  "retries": 0,
+  "checks": [
+    { "method": "GET", "path": "/health", "status": 200 },
+    {
+      "method": "GET",
+      "path": "/v1/models",
+      "status": 200,
+      "model": {
+        "id": "deepseek-chat",
+        "model_type": "logical_alias",
+        "upstream_model": "deepseek-v4-flash",
+        "thinking_mode": "disabled"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "authenticated": false,
+      "status": 401,
+      "error_code": "missing_token"
+    }
+  ],
+  "budget_before": {
+    "platform_reserved_micro_usd": 21,
+    "platform_call_count": 1,
+    "historical_deepseek_chat_reserved_micro_usd": 21,
+    "historical_deepseek_chat_call_count": 1,
+    "deepseek_v4_flash_row_exists": false
+  },
+  "budget_after": {
+    "platform_reserved_micro_usd": 21,
+    "platform_call_count": 1,
+    "historical_deepseek_chat_reserved_micro_usd": 21,
+    "historical_deepseek_chat_call_count": 1,
+    "deepseek_v4_flash_row_exists": false
+  },
+  "provider_called": false,
+  "passed": true
+}

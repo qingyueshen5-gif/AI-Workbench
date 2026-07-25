@@ -1,0 +1,121 @@
+{
+  "task": "deepseek-v4-flash-nonthinking-real-preview",
+  "execution_status": "blocked_after_single_registration_before_real_call",
+  "accepted_local_candidate_commit": "b024123aac66dc9de01102a61ed92ae8c57dbd0f",
+  "repository_head_before": "3459e5ad9449afaf162f97eaf82bf9d7f9efd96d",
+  "origin_main_before": "3459e5ad9449afaf162f97eaf82bf9d7f9efd96d",
+  "working_tree_clean_before": true,
+  "managed_proxy_diff_from_accepted_candidate": false,
+  "git_fetch_origin_prune": {
+    "exit_code": 1,
+    "error": "SEC_E_NO_CREDENTIALS",
+    "credential_repair_attempted": false
+  },
+  "worker_name": "ai-workbench-managed-proxy",
+  "active_deployment_before": "d9acb146-b720-4e09-b2b8-0257b93fc407",
+  "active_deployment_after": "d9acb146-b720-4e09-b2b8-0257b93fc407",
+  "stable_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "stable_traffic_before": 100,
+  "stable_traffic_after": 100,
+  "failed_candidate_version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+  "failed_candidate_traffic_after": 0,
+  "version_12_id": "a7eb385b-84df-4a45-b554-0aca40b6b407",
+  "version_12_traffic_after": 0,
+  "new_candidate_version_id": "cf002344-57ee-4c3f-86a6-115ca66c8b5f",
+  "new_candidate_version_number": 13,
+  "new_candidate_traffic_after": 0,
+  "new_candidate_in_active_deployment": false,
+  "version_uploaded": true,
+  "version_deployed": false,
+  "version_message": "DeepSeek V4 Flash non-thinking real validation candidate",
+  "version_tag": "v4-flash-nonthinking-real-candidate",
+  "preview_alias": "budget-v4-nt-real-candidate",
+  "preview_host_redacted": "budget-v4-nt-real-candidate-ai-workbench-managed-proxy.<redacted>.workers.dev",
+  "preview_host_sha256": "2FD6371B74E77EFB8F201E85D245C61D8F3C8358553C3D38330E422A8EB84048",
+  "bundle_sha256": "9ED565A41CE72D68D9D1194CBDDFF676F75EF1240BE28A1FD282AB475B803ABA",
+  "local_validation": {
+    "typescript_passed": true,
+    "managed_proxy_tests_total": 19,
+    "managed_proxy_tests_passed": 19,
+    "wrangler_config_json_parse_passed": true,
+    "git_diff_check_passed": true,
+    "deepseek_chat_routes_to": "deepseek-v4-flash",
+    "thinking_mode": "disabled",
+    "client_thinking_enabled_overridden": true,
+    "missing_or_illegal_thinking_mode_fails_closed_before_budget_and_provider": true,
+    "platform_aggregate_budget_algorithm_changed": false
+  },
+  "preview_no_cost_gate": {
+    "health_status": 200,
+    "models_status": 200,
+    "models_verified": {
+      "id": "deepseek-chat",
+      "model_type": "logical_alias",
+      "upstream_model": "deepseek-v4-flash",
+      "thinking_mode": "disabled"
+    },
+    "unauthenticated_chat_status": 401,
+    "unauthenticated_chat_error_code": "missing_token",
+    "budget_unchanged_after_gate": true,
+    "provider_called": false
+  },
+  "registration": {
+    "attempts": 1,
+    "expected_version_marker": "3b-v4-nt-real-preview",
+    "result": "request_completed_but_process_crashed_before_sanitized_result_output",
+    "token_persisted": false,
+    "token_logged": false,
+    "installation_id_logged": false,
+    "installations_delta": 1,
+    "daily_usage_request_delta_from_registration": 1
+  },
+  "real_chat": {
+    "attempts": 0,
+    "provider_calls": 0,
+    "reason_not_attempted": "The one-time Node script crashed at the pre-chat D1 budget read with spawnSync npx.cmd EINVAL after registration succeeded. The token existed only in process memory and was lost on process exit. A second registration is prohibited by the approved boundary."
+  },
+  "reservation_calculation": {
+    "model": "deepseek-chat",
+    "upstream_model": "deepseek-v4-flash",
+    "raw_request_bytes": 126,
+    "input_chars": 6,
+    "estimated_input_tokens": 2,
+    "reserve_input_tokens": 126,
+    "reserve_output_tokens": 16,
+    "expected_reserved_micro_usd": 23,
+    "within_100_micro_usd_gate": true,
+    "used_for_real_call": false
+  },
+  "budget_state": {
+    "before": {
+      "platform": { "reserved_micro_usd": 21, "call_count": 1 },
+      "historical_deepseek_chat": { "reserved_micro_usd": 21, "call_count": 1 },
+      "deepseek_v4_flash_row_exists": false,
+      "installations_count": 34,
+      "daily_usage_today": { "request_count": 2, "input_tokens": 2, "output_tokens": 0 }
+    },
+    "after": {
+      "platform": { "reserved_micro_usd": 21, "call_count": 1 },
+      "historical_deepseek_chat": { "reserved_micro_usd": 21, "call_count": 1 },
+      "deepseek_v4_flash_row_exists": false,
+      "installations_count": 35,
+      "daily_usage_today": { "request_count": 3, "input_tokens": 2, "output_tokens": 0 }
+    },
+    "platform_budget_delta": { "reserved_micro_usd": 0, "call_count": 0 },
+    "v4_flash_budget_delta": { "reserved_micro_usd": 0, "call_count": 0 },
+    "historical_deepseek_chat_modified": false
+  },
+  "secrets_modified": false,
+  "d1_schema_modified": false,
+  "production_traffic_changed": false,
+  "full_preview_url_committed": false,
+  "temporary_script_deleted": true,
+  "temporary_bundle_deleted": true,
+  "normal_acceptance_status_written": false,
+  "blocked_items": [
+    "The single approved registration was consumed before chat.",
+    "The real chat was not executed because the token was lost with the crashed one-time process.",
+    "A second registration or chat would violate the approved hard boundary."
+  ],
+  "next_action": "Wait for product owner review. A new paid validation attempt requires explicit approval because the single registration allowance for this run has already been used."
+}

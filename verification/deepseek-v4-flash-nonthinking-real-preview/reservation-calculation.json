@@ -1,0 +1,21 @@
+{
+  "payload": {
+    "model": "deepseek-chat",
+    "messages": [{ "role": "user", "content": "只回复 OK" }],
+    "stream": false,
+    "temperature": 0,
+    "max_tokens": 16
+  },
+  "raw_request_bytes": 126,
+  "input_chars": 6,
+  "estimated_input_tokens": 2,
+  "reserve_input_tokens": 126,
+  "reserve_output_tokens": 16,
+  "input_cache_miss_micro_usd_per_million_tokens": 140000,
+  "output_micro_usd_per_million_tokens": 280000,
+  "expected_reserved_micro_usd": 23,
+  "greater_than_zero": true,
+  "not_more_than_100_micro_usd": true,
+  "used_for_chat": false,
+  "not_used_reason": "Single registration succeeded but the one-time process crashed during the pre-chat D1 budget read. The in-memory token was lost and a second registration was prohibited."
+}

@@ -1,0 +1,14 @@
+{
+  "attempts": 1,
+  "version_marker": "3b-v4-nt-real-preview",
+  "http_status": "not_captured_before_process_crash",
+  "valid_json": "not_captured_before_process_crash",
+  "token_obtained": "not_captured_before_process_crash_but_not_persisted",
+  "token_logged": false,
+  "authorization_header_logged": false,
+  "full_installation_id_logged": false,
+  "duration_ms": "not_captured_before_process_crash",
+  "d1_installations_delta": 1,
+  "d1_daily_usage_request_delta": 1,
+  "result": "registration_side_effects_confirmed_by_d1; token lost with crashed process"
+}

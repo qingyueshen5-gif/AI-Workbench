@@ -1,0 +1,19 @@
+{
+  "typescript": "passed",
+  "managed_proxy_tests": { "total": 19, "passed": 19, "failed": 0 },
+  "wrangler_config_json_parse": "passed",
+  "git_diff_check": "passed",
+  "route": {
+    "logical_model": "deepseek-chat",
+    "upstream_model": "deepseek-v4-flash",
+    "thinking_mode": "disabled"
+  },
+  "assertions": {
+    "upstream_payload_forces_thinking_disabled": true,
+    "client_thinking_enabled_is_overridden": true,
+    "model_budget_detail_uses_deepseek_v4_flash": true,
+    "missing_or_illegal_thinking_mode_provider_calls": 0,
+    "missing_or_illegal_thinking_mode_budget_reservation": 0,
+    "monthly_platform_ledger_algorithm_changed": false
+  }
+}
