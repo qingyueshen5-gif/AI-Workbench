@@ -5,18 +5,19 @@
 
 ## 当前主线
 
-本轮唯一任务：等待产品负责人验收第 3B-2b2d 阻塞恢复结果。
+本轮唯一任务：等待产品负责人验收第 3B-2b2d 段候选 Versioned Preview 单笔真实预算链路失败后预留结果。
 
 边界：
 
 - 本轮在 99%/1% 正常生产灰度下尝试第 3B-2b2d 段单笔真实预算链路验证。
 - 预留金额计算为 21 micro-USD，但一次性注册尝试未返回 HTTP 状态、未取得 Token。
 - 本轮没有执行真实聊天请求，没有调用 provider，没有预算表增量。
-- 阻塞恢复诊断确认本地 Node 代理传输问题，但未取得独立 version 命中证据，因此没有进行第二次注册。
+- 阻塞恢复诊断确认本地 Node 代理传输问题；产品负责人批准改用候选 Preview URL 后，注册成功，唯一真实聊天返回 HTTP 400。
+- 预算预留已写入：平台总账和模型明细各 +21 micro-USD、call_count +1。
 - 不部署 Cloudflare Worker，不修改 Secrets。
 - 不重试注册，不调用真实模型，不产生模型费用，不使用真实安装 Token。
 - 不修改生产功能代码，不进入 100% 全量切换、模型分层、上下文压缩或 v0.4.7。
-- 完成后停止，等待产品负责人验收第 3B-2b2d 阻塞恢复结果。
+- 完成后停止，等待产品负责人验收第 3B-2b2d 候选 Preview 失败后预留结果。
 
 ## 最近完成
 
@@ -35,8 +36,7 @@
 - 第 3B-2b2a 段 Preview 上传验证：preview_upload_verified。已上传 Worker Preview version `483e4fae-3af8-40fa-ab83-4551f08b519e`；Preview `/health` 与 `/v1/models` 均 HTTP 200，未认证聊天请求 HTTP 401 `missing_token` 且在 provider 前拒绝。active deployment、生产流量和原稳定 version 未变；预算表仍为空。未部署 Worker，未修改 Secrets，未调用真实 provider。证据见 `verification/monthly-budget-worker-preview-upload/summary.json`。
 - 第 3B-2b2b 段零流量 deployment：zero_traffic_deployment_verified。新 active deployment `063b83c3-974f-43fb-84f2-9da0d574f745` 中旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 为 100%，新预算 version `483e4fae-3af8-40fa-ab83-4551f08b519e` 为 0%。version override 三项验证通过，预算表仍为空，未调用真实 provider，未修改 Secrets。证据见 `verification/monthly-budget-worker-zero-traffic-deployment/summary.json`。
 - 第 3B-2b2c 段 1% 生产灰度：one_percent_canary_observation_limited_by_low_traffic。active deployment `55b20f6c-1a50-446b-95cc-18ebf0e6cbe1` 中旧稳定 version 为 99%，新预算 version 为 1%。20 分钟观察和 5 分钟缓冲完成，健康检查均 200，预算表仍为空，未主动真实模型调用，未修改 Secrets 或 D1 schema，未触发回滚。证据见 `verification/monthly-budget-worker-one-percent-canary/summary.json`。
-- 第 3B-2b2d 段单笔真实预算链路验证：blocked_before_paid_call。预留金额 21 micro-USD 通过调用前门槛；一次性注册尝试未返回 HTTP 状态、未取得 Token，聊天尝试 0 次，未调用真实 provider，预算表和 usage 无增量，未触发回滚。证据见 `verification/monthly-budget-worker-controlled-real-canary/summary.json`。
-- 第 3B-2b2d 阻塞恢复诊断：blocked_transport_cause_unresolved。无付费诊断确认本地 Node 内置 fetch 未显式使用代理时连接超时，显式 ProxyAgent 后可取得 HTTP 响应；但未取得独立 version 命中证据，因此本轮新增注册 0 次、聊天 0 次、provider 调用 0 次。证据见 `verification/monthly-budget-worker-controlled-real-canary/summary.json`。
+- 第 3B-2b2d 候选 Preview 单笔真实链路：real_preview_call_failed_after_budget_reservation。注册成功，唯一真实聊天返回 HTTP 400 `invalid_request_error`；预算预留已写入且两账一致，未重试，生产流量仍 99%/1%。证据见 `verification/monthly-budget-worker-controlled-real-canary/summary.json`。
 
 ## 当前事实
 
@@ -68,6 +68,6 @@
 
 ## 当前唯一下一步
 
-当前唯一下一步以 `NEXT_STEP.md` 为准：等待产品负责人验收第 3B-2b2d 阻塞恢复结果。未经批准不得将新预算 Worker 切换到 100% 流量，不得重试注册或发起真实模型调用。
+当前唯一下一步以 `NEXT_STEP.md` 为准：等待产品负责人验收第 3B-2b2d 段候选 Versioned Preview 单笔真实预算链路失败后预留结果。未经批准不得将新预算 Worker 切换到 100% 流量，不得发起第二笔主动真实模型调用。
 
-完成本轮后必须停止，等待产品负责人验收第 3B-2b2d 阻塞恢复结果，不自动切换到 100% 流量、不重试真实调用、不进入后续段、第二批清理或其他任务。
+完成本轮后必须停止，等待产品负责人验收第 3B-2b2d 候选 Preview 失败后预留结果，不自动切换到 100% 流量、不发起第二笔真实调用、不进入后续段、第二批清理或其他任务。

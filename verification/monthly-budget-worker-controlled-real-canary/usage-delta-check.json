@@ -1,21 +1,21 @@
 {
   "task": "monthly-budget-worker-controlled-real-canary-usage-delta-check",
   "installations_before": 33,
-  "installations_after": 33,
-  "installation_count_delta": 0,
+  "installations_after": 34,
+  "installation_count_delta": 1,
   "daily_usage_before": {
     "request_count": 0,
     "input_tokens": 0,
     "output_tokens": 0
   },
   "daily_usage_after": {
-    "request_count": 0,
-    "input_tokens": 0,
+    "request_count": 2,
+    "input_tokens": 2,
     "output_tokens": 0
   },
   "daily_usage_delta": {
-    "request_count": 0,
-    "input_tokens": 0,
+    "request_count": 2,
+    "input_tokens": 2,
     "output_tokens": 0
   },
   "concurrent_natural_activity_observed": false

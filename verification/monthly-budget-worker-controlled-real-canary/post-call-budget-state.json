@@ -1,21 +1,36 @@
 {
   "task": "monthly-budget-worker-controlled-real-canary-post-budget-state",
   "monthly_platform_budget": {
-    "row_count": 0,
-    "reserved_micro_usd_sum": 0,
-    "call_count_sum": 0,
-    "rows": []
+    "row_count": 1,
+    "reserved_micro_usd_sum": 21,
+    "call_count_sum": 1,
+    "rows": [
+      {
+        "month_key": "2026-07",
+        "reserved_micro_usd": 21,
+        "call_count": 1,
+        "updated_at": "2026-07-25T08:18:17.578Z"
+      }
+    ]
   },
   "monthly_model_budget": {
-    "row_count": 0,
-    "reserved_micro_usd_sum": 0,
-    "call_count_sum": 0,
-    "rows": []
+    "row_count": 1,
+    "reserved_micro_usd_sum": 21,
+    "call_count_sum": 1,
+    "rows": [
+      {
+        "month_key": "2026-07",
+        "model": "deepseek-chat",
+        "reserved_micro_usd": 21,
+        "call_count": 1,
+        "updated_at": "2026-07-25T08:18:17.578Z"
+      }
+    ]
   },
   "daily_usage_today": {
-    "request_count": 0,
-    "input_tokens": 0,
+    "request_count": 2,
+    "input_tokens": 2,
     "output_tokens": 0
   },
-  "installations_count": 33
+  "installations_count": 34
 }

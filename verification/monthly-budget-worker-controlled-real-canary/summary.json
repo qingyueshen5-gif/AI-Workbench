@@ -1,6 +1,6 @@
 {
   "task": "monthly-budget-worker-controlled-real-canary",
-  "execution_status": "blocked_transport_cause_unresolved",
+  "execution_status": "real_preview_call_failed_after_budget_reservation",
   "repository_head_before": "a36dfc0acb53bc8a636a5fcf7ce605c118156199",
   "accepted_previous_stage": "3B-2b2c accepted by product owner at db4e055273c4cd8a3639fe61e322644d5ed5a908",
   "worker_name": "ai-workbench-managed-proxy",
@@ -11,18 +11,18 @@
   "stable_traffic_percentage": 99,
   "candidate_traffic_percentage": 1,
   "previous_registration_attempts": 1,
-  "diagnostic_request_count": 12,
-  "new_registration_attempts": 0,
+  "diagnostic_request_count": 15,
+  "new_registration_attempts": 1,
   "controlled_registration_attempts": 1,
-  "cumulative_registration_attempts": 1,
-  "controlled_real_chat_attempts": 0,
+  "cumulative_registration_attempts": 2,
+  "controlled_real_chat_attempts": 1,
   "client_retry_enabled": false,
   "root_cause_category": "system_proxy_error",
   "previous_exception_details": "previous_exception_details_missing",
   "http_status_obtained_for_previous_registration": false,
-  "http_status_obtained_for_new_registration": null,
-  "version_override_confirmed": false,
-  "version_override_header_sent": true,
+  "http_status_obtained_for_new_registration": true,
+  "version_override_confirmed": null,
+  "version_override_header_sent": false,
   "model": "deepseek-chat",
   "max_output_tokens": 8,
   "expected_reservation_micro_usd": 21,
@@ -32,34 +32,34 @@
     "call_count_sum": 0
   },
   "platform_budget_after": {
-    "row_count": 0,
-    "reserved_micro_usd_sum": 0,
-    "call_count_sum": 0
+    "row_count": 1,
+    "reserved_micro_usd_sum": 21,
+    "call_count_sum": 1
   },
-  "platform_budget_delta": 0,
+  "platform_budget_delta": 21,
   "model_budget_before": {
     "row_count": 0,
     "reserved_micro_usd_sum": 0,
     "call_count_sum": 0
   },
   "model_budget_after": {
-    "row_count": 0,
-    "reserved_micro_usd_sum": 0,
-    "call_count_sum": 0
+    "row_count": 1,
+    "reserved_micro_usd_sum": 21,
+    "call_count_sum": 1
   },
-  "model_budget_delta": 0,
-  "platform_call_count_delta": 0,
-  "model_call_count_delta": 0,
-  "budget_written": false,
-  "real_provider_called_by_codex": false,
-  "provider_call_status": "not_called_no_registration_token",
+  "model_budget_delta": 21,
+  "platform_call_count_delta": 1,
+  "model_call_count_delta": 1,
+  "budget_written": true,
+  "real_provider_called_by_codex": true,
+  "provider_call_status": "http_400_invalid_request_error",
   "provider_usage": null,
   "daily_usage_delta": {
-    "request_count": 0,
-    "input_tokens": 0,
+    "request_count": 2,
+    "input_tokens": 2,
     "output_tokens": 0
   },
-  "installation_count_delta": 0,
+  "installation_count_delta": 1,
   "temporary_token_persisted": false,
   "temporary_script_deleted": true,
   "secrets_modified": false,
@@ -70,13 +70,13 @@
   "rollback_executed": false,
   "critical_findings": [
     "The prior evidence did not preserve detailed exception fields for the first registration attempt.",
-    "This run reproduced the transport failure class with Node built-in fetch: no response headers, TypeError fetch failed, cause UND_ERR_CONNECT_TIMEOUT.",
-    "Using undici ProxyAgent fixed no-fee Node probes, but independent confirmation that version override hit the candidate version was not obtained.",
-    "No second registration attempt was made."
+    "This run used the candidate version Preview URL, so production hostname version override was not required.",
+    "Registration succeeded and returned a token kept only in memory.",
+    "The only chat attempt returned HTTP 400 invalid_request_error after the budget reservation had been written.",
+    "No retry was performed."
   ],
   "blocked_items": [
-    "Version override hit could not be independently confirmed beyond request header and successful endpoint responses.",
-    "The allow-to-register conditions were not all satisfied."
+    "The real chat response was HTTP 400, so the real budget path cannot be marked passed."
   ],
   "evidence_files": [
     "verification/monthly-budget-worker-controlled-real-canary/summary.json",
@@ -99,7 +99,13 @@
     "verification/monthly-budget-worker-controlled-real-canary/version-override-check.json",
     "verification/monthly-budget-worker-controlled-real-canary/registration-retry-result.json",
     "verification/monthly-budget-worker-controlled-real-canary/budget-before-after.json",
+    "verification/monthly-budget-worker-controlled-real-canary/versioned-preview-check.json",
     "verification/monthly-budget-worker-controlled-real-canary/artifact-manifest.json"
   ],
-  "next_action": "Wait for product owner acceptance of the 3B-2b2d blocked recovery result. Do not retry registration or send a real chat request without explicit approval."
+  "next_action": "Wait for product owner acceptance of the 3B-2b2d candidate Preview result. Do not send a second active real chat request or switch production traffic to 100% without explicit approval.",
+  "production_override_confirmation_limitation": "Production hostname version override hit could not be independently confirmed in the previous recovery run; this run used the candidate version Preview URL instead.",
+  "test_target_type": "versioned_preview_url",
+  "preview_url_redacted": true,
+  "preview_host_redacted": "budget-candidate-3b2b2a-ai-workbench-managed-proxy.<redacted>.workers.dev",
+  "preview_host_sha256": "8E0B40C5A1D58A94FE1FBF2EF67E5EFDABFB89D4FD72A3EA45F882AF8C7318B2"
 }

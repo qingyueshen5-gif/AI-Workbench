@@ -1,14 +1,14 @@
 {
   "task": "monthly-budget-worker-controlled-real-canary-post-call-observation",
-  "observation_scope": "post-registration-attempt; no paid chat was attempted",
+  "observation_scope": "post-versioned-preview-real-chat-attempt",
   "active_deployment": "55b20f6c-1a50-446b-95cc-18ebf0e6cbe1",
   "stable_traffic_percentage": 99,
   "candidate_traffic_percentage": 1,
   "production_health_http_status": 200,
   "production_models_http_status": 200,
-  "candidate_override_health_http_status": 200,
-  "candidate_override_models_http_status": 200,
-  "budget_tables_unchanged": true,
+  "preview_health_http_status": 200,
+  "health_observation_minutes": 5,
+  "budget_tables_expected": true,
   "candidate_runtime_error_observed": false,
   "overall_worker_error_observed": false,
   "rollback_condition_triggered": false

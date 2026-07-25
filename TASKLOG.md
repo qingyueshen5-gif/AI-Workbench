@@ -41,6 +41,7 @@ AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 
 | 第 3B-2b2c 段：1% 生产灰度 | 已完成，观察可信度受低流量限制 | 产品负责人验收通过 3B-2b2b 后批准进入 3B-2b2c，并拍板钱包刹车采用灰度切流量。开始前确认仓库 clean、HEAD=origin/main、`managed-proxy` 无 diff、active deployment 为旧 100%/新 0%、预算表为空、健康端点 200；`git fetch` 因本机凭据 `SEC_E_NO_CREDENTIALS` 失败但未影响 HEAD=origin/main。dry-run 正确后用 `wrangler versions deploy` 将旧稳定 version 调为 99%、新预算 version 调为 1%。20 分钟观察加 5 分钟缓冲完成，生产 `/health` 和 `/v1/models` 共 11 轮均 200，version override GET 通过；tail 未输出可见事件，未确认自然候选流量。预算表仍为空，Secrets 和 D1 schema 未变，未主动真实模型调用，未触发回滚。 | `verification/monthly-budget-worker-one-percent-canary/summary.json`、`verification/monthly-budget-worker-one-percent-canary/report.md` |
 | 第 3B-2b2d 段：单笔真实预算链路验证 | blocked_before_paid_call | 产品负责人验收通过 3B-2b2c 后批准在 99%/1% 灰度下对新预算 version 执行最多一笔注册和最多一笔真实聊天。开始前确认仓库 clean、HEAD=origin/main、`managed-proxy` 无 diff、active deployment 仍为 99%/1%、预算表为空、健康端点 200；`git fetch` 仍因本机凭据 `SEC_E_NO_CREDENTIALS` 失败但未修改凭据。预留计算为 21 micro-USD，低于 100 micro-USD 门槛。一次性临时 Node 脚本只尝试 1 次注册，未返回 HTTP 状态且未取得 Token；按不得重试边界停止，聊天请求 0 次，未调用 provider，预算表、installations 和 daily_usage 均无增量，Secrets/D1 schema/Worker 代码未变，未触发回滚。 | `verification/monthly-budget-worker-controlled-real-canary/summary.json`、`verification/monthly-budget-worker-controlled-real-canary/report.md` |
 | 第 3B-2b2d 段：阻塞恢复诊断 | blocked_transport_cause_unresolved | 产品负责人确认上次阻塞处理正确后批准继续同一段，先诊断注册无 HTTP 状态原因。上次 evidence 缺少异常详情；本轮无付费诊断确认 Node 内置 fetch 未显式使用代理时出现 `UND_ERR_CONNECT_TIMEOUT`，显式 undici `ProxyAgent` 后 GET/OPTIONS/无状态 POST 可取得 HTTP 响应，根因分类 `system_proxy_error`。但未取得独立证据证明 version override 命中新预算 version，因此不满足再次注册条件。新增注册 0 次、聊天 0 次、provider 调用 0 次、预算写入 0；流量仍 99%/1%，未回滚。 | `verification/monthly-budget-worker-controlled-real-canary/summary.json`、`verification/monthly-budget-worker-controlled-real-canary/transport-diagnosis.json` |
+| 第 3B-2b2d 段：候选 Preview 单笔真实链路 | real_preview_call_failed_after_budget_reservation | 产品负责人确认 transport 根因后批准改用候选 version Preview URL。本轮无付费 Preview 检查通过；注册 1 次成功；唯一真实聊天 1 次返回 HTTP 400 `invalid_request_error`，未重试。预算预留已写入：平台总账和 `deepseek-chat` 明细各 +21 micro-USD、call_count +1；installations +1，daily_usage +2 requests/+2 input tokens/+0 output tokens。生产流量仍旧版本 99%、新预算版本 1%；Secrets、D1 schema 和 Managed Proxy 代码未变，未回滚。 | `verification/monthly-budget-worker-controlled-real-canary/summary.json`、`verification/monthly-budget-worker-controlled-real-canary/versioned-preview-check.json` |
 
 ## 当前未完成任务
 
@@ -55,7 +56,7 @@ AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 
 | 自动情报流水线 | 未开始/P3 | 后续再做，不阻塞上线。 |
 | 电脑环境治理：产品资产备份、单点故障核查和清理候选盘点 | 已完成 | 已进入第一批安全清理，当前清理结果为 partial。 |
 | 重启后处理第一批遗留空目录，并由产品负责人决定Windows临时文件及第二批软件清理 | 部分完成 | 已处理批准遗留目录；用户 npm 缓存仍因 `EPERM` 失败，Windows 临时文件仍需产品负责人手动确认；不得自动进入第二批清理。 |
-| 新预算 Worker 100% 全量切换 | 未开始 | 只能在产品负责人验收第 3B-2b2d 阻塞恢复结果并明确批准后执行；新预算 Worker 当前仅承载 1% 正常生产流量，不得自动全量或重试真实调用。 |
+| 新预算 Worker 100% 全量切换 | 未开始 | 只能在产品负责人验收第 3B-2b2d 候选 Preview 失败后预留结果并明确批准后执行；新预算 Worker 当前仅承载 1% 正常生产流量，不得自动全量或发起第二笔主动真实调用。 |
 
 ## 最新 3A-R1.3 结果
 

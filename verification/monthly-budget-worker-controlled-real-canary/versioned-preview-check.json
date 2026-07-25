@@ -1,0 +1,27 @@
+{
+  "task": "monthly-budget-worker-controlled-real-canary-versioned-preview-check",
+  "target_type": "versioned_preview_url",
+  "candidate_version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+  "preview_alias": "budget-candidate-3b2b2a",
+  "preview_host_redacted": "budget-candidate-3b2b2a-ai-workbench-managed-proxy.<redacted>.workers.dev",
+  "preview_host_sha256": "8E0B40C5A1D58A94FE1FBF2EF67E5EFDABFB89D4FD72A3EA45F882AF8C7318B2",
+  "full_preview_url_logged": false,
+  "cloudflare_access_enabled": false,
+  "proxy_agent_used": true,
+  "proxy_value_logged": false,
+  "precheck": {
+    "health_http_status": 200,
+    "models_http_status": 200,
+    "unauthenticated_chat_http_status": 401,
+    "unauthenticated_chat_error_code": "missing_token",
+    "provider_called": false
+  },
+  "paid_attempt": {
+    "registration_attempts": 1,
+    "registration_http_status": 200,
+    "chat_attempts": 1,
+    "chat_http_status": 400,
+    "chat_error_code": "invalid_request_error",
+    "client_retry_enabled": false
+  }
+}

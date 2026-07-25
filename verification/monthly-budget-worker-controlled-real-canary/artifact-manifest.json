@@ -19,6 +19,7 @@
     "temporary-artifact-cleanup.json",
     "transport-diagnosis.json",
     "version-override-check.json",
+    "versioned-preview-check.json",
     "registration-retry-result.json",
     "budget-before-after.json",
     "artifact-manifest.json"

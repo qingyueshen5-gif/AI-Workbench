@@ -1,12 +1,13 @@
 {
   "task": "monthly-budget-worker-controlled-real-canary-budget-delta-check",
   "expected_reservation_micro_usd": 21,
-  "platform_reserved_delta": 0,
-  "model_reserved_delta": 0,
-  "platform_call_count_delta": 0,
-  "model_call_count_delta": 0,
+  "platform_reserved_delta": 21,
+  "model_reserved_delta": 21,
+  "platform_call_count_delta": 1,
+  "model_call_count_delta": 1,
   "two_ledgers_consistent": true,
-  "delta_equals_expected_reservation": false,
-  "reason": "No chat request was attempted because registration did not return a token.",
-  "budget_records_modified_by_codex": false
+  "delta_equals_expected_reservation": true,
+  "budget_records_modified_by_codex": true,
+  "chat_http_status": 400,
+  "status": "real_preview_call_failed_after_budget_reservation"
 }

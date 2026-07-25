@@ -1,6 +1,6 @@
 # 3B-2b2d Controlled Real Canary Report
 
-Status: `blocked_transport_cause_unresolved`.
+Status: `real_preview_call_failed_after_budget_reservation`.
 
 The repository baseline was clean at `db4e055273c4cd8a3639fe61e322644d5ed5a908`, with no `managed-proxy` diff after the accepted 3B-2b2c commit. `git fetch origin --prune` still failed with `SEC_E_NO_CREDENTIALS`; no login or credential repair was attempted.
 
@@ -46,4 +46,29 @@ This run reproduced the transport class safely without registering:
 
 The root cause category is `system_proxy_error`: the local Node fetch transport did not use the available proxy path by default and timed out before any response headers. However, the task also required independent proof that version override hit the candidate version, not merely that the header was sent. A short `wrangler tail --version-id` attempt did not yield usable confirmation. Because that condition was not satisfied, no second registration attempt was made.
 
-This run must not be described as a successful real budget path verification. No new registration, no chat request and no real provider call occurred in this recovery run.
+Candidate Preview real attempt
+------------------------------
+
+Product owner approved continuing the same 3B-2b2d segment using the candidate version Preview URL, because the transport root cause was clear and the remaining blocker was production hostname version override confirmation.
+
+The full Preview URL was not written to repository evidence. Evidence records only the alias, redacted host, host SHA256 and candidate version ID.
+
+No-fee Preview checks through explicit undici `ProxyAgent` passed:
+
+- `GET /health`: HTTP 200
+- `GET /v1/models`: HTTP 200
+- unauthenticated `POST /v1/chat/completions`: HTTP 401 `missing_token`
+
+The fixed request reservation was recalculated as 21 micro-USD. Immediately before registration, both budget ledgers were empty, `installations` was 33 and today's `daily_usage` was 0.
+
+The one allowed registration attempt succeeded with HTTP 200 and returned a token kept only in process memory. The one allowed chat attempt was sent to the same Preview URL and returned HTTP 400 `invalid_request_error`. No retry was performed.
+
+Budget verification after the chat attempt showed the pre-provider reservation did execute:
+
+- `monthly_platform_budget`: +21 micro-USD, `call_count` +1
+- `monthly_model_budget` for `deepseek-chat`: +21 micro-USD, `call_count` +1
+- ledgers match the expected reservation
+- `installations`: +1
+- today's `daily_usage`: +2 requests, +2 input tokens, +0 output tokens
+
+Production deployment remained 99% stable / 1% candidate. Production health checks stayed HTTP 200. Secrets, D1 schema and Managed Proxy code were unchanged. This run must not be described as passed because the real chat response was HTTP 400.

@@ -14,19 +14,28 @@
   },
   "after_recovery_diagnosis": {
     "monthly_platform_budget": {
-      "row_count": 0,
-      "reserved_micro_usd_sum": 0,
-      "call_count_sum": 0
+      "row_count": 1,
+      "reserved_micro_usd_sum": 21,
+      "call_count_sum": 1
     },
     "monthly_model_budget": {
-      "row_count": 0,
-      "reserved_micro_usd_sum": 0,
-      "call_count_sum": 0
+      "row_count": 1,
+      "reserved_micro_usd_sum": 21,
+      "call_count_sum": 1
     }
   },
-  "platform_reserved_delta": 0,
-  "model_reserved_delta": 0,
-  "platform_call_count_delta": 0,
-  "model_call_count_delta": 0,
-  "budget_written": false
+  "platform_reserved_delta": 21,
+  "model_reserved_delta": 21,
+  "platform_call_count_delta": 1,
+  "model_call_count_delta": 1,
+  "expected_reservation_micro_usd": 21,
+  "two_ledgers_consistent": true,
+  "delta_equals_expected_reservation": true,
+  "budget_written": true,
+  "installations_delta": 1,
+  "daily_usage_delta": {
+    "request_count": 2,
+    "input_tokens": 2,
+    "output_tokens": 0
+  }
 }

@@ -1,14 +1,15 @@
 {
   "task": "monthly-budget-worker-controlled-real-canary-registration-retry-result",
-  "new_registration_attempts": 0,
-  "cumulative_registration_attempts": 1,
-  "retry_allowed": false,
-  "retry_not_allowed_reasons": [
-    "Independent candidate-version hit confirmation was not obtained.",
-    "The allow-to-register conditions were not all satisfied."
-  ],
-  "http_status": null,
-  "token_obtained": false,
+  "new_registration_attempts": 1,
+  "cumulative_registration_attempts": 2,
+  "retry_allowed": true,
+  "retry_target_type": "versioned_preview_url",
+  "http_status": 200,
+  "token_obtained": true,
+  "token_type": "Bearer",
+  "token_expires_at": "2026-07-26T08:18:17.000Z",
+  "duration_ms": 1475,
+  "installation_fingerprint": "d66d7ceb08c26782",
   "token_logged": false,
   "authorization_header_logged": false,
   "full_installation_id_logged": false

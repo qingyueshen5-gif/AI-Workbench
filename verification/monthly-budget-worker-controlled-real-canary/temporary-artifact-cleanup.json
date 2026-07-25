@@ -10,5 +10,8 @@
   "token_written_to_disk": false,
   "token_logged": false,
   "authorization_header_logged": false,
-  "full_installation_id_logged": false
+  "full_installation_id_logged": false,
+  "versioned_preview_precheck_script_deleted": true,
+  "versioned_preview_real_call_script_deleted": true,
+  "temporary_preview_url_config_deleted": true
 }
