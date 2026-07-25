@@ -1,0 +1,15 @@
+2026-07-25T21:40:00+08:00 | command: git status/rev-parse/log/merge-base/managed-proxy diff | exit_code: 0 | output: clean; HEAD=origin/main=649eb031907bd476828e50134a948c01858e606d; 649eb03 ancestor true; managed-proxy diff empty
+2026-07-25T21:40:00+08:00 | command: git fetch origin --prune | exit_code: 1 | output: SEC_E_NO_CREDENTIALS; no credential repair or login attempted
+2026-07-25T21:43:00+08:00 | command: correct previous real Preview summary ambiguity | exit_code: 0 | output: run1 fields nested under run1; final run2 fields added; run2 baseline corrected to 90181443c85d95c8bca9d3445318f0b61e1e72fc
+2026-07-25T21:44:00+08:00 | command: npx.cmd wrangler --version/whoami/deployments/versions/secret/schema/budget checks | exit_code: 0 | output: Wrangler 4.113.0; logged in with existing OAuth; active d9acb146-b720-4e09-b2b8-0257b93fc407; stable 100; version 13 0; secrets names unchanged; D1 schema unchanged; platform 44/2, deepseek-chat 21/1, deepseek-v4-flash 23/1
+2026-07-25T21:49:00+08:00 | command: wrangler tail/rollback/versions deploy help | exit_code: 0 | output: tail supports json/status/version-id; rollback target command and versions deploy dry-run available
+2026-07-25T21:49:00+08:00 | command: wrangler versions deploy 99/1 --dry-run | exit_code: 0 | output: dry-run selected only stable version 99 and version 13 1
+2026-07-25T21:51:00+08:00 | command: wrangler versions deploy 99/1 | exit_code: 0 | output: active deployment 9952d7cb-2d99-483a-85f7-c9ada1a09db4; stable 99; version 13 1
+2026-07-25T21:52:00+08:00 | command: immediate post-deploy checks | exit_code: 0 | output: deployment 99/1; three rounds production health/models and Preview health/models all HTTP 200; Secrets and D1 schema unchanged
+2026-07-25T21:54:00+08:00 | command: bounded tail setup correction | exit_code: mixed | output: Start-Process and background tail attempts failed locally; no deployment change; Wrangler rejected --sampling-rate 1; switched to tool-timeout bounded tail windows without sampling-rate
+2026-07-25T21:58:00+08:00 | command: T+5 snapshot | exit_code: 0 | output: active 99/1; health/models all 200; candidate tail/error tail emitted no JSON events
+2026-07-25T22:00:00+08:00 | command: T+10 snapshot | exit_code: 0 | output: active 99/1; health/models all 200; candidate tail/error tail emitted no JSON events
+2026-07-25T22:05:00+08:00 | command: T+15 snapshot | exit_code: 0 | output: active 99/1; health/models all 200; candidate tail/error tail emitted no JSON events
+2026-07-25T22:10:00+08:00 | command: T+20 snapshot | exit_code: 0 | output: active 99/1; health/models all 200; candidate tail/error tail emitted no JSON events
+2026-07-25T22:15:00+08:00 | command: T+25 final snapshot | exit_code: 0 | output: active 99/1; health/models all 200; candidate tail/error tail emitted no JSON events
+2026-07-25T22:16:00+08:00 | command: final budget/secret/schema/managed-proxy diff checks | exit_code: 0 | output: platform 44/2; deepseek-chat 21/1; deepseek-v4-flash 23/1; installations 36; daily_usage 5/4/1; secrets and D1 schema unchanged; managed-proxy diff empty

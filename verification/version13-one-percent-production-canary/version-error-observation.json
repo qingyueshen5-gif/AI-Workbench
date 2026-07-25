@@ -1,0 +1,23 @@
+{
+  "observation_method": "wrangler tail bounded windows",
+  "wrangler_tail_help_checked": true,
+  "candidate_version_id": "cf002344-57ee-4c3f-86a6-115ca66c8b5f",
+  "candidate_invocation_json_events": 0,
+  "candidate_error_json_events": 0,
+  "overall_error_json_events": 0,
+  "script_threw_exception_observed": 0,
+  "exceeded_resources_observed": 0,
+  "internal_error_observed": 0,
+  "http_5xx_observed_by_health_checks": 0,
+  "wrangler_tail_notes": [
+    "Wrangler 4.113 rejected --sampling-rate 1, so subsequent tail windows omitted sampling-rate.",
+    "Wrangler log-file EPERM warnings were emitted for user-profile debug logs but commands otherwise executed or timed out as expected.",
+    "Long-running tail commands were bounded by the command timeout; no JSON event lines were observed before timeout in the sampled windows."
+  ],
+  "natural_candidate_traffic_observed": false,
+  "observability_limitations": [
+    "No historical metrics command was available through confirmed Wrangler help.",
+    "No natural candidate invocation was captured in the bounded tail windows."
+  ],
+  "rollback_condition_triggered": false
+}

@@ -1,0 +1,48 @@
+{
+  "full_preview_url_recorded": false,
+  "production_host_redacted": "ai-workbench-managed-proxy.<redacted>.workers.dev",
+  "production_host_sha256": "32D1E7DF3451BCC8E694795197338367E6309B3B094AA96162E6A48EE59F0DF6",
+  "preview_alias": "budget-v4-nt-real-candidate",
+  "preview_host_redacted": "budget-v4-nt-real-candidate-ai-workbench-managed-proxy.<redacted>.workers.dev",
+  "preview_host_sha256": "2FD6371B74E77EFB8F201E85D245C61D8F3C8358553C3D38330E422A8EB84048",
+  "used_undici_proxy_agent": true,
+  "checks": {
+    "production_health": {
+      "count": 8,
+      "failures": 0,
+      "statuses": [
+        200
+      ]
+    },
+    "production_models": {
+      "count": 8,
+      "failures": 0,
+      "statuses": [
+        200
+      ]
+    },
+    "preview_health": {
+      "count": 8,
+      "failures": 0,
+      "statuses": [
+        200
+      ]
+    },
+    "preview_models": {
+      "count": 6,
+      "failures": 0,
+      "statuses": [
+        200
+      ],
+      "model_verified": {
+        "id": "deepseek-chat",
+        "model_type": "logical_alias",
+        "upstream_model": "deepseek-v4-flash",
+        "thinking_mode": "disabled"
+      }
+    }
+  },
+  "active_registration_attempts": 0,
+  "active_chat_attempts": 0,
+  "provider_calls_initiated_by_codex": 0
+}

@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Unreleased - Version 13 的 1% 生产灰度
+
+- 产品负责人验收 version 13 DeepSeek V4 Flash 非思考真实 Preview 链路后，批准执行 1% 正常生产灰度。
+- 纠正 `verification/deepseek-v4-flash-nonthinking-real-preview/summary.json` 中 run1 顶层字段与 run2 最终状态混放的歧义，不改写历史、不修改预算数据。
+- 使用现有 Worker version `cf002344-57ee-4c3f-86a6-115ca66c8b5f`，未上传新 version，未修改 Worker 代码、Wrangler 配置、Secrets 或 D1 schema。
+- 新 active deployment `9952d7cb-2d99-483a-85f7-c9ada1a09db4`：旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 承载 99%，version 13 承载 1%。
+- 完成 20 分钟主动观察和 5 分钟指标缓冲；生产和 Preview 无付费 GET 健康检查均 HTTP 200，未触发回滚。
+- 本轮未主动注册 installation，未主动发起真实聊天或 provider 调用；预算保持平台 44/2、历史 `deepseek-chat` 21/1、`deepseek-v4-flash` 23/1。
+- 未捕获足够自然候选 invocation，状态为 `version13_one_percent_canary_observation_limited_by_low_traffic`；不得写成 100% 全量或钱包刹车最终完成。
+
 ## Unreleased - DeepSeek V4 Flash 非思考真实 Preview 阻断
 
 - 上传新的非思考兼容 Worker version `cf002344-57ee-4c3f-86a6-115ca66c8b5f` / version 13，Preview alias 为 `budget-v4-nt-real-candidate`。

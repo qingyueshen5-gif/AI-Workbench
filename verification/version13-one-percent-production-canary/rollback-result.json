@@ -1,0 +1,6 @@
+{
+  "executed": false,
+  "reason": "no rollback condition triggered",
+  "stable_version_final_percentage": 99,
+  "candidate_version_final_percentage": 1
+}

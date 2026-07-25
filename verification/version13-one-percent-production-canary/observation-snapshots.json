@@ -1,0 +1,103 @@
+{
+  "observation_status": "completed",
+  "observation_minutes": 20,
+  "metrics_buffer_minutes": 5,
+  "snapshots": [
+    {
+      "label": "T+0",
+      "local_time": "2026-07-25T21:52:03+08:00",
+      "active_deployment": "9952d7cb-2d99-483a-85f7-c9ada1a09db4",
+      "stable_traffic": 99,
+      "candidate_traffic": 1,
+      "production_health": 200,
+      "production_models": 200,
+      "preview_health": 200,
+      "candidate_tail_json_events": 0,
+      "candidate_error_tail_json_events": 0,
+      "budget_platform": {
+        "reserved_micro_usd": 44,
+        "call_count": 2
+      }
+    },
+    {
+      "label": "T+2",
+      "local_time": "2026-07-25T21:54:10+08:00",
+      "active_deployment": "9952d7cb-2d99-483a-85f7-c9ada1a09db4",
+      "stable_traffic": 99,
+      "candidate_traffic": 1,
+      "production_health": 200,
+      "production_models": 200,
+      "preview_health": 200,
+      "candidate_tail_json_events": 0,
+      "candidate_error_tail_json_events": 0,
+      "note": "Initial tail retry confirmed --sampling-rate 1 was invalid in Wrangler 4.113; no Worker runtime error was observed."
+    },
+    {
+      "label": "T+5",
+      "local_time": "2026-07-25T21:58:31+08:00",
+      "active_deployment": "9952d7cb-2d99-483a-85f7-c9ada1a09db4",
+      "stable_traffic": 99,
+      "candidate_traffic": 1,
+      "production_health": 200,
+      "production_models": 200,
+      "preview_health": 200,
+      "preview_models": 200,
+      "candidate_tail_json_events": 0,
+      "candidate_error_tail_json_events": 0
+    },
+    {
+      "label": "T+10",
+      "local_time": "2026-07-25T22:00:40+08:00",
+      "active_deployment": "9952d7cb-2d99-483a-85f7-c9ada1a09db4",
+      "stable_traffic": 99,
+      "candidate_traffic": 1,
+      "production_health": 200,
+      "production_models": 200,
+      "preview_health": 200,
+      "preview_models": 200,
+      "candidate_tail_json_events": 0,
+      "candidate_error_tail_json_events": 0
+    },
+    {
+      "label": "T+15",
+      "local_time": "2026-07-25T22:05:27+08:00",
+      "active_deployment": "9952d7cb-2d99-483a-85f7-c9ada1a09db4",
+      "stable_traffic": 99,
+      "candidate_traffic": 1,
+      "production_health": 200,
+      "production_models": 200,
+      "preview_health": 200,
+      "preview_models": 200,
+      "candidate_tail_json_events": 0,
+      "candidate_error_tail_json_events": 0
+    },
+    {
+      "label": "T+20",
+      "local_time": "2026-07-25T22:10:17+08:00",
+      "active_deployment": "9952d7cb-2d99-483a-85f7-c9ada1a09db4",
+      "stable_traffic": 99,
+      "candidate_traffic": 1,
+      "production_health": 200,
+      "production_models": 200,
+      "preview_health": 200,
+      "preview_models": 200,
+      "candidate_tail_json_events": 0,
+      "candidate_error_tail_json_events": 0
+    },
+    {
+      "label": "T+25",
+      "local_time": "2026-07-25T22:15:28+08:00",
+      "active_deployment": "9952d7cb-2d99-483a-85f7-c9ada1a09db4",
+      "stable_traffic": 99,
+      "candidate_traffic": 1,
+      "production_health": 200,
+      "production_models": 200,
+      "preview_health": 200,
+      "preview_models": 200,
+      "candidate_tail_json_events": 0,
+      "candidate_error_tail_json_events": 0
+    }
+  ],
+  "natural_candidate_traffic_observed": false,
+  "rollback_condition_triggered": false
+}

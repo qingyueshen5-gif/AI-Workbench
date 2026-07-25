@@ -1,0 +1,37 @@
+{
+  "time_range": {
+    "start_local": "2026-07-25T21:51:26+08:00",
+    "end_local": "2026-07-25T22:16:20+08:00"
+  },
+  "historical_metrics_status": "historical_metrics_unavailable",
+  "historical_metrics_unavailable_reason": "Wrangler 4.113.0 exposed deployments and tail commands in this environment, but no supported historical Workers metrics command was available in the confirmed help output.",
+  "realtime_observability": {
+    "tool": "wrangler tail",
+    "help_checked": true,
+    "supported_filters": [
+      "--format json",
+      "--status error",
+      "--version-id"
+    ],
+    "sampling_rate_parameter_note": "Wrangler 4.113 rejected --sampling-rate 1; subsequent bounded windows omitted sampling-rate.",
+    "bounded_windows_used": true
+  },
+  "baseline": {
+    "active_deployment": "d9acb146-b720-4e09-b2b8-0257b93fc407",
+    "stable_traffic": 100,
+    "candidate_traffic": 0,
+    "total_invocation_count_available": false,
+    "worker_runtime_error_count_available": true,
+    "script_threw_exception_count_available": true,
+    "exceeded_resources_count_available": true,
+    "internal_error_count_available": true,
+    "http_5xx_count_available": "health_check_proxy",
+    "production_health_status": 200,
+    "production_models_status": 200,
+    "platform_budget": {
+      "reserved_micro_usd": 44,
+      "call_count": 2
+    }
+  },
+  "blocked_observability_unavailable": false
+}

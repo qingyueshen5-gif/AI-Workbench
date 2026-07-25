@@ -1,0 +1,101 @@
+{
+  "task": "version13-one-percent-production-canary",
+  "execution_status": "version13_one_percent_canary_observation_limited_by_low_traffic",
+  "repository_head_before": "649eb031907bd476828e50134a948c01858e606d",
+  "origin_main_before": "649eb031907bd476828e50134a948c01858e606d",
+  "accepted_real_preview_commit": "649eb031907bd476828e50134a948c01858e606d",
+  "stable_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "candidate_version_id": "cf002344-57ee-4c3f-86a6-115ca66c8b5f",
+  "active_deployment_before": "d9acb146-b720-4e09-b2b8-0257b93fc407",
+  "active_deployment_after": "9952d7cb-2d99-483a-85f7-c9ada1a09db4",
+  "stable_traffic_before": 100,
+  "candidate_traffic_before": 0,
+  "stable_traffic_after": 99,
+  "candidate_traffic_after": 1,
+  "observation_minutes": 20,
+  "metrics_buffer_minutes": 5,
+  "health_checks": {
+    "production_health_count": 8,
+    "production_health_failures": 0,
+    "preview_health_count": 8,
+    "preview_health_failures": 0
+  },
+  "models_checks": {
+    "production_models_count": 8,
+    "production_models_failures": 0,
+    "preview_models_count": 6,
+    "preview_models_failures": 0
+  },
+  "overall_invocations_observed": 0,
+  "overall_runtime_errors": 0,
+  "candidate_invocations_observed": 0,
+  "candidate_runtime_errors": 0,
+  "natural_candidate_traffic_observed": false,
+  "observability_limitations": [
+    "historical_metrics_unavailable",
+    "wrangler_tail_used_as_bounded_realtime_windows",
+    "low_or_no_natural_candidate_traffic_observed"
+  ],
+  "organic_provider_activity_observed": false,
+  "codex_active_registration_attempts": 0,
+  "codex_active_chat_attempts": 0,
+  "platform_budget_before": {
+    "reserved_micro_usd": 44,
+    "call_count": 2
+  },
+  "platform_budget_after": {
+    "reserved_micro_usd": 44,
+    "call_count": 2
+  },
+  "deepseek_chat_budget_before": {
+    "reserved_micro_usd": 21,
+    "call_count": 1
+  },
+  "deepseek_chat_budget_after": {
+    "reserved_micro_usd": 21,
+    "call_count": 1
+  },
+  "v4_flash_budget_before": {
+    "reserved_micro_usd": 23,
+    "call_count": 1
+  },
+  "v4_flash_budget_after": {
+    "reserved_micro_usd": 23,
+    "call_count": 1
+  },
+  "installations_before": 36,
+  "installations_after": 36,
+  "daily_usage_before": {
+    "request_count": 5,
+    "input_tokens": 4,
+    "output_tokens": 1
+  },
+  "daily_usage_after": {
+    "request_count": 5,
+    "input_tokens": 4,
+    "output_tokens": 1
+  },
+  "rollback_ready": true,
+  "rollback_executed": false,
+  "production_traffic_changed": true,
+  "secrets_modified": false,
+  "d1_schema_modified": false,
+  "worker_code_modified": false,
+  "previous_summary_ambiguity_corrected": true,
+  "blocked_items": [],
+  "evidence_files": [
+    "verification/version13-one-percent-production-canary/previous-evidence-correction.json",
+    "verification/version13-one-percent-production-canary/pre-canary-state.json",
+    "verification/version13-one-percent-production-canary/pre-canary-metrics.json",
+    "verification/version13-one-percent-production-canary/deployment-dry-run.json",
+    "verification/version13-one-percent-production-canary/deployment-result.json",
+    "verification/version13-one-percent-production-canary/observation-snapshots.json",
+    "verification/version13-one-percent-production-canary/health-check-results.json",
+    "verification/version13-one-percent-production-canary/version-error-observation.json",
+    "verification/version13-one-percent-production-canary/budget-before-after.json",
+    "verification/version13-one-percent-production-canary/secret-and-schema-check.json",
+    "verification/version13-one-percent-production-canary/rollback-readiness.json",
+    "verification/version13-one-percent-production-canary/rollback-result.json"
+  ],
+  "next_action": "等待产品负责人验收 version 13 的 1% 生产灰度。未经批准不得将 version 13 切换到 100%，不得发起新的主动真实模型调用。"
+}

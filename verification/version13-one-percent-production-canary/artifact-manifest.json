@@ -1,0 +1,28 @@
+{
+  "verification_path": "verification/version13-one-percent-production-canary",
+  "files": [
+    "summary.json",
+    "report.md",
+    "commands.log",
+    "previous-evidence-correction.json",
+    "pre-canary-state.json",
+    "pre-canary-metrics.json",
+    "deployment-dry-run.json",
+    "deployment-result.json",
+    "observation-snapshots.json",
+    "health-check-results.json",
+    "version-error-observation.json",
+    "budget-before-after.json",
+    "secret-and-schema-check.json",
+    "rollback-readiness.json",
+    "rollback-result.json",
+    "artifact-manifest.json"
+  ],
+  "contains_full_preview_url": false,
+  "contains_token": false,
+  "contains_authorization_header": false,
+  "contains_cookie": false,
+  "contains_secret_values": false,
+  "contains_proxy_credentials": false,
+  "contains_raw_production_logs": false
+}

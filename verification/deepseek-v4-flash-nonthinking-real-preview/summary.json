@@ -2,8 +2,10 @@
   "task": "deepseek-v4-flash-nonthinking-real-preview",
   "execution_status": "v4_flash_nonthinking_real_path_passed",
   "accepted_local_candidate_commit": "b024123aac66dc9de01102a61ed92ae8c57dbd0f",
-  "repository_head_before": "3459e5ad9449afaf162f97eaf82bf9d7f9efd96d",
-  "origin_main_before": "3459e5ad9449afaf162f97eaf82bf9d7f9efd96d",
+  "repository_head_before": "90181443c85d95c8bca9d3445318f0b61e1e72fc",
+  "origin_main_before": "90181443c85d95c8bca9d3445318f0b61e1e72fc",
+  "run1_repository_head_before": "3459e5ad9449afaf162f97eaf82bf9d7f9efd96d",
+  "run1_origin_main_before": "3459e5ad9449afaf162f97eaf82bf9d7f9efd96d",
   "working_tree_clean_before": true,
   "managed_proxy_diff_from_accepted_candidate": false,
   "git_fetch_origin_prune": {
@@ -59,15 +61,36 @@
     "budget_unchanged_after_gate": true,
     "provider_called": false
   },
-  "registration": {
-    "attempts": 1,
-    "expected_version_marker": "3b-v4-nt-real-preview",
-    "result": "request_completed_but_process_crashed_before_sanitized_result_output",
-    "token_persisted": false,
-    "token_logged": false,
-    "installation_id_logged": false,
-    "installations_delta": 1,
-    "daily_usage_request_delta_from_registration": 1
+  "run1": {
+    "repository_head_before": "3459e5ad9449afaf162f97eaf82bf9d7f9efd96d",
+    "origin_main_before": "3459e5ad9449afaf162f97eaf82bf9d7f9efd96d",
+    "registration": {
+      "attempts": 1,
+      "expected_version_marker": "3b-v4-nt-real-preview",
+      "result": "request_completed_but_process_crashed_before_sanitized_result_output",
+      "token_persisted": false,
+      "token_logged": false,
+      "installation_id_logged": false,
+      "installations_delta": 1,
+      "daily_usage_request_delta_from_registration": 1
+    },
+    "real_chat": {
+      "attempts": 0,
+      "provider_calls": 0,
+      "reason_not_attempted": "The one-time Node script crashed at the pre-chat D1 budget read with spawnSync npx.cmd EINVAL after registration succeeded. The token existed only in process memory and was lost on process exit."
+    },
+    "reservation_calculation": {
+      "model": "deepseek-chat",
+      "upstream_model": "deepseek-v4-flash",
+      "raw_request_bytes": 126,
+      "input_chars": 6,
+      "estimated_input_tokens": 2,
+      "reserve_input_tokens": 126,
+      "reserve_output_tokens": 16,
+      "expected_reserved_micro_usd": 23,
+      "within_100_micro_usd_gate": true,
+      "used_for_real_call": false
+    }
   },
   "run2": {
     "approved_as_new_independent_attempt": true,
@@ -132,23 +155,11 @@
     "total_chat_attempts": 1,
     "total_provider_call_upper_bound": 1
   },
-  "real_chat": {
-    "attempts": 0,
-    "provider_calls": 0,
-    "reason_not_attempted": "The one-time Node script crashed at the pre-chat D1 budget read with spawnSync npx.cmd EINVAL after registration succeeded. The token existed only in process memory and was lost on process exit. A second registration is prohibited by the approved boundary."
-  },
-  "reservation_calculation": {
-    "model": "deepseek-chat",
-    "upstream_model": "deepseek-v4-flash",
-    "raw_request_bytes": 126,
-    "input_chars": 6,
-    "estimated_input_tokens": 2,
-    "reserve_input_tokens": 126,
-    "reserve_output_tokens": 16,
-    "expected_reserved_micro_usd": 23,
-    "within_100_micro_usd_gate": true,
-    "used_for_real_call": false
-  },
+  "final_authenticated_chat_attempts": 1,
+  "final_provider_calls": 1,
+  "final_chat_http_status": 200,
+  "final_real_call_succeeded": true,
+  "final_reservation_used_for_real_call": true,
   "budget_state": {
     "before": {
       "platform": { "reserved_micro_usd": 21, "call_count": 1 },

@@ -1,0 +1,25 @@
+{
+  "command_family": "wrangler versions deploy",
+  "ordinary_wrangler_deploy_used": false,
+  "version_upload_used": false,
+  "exit_code": 0,
+  "message": "version 13 V4 Flash wallet guard one percent canary",
+  "executed_at_local": "2026-07-25T21:51:26+08:00",
+  "active_deployment_before": "d9acb146-b720-4e09-b2b8-0257b93fc407",
+  "active_deployment_after": "9952d7cb-2d99-483a-85f7-c9ada1a09db4",
+  "versions": [
+    {
+      "version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+      "percentage": 99
+    },
+    {
+      "version_id": "cf002344-57ee-4c3f-86a6-115ca66c8b5f",
+      "percentage": 1
+    }
+  ],
+  "third_version_present": false,
+  "secrets_modified": false,
+  "d1_schema_modified": false,
+  "routes_domains_triggers_modified": false,
+  "passed": true
+}

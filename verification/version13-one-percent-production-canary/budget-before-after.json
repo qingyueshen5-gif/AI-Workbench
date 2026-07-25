@@ -1,0 +1,62 @@
+{
+  "before": {
+    "monthly_platform_budget": {
+      "month_key": "2026-07",
+      "reserved_micro_usd": 44,
+      "call_count": 2
+    },
+    "monthly_model_budget": {
+      "deepseek-chat": {
+        "reserved_micro_usd": 21,
+        "call_count": 1
+      },
+      "deepseek-v4-flash": {
+        "reserved_micro_usd": 23,
+        "call_count": 1
+      }
+    },
+    "installations_count": 36,
+    "daily_usage_today": {
+      "request_count": 5,
+      "input_tokens": 4,
+      "output_tokens": 1
+    }
+  },
+  "after": {
+    "monthly_platform_budget": {
+      "month_key": "2026-07",
+      "reserved_micro_usd": 44,
+      "call_count": 2
+    },
+    "monthly_model_budget": {
+      "deepseek-chat": {
+        "reserved_micro_usd": 21,
+        "call_count": 1
+      },
+      "deepseek-v4-flash": {
+        "reserved_micro_usd": 23,
+        "call_count": 1
+      }
+    },
+    "installations_count": 36,
+    "daily_usage_today": {
+      "request_count": 5,
+      "input_tokens": 4,
+      "output_tokens": 1
+    }
+  },
+  "delta": {
+    "platform_reserved_micro_usd": 0,
+    "platform_call_count": 0,
+    "deepseek_chat_reserved_micro_usd": 0,
+    "deepseek_chat_call_count": 0,
+    "deepseek_v4_flash_reserved_micro_usd": 0,
+    "deepseek_v4_flash_call_count": 0,
+    "installations_count": 0,
+    "daily_usage_request_count": 0
+  },
+  "organic_provider_activity_observed": false,
+  "codex_active_registration_attempts": 0,
+  "codex_active_chat_attempts": 0,
+  "ledger_consistent": true
+}

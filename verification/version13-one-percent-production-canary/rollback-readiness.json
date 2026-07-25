@@ -1,0 +1,30 @@
+{
+  "help_checked": {
+    "wrangler_rollback_help": true,
+    "wrangler_versions_deploy_help": true
+  },
+  "rollback_target_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "rollback_target_exists": true,
+  "primary_command_family": "wrangler rollback <stable-version-id> --message <reason> -y",
+  "fallback_command_family": "wrangler versions deploy <stable-version-id>@100% --message <reason> -y",
+  "rollback_after_checks": [
+    "confirm stable version 100%",
+    "confirm version 13 0% or absent from active deployment",
+    "GET production /health",
+    "GET production /v1/models",
+    "read budget tables",
+    "confirm Secrets names unchanged",
+    "confirm D1 schema unchanged"
+  ],
+  "rollback_triggers": [
+    "candidate Script Threw Exception",
+    "candidate Exceeded Resources",
+    "sustained candidate Internal Error",
+    "consecutive HTTP 5xx",
+    "two consecutive /health or /v1/models failures",
+    "deployment ratio not exactly 99/1",
+    "third version appears",
+    "unexplained candidate anomaly that may affect users"
+  ],
+  "rollback_ready": true
+}

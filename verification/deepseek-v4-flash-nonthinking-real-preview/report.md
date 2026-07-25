@@ -2,6 +2,8 @@
 
 Status: `v4_flash_nonthinking_real_path_passed`
 
+Correction on 2026-07-25: the summary file previously kept run1-only fields at top level next to the run2 success fields. That was ambiguous because top-level `real_chat.attempts: 0` and `reservation_calculation.used_for_real_call: false` described run1, while the final execution status described run2. The run1 fields are now nested under `run1`, run2 remains under `run2`, and the top level contains explicit final summary fields such as `final_authenticated_chat_attempts: 1`, `final_provider_calls: 1`, `final_chat_http_status: 200`, `final_real_call_succeeded: true`, and `final_reservation_used_for_real_call: true`. The top-level execution baseline was also corrected to the run2 baseline commit `90181443c85d95c8bca9d3445318f0b61e1e72fc`; the original run1 baseline `3459e5ad9449afaf162f97eaf82bf9d7f9efd96d` is preserved in run1-specific fields.
+
 The new non-thinking-compatible Worker version was uploaded successfully as version 13:
 
 - Version ID: `cf002344-57ee-4c3f-86a6-115ca66c8b5f`

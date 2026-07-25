@@ -1,0 +1,77 @@
+{
+  "wrangler_version": "4.113.0",
+  "cloudflare_login": {
+    "logged_in": true,
+    "auth_type": "OAuth Token",
+    "identity_recorded": "redacted"
+  },
+  "worker_name": "ai-workbench-managed-proxy",
+  "git_fetch_origin_prune": {
+    "attempted": true,
+    "exit_code": 1,
+    "error": "SEC_E_NO_CREDENTIALS",
+    "credential_repair_attempted": false,
+    "login_attempted": false
+  },
+  "repository": {
+    "working_tree_clean_before_task": true,
+    "head": "649eb031907bd476828e50134a948c01858e606d",
+    "origin_main": "649eb031907bd476828e50134a948c01858e606d",
+    "accepted_commit_is_ancestor": true,
+    "managed_proxy_diff_after_accepted_commit": false
+  },
+  "active_deployment_before": {
+    "id": "d9acb146-b720-4e09-b2b8-0257b93fc407",
+    "versions": [
+      {
+        "version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+        "percentage": 100
+      },
+      {
+        "version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+        "percentage": 0
+      }
+    ]
+  },
+  "candidate_version": {
+    "version_id": "cf002344-57ee-4c3f-86a6-115ca66c8b5f",
+    "version_number": 13,
+    "preview_alias": "budget-v4-nt-real-candidate",
+    "normal_production_traffic_percent": 0
+  },
+  "disallowed_versions_not_used": [
+    "483e4fae-3af8-40fa-ab83-4551f08b519e",
+    "a7eb385b-84df-4a45-b554-0aca40b6b407"
+  ],
+  "production_health_status": 200,
+  "production_models_status": 200,
+  "preview_health_status": 200,
+  "preview_models_status": 200,
+  "preview_models_verified": {
+    "id": "deepseek-chat",
+    "model_type": "logical_alias",
+    "upstream_model": "deepseek-v4-flash",
+    "thinking_mode": "disabled"
+  },
+  "budget_baseline": {
+    "platform": {
+      "reserved_micro_usd": 44,
+      "call_count": 2
+    },
+    "deepseek_chat": {
+      "reserved_micro_usd": 21,
+      "call_count": 1
+    },
+    "deepseek_v4_flash": {
+      "reserved_micro_usd": 23,
+      "call_count": 1
+    },
+    "installations_count": 36,
+    "daily_usage_today": {
+      "request_count": 5,
+      "input_tokens": 4,
+      "output_tokens": 1
+    }
+  },
+  "preconditions_passed": true
+}
