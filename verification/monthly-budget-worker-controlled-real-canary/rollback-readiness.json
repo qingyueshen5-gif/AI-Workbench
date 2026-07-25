@@ -1,0 +1,15 @@
+{
+  "task": "monthly-budget-worker-controlled-real-canary-rollback-readiness",
+  "rollback_ready": true,
+  "stable_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "stable_version_exists": true,
+  "rollback_command": "wrangler rollback <stable-version-id> --name ai-workbench-managed-proxy --message <3B-2b2d rollback reason> --yes",
+  "rollback_help_checked": true,
+  "rollback_verification_steps": [
+    "confirm active deployment routes stable version at 100%",
+    "confirm candidate version is 0% or absent from active normal traffic",
+    "confirm /health HTTP 200",
+    "confirm /v1/models HTTP 200",
+    "confirm Secrets names and D1 schema unchanged"
+  ]
+}

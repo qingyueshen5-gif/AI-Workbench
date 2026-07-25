@@ -1,0 +1,18 @@
+2026-07-25T14:54:00+08:00 | command: git status --short --branch | exit_code: 0 | output: ## main...origin/main
+2026-07-25T14:54:00+08:00 | command: git rev-parse HEAD | exit_code: 0 | output: db4e055273c4cd8a3639fe61e322644d5ed5a908
+2026-07-25T14:54:00+08:00 | command: git rev-parse origin/main | exit_code: 0 | output: db4e055273c4cd8a3639fe61e322644d5ed5a908
+2026-07-25T14:54:00+08:00 | command: git diff db4e055273c4cd8a3639fe61e322644d5ed5a908..HEAD -- managed-proxy | exit_code: 0 | output: no managed-proxy changes
+2026-07-25T14:54:00+08:00 | command: git fetch origin --prune | exit_code: 1 | output: SEC_E_NO_CREDENTIALS; no credential repair attempted
+2026-07-25T15:00:00+08:00 | command: wrangler deployments status/list | exit_code: 0 | output: active deployment 55b20f6c-1a50-446b-95cc-18ebf0e6cbe1; stable 99%; candidate 1%
+2026-07-25T15:02:00+08:00 | command: wrangler d1 schema and aggregate budget reads | exit_code: 0 | output: schema unchanged; monthly_platform_budget 0 rows/0 reserved; monthly_model_budget 0 rows/0 reserved; installations 33; daily_usage today 0
+2026-07-25T15:03:00+08:00 | command: wrangler secret list --format json | exit_code: 0 | output: DEEPSEEK_API_KEY, INSTALLATION_HASH_SALT, TOKEN_SIGNING_SECRET names only; values not read
+2026-07-25T15:03:00+08:00 | command: production and version override GET /health and /v1/models | exit_code: 0 | output: all HTTP 200; full hostname not recorded
+2026-07-25T15:04:00+08:00 | command: reservation calculation | exit_code: 0 | output: expected reservation 21 micro-USD; within 100 micro-USD gate
+2026-07-25T15:04:30+08:00 | command: one-time temp Node script register then at most one chat | exit_code: 0 | output: register attempts 1; register HTTP status unavailable; token not returned; chat attempts 0; token not logged; temp script deleted
+2026-07-25T15:05:00+08:00 | command: post-attempt deployment, budget, usage, secrets and health reads | exit_code: 0 | output: deployment unchanged 99/1; budget unchanged; installations unchanged; daily_usage unchanged; secrets unchanged; health checks HTTP 200
+2026-07-25T15:15:00+08:00 | command: parse monthly-budget-worker-controlled-real-canary JSON files | exit_code: 0 | output: json ok
+2026-07-25T15:15:00+08:00 | command: npm.cmd run docs:generate-handoff | exit_code: 0 | output: handoff snapshot generated
+2026-07-25T15:15:00+08:00 | command: npm.cmd run verify:docs-consistency | exit_code: 0 | output: passed
+2026-07-25T15:16:00+08:00 | command: controlled attempt, reservation, traffic, token persistence and modification flag checks | exit_code: 0 | output: checks ok
+2026-07-25T15:16:00+08:00 | command: git diff --check | exit_code: 0 | output: passed with line-ending warnings only
+2026-07-25T15:16:00+08:00 | command: sensitive pattern scan | exit_code: 1 | output: no secrets, tokens, authorization headers, cookies, full production hostname or JWT found

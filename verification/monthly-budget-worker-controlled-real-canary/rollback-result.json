@@ -1,0 +1,6 @@
+{
+  "task": "monthly-budget-worker-controlled-real-canary-rollback-result",
+  "executed": false,
+  "reason": "no rollback condition triggered",
+  "rollback_status": "not_run"
+}

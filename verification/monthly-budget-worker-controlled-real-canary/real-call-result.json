@@ -1,0 +1,16 @@
+{
+  "task": "monthly-budget-worker-controlled-real-canary-real-call-result",
+  "attempts": 0,
+  "not_attempted_reason": "registration did not return a token in the one allowed attempt",
+  "model": "deepseek-chat",
+  "max_tokens": 8,
+  "http_status": null,
+  "response_valid_json": false,
+  "response_non_empty_answer": false,
+  "provider_model": null,
+  "provider_usage": null,
+  "real_provider_called_by_codex": false,
+  "client_retry_enabled": false,
+  "retry_attempted": false,
+  "authorization_header_logged": false
+}

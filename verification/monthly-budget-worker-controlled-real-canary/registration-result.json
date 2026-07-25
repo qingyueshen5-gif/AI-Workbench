@@ -1,0 +1,17 @@
+{
+  "task": "monthly-budget-worker-controlled-real-canary-registration-result",
+  "attempts": 1,
+  "version_override_header_sent": true,
+  "candidate_version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+  "http_status": null,
+  "returned_token": false,
+  "token_type": null,
+  "token_expires_at": null,
+  "installation_fingerprint": "a6ecaaac940ba0c4",
+  "installation_id_logged_full": false,
+  "token_logged": false,
+  "authorization_header_logged": false,
+  "result": "no_http_status_no_token",
+  "retry_attempted": false,
+  "chat_allowed_after_registration": false
+}

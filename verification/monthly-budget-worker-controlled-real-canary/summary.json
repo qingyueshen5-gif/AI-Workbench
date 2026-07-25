@@ -1,0 +1,90 @@
+{
+  "task": "monthly-budget-worker-controlled-real-canary",
+  "execution_status": "blocked_before_paid_call",
+  "repository_head_before": "db4e055273c4cd8a3639fe61e322644d5ed5a908",
+  "accepted_previous_stage": "3B-2b2c accepted by product owner at db4e055273c4cd8a3639fe61e322644d5ed5a908",
+  "worker_name": "ai-workbench-managed-proxy",
+  "stable_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "candidate_version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+  "active_deployment_before": "55b20f6c-1a50-446b-95cc-18ebf0e6cbe1",
+  "active_deployment_after": "55b20f6c-1a50-446b-95cc-18ebf0e6cbe1",
+  "stable_traffic_percentage": 99,
+  "candidate_traffic_percentage": 1,
+  "controlled_registration_attempts": 1,
+  "controlled_real_chat_attempts": 0,
+  "client_retry_enabled": false,
+  "version_override_confirmed": false,
+  "version_override_header_sent": true,
+  "model": "deepseek-chat",
+  "max_output_tokens": 8,
+  "expected_reservation_micro_usd": 21,
+  "platform_budget_before": {
+    "row_count": 0,
+    "reserved_micro_usd_sum": 0,
+    "call_count_sum": 0
+  },
+  "platform_budget_after": {
+    "row_count": 0,
+    "reserved_micro_usd_sum": 0,
+    "call_count_sum": 0
+  },
+  "platform_budget_delta": 0,
+  "model_budget_before": {
+    "row_count": 0,
+    "reserved_micro_usd_sum": 0,
+    "call_count_sum": 0
+  },
+  "model_budget_after": {
+    "row_count": 0,
+    "reserved_micro_usd_sum": 0,
+    "call_count_sum": 0
+  },
+  "model_budget_delta": 0,
+  "platform_call_count_delta": 0,
+  "model_call_count_delta": 0,
+  "real_provider_called_by_codex": false,
+  "provider_call_status": "not_called_no_registration_token",
+  "provider_usage": null,
+  "daily_usage_delta": {
+    "request_count": 0,
+    "input_tokens": 0,
+    "output_tokens": 0
+  },
+  "installation_count_delta": 0,
+  "temporary_token_persisted": false,
+  "temporary_script_deleted": true,
+  "secrets_modified": false,
+  "d1_schema_modified": false,
+  "worker_code_modified": false,
+  "traffic_changed": false,
+  "rollback_ready": true,
+  "rollback_executed": false,
+  "critical_findings": [
+    "The one-time Node script attempted registration once but did not receive an HTTP status.",
+    "No token was returned, so the controlled real chat request was not attempted.",
+    "The no-retry boundary was honored; no provider call was made."
+  ],
+  "blocked_items": [
+    "Controlled registration did not produce an HTTP response status in the one allowed attempt."
+  ],
+  "evidence_files": [
+    "verification/monthly-budget-worker-controlled-real-canary/summary.json",
+    "verification/monthly-budget-worker-controlled-real-canary/report.md",
+    "verification/monthly-budget-worker-controlled-real-canary/commands.log",
+    "verification/monthly-budget-worker-controlled-real-canary/pre-call-production-state.json",
+    "verification/monthly-budget-worker-controlled-real-canary/pre-call-budget-state.json",
+    "verification/monthly-budget-worker-controlled-real-canary/reservation-calculation.json",
+    "verification/monthly-budget-worker-controlled-real-canary/registration-result.json",
+    "verification/monthly-budget-worker-controlled-real-canary/real-call-result.json",
+    "verification/monthly-budget-worker-controlled-real-canary/post-call-budget-state.json",
+    "verification/monthly-budget-worker-controlled-real-canary/budget-delta-check.json",
+    "verification/monthly-budget-worker-controlled-real-canary/usage-delta-check.json",
+    "verification/monthly-budget-worker-controlled-real-canary/post-call-observation.json",
+    "verification/monthly-budget-worker-controlled-real-canary/secret-and-schema-check.json",
+    "verification/monthly-budget-worker-controlled-real-canary/rollback-readiness.json",
+    "verification/monthly-budget-worker-controlled-real-canary/rollback-result.json",
+    "verification/monthly-budget-worker-controlled-real-canary/temporary-artifact-cleanup.json",
+    "verification/monthly-budget-worker-controlled-real-canary/artifact-manifest.json"
+  ],
+  "next_action": "Wait for product owner acceptance or instruction for the 3B-2b2d blocked-before-paid-call result. Do not retry registration or send a real chat request without explicit approval."
+}

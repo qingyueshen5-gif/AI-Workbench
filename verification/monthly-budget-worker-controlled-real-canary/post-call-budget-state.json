@@ -1,0 +1,21 @@
+{
+  "task": "monthly-budget-worker-controlled-real-canary-post-budget-state",
+  "monthly_platform_budget": {
+    "row_count": 0,
+    "reserved_micro_usd_sum": 0,
+    "call_count_sum": 0,
+    "rows": []
+  },
+  "monthly_model_budget": {
+    "row_count": 0,
+    "reserved_micro_usd_sum": 0,
+    "call_count_sum": 0,
+    "rows": []
+  },
+  "daily_usage_today": {
+    "request_count": 0,
+    "input_tokens": 0,
+    "output_tokens": 0
+  },
+  "installations_count": 33
+}

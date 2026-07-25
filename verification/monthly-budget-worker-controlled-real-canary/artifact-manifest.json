@@ -1,0 +1,23 @@
+{
+  "task": "monthly-budget-worker-controlled-real-canary-artifact-manifest",
+  "files": [
+    "summary.json",
+    "report.md",
+    "commands.log",
+    "pre-call-production-state.json",
+    "pre-call-budget-state.json",
+    "reservation-calculation.json",
+    "registration-result.json",
+    "real-call-result.json",
+    "post-call-budget-state.json",
+    "budget-delta-check.json",
+    "usage-delta-check.json",
+    "post-call-observation.json",
+    "secret-and-schema-check.json",
+    "rollback-readiness.json",
+    "rollback-result.json",
+    "temporary-artifact-cleanup.json",
+    "artifact-manifest.json"
+  ],
+  "sensitive_data_policy": "No token, authorization header, secret value, full installation ID, full production hostname, full request body, raw production log, database export, or user data is recorded."
+}

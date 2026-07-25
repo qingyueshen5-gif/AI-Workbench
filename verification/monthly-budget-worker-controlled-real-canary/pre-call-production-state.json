@@ -1,0 +1,39 @@
+{
+  "task": "monthly-budget-worker-controlled-real-canary-pre-production-state",
+  "repository_head": "db4e055273c4cd8a3639fe61e322644d5ed5a908",
+  "git_fetch_origin_prune": {
+    "attempted": true,
+    "success": false,
+    "error": "SEC_E_NO_CREDENTIALS",
+    "credential_changes_attempted": false
+  },
+  "worker_name": "ai-workbench-managed-proxy",
+  "wrangler_version": "4.113.0",
+  "cloudflare_api_read_confirmed": true,
+  "active_deployment": {
+    "id": "55b20f6c-1a50-446b-95cc-18ebf0e6cbe1",
+    "stable_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+    "stable_traffic_percentage": 99,
+    "candidate_version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+    "candidate_traffic_percentage": 1,
+    "other_versions_with_traffic": []
+  },
+  "production_host_redacted": "ai-workbench-managed-proxy.<redacted>.workers.dev",
+  "production_host_sha256": "32D1E7DF3451BCC8E694795197338367E6309B3B094AA96162E6A48EE59F0DF6",
+  "production_health": {
+    "health_http_status": 200,
+    "models_http_status": 200
+  },
+  "candidate_override_health": {
+    "health_http_status": 200,
+    "models_http_status": 200
+  },
+  "secret_names": [
+    "DEEPSEEK_API_KEY",
+    "INSTALLATION_HASH_SALT",
+    "TOKEN_SIGNING_SECRET"
+  ],
+  "secret_values_read": false,
+  "d1_database": "aiw-managed-proxy",
+  "d1_schema_confirmed": true
+}

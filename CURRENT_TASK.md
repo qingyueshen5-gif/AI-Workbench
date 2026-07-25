@@ -5,15 +5,17 @@
 
 ## 当前主线
 
-本轮唯一任务：等待产品负责人验收第 3B-2b2c 段 1% 生产灰度。
+本轮唯一任务：等待产品负责人验收第 3B-2b2d 段调用前阻塞结果。
 
 边界：
 
-- 本轮已将新预算 Worker version 调整为 1% 正常生产灰度，旧稳定 version 保留 99%。
+- 本轮在 99%/1% 正常生产灰度下尝试第 3B-2b2d 段单笔真实预算链路验证。
+- 预留金额计算为 21 micro-USD，但一次性注册尝试未返回 HTTP 状态、未取得 Token。
+- 本轮没有执行真实聊天请求，没有调用 provider，没有预算表增量。
 - 不部署 Cloudflare Worker，不修改 Secrets。
-- 不调用真实模型，不产生模型费用，不使用真实安装 Token。
+- 不重试注册，不调用真实模型，不产生模型费用，不使用真实安装 Token。
 - 不修改生产功能代码，不进入 100% 全量切换、模型分层、上下文压缩或 v0.4.7。
-- 完成后停止，等待产品负责人验收第 3B-2b2c 段。
+- 完成后停止，等待产品负责人验收第 3B-2b2d 段阻塞结果。
 
 ## 最近完成
 
@@ -32,6 +34,7 @@
 - 第 3B-2b2a 段 Preview 上传验证：preview_upload_verified。已上传 Worker Preview version `483e4fae-3af8-40fa-ab83-4551f08b519e`；Preview `/health` 与 `/v1/models` 均 HTTP 200，未认证聊天请求 HTTP 401 `missing_token` 且在 provider 前拒绝。active deployment、生产流量和原稳定 version 未变；预算表仍为空。未部署 Worker，未修改 Secrets，未调用真实 provider。证据见 `verification/monthly-budget-worker-preview-upload/summary.json`。
 - 第 3B-2b2b 段零流量 deployment：zero_traffic_deployment_verified。新 active deployment `063b83c3-974f-43fb-84f2-9da0d574f745` 中旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 为 100%，新预算 version `483e4fae-3af8-40fa-ab83-4551f08b519e` 为 0%。version override 三项验证通过，预算表仍为空，未调用真实 provider，未修改 Secrets。证据见 `verification/monthly-budget-worker-zero-traffic-deployment/summary.json`。
 - 第 3B-2b2c 段 1% 生产灰度：one_percent_canary_observation_limited_by_low_traffic。active deployment `55b20f6c-1a50-446b-95cc-18ebf0e6cbe1` 中旧稳定 version 为 99%，新预算 version 为 1%。20 分钟观察和 5 分钟缓冲完成，健康检查均 200，预算表仍为空，未主动真实模型调用，未修改 Secrets 或 D1 schema，未触发回滚。证据见 `verification/monthly-budget-worker-one-percent-canary/summary.json`。
+- 第 3B-2b2d 段单笔真实预算链路验证：blocked_before_paid_call。预留金额 21 micro-USD 通过调用前门槛；一次性注册尝试未返回 HTTP 状态、未取得 Token，聊天尝试 0 次，未调用真实 provider，预算表和 usage 无增量，未触发回滚。证据见 `verification/monthly-budget-worker-controlled-real-canary/summary.json`。
 
 ## 当前事实
 
@@ -63,6 +66,6 @@
 
 ## 当前唯一下一步
 
-当前唯一下一步以 `NEXT_STEP.md` 为准：等待产品负责人验收第 3B-2b2c 段 1% 生产灰度。未经批准不得将新预算 Worker 切换到 100% 流量，不得主动执行真实模型调用。
+当前唯一下一步以 `NEXT_STEP.md` 为准：等待产品负责人验收第 3B-2b2d 段调用前阻塞结果。未经批准不得将新预算 Worker 切换到 100% 流量，不得重试注册或发起真实模型调用。
 
-完成本轮后必须停止，等待产品负责人验收第 3B-2b2c 段，不自动切换到 100% 流量、不进入后续段、第二批清理或其他任务。
+完成本轮后必须停止，等待产品负责人验收第 3B-2b2d 段阻塞结果，不自动切换到 100% 流量、不重试真实调用、不进入后续段、第二批清理或其他任务。

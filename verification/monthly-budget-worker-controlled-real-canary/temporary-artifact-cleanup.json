@@ -1,0 +1,10 @@
+{
+  "task": "monthly-budget-worker-controlled-real-canary-temporary-artifact-cleanup",
+  "temporary_script_path_redacted": "%TEMP%/aiw-3b2b2d-controlled-real-canary.mjs",
+  "temporary_script_deleted": true,
+  "temporary_token_persisted": false,
+  "token_written_to_disk": false,
+  "token_logged": false,
+  "authorization_header_logged": false,
+  "full_installation_id_logged": false
+}

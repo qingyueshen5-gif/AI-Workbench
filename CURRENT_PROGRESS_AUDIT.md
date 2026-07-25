@@ -76,10 +76,11 @@
 - 第 3B-2b2a 段 Preview 上传验证 preview_upload_verified：产品负责人已验收第 3B-2b1 段并批准进入 3B-2b2a。本轮仅上传已锁定候选为新的 Worker Preview version `483e4fae-3af8-40fa-ab83-4551f08b519e`，Preview URL `/health` 和 `/v1/models` 均 HTTP 200，未认证 `/v1/chat/completions` HTTP 401 `missing_token` 并在 provider 前拒绝。active deployment 仍为 `61aa34dd-c20a-42b4-a3c6-1ca474a81e5e`，100% 生产流量仍指向 version `16333442-925a-4b11-a3d1-d6249d2492ba`；远端 `monthly_platform_budget` 和 `monthly_model_budget` 行数仍为 0。未部署 Worker，未修改 Secrets，未使用真实安装 Token，未调用真实 provider。证据见 `verification/monthly-budget-worker-preview-upload/summary.json`。Preview 版本已上传但生产钱包刹车尚未生效。
 - 第 3B-2b2b 段零流量 deployment zero_traffic_deployment_verified：产品负责人验收通过 3B-2b2a 后批准执行。本轮用 `wrangler versions deploy` 创建 active deployment `063b83c3-974f-43fb-84f2-9da0d574f745`：旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 为 100%，新预算 version `483e4fae-3af8-40fa-ab83-4551f08b519e` 为 0%。通过 production hostname 的 version override 定向验证新预算 version：`/health` HTTP 200，`/v1/models` HTTP 200，未认证聊天 HTTP 401 `missing_token`；预算表仍为空，未使用真实安装 Token，未调用真实 provider，未修改 Secrets，未执行回滚。上一段完整 Preview URL 当前文件已脱敏，历史不重写。证据见 `verification/monthly-budget-worker-zero-traffic-deployment/summary.json`。新预算 Worker 已加入 deployment，但正常生产流量仍为 0%，生产钱包刹车尚未对正常流量生效。
 - 第 3B-2b2c 段 1% 生产灰度 one_percent_canary_observation_limited_by_low_traffic：产品负责人验收通过 3B-2b2b 后批准执行 1% 灰度。本轮 active deployment 更新为 `55b20f6c-1a50-446b-95cc-18ebf0e6cbe1`，旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 为 99%，新预算 version `483e4fae-3af8-40fa-ab83-4551f08b519e` 为 1%。20 分钟主动观察和 5 分钟指标缓冲完成；生产 `/health` 11 次和 `/v1/models` 11 次均 HTTP 200，version override 无付费 GET 检查通过。整体 tail 和候选错误 tail 未输出可见事件，未确认自然候选版本 invocation，因此可信度受低流量限制。预算表仍为 0 行/0 预留，未主动调用真实 provider，未修改 Secrets、D1 schema 或 Managed Proxy 功能代码，未触发回滚。证据见 `verification/monthly-budget-worker-one-percent-canary/summary.json`。新预算 Worker 当前仅 1% 正常生产流量，尚未全量。
+- 第 3B-2b2d 段单笔真实预算链路验证 blocked_before_paid_call：产品负责人验收通过 3B-2b2c 后批准在 99%/1% 灰度状态下向新预算 version 发起最多一笔受控真实模型请求。本轮开始前仓库 clean，HEAD=origin/main=`db4e055273c4cd8a3639fe61e322644d5ed5a908`，`managed-proxy` 无 diff；active deployment 仍为 `55b20f6c-1a50-446b-95cc-18ebf0e6cbe1`，旧稳定 version 99%，新预算 version 1%。生产和候选 override 的 `/health` 与 `/v1/models` 均 HTTP 200，Secrets 名称与 D1 schema 未变，预算表为空。预计算预留金额为 21 micro-USD，满足 100 micro-USD 安全门槛；一次性临时 Node 脚本只尝试 1 次注册，但未返回 HTTP 状态且未取得 Token，因此没有执行聊天请求、没有调用真实 provider、没有预算或 usage 增量、没有触发回滚。证据见 `verification/monthly-budget-worker-controlled-real-canary/summary.json`。本轮不得写成真实预算链路通过。
 
 未完成：
 
-- 等待产品负责人验收第 3B-2b2c 段 1% 生产灰度。未经批准不得将新预算 Worker 切换到 100% 流量，不得主动执行真实模型调用。
+- 等待产品负责人验收第 3B-2b2d 段调用前阻塞结果。未经批准不得将新预算 Worker 切换到 100% 流量，不得重试注册或发起真实模型调用。
 - 实际电脑清理。
 - 首屏 3-5 条示例指令。
 - 反馈入口和安全/隐私告知。
@@ -95,7 +96,7 @@
 - 跨网站复杂执行。
 - 国际化和区域合规。
 
-当前唯一下一步：等待产品负责人验收第 3B-2b2c 段 1% 生产灰度。未经批准不得将新预算 Worker 切换到 100% 流量，不得主动执行真实模型调用。
+当前唯一下一步：等待产品负责人验收第 3B-2b2d 段调用前阻塞结果。未经批准不得将新预算 Worker 切换到 100% 流量，不得重试注册或发起真实模型调用。
 
 <!-- AIW_CAPABILITY_STATUS_END -->
 
@@ -105,14 +106,14 @@
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；Workbench、Hermes、OpenClaw 三类执行入口都已通过 `18800` 调用当前生产 provider DeepSeek，验收摘要在 `verification/unified-model-proxy/summary.json`。DeepSeek 是当前实现细节，后续 provider 必须可替换。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。阶段性总审核、生存体检、第 3A 段本地钱包刹车、第 3B-1 段生产预检备份、第 3B-2a 段远端 D1 migration、第 3B-2b1 段部署候选、第 3B-2b2a 段 Preview 上传验证和第 3B-2b2b 段零流量 deployment 均已由产品负责人验收通过。第 3B-2b2c 段已将新预算 Worker 切到 1% 正常生产灰度；当前唯一下一步是等待产品负责人验收第 3B-2b2c 段，未经批准不得切到 100% 或主动执行真实模型调用。
+- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。阶段性总审核、生存体检、第 3A 段本地钱包刹车、第 3B-1 段生产预检备份、第 3B-2a 段远端 D1 migration、第 3B-2b1 段部署候选、第 3B-2b2a 段 Preview 上传验证、第 3B-2b2b 段零流量 deployment 和第 3B-2b2c 段 1% 生产灰度均已由产品负责人验收通过。第 3B-2b2d 段受控真实预算链路验证在调用前 blocked，未执行聊天请求；当前唯一下一步是等待产品负责人验收第 3B-2b2d 段阻塞结果，未经批准不得重试或切到 100%。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
 ## 5. 近期优先级
 
-1. 等待产品负责人验收第 3B-2b2c 段 1% 生产灰度。
-2. 后续 100% 全量切换只能在产品负责人验收 3B-2b2c 并明确批准后执行。
+1. 等待产品负责人验收第 3B-2b2d 段调用前阻塞结果。
+2. 后续重试真实调用或 100% 全量切换只能在产品负责人明确批准后执行。
 3. 模型分层调度与上下文压缩。
 4. v0.4.7 首屏示例、反馈入口和安全告知。
 5. 3-5 名真实用户测试。
