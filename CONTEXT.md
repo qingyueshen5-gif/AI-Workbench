@@ -62,9 +62,9 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 
 当前唯一下一步以 `NEXT_STEP.md` 为唯一权威：
 
-等待产品负责人验收第 3B-2b1 段部署候选。未经批准不得部署 Worker 或进入第 3B-2b2 段。
+等待产品负责人验收第 3B-2b2a 段 Preview 上传验证。未经批准不得部署 Worker 或进入第 3B-2b2b 段。
 
-不得部署 Cloudflare Worker、修改 Secrets、进入第 3B-2b2 段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发。
+不得部署 Cloudflare Worker、修改 Secrets、进入第 3B-2b2b 段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发。
 
 ## 产品方向文件索引
 
@@ -112,6 +112,15 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 | Codex 窗口断连后不知道怎么重开 | 正常操作，不是故障 | 在 `F:\AI-Workbench` 打开终端，输入 `codex` 回车 |
 | Codex 任务量太大导致 502/连接中断 | 一次性任务过大 | 拆小任务，分批发送 |
 | Hermes / WSL / OpenClaw 历史环境问题 | 见任务记录和历史文档 | 不在当前任务中重复排查，按对应历史留痕处理 |
+
+## 第 3B-2b2a 当前生产变更边界
+
+- 第 3B-2b1 段部署候选已由产品负责人验收通过，验收提交 `982d6a324727465cd89911325d13e3f395b58142`。
+- 已上传新的 Cloudflare Worker Preview version `483e4fae-3af8-40fa-ab83-4551f08b519e`，Preview alias 为 `budget-candidate-3b2b2a`。
+- Preview URL 已验证 `/health`、`/v1/models` 和未认证聊天拒绝路径；未使用真实安装 Token，未调用真实 provider。
+- 生产 active deployment 仍为 `61aa34dd-c20a-42b4-a3c6-1ca474a81e5e`，100% 流量仍指向稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba`。
+- 远端 `monthly_platform_budget` 和 `monthly_model_budget` 仍为空。
+- Worker 尚未部署，生产钱包刹车尚未生效；部署和流量切换必须等待产品负责人批准后进入后续段。
 
 ## 第三方 Agent/工具升级管理规则
 

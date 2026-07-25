@@ -1,0 +1,56 @@
+{
+  "task": "monthly-budget-worker-preview-upload",
+  "execution_status": "preview_upload_verified",
+  "repository_head_before": "982d6a324727465cd89911325d13e3f395b58142",
+  "accepted_previous_stage": "3B-2b1 accepted by product owner at 982d6a324727465cd89911325d13e3f395b58142",
+  "worker": "ai-workbench-managed-proxy",
+  "uploaded_version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+  "uploaded_version_number": 11,
+  "preview_alias": "budget-candidate-3b2b2a",
+  "preview_url": "https://budget-candidate-3b2b2a-ai-workbench-managed-proxy.qingyueshen5.workers.dev",
+  "preview_checks": {
+    "health": {
+      "http_status": 200,
+      "passed": true
+    },
+    "models": {
+      "http_status": 200,
+      "passed": true
+    },
+    "unauthenticated_chat_rejection": {
+      "http_status": 401,
+      "code": "missing_token",
+      "passed": true,
+      "provider_call_possible": false
+    }
+  },
+  "active_deployment_changed": false,
+  "active_version_changed": false,
+  "traffic_changed": false,
+  "active_deployment_id": "61aa34dd-c20a-42b4-a3c6-1ca474a81e5e",
+  "active_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "active_traffic_percentage": 100,
+  "remote_budget_tables_confirmed": true,
+  "remote_budget_table_row_counts": {
+    "monthly_platform_budget": 0,
+    "monthly_model_budget": 0
+  },
+  "deployment_status": "not_deployed",
+  "secrets_modified": false,
+  "real_installation_token_used": false,
+  "authenticated_chat_called": false,
+  "real_provider_called": false,
+  "model_cost_incurred": false,
+  "blocked_items": [],
+  "evidence_files": [
+    "verification/monthly-budget-worker-preview-upload/summary.json",
+    "verification/monthly-budget-worker-preview-upload/report.md",
+    "verification/monthly-budget-worker-preview-upload/commands.log",
+    "verification/monthly-budget-worker-preview-upload/version-upload-result.json",
+    "verification/monthly-budget-worker-preview-upload/preview-checks.json",
+    "verification/monthly-budget-worker-preview-upload/active-deployment-check.json",
+    "verification/monthly-budget-worker-preview-upload/remote-budget-table-check.json",
+    "verification/monthly-budget-worker-preview-upload/artifact-manifest.json"
+  ],
+  "next_action": "Wait for product owner acceptance of 3B-2b2a Preview upload verification. Do not deploy Worker or enter the next stage without approval."
+}

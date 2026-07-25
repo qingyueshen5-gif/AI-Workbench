@@ -1,0 +1,21 @@
+{
+  "task": "monthly-budget-worker-preview-d1-budget-table-check",
+  "checked_at": "2026-07-25T12:24:00+08:00",
+  "database_name": "aiw-managed-proxy",
+  "database_id_masked": "202583b9...3de8",
+  "command_type": "remote D1 read-only SELECT",
+  "tables": {
+    "monthly_platform_budget": {
+      "exists": true,
+      "row_count": 0
+    },
+    "monthly_model_budget": {
+      "exists": true,
+      "row_count": 0
+    }
+  },
+  "rows_written": 0,
+  "changed_db": false,
+  "test_budget_rows_inserted": false,
+  "production_d1_modified": false
+}

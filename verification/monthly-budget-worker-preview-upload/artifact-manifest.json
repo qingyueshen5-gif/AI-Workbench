@@ -1,0 +1,51 @@
+{
+  "task": "monthly-budget-worker-preview-upload",
+  "generated_at": "2026-07-25T12:30:00+08:00",
+  "artifact_count": 8,
+  "artifacts": [
+    {
+      "path": "verification/monthly-budget-worker-preview-upload/summary.json",
+      "bytes": 2358,
+      "sha256": "931019114411CD716003AFB647B4D490CE7EB210B0C9623862C4DAB0B0F27AEB"
+    },
+    {
+      "path": "verification/monthly-budget-worker-preview-upload/report.md",
+      "bytes": 2384,
+      "sha256": "82D47E6566BE481BC365291AAF324B01B35A86BFF8C905A088E7556160903982"
+    },
+    {
+      "path": "verification/monthly-budget-worker-preview-upload/commands.log",
+      "bytes": 3318,
+      "sha256": "6683826B7192C7ED633AE3778F4F9BC6AA1BC2396BB8A71FDD83CDA15E9F5DD3"
+    },
+    {
+      "path": "verification/monthly-budget-worker-preview-upload/version-upload-result.json",
+      "bytes": 1019,
+      "sha256": "092AB0E26DA809146CB0E1A660F4E01408B49F98D2534799DDFCB199FB483BAC"
+    },
+    {
+      "path": "verification/monthly-budget-worker-preview-upload/preview-checks.json",
+      "bytes": 1118,
+      "sha256": "C6E689FCF9643217B8EB951E8445842E0B66E45172577BA4AB50EF7952B7EDA4"
+    },
+    {
+      "path": "verification/monthly-budget-worker-preview-upload/active-deployment-check.json",
+      "bytes": 1025,
+      "sha256": "500E9509938AD69B73008F49C8EFADD5D1B6DF469A198F5265C6AFC4A8FFE2E3"
+    },
+    {
+      "path": "verification/monthly-budget-worker-preview-upload/remote-budget-table-check.json",
+      "bytes": 542,
+      "sha256": "CE0CEF7A2645696BB17FEE5691AD33C9829A321BF0234DDB0278C21493AB457E"
+    },
+    {
+      "path": "verification/monthly-budget-worker-preview-upload/artifact-manifest.json",
+      "bytes": null,
+      "sha256": "self-referential-hash-not-recorded"
+    }
+  ],
+  "excluded_from_git": [
+    "No external D1 backup SQL files are stored in this verification directory."
+  ],
+  "sensitive_data_policy": "No API token, Secret, Cookie, Authorization header, installation token, database content, or user content is recorded."
+}

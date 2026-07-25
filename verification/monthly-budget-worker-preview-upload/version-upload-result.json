@@ -1,0 +1,21 @@
+{
+  "task": "monthly-budget-worker-preview-upload",
+  "uploaded_before_resume": true,
+  "upload_command": "npx.cmd wrangler versions upload --name ai-workbench-managed-proxy --message <3B-2b2a budget candidate preview> --tag <3b-2b2a-budget-candidate> --preview-alias <budget-candidate-3b2b2a>",
+  "upload_exit_code": 0,
+  "worker": "ai-workbench-managed-proxy",
+  "account_id_masked": "351b5cce...7f30",
+  "uploaded_version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+  "uploaded_version_number": 11,
+  "uploaded_version_created_on": "2026-07-25T04:19:41.368218Z",
+  "has_preview": true,
+  "preview_alias": "budget-candidate-3b2b2a",
+  "message": "3B-2b2a budget candidate preview",
+  "tag": "3b-2b2a-budget-candidate",
+  "triggered_by": "version_upload",
+  "deployment_command_used": false,
+  "traffic_modified": false,
+  "secrets_modified": false,
+  "real_provider_called": false,
+  "evidence_method": "Resumed after interruption; Cloudflare API read-only version list confirmed the previously uploaded version."
+}

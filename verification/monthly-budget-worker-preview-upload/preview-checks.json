@@ -1,0 +1,44 @@
+{
+  "task": "monthly-budget-worker-preview-checks",
+  "checked_at": "2026-07-25T12:25:00+08:00",
+  "preview_base_url": "https://budget-candidate-3b2b2a-ai-workbench-managed-proxy.qingyueshen5.workers.dev",
+  "checks": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "http_status": 200,
+      "body_summary": {
+        "ok": true,
+        "service": "ai-workbench-managed-proxy",
+        "enabled": true,
+        "models": [
+          "deepseek-chat"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/v1/models",
+      "http_status": 200,
+      "body_summary": {
+        "object": "list",
+        "models": [
+          "deepseek-chat"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "auth": "none",
+      "http_status": 401,
+      "error_code": "missing_token",
+      "error_message": "共享模型服务认证失败，请稍后重试。",
+      "provider_call_possible": false
+    }
+  ],
+  "authenticated_chat_called": false,
+  "real_installation_token_used": false,
+  "real_provider_called": false,
+  "model_cost_incurred": false
+}

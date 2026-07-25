@@ -1,0 +1,24 @@
+{
+  "task": "monthly-budget-worker-active-deployment-check",
+  "checked_at": "2026-07-25T12:25:47+08:00",
+  "method": "Cloudflare API read-only query using existing Wrangler OAuth credentials; token not logged",
+  "account_id_masked": "351b5cce...7f30",
+  "worker": "ai-workbench-managed-proxy",
+  "baseline_from_3b2b1": {
+    "active_deployment_id": "61aa34dd-c20a-42b4-a3c6-1ca474a81e5e",
+    "active_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+    "active_traffic_percentage": 100
+  },
+  "after_preview_upload": {
+    "active_deployment_id": "61aa34dd-c20a-42b4-a3c6-1ca474a81e5e",
+    "active_deployment_created_on": "2026-07-23T09:57:15.724674Z",
+    "active_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+    "active_traffic_percentage": 100,
+    "latest_uploaded_version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+    "latest_uploaded_version_number": 11
+  },
+  "active_deployment_changed": false,
+  "active_version_changed": false,
+  "traffic_changed": false,
+  "deployment_status": "not_deployed"
+}
