@@ -92,9 +92,10 @@ DeepSeek 是当前唯一已接入的生产实现，属于可替换的实现细�
 
 ## 新对话交接方法
 
-- 普通新对话：提供 AI-Workbench-Handoff.md、NEXT_STEP.md 和 THINKING.md。
-- 新对话如需理解决策背景，应阅读 THINKING.md。
-- 需要判断某项验收：再提供对应 verification/<task>/summary.json。
+- 普通新对话：提供 AI-Workbench-Handoff.md、NEXT_STEP.md、THINKING.md、PRINCIPLES.md 和 GROWTH_LOG.md。
+- 新对话如需理解决策背景，应阅读 THINKING.md、PRINCIPLES.md 和 GROWTH_LOG.md。
+- 需要判断某项验收：再提供对应 verification/<task>/summary.json、report.md、必要的 commands.log、对应 commit 和 Git diff。
+- 新对话不需要默认读取全部 verification 目录，只有当前任务相关证据才需要增加。
 - 对方无法访问本机仓库时，必须提供文件内容或 GitHub 链接，不能只给本地路径。
 - 任何新决策、任务结论和验收结果都必须回写仓库，不得只留在聊天里。
 <!-- AIW_GENERATED_HANDOFF_END -->

@@ -11,6 +11,7 @@ const requiredFiles = [
   'PRODUCT.md',
   'VISION.md',
   'PRINCIPLES.md',
+  'GROWTH_LOG.md',
   'DECISIONS.md',
   'CONTEXT.md',
   'CURRENT_TASK.md',
@@ -32,6 +33,8 @@ const scannedFiles = [
   'NEXT_STEP.md',
   'AI-Workbench-Handoff.md',
   'DECISIONS.md',
+  'PRINCIPLES.md',
+  'GROWTH_LOG.md',
   'LAUNCH.md',
 ];
 
@@ -148,6 +151,9 @@ function main() {
         if (line.includes(expectedNextStep)) return false;
         if (line.includes('电脑环境治理')) return false;
         if (line.includes('NEXT_STEP.md')) return false;
+        if (line.includes('判断产品下一步')) return false;
+        if (line.includes('下一步必须能被新对话读取')) return false;
+        if (line.includes('新想法先记录')) return false;
         if (line.includes('新对话交接')) return false;
         if (/不得|不自动|不能|需要继续执行任务/.test(line)) return false;
         if (line.includes('历史')) return false;
@@ -195,7 +201,7 @@ function main() {
 
     const handoffBodyLineCount = handoffMarked.split(/\r?\n/).length;
     if (handoffBodyLineCount > 90) errors.push(`Handoff 自动生成区过长：${handoffBodyLineCount} 行，疑似复制源文档正文。`);
-    for (const required of ['当前版本', '当前架构', '当前唯一下一步', 'GPT', 'Claude', 'Codex', '新对话交接方法']) {
+    for (const required of ['当前版本', '当前架构', '当前唯一下一步', 'GPT', 'Claude', 'Codex', '新对话交接方法', 'PRINCIPLES.md', 'GROWTH_LOG.md']) {
       if (!handoffMarked.includes(required)) errors.push(`Handoff 缺少新对话最小上下文：${required}`);
     }
 

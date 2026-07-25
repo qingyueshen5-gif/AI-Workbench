@@ -72,9 +72,15 @@ Codex / 执行助手：
 
 ## 2.2 新对话交接规则
 
-- 普通新对话：默认提供 `AI-Workbench-Handoff.md`、`NEXT_STEP.md` 和 `THINKING.md` 三份。
-- 新对话如需理解决策背景，必须阅读 `THINKING.md`。
-- 需要判断某项验收：再加对应 `verification/<task>/summary.json`。
+- 普通新对话：默认提供五份文件：
+  1. `AI-Workbench-Handoff.md`
+  2. `NEXT_STEP.md`
+  3. `THINKING.md`
+  4. `PRINCIPLES.md`
+  5. `GROWTH_LOG.md`
+- 新对话如需理解决策背景，必须阅读 `THINKING.md`、`PRINCIPLES.md` 和 `GROWTH_LOG.md`。
+- 需要判断某项具体验收时，再读取对应 `verification/<task>/summary.json`、`verification/<task>/report.md`、必要的 `commands.log`、对应 commit 和 Git diff。
+- 新对话不需要默认读取全部 `verification/` 目录。只有当前任务相关证据才需要增加。
 - 对方无法访问本机仓库时，必须提供文件内容或 GitHub 链接，不能只给本地路径。
 - 任何新决策、任务结论和验收结果都必须回写仓库，不得只留在聊天里。
 
@@ -349,3 +355,27 @@ summary 状态写 `failed`、`blocked`、`partial` 或 `pending`。
 13. 是否具备进入下一阶段的条件；
 14. 下一步建议；
 15. 明确声明没有自动继续下一阶段。
+
+## 14. 执行验收与阶段验收
+
+执行验收是 Codex 单轮任务完成后的自检和交付。Codex 每轮完成后必须：
+
+- 给出执行状态；
+- 列出修改内容；
+- 列出未做事项；
+- 提供测试结果；
+- 提供 verification 路径；
+- 提供 commit 和 push；
+- 确认工作区 clean；
+- 停止等待产品负责人。
+
+阶段验收是一个完整产品阶段结束时的独立验收，不能由 Codex 自己宣布完成。独立验收应从 GitHub 读取证据，交叉核对代码、测试、verification 和权威文档，并输出：
+
+- 已完成；
+- 未完成；
+- 严重阻塞；
+- 非阻塞问题；
+- 结论 `PASS / CONDITIONAL_PASS / BLOCKED`；
+- 是否允许结束阶段。
+
+阶段没有通过独立验收和产品负责人批准，不得宣布阶段结束，不得进入下一阶段。

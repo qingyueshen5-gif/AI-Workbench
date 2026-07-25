@@ -1,6 +1,6 @@
 # AI Workbench 项目基准文档 (CONTEXT.md)
 
-> 使用方法：新对话需要完整基准时，提供本文件内容或 GitHub 链接；需要快速交接时优先提供 `AI-Workbench-Handoff.md`、`NEXT_STEP.md` 和 `THINKING.md`。
+> 使用方法：新对话需要完整基准时，提供本文件内容或 GitHub 链接；需要快速交接时优先提供 `AI-Workbench-Handoff.md`、`NEXT_STEP.md`、`THINKING.md`、`PRINCIPLES.md` 和 `GROWTH_LOG.md`。
 > 当前版本号以 `package.json` 的 `version` 为唯一权威，本文件只展示脚本可校验的当前口径。
 > 新电脑迁移或重装环境时，先看仓库根目录的 `SETUP.md`。
 
@@ -78,6 +78,7 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 - `VISION.md`：全球愿景、质量基线、人机共同打磨和长期方向。
 - `THINKING.md`：产品负责人判断依据，解释关键结论背后的原因。
 - `PRINCIPLES.md`：简单、高质量、快速、低损耗、真实完成和透明可追溯。
+- `GROWTH_LOG.md`：产品负责人的学习目标、长期关注方向和未来排期记录。
 - `DECISIONS.md`：已锁定决策，包括借用生态但掌握控制层、跨平台执行边界和用户状态波动补偿。
 - `CURRENT_PROGRESS_AUDIT.md`：已完成/未完成能力的唯一权威。
 - `NEXT_STEP.md`：当前唯一下一步的唯一权威。
@@ -97,6 +98,7 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 
 - 执行规范以 `EXECUTION_PROTOCOL.md` 为准。
 - AI 不负责宣布成功，AI 负责提供证据；用户负责最终验收。
+- Codex 单轮完成后做执行验收并停止；完整产品阶段结束时必须另做独立验收，从 GitHub 交叉核对代码、测试、verification 和权威文档。独立验收和产品负责人批准前，不得宣布阶段结束或进入下一阶段。
 - 外部流程必须取得真实外部结果后才能判绿。
 - 任何任务结论、验收结果和新决策都必须写回仓库，不得只留在聊天里。
 - 历史记录不得为统一当前口径而篡改；历史文件可保留当时版本号和当时状态。
@@ -160,5 +162,6 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 
 - 不依赖任何 AI 记住整段对话历史。
 - 一个对话框只聊一个主线任务。
-- 新对话默认提供 `AI-Workbench-Handoff.md`、`NEXT_STEP.md` 和 `THINKING.md`；需要完整基准时再提供本文件。
+- 新对话默认提供 `AI-Workbench-Handoff.md`、`NEXT_STEP.md`、`THINKING.md`、`PRINCIPLES.md` 和 `GROWTH_LOG.md`；需要完整基准时再提供本文件。
+- 需要判断某项具体验收时，再读取对应 `verification/<task>/summary.json`、`report.md`、必要的 `commands.log`、对应 commit 和 Git diff；不默认读取全部 verification 目录。
 - 任何决策、结论、进度变化必须写回仓库。

@@ -51,6 +51,8 @@
     "NEXT_STEP.md",
     "AI-Workbench-Handoff.md",
     "DECISIONS.md",
+    "PRINCIPLES.md",
+    "GROWTH_LOG.md",
     "LAUNCH.md"
   ],
   "ignoredHistoricalPaths": [
@@ -62,5 +64,5 @@
   ],
   "errors": [],
   "warnings": [],
-  "verifiedAt": "2026-07-25T16:00:42.184Z"
+  "verifiedAt": "2026-07-25T16:15:47.841Z"
 }
