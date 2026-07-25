@@ -1,0 +1,19 @@
+{
+  "attempts": 1,
+  "http_status": 200,
+  "valid_json": true,
+  "answer_non_empty": true,
+  "finish_reason": "stop",
+  "provider_model": "deepseek-v4-flash",
+  "usage": {
+    "prompt_tokens": 7,
+    "completion_tokens": 1,
+    "total_tokens": 8
+  },
+  "reasoning_content_present_or_non_empty": false,
+  "shortest_necessary_answer": "OK",
+  "duration_ms": 1186,
+  "retries": 0,
+  "provider_call_upper_bound": 1,
+  "status": "real_call_completed"
+}

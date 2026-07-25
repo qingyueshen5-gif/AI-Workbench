@@ -36,7 +36,7 @@ const scannedFiles = [
 ];
 
 const ignoredHistoricalPaths = ['CHANGELOG.md', 'TASKLOG.md', 'tasks/**', 'verification/**', 'research/**'];
-const expectedNextStep = '等待产品负责人处理 DeepSeek V4 Flash 非思考真实 Preview 验证阻断。新 version 13 已上传但未加入 production deployment；本轮已消耗唯一一次注册且未执行真实聊天，未经批准不得第二次注册、不得发起真实模型调用、不得把新 version 加入 production deployment、不得切换 1% 或 100%。';
+const expectedNextStep = '等待产品负责人验收 version 13 DeepSeek V4 Flash 非思考真实 Preview 链路。未经批准不得把 version 13 加入 production deployment，不得切换 1% 或 100%，不得发起新的主动真实模型调用。';
 
 function readText(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');

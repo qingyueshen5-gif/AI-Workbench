@@ -1,0 +1,12 @@
+{
+  "temporary_node_script_location": "repository_external_system_temp",
+  "temporary_node_script_deleted": true,
+  "token_persisted": false,
+  "token_logged": false,
+  "authorization_header_logged": false,
+  "full_preview_url_logged_to_repository": false,
+  "full_installation_id_logged": false,
+  "cleanup_check": {
+    "aiw_v4_nt_run2_network_scripts_found": 0
+  }
+}

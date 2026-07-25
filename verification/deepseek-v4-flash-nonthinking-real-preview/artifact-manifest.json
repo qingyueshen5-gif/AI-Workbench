@@ -14,6 +14,13 @@
     "budget-delta-check.json",
     "post-call-observation.json",
     "temporary-artifact-cleanup.json",
+    "run2-pre-call-budget-state.json",
+    "run2-registration-result.json",
+    "run2-real-call-result.json",
+    "run2-post-call-budget-state.json",
+    "run2-budget-delta-check.json",
+    "run2-post-call-observation.json",
+    "run2-temporary-artifact-cleanup.json",
     "artifact-manifest.json"
   ],
   "contains_full_preview_url": false,

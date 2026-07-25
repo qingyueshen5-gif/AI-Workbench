@@ -1,0 +1,29 @@
+{
+  "expected_reserved_micro_usd": 23,
+  "platform": {
+    "before": { "reserved_micro_usd": 21, "call_count": 1 },
+    "after": { "reserved_micro_usd": 44, "call_count": 2 },
+    "delta": { "reserved_micro_usd": 23, "call_count": 1 }
+  },
+  "deepseek_v4_flash": {
+    "before": null,
+    "after": { "reserved_micro_usd": 23, "call_count": 1 },
+    "delta": { "reserved_micro_usd": 23, "call_count": 1 }
+  },
+  "historical_deepseek_chat": {
+    "before": { "reserved_micro_usd": 21, "call_count": 1 },
+    "after": { "reserved_micro_usd": 21, "call_count": 1 },
+    "delta": { "reserved_micro_usd": 0, "call_count": 0 }
+  },
+  "installations_delta": 1,
+  "daily_usage_delta": {
+    "request_count": 2,
+    "input_tokens": 2,
+    "output_tokens": 1
+  },
+  "platform_and_v4_flash_amount_deltas_match": true,
+  "platform_and_v4_flash_call_deltas_match": true,
+  "duplicate_reservation_detected": false,
+  "historical_deepseek_chat_modified": false,
+  "passed": true
+}

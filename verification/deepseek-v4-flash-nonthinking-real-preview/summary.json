@@ -1,6 +1,6 @@
 {
   "task": "deepseek-v4-flash-nonthinking-real-preview",
-  "execution_status": "blocked_after_single_registration_before_real_call",
+  "execution_status": "v4_flash_nonthinking_real_path_passed",
   "accepted_local_candidate_commit": "b024123aac66dc9de01102a61ed92ae8c57dbd0f",
   "repository_head_before": "3459e5ad9449afaf162f97eaf82bf9d7f9efd96d",
   "origin_main_before": "3459e5ad9449afaf162f97eaf82bf9d7f9efd96d",
@@ -69,6 +69,69 @@
     "installations_delta": 1,
     "daily_usage_request_delta_from_registration": 1
   },
+  "run2": {
+    "approved_as_new_independent_attempt": true,
+    "used_existing_version_id": "cf002344-57ee-4c3f-86a6-115ca66c8b5f",
+    "version_uploaded_this_run": false,
+    "worker_code_changed": false,
+    "wrangler_config_changed": false,
+    "token_process_child_process_calls": 0,
+    "token_process_cli_calls": 0,
+    "registration": {
+      "attempts": 1,
+      "http_status": 200,
+      "valid_json": true,
+      "token_obtained": true,
+      "expires_at": "2026-07-26T13:07:40.000Z",
+      "installation_sha256_prefix": "0621DAAD666E711D",
+      "duration_ms": 2419
+    },
+    "real_chat": {
+      "attempts": 1,
+      "http_status": 200,
+      "valid_json": true,
+      "answer_non_empty": true,
+      "finish_reason": "stop",
+      "provider_model": "deepseek-v4-flash",
+      "prompt_tokens": 7,
+      "completion_tokens": 1,
+      "total_tokens": 8,
+      "reasoning_content_present_or_non_empty": false,
+      "shortest_necessary_answer": "OK",
+      "duration_ms": 1186
+    },
+    "reservation_calculation": {
+      "raw_request_bytes": 126,
+      "input_chars": 6,
+      "estimated_input_tokens": 2,
+      "reserve_input_tokens": 126,
+      "reserve_output_tokens": 16,
+      "expected_reserved_micro_usd": 23,
+      "within_100_micro_usd_gate": true
+    },
+    "budget_delta": {
+      "platform_reserved_micro_usd_delta": 23,
+      "platform_call_count_delta": 1,
+      "deepseek_v4_flash_reserved_micro_usd_delta": 23,
+      "deepseek_v4_flash_call_count_delta": 1,
+      "historical_deepseek_chat_reserved_micro_usd_delta": 0,
+      "historical_deepseek_chat_call_count_delta": 0,
+      "installations_delta": 1,
+      "daily_usage_request_delta": 2,
+      "daily_usage_input_tokens_delta": 2,
+      "daily_usage_output_tokens_delta": 1
+    }
+  },
+  "cumulative_version13_audit": {
+    "run1_registration_attempts": 1,
+    "run1_chat_attempts": 0,
+    "run1_failure": "spawnSync npx.cmd EINVAL before chat",
+    "run2_registration_attempts": 1,
+    "run2_chat_attempts": 1,
+    "total_registration_attempts": 2,
+    "total_chat_attempts": 1,
+    "total_provider_call_upper_bound": 1
+  },
   "real_chat": {
     "attempts": 0,
     "provider_calls": 0,
@@ -95,14 +158,14 @@
       "daily_usage_today": { "request_count": 2, "input_tokens": 2, "output_tokens": 0 }
     },
     "after": {
-      "platform": { "reserved_micro_usd": 21, "call_count": 1 },
+      "platform": { "reserved_micro_usd": 44, "call_count": 2 },
       "historical_deepseek_chat": { "reserved_micro_usd": 21, "call_count": 1 },
-      "deepseek_v4_flash_row_exists": false,
-      "installations_count": 35,
-      "daily_usage_today": { "request_count": 3, "input_tokens": 2, "output_tokens": 0 }
+      "deepseek_v4_flash": { "reserved_micro_usd": 23, "call_count": 1 },
+      "installations_count": 36,
+      "daily_usage_today": { "request_count": 5, "input_tokens": 4, "output_tokens": 1 }
     },
-    "platform_budget_delta": { "reserved_micro_usd": 0, "call_count": 0 },
-    "v4_flash_budget_delta": { "reserved_micro_usd": 0, "call_count": 0 },
+    "platform_budget_delta": { "reserved_micro_usd": 23, "call_count": 1 },
+    "v4_flash_budget_delta": { "reserved_micro_usd": 23, "call_count": 1 },
     "historical_deepseek_chat_modified": false
   },
   "secrets_modified": false,
@@ -111,11 +174,18 @@
   "full_preview_url_committed": false,
   "temporary_script_deleted": true,
   "temporary_bundle_deleted": true,
-  "normal_acceptance_status_written": false,
-  "blocked_items": [
-    "The single approved registration was consumed before chat.",
-    "The real chat was not executed because the token was lost with the crashed one-time process.",
-    "A second registration or chat would violate the approved hard boundary."
+  "normal_acceptance_status_written": true,
+  "passed_requirements": [
+    "Existing version 13 was reused.",
+    "No new Worker version was uploaded.",
+    "Run2 registration succeeded once.",
+    "Run2 chat succeeded once with HTTP 200.",
+    "No retry was performed.",
+    "Answer was non-empty and reasoning_content was empty.",
+    "Platform and deepseek-v4-flash budget deltas matched.",
+    "Historical deepseek-chat budget stayed 21/1.",
+    "Production deployment and production traffic were unchanged.",
+    "Secrets, D1 schema, Worker code and Wrangler config were unchanged."
   ],
-  "next_action": "Wait for product owner review. A new paid validation attempt requires explicit approval because the single registration allowance for this run has already been used."
+  "next_action": "Wait for product owner acceptance of the version 13 DeepSeek V4 Flash non-thinking real Preview path. Do not add version 13 to production deployment, do not switch 1% or 100%, and do not make another active real model call without approval."
 }

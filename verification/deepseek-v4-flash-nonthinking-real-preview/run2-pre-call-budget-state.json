@@ -1,0 +1,29 @@
+{
+  "monthly_platform_budget": {
+    "month_key": "2026-07",
+    "reserved_micro_usd": 21,
+    "call_count": 1,
+    "updated_at": "2026-07-25T08:18:17.578Z"
+  },
+  "monthly_model_budget": [
+    {
+      "month_key": "2026-07",
+      "model": "deepseek-chat",
+      "reserved_micro_usd": 21,
+      "call_count": 1,
+      "updated_at": "2026-07-25T08:18:17.578Z"
+    }
+  ],
+  "deepseek_v4_flash_row_exists": false,
+  "installations_count": 35,
+  "daily_usage_today": {
+    "request_count": 3,
+    "input_tokens": 2,
+    "output_tokens": 0
+  },
+  "active_deployment": "d9acb146-b720-4e09-b2b8-0257b93fc407",
+  "production_traffic": {
+    "16333442-925a-4b11-a3d1-d6249d2492ba": 100,
+    "cf002344-57ee-4c3f-86a6-115ca66c8b5f": 0
+  }
+}

@@ -83,10 +83,11 @@
 - DeepSeek V4 Flash 修复 Worker Preview v4_flash_candidate_preview_verified：产品负责人验收本地候选后批准只上传新 Worker version 并执行无付费 Preview 验证。新修复 version `a7eb385b-84df-4a45-b554-0aca40b6b407` / version number `12` 已上传，Preview alias 为 `budget-v4-flash-candidate`。Preview `/health` HTTP 200，`/v1/models` HTTP 200 并确认 `deepseek-chat` 是逻辑 alias、上游为 `deepseek-v4-flash`；未认证聊天 HTTP 401 `missing_token`。active deployment 前后均为 `d9acb146-b720-4e09-b2b8-0257b93fc407`，旧稳定 version 100%，失败候选 0%，新修复 version 正常生产流量 0%。两张预算表仍保持 21 micro-USD / call_count 1，未出现 `deepseek-v4-flash` 真实调用明细，Secrets 和 D1 schema 未修改，未注册 installation，未调用真实 provider。证据见 `verification/deepseek-v4-flash-worker-preview-upload/summary.json`。
 - DeepSeek V4 Flash 非思考兼容本地候选 v4_flash_nonthinking_compatibility_candidate_ready_locally：产品负责人验收第 3B-2b2e Preview 上传通过后，付费验证前确认 version 12 未显式固定 `deepseek-chat` 非思考语义，因此 version 12 不用于付费真实验证。本地修正为 `deepseek-chat` 路由新增 `thinkingMode: "disabled"`，服务端强制上游 payload 为 `model: deepseek-v4-flash` 和 `thinking.type: disabled`，并覆盖客户端传入的 `thinking.type: enabled`。缺失或非法 `thinkingMode` 在预算预留和 provider 调用前 fail closed；`/v1/models` 输出 `thinking_mode: disabled`。Managed Proxy 19 项测试和 TypeScript 检查通过；未上传新 Worker version，未部署，未注册 installation，未调用真实 provider，生产流量未修改，历史 21 micro-USD 未修改。证据见 `verification/deepseek-v4-flash-nonthinking-compatibility/summary.json`。
 - DeepSeek V4 Flash 非思考真实 Preview 验证 blocked_after_single_registration_before_real_call：产品负责人验收非思考兼容本地候选后批准上传新的非思考兼容 Worker version，并在无付费安全门后最多一次注册和一次真实调用。新 version `cf002344-57ee-4c3f-86a6-115ca66c8b5f` / version number `13` 已上传，Preview alias `budget-v4-nt-real-candidate`；无付费 Preview `/health`、`/v1/models`、未认证聊天 401 `missing_token` 均通过，生产 active deployment 未变化，旧稳定 version 仍 100%，新 version 正常生产流量 0%。一次性脚本唯一注册后在聊天前预算读取阶段崩溃，Token 未打印未持久化且不可恢复；按“一次且仅一次注册”边界停止，真实聊天 0 次、provider 调用 0 次、预算预留 0。D1 仅确认 installations +1、daily_usage +1；平台预算仍 21/1，历史 `deepseek-chat` 仍 21/1，无 `deepseek-v4-flash` 行。证据见 `verification/deepseek-v4-flash-nonthinking-real-preview/summary.json`。
+- DeepSeek V4 Flash 非思考真实 Preview 链路 v4_flash_nonthinking_real_path_passed：产品负责人确认 run1 阻断不是 Worker、D1、Secret、DeepSeek 或预算代码问题，而是 Windows Node 子进程错误调用 `.cmd` 文件，并批准 run2 复用现有 version 13。run2 未上传新 version，未修改 Worker/配置/Secrets/D1 schema/production deployment；父级终端直接读 D1，Token 进程移除所有子进程调用，只注册一次并聊天一次。注册 HTTP 200，聊天 HTTP 200，provider model `deepseek-v4-flash`，回答 `OK`，`reasoning_content` 为空，usage 为 prompt 7 / completion 1 / total 8。预算预留按最终 payload 计算为 23 micro-USD；平台总账 21/1 -> 44/2，`deepseek-v4-flash` 明细不存在 -> 23/1，历史 `deepseek-chat` 保持 21/1。version 13 仍未加入 active deployment，正常生产流量 0%。证据见 `verification/deepseek-v4-flash-nonthinking-real-preview/summary.json`。
 
 未完成：
 
-- 等待产品负责人处理 DeepSeek V4 Flash 非思考真实 Preview 验证阻断。新 version 13 已上传但未部署；本轮已消耗唯一一次注册且未执行真实聊天，未经批准不得第二次注册、不得发起真实模型调用、不得把新 version 加入 production deployment、不得切换 1% 或 100%。
+- 等待产品负责人验收 version 13 DeepSeek V4 Flash 非思考真实 Preview 链路。未经批准不得把 version 13 加入 production deployment，不得切换 1% 或 100%，不得发起新的主动真实模型调用。
 - 实际电脑清理。
 - 首屏 3-5 条示例指令。
 - 反馈入口和安全/隐私告知。
@@ -102,7 +103,7 @@
 - 跨网站复杂执行。
 - 国际化和区域合规。
 
-当前唯一下一步：等待产品负责人处理 DeepSeek V4 Flash 非思考真实 Preview 验证阻断。未经批准不得第二次注册、不得发起真实模型调用、不得把新 version 加入 production deployment、不得切换 1% 或 100%。
+当前唯一下一步：等待产品负责人验收 version 13 DeepSeek V4 Flash 非思考真实 Preview 链路。未经批准不得把 version 13 加入 production deployment，不得切换 1% 或 100%，不得发起新的主动真实模型调用。
 
 <!-- AIW_CAPABILITY_STATUS_END -->
 
@@ -112,14 +113,14 @@
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；Workbench、Hermes、OpenClaw 三类执行入口都已通过 `18800` 调用当前生产 provider DeepSeek，验收摘要在 `verification/unified-model-proxy/summary.json`。DeepSeek 是当前实现细节，后续 provider 必须可替换。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。DeepSeek V4 Flash 非思考兼容新 Worker version 13 已上传且无付费 Preview 安全门通过，但唯一一次注册后一次性脚本在聊天前崩溃，Token 不可恢复，因此真实聊天未执行。唯一下一步是等待产品负责人处理阻断；未经批准不得第二次注册、发起真实模型调用、把新 version 加入 production deployment 或切换灰度/全量。
+- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。DeepSeek V4 Flash 非思考兼容 version 13 已通过真实 Preview 链路：注册 1 次、聊天 1 次、HTTP 200、provider model `deepseek-v4-flash`、预算 23 micro-USD 写入平台总账和 V4 Flash 明细。唯一下一步是等待产品负责人验收；未经批准不得把 version 13 加入 production deployment、切换 1%/100% 或发起新的主动真实模型调用。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
 ## 5. 近期优先级
 
-1. 等待产品负责人处理 DeepSeek V4 Flash 非思考真实 Preview 验证阻断。
-2. 后续第二次注册、单笔真实调用、灰度或 100% 全量切换只能在产品负责人明确批准后执行。
+1. 等待产品负责人验收 version 13 DeepSeek V4 Flash 非思考真实 Preview 链路。
+2. 后续 production deployment、1% 灰度或 100% 全量切换只能在产品负责人明确批准后执行。
 3. 模型分层调度与上下文压缩。
 4. v0.4.7 首屏示例、反馈入口和安全告知。
 5. 3-5 名真实用户测试。
@@ -135,7 +136,7 @@
 
 ## 6. 当前未解决风险
 
-- 成本失控：生存体检已确认当前钱包安全状态 unsafe；第 3A 本地钱包刹车已通过，生产 D1 预算表已创建，DeepSeek V4 Flash 非思考兼容新 version 已上传并通过无付费 Preview，但唯一一次注册后脚本崩溃，真实 provider 成功验证、灰度或全量仍未完成；模型分层和上下文压缩仍未完成。
+- 成本失控：生存体检已确认当前钱包安全状态 unsafe；第 3A 本地钱包刹车已通过，生产 D1 预算表已创建，DeepSeek V4 Flash 非思考真实 Preview 链路已通过，但 version 13 尚未加入 production deployment，灰度或全量仍未完成；模型分层和上下文压缩仍未完成。
 - 上游账号合规：当前生产 DeepSeek provider 使用单一上游账户服务陌生用户的许可边界仍需确认；这是当前实现风险，不改变产品的多 provider 框架定位。
 - 账号单点故障：GitHub、Cloudflare 和关键开发账号的恢复方案尚未核查。
 - 本机执行安全：未来在用户电脑执行操作前必须建立权限、确认和回滚机制。

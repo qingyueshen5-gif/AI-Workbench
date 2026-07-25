@@ -1,7 +1,7 @@
 # NEXT_STEP.md
 
 <!-- AIW_NEXT_STEP_START -->
-等待产品负责人处理 DeepSeek V4 Flash 非思考真实 Preview 验证阻断。新 version 13 已上传但未加入 production deployment；本轮已消耗唯一一次注册且未执行真实聊天，未经批准不得第二次注册、不得发起真实模型调用、不得把新 version 加入 production deployment、不得切换 1% 或 100%。
+等待产品负责人验收 version 13 DeepSeek V4 Flash 非思考真实 Preview 链路。未经批准不得把 version 13 加入 production deployment，不得切换 1% 或 100%，不得发起新的主动真实模型调用。
 <!-- AIW_NEXT_STEP_END -->
 
 ## 当前状态
@@ -29,26 +29,29 @@
 - 新非思考兼容 Worker version `cf002344-57ee-4c3f-86a6-115ca66c8b5f` 已上传，version number 为 `13`，Preview alias 为 `budget-v4-nt-real-candidate`。
 - 新 version 未加入 active production deployment，正常生产流量为 0%。
 - 无付费 Preview 安全门已通过，预算未变化。
-- 唯一一次注册后一次性脚本在聊天前预算读取阶段崩溃；Token 未打印未持久化且不可恢复。
-- 本轮真实聊天 0 次，provider 调用 0 次，预算预留 0；平台预算仍 21/1，历史 `deepseek-chat` 仍 21/1，无 `deepseek-v4-flash` 行。
+- run1 唯一一次注册后一次性脚本在聊天前预算读取阶段崩溃；Token 未打印未持久化且不可恢复。
+- 产品负责人确认 run1 根因为 Windows Node 子进程错误调用 `.cmd` 文件，并批准 run2 复用 version 13 重新执行一次独立注册和一次真实聊天。
+- run2 已移除 Token 进程中的所有子进程调用；D1 查询全部由父级终端直接执行。
+- run2 注册 HTTP 200，聊天 HTTP 200，provider model `deepseek-v4-flash`，回答 `OK`，`reasoning_content` 为空。
+- run2 预算预留 23 micro-USD；平台总账 21/1 -> 44/2，`deepseek-v4-flash` 明细不存在 -> 23/1，历史 `deepseek-chat` 保持 21/1。
 
-## 为什么停在 DeepSeek V4 Flash 非思考真实 Preview 阻断
+## 为什么停在 version 13 真实 Preview 链路验收
 
 - 真实预算预留已验证，但 provider 成功返回因已退役上游模型名失败。
 - 本轮已先执行生产风险收敛：旧稳定 version 100%，失败候选 version 0%。
 - 本地修复保持客户端逻辑模型 `deepseek-chat` 兼容，内部路由到 `deepseek-v4-flash`。
 - 预算明细新路径按实际计费模型 `deepseek-v4-flash` 记录，既有 `deepseek-chat` 21 micro-USD 历史行保留。
 - version 12 已通过无付费 Preview，但缺少显式非思考模式，不能代表 `deepseek-chat` 历史语义完整兼容。
-- 新非思考兼容 version 已上传并通过无付费 Preview，但真实 provider 成功链路尚未验证。
-- 本轮唯一一次注册已被消耗；聊天前脚本崩溃导致 Token 不可恢复。
-- 为遵守“一次且仅一次注册和一次真实模型调用”的批准边界，本轮不能第二次注册，不能继续真实聊天。
-- 本轮未修改 Secrets 或 D1 schema，未改变生产流量，未发起真实模型调用。
+- 新非思考兼容 version 已上传并通过无付费 Preview 和真实 Preview 链路。
+- 真实 Preview 验证只证明 version 13 在专属 Preview URL 上可注册、可调用 DeepSeek V4 Flash、可写入预算账本。
+- version 13 仍未加入 active production deployment，正常生产流量仍为 0%。
+- 本轮未修改 Secrets 或 D1 schema，未改变生产流量，未发起第二次真实聊天。
 
 ## 本轮允许范围
 
 当前只允许：
 
-- 等待产品负责人处理 DeepSeek V4 Flash 非思考真实 Preview 验证阻断；
+- 等待产品负责人验收 version 13 DeepSeek V4 Flash 非思考真实 Preview 链路；
 - 查阅 `verification/deepseek-v4-flash-nonthinking-real-preview/summary.json` 和 `report.md`；
 - 查阅 `verification/deepseek-v4-flash-nonthinking-compatibility/summary.json` 和 `report.md`；
 - 查阅 `verification/deepseek-v4-flash-worker-preview-upload/summary.json` 和 `report.md`；
@@ -77,4 +80,4 @@
 
 ## 验收后
 
-验收批准后的候选下一步只能是产品负责人明确授权的新一轮单次注册/真实链路验证，或另行指定的处理方案。它不是本轮已执行内容，未经产品负责人批准不得开始。
+验收批准后的候选下一步可能是把 version 13 加入 production deployment、1% 灰度或其他处理方案。它不是本轮已执行内容，未经产品负责人批准不得开始。

@@ -1,0 +1,17 @@
+{
+  "attempts": 1,
+  "version_marker": "3b-v4-nt-real-preview-run2",
+  "http_status": 200,
+  "valid_json": true,
+  "token_obtained": true,
+  "token_type": "Bearer",
+  "expires_at": "2026-07-26T13:07:40.000Z",
+  "token_logged": false,
+  "authorization_header_logged": false,
+  "full_installation_id_logged": false,
+  "installation_sha256_prefix": "0621DAAD666E711D",
+  "duration_ms": 2419,
+  "child_process_calls": 0,
+  "cli_calls": 0,
+  "retries": 0
+}

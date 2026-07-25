@@ -8,6 +8,15 @@
 - 唯一一次注册后一次性脚本在聊天前预算读取阶段崩溃，Token 未打印未持久化且不可恢复；按边界停止，没有第二次注册。
 - 最终真实聊天 0 次、provider 调用 0 次、预算预留 0；平台预算仍 21/1，历史 `deepseek-chat` 仍 21/1，无 `deepseek-v4-flash` 行。
 
+## Unreleased - DeepSeek V4 Flash 非思考真实 Preview 链路
+
+- 产品负责人确认上次阻断根因为 Windows Node 子进程错误调用 `.cmd` 文件，并批准 run2 复用现有 version 13。
+- run2 未上传新 Worker version，未修改 Worker 代码、Wrangler 配置、Secrets、D1 schema 或 production deployment。
+- Token 进程已移除所有子进程调用，只使用 `undici ProxyAgent` 注册一次并聊天一次；D1 查询由父级终端执行。
+- run2 注册 HTTP 200，聊天 HTTP 200，provider model `deepseek-v4-flash`，回答 `OK`，`reasoning_content` 为空，usage 为 prompt 7 / completion 1 / total 8。
+- 预算预留按最终 payload 计算为 23 micro-USD；平台总账 21/1 -> 44/2，V4 Flash 明细不存在 -> 23/1，历史 `deepseek-chat` 保持 21/1。
+- version 13 仍未加入 active deployment，正常生产流量仍为 0%；状态为 `v4_flash_nonthinking_real_path_passed`，等待产品负责人验收。
+
 ## Unreleased - 判断逻辑与学习记录
 
 - 在 `PRINCIPLES.md` 写入“简单粗暴模式与细致模式的切换原则”：默认直接办事，遇到技术保护墙切换细致模式，遇到信息分散墙仍保持快速采集和汇总。
