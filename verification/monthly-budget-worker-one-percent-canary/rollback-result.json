@@ -1,0 +1,8 @@
+{
+  "task": "monthly-budget-worker-one-percent-canary-rollback-result",
+  "executed": false,
+  "reason": "no rollback condition triggered",
+  "rollback_status": "not_run",
+  "stable_version_final_traffic_percentage": 99,
+  "candidate_version_final_traffic_percentage": 1
+}

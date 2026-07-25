@@ -1,0 +1,23 @@
+{
+  "task": "monthly-budget-worker-one-percent-canary-dry-run",
+  "executed_at": "2026-07-25T14:12:30+08:00",
+  "command": "npx.cmd wrangler versions deploy <stable-version>@99% <candidate-version>@1% --dry-run -y",
+  "exit_code": 0,
+  "dry_run": true,
+  "selected_versions": [
+    {
+      "version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+      "percentage": 99
+    },
+    {
+      "version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+      "percentage": 1
+    }
+  ],
+  "third_version_included": false,
+  "new_version_uploaded": false,
+  "configuration_modified": false,
+  "secrets_modified": false,
+  "routes_domains_or_triggers_modified": false,
+  "dry_run_matched_expected_plan": true
+}

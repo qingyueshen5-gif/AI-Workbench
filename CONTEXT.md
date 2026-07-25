@@ -62,9 +62,9 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 
 当前唯一下一步以 `NEXT_STEP.md` 为唯一权威：
 
-等待产品负责人验收第 3B-2b2b 段零流量 deployment。未经批准不得把新预算 Worker 切换到正常生产流量。
+等待产品负责人验收第 3B-2b2c 段 1% 生产灰度。未经批准不得将新预算 Worker 切换到 100% 流量，不得主动执行真实模型调用。
 
-不得把新预算 Worker 切换到正常生产流量、修改 Secrets、进入后续段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发。
+不得把新预算 Worker 切换到 100% 流量、主动执行真实模型调用、修改 Secrets、进入后续段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发。
 
 ## 产品方向文件索引
 
@@ -118,9 +118,9 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 - 第 3B-2b1 段部署候选已由产品负责人验收通过，验收提交 `982d6a324727465cd89911325d13e3f395b58142`。
 - 已上传新的 Cloudflare Worker Preview version `483e4fae-3af8-40fa-ab83-4551f08b519e`，Preview alias 为 `budget-candidate-3b2b2a`。
 - Preview URL 已验证 `/health`、`/v1/models` 和未认证聊天拒绝路径；未使用真实安装 Token，未调用真实 provider。
-- 当前 active deployment 已更新为 `063b83c3-974f-43fb-84f2-9da0d574f745`，100% 正常生产流量仍指向稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba`，新预算 version `483e4fae-3af8-40fa-ab83-4551f08b519e` 正常生产流量为 0%。
+- 当前 active deployment 已更新为 `55b20f6c-1a50-446b-95cc-18ebf0e6cbe1`，99% 正常生产流量仍指向稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba`，新预算 version `483e4fae-3af8-40fa-ab83-4551f08b519e` 正常生产流量为 1%。
 - 远端 `monthly_platform_budget` 和 `monthly_model_budget` 仍为空。
-- 新预算 Worker 已加入 deployment，但生产钱包刹车尚未对正常生产流量生效；流量切换必须等待产品负责人批准后进入后续段。
+- 新预算 Worker 已开始承载 1% 正常生产流量，但尚未全量；本轮未主动真实模型调用。100% 切换必须等待产品负责人批准后进入后续段。
 
 ## 第三方 Agent/工具升级管理规则
 

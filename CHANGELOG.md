@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Unreleased - 3B-2b2c 1% 生产灰度
+
+- 产品负责人拍板生产钱包刹车采用灰度切流量，不直接全量上线。
+- 使用 `wrangler versions deploy` 将新预算 Worker version `483e4fae-3af8-40fa-ab83-4551f08b519e` 从 0% 调整为 1% 正常生产流量，旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 保留 99%。
+- 完成 20 分钟主动观察和 5 分钟指标缓冲；生产 `/health` 与 `/v1/models` 检查均 HTTP 200，version override 无付费 GET 检查通过。
+- 预算表仍为空，Secrets 未修改，D1 schema 未修改，Managed Proxy 功能代码未修改，未执行回滚。
+- 未主动发起真实模型调用；由于没有确认到自然候选版本 invocation，本轮不得写成全面上线或真实模型预算链路完整验证。
+
 ## Unreleased - 3B-2b2b 零流量 deployment
 
 - 产品负责人验收通过第 3B-2b2a 段，并在严格基线检查 blocked 后批准以文档提交 `37ab9c28a451dcdc858ce783293ef09448b7bc34` 作为新执行基线。
@@ -100,8 +108,8 @@
 
 ## Unreleased - 上线硬骨头3A-R2.1：Cloudflare 生产部署与真实验证
 
-- 部署 `managed-proxy/` 到 Cloudflare Workers：`https://ai-workbench-managed-proxy.qingyueshen5.workers.dev`。
-- 创建并绑定 D1 数据库 `aiw-managed-proxy`，真实 `database_id` 为 `202583b9-817f-4115-9ab1-41e136133de8`，`installations`、`daily_usage`、`revoked_tokens` 三张表已执行 schema 并读写通过。
+- 部署 `managed-proxy/` 到 Cloudflare Workers：`ai-workbench-managed-proxy.<redacted>.workers.dev`。
+- 创建并绑定 D1 数据库 `aiw-managed-proxy`，脱敏 `database_id` 为 `202583b9...3de8`，`installations`、`daily_usage`、`revoked_tokens` 三张表已执行 schema 并读写通过。
 - 通过 Cloudflare Secret 配置 `DEEPSEEK_API_KEY`、`TOKEN_SIGNING_SECRET`、`INSTALLATION_HASH_SALT`；Secret 值未写入仓库、本机 `.env`、日志或命令行。
 - `model-proxy.mjs` 内置公开生产 Worker URL 作为安装版默认 Managed Proxy URL；本机 `DEEPSEEK_API_KEY` 仍优先，安装版禁止回退本机 shared key 作为生产方案。
 - 真实生产验证 passed：无本机 Key 的 18800 和安装版均通过生产 Worker 调用 DeepSeek，返回 `生产共享模型调用成功`。

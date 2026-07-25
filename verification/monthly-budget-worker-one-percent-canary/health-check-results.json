@@ -1,0 +1,22 @@
+{
+  "task": "monthly-budget-worker-one-percent-canary-health-checks",
+  "production_host_redacted": "ai-workbench-managed-proxy.<redacted>.workers.dev",
+  "normal_production_checks": {
+    "health_check_count": 11,
+    "health_check_failures": 0,
+    "models_check_count": 11,
+    "models_check_failures": 0,
+    "all_health_statuses": [
+      200
+    ],
+    "all_models_statuses": [
+      200
+    ]
+  },
+  "version_override_checks": {
+    "target_version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+    "health_http_status": 200,
+    "models_http_status": 200,
+    "paid_or_authenticated_chat_called": false
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task": "monthly-budget-worker-one-percent-canary-rollback-readiness",
+  "checked_before_canary": true,
+  "stable_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "stable_version_health_before_canary": {
+    "health_http_status": 200,
+    "models_http_status": 200
+  },
+  "primary_rollback_command": "npx.cmd wrangler rollback 16333442-925a-4b11-a3d1-d6249d2492ba --name ai-workbench-managed-proxy --message <3B-2b2c rollback reason> -y",
+  "fallback_rollback_command": "npx.cmd wrangler versions deploy 16333442-925a-4b11-a3d1-d6249d2492ba@100% --name ai-workbench-managed-proxy --message <3B-2b2c fallback rollback> -y",
+  "rollback_verification_steps": [
+    "Confirm stable version is 100%.",
+    "Confirm candidate version is 0% or absent from active deployment.",
+    "Confirm /health HTTP 200.",
+    "Confirm /v1/models HTTP 200.",
+    "Confirm Secrets unchanged.",
+    "Confirm D1 schema unchanged."
+  ],
+  "rollback_ready": true,
+  "rollback_triggered": false
+}

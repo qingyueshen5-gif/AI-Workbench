@@ -1,0 +1,22 @@
+{
+  "task": "monthly-budget-worker-one-percent-canary-deployment-result",
+  "started_at": "2026-07-25T14:13:02+08:00",
+  "ended_at": "2026-07-25T14:13:23+08:00",
+  "command": "npx.cmd wrangler versions deploy <stable-version>@99% <candidate-version>@1% --message <3B-2b2c 1 percent production canary> -y",
+  "exit_code": 0,
+  "deployment_created": true,
+  "deployment_after": {
+    "id": "55b20f6c-1a50-446b-95cc-18ebf0e6cbe1",
+    "created_on": "2026-07-25T06:13:02.166818Z",
+    "stable_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+    "stable_traffic_percentage": 99,
+    "candidate_version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+    "candidate_traffic_percentage": 1
+  },
+  "ordinary_wrangler_deploy_used": false,
+  "new_version_uploaded": false,
+  "third_version_included": false,
+  "secrets_modified": false,
+  "d1_schema_modified": false,
+  "routes_domains_or_triggers_modified": false
+}

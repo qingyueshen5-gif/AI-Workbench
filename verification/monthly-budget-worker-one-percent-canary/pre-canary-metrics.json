@@ -1,0 +1,20 @@
+{
+  "task": "monthly-budget-worker-one-percent-canary-pre-metrics",
+  "baseline_time_range": {
+    "started_at": "2026-07-25T14:05:40+08:00",
+    "ended_at": "2026-07-25T14:13:02+08:00"
+  },
+  "historical_metrics_available": false,
+  "historical_metrics_status": "historical_metrics_unavailable",
+  "reason": "No accessible historical Workers metrics export was available through the confirmed local CLI path during this task. Metrics were not fabricated.",
+  "realtime_tail_started": true,
+  "tail_sampling_rate_requested": 1,
+  "tail_sampling_rate_used": 0.999,
+  "sampling_rate_note": "Wrangler 4.113.0 rejected --sampling-rate 1 and requires a value between 0 and 1; 0.999 was used as the closest accepted value.",
+  "baseline_requests_observed_by_tail": 0,
+  "baseline_errors_observed_by_tail": 0,
+  "script_threw_exception_observed": 0,
+  "exceeded_resources_observed": 0,
+  "internal_error_observed": 0,
+  "confidence": "limited"
+}

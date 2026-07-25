@@ -1,0 +1,37 @@
+{
+  "task": "monthly-budget-worker-one-percent-canary-pre-state",
+  "checked_at": "2026-07-25T14:05:40+08:00",
+  "repository_head_before": "06933e9958621e7a5a1c05a390a4f168290daa33",
+  "git_fetch_origin_prune": {
+    "exit_code": 1,
+    "status": "failed_sec_e_no_credentials",
+    "note": "HEAD and origin/main were already equal; credentials were not modified."
+  },
+  "managed_proxy_diff_since_accepted_zero_traffic_commit": "no diff",
+  "worker_name": "ai-workbench-managed-proxy",
+  "wrangler_version": "4.113.0",
+  "cloudflare_identity_confirmed": true,
+  "stable_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "candidate_version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+  "deployment_before": {
+    "id": "063b83c3-974f-43fb-84f2-9da0d574f745",
+    "stable_traffic_percentage": 100,
+    "candidate_traffic_percentage": 0
+  },
+  "production_health_before": {
+    "health_http_status": 200,
+    "models_http_status": 200
+  },
+  "budget_rows_before": {
+    "monthly_platform_budget": {
+      "row_count": 0,
+      "reserved_micro_usd": 0,
+      "call_count": 0
+    },
+    "monthly_model_budget": {
+      "row_count": 0,
+      "reserved_micro_usd": 0,
+      "call_count": 0
+    }
+  }
+}

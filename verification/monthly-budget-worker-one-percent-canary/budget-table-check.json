@@ -1,0 +1,32 @@
+{
+  "task": "monthly-budget-worker-one-percent-canary-budget-table-check",
+  "database_name": "aiw-managed-proxy",
+  "database_id_masked": "202583b9...3de8",
+  "before": {
+    "monthly_platform_budget": {
+      "row_count": 0,
+      "reserved_micro_usd": 0,
+      "call_count": 0
+    },
+    "monthly_model_budget": {
+      "row_count": 0,
+      "reserved_micro_usd": 0,
+      "call_count": 0
+    }
+  },
+  "after": {
+    "monthly_platform_budget": {
+      "row_count": 0,
+      "reserved_micro_usd": 0,
+      "call_count": 0
+    },
+    "monthly_model_budget": {
+      "row_count": 0,
+      "reserved_micro_usd": 0,
+      "call_count": 0
+    }
+  },
+  "organic_provider_activity_observed": false,
+  "codex_test_budget_rows_inserted": false,
+  "production_d1_modified_by_codex": false
+}

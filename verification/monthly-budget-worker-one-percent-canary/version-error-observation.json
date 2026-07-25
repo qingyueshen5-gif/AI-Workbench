@@ -1,0 +1,19 @@
+{
+  "task": "monthly-budget-worker-one-percent-canary-version-error-observation",
+  "tail_started": true,
+  "tail_sampling_rate_used": 0.999,
+  "overall_tail_bytes": 0,
+  "candidate_error_tail_bytes": 0,
+  "overall_invocations_observed": 0,
+  "overall_errors_observed": 0,
+  "candidate_invocations_observed": 0,
+  "candidate_errors_observed": 0,
+  "script_threw_exception_observed": 0,
+  "exceeded_resources_observed": 0,
+  "internal_error_observed": 0,
+  "http_5xx_observed": 0,
+  "d1_or_binding_error_observed": 0,
+  "new_version_runtime_error_observed": false,
+  "natural_canary_traffic_observed": false,
+  "confidence": "limited_by_low_traffic_and_tail_no_events"
+}

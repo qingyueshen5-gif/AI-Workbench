@@ -36,7 +36,7 @@ const scannedFiles = [
 ];
 
 const ignoredHistoricalPaths = ['CHANGELOG.md', 'TASKLOG.md', 'tasks/**', 'verification/**', 'research/**'];
-const expectedNextStep = '等待产品负责人验收第 3B-2b2b 段零流量 deployment。未经批准不得把新预算 Worker 切换到正常生产流量。';
+const expectedNextStep = '等待产品负责人验收第 3B-2b2c 段 1% 生产灰度。未经批准不得将新预算 Worker 切换到 100% 流量，不得主动执行真实模型调用。';
 
 function readText(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');

@@ -1,0 +1,16 @@
+{
+  "task": "monthly-budget-worker-one-percent-canary-post-metrics",
+  "observation_window_completed": true,
+  "observation_window_minutes": 20,
+  "metrics_settle_buffer_completed": true,
+  "metrics_settle_buffer_minutes": 5,
+  "historical_metrics_available": false,
+  "overall_invocations_observed": 0,
+  "overall_errors_observed": 0,
+  "candidate_invocations_observed": 0,
+  "candidate_errors_observed": 0,
+  "natural_canary_traffic_observed": false,
+  "error_rate_anomaly_detected": false,
+  "rollback_condition_triggered": false,
+  "status": "observation_limited_by_low_traffic"
+}

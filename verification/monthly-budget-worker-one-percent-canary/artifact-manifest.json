@@ -1,0 +1,96 @@
+{
+  "task": "monthly-budget-worker-one-percent-canary",
+  "generated_at": "2026-07-25T14:45:00+08:00",
+  "artifact_count": 17,
+  "artifacts": [
+    {
+      "path": "verification/monthly-budget-worker-one-percent-canary/budget-table-check.json",
+      "bytes": 783,
+      "sha256": "C78FF9DD2B22A4BAE5D7CD40B4FCFC705C618FCD254FE3173C79BA19CA5D7B0F"
+    },
+    {
+      "path": "verification/monthly-budget-worker-one-percent-canary/commands.log",
+      "bytes": 5115,
+      "sha256": "8602C394DE077545D18E7A9B609BFBE7B4CF7BA30D90786E27659814FB869AA4"
+    },
+    {
+      "path": "verification/monthly-budget-worker-one-percent-canary/deployment-dry-run.json",
+      "bytes": 695,
+      "sha256": "E7A3982AF4F04E9ED12B08158A2D50C8B18758A8A780C0C87D092610D010BF2E"
+    },
+    {
+      "path": "verification/monthly-budget-worker-one-percent-canary/deployment-result.json",
+      "bytes": 909,
+      "sha256": "7D6A1C9AA7147351CCEE512D1BADDECB4EF821E76CEE8821E96C56B178E4370A"
+    },
+    {
+      "path": "verification/monthly-budget-worker-one-percent-canary/health-check-results.json",
+      "bytes": 616,
+      "sha256": "297088DB6F5C427415E214086D50E83FEF9C34646DD87DCB2C44EBEAB5E4CB09"
+    },
+    {
+      "path": "verification/monthly-budget-worker-one-percent-canary/observation-snapshots.json",
+      "bytes": 4814,
+      "sha256": "ED4A46E681243625328B17AFA4EE506A8546315406C7890BAC1DED16CA4E4B10"
+    },
+    {
+      "path": "verification/monthly-budget-worker-one-percent-canary/post-canary-metrics.json",
+      "bytes": 585,
+      "sha256": "9CAD1BE79DD9A873DB912EF42C8952FDD4E01CC4C7761B6E48A75DC479270D42"
+    },
+    {
+      "path": "verification/monthly-budget-worker-one-percent-canary/post-canary-state.json",
+      "bytes": 659,
+      "sha256": "4F87E12F7C8647573549FC0FCD7C47677DC94669B99094BF80A8C1D501B38F93"
+    },
+    {
+      "path": "verification/monthly-budget-worker-one-percent-canary/pre-canary-metrics.json",
+      "bytes": 939,
+      "sha256": "E3E95752A2C3B6EF9AE2B88FA17E0365B287286E703E31C59966F1C261647711"
+    },
+    {
+      "path": "verification/monthly-budget-worker-one-percent-canary/pre-canary-state.json",
+      "bytes": 1201,
+      "sha256": "56AE7F790F4FEBC76D6247F22B40DB483891D6880D8DC6D6C3C8465300062709"
+    },
+    {
+      "path": "verification/monthly-budget-worker-one-percent-canary/report.md",
+      "bytes": 2805,
+      "sha256": "8F03FAA80D4A71E62FEFBCBFB84D0902A2423148C0E28E52613922700CAB24BB"
+    },
+    {
+      "path": "verification/monthly-budget-worker-one-percent-canary/rollback-readiness.json",
+      "bytes": 981,
+      "sha256": "2295B3E43849367CEFD96001DF8F2F987F7309A1049485FFD220817C35C7B2D8"
+    },
+    {
+      "path": "verification/monthly-budget-worker-one-percent-canary/rollback-result.json",
+      "bytes": 273,
+      "sha256": "C4C8F612B88F04AFF78D5CE2ACBC8C5A75B8868DC3F035A6CD4EF0E7F7DE9BD2"
+    },
+    {
+      "path": "verification/monthly-budget-worker-one-percent-canary/secret-and-schema-check.json",
+      "bytes": 660,
+      "sha256": "4705426DB4D4BC4EDA15F0E1418F840E8FC080B01517519EF9CE9592895E93E0"
+    },
+    {
+      "path": "verification/monthly-budget-worker-one-percent-canary/summary.json",
+      "bytes": 3764,
+      "sha256": "6A45B26D21AF70C571598E2F95B8BE794A9207FDBEA3A49843A770ECCDE34EF0"
+    },
+    {
+      "path": "verification/monthly-budget-worker-one-percent-canary/version-error-observation.json",
+      "bytes": 670,
+      "sha256": "D49349E0DD87F78ED9D5F462717622A8A72968E123F08C818D1DE8569F57801E"
+    },
+    {
+      "path": "verification/monthly-budget-worker-one-percent-canary/artifact-manifest.json",
+      "bytes": null,
+      "sha256": "self-referential-hash-not-recorded"
+    }
+  ],
+  "excluded_from_git": [
+    "Raw Wrangler tail temp files under the user temp directory were not committed."
+  ],
+  "sensitive_data_policy": "No Secret values, API tokens, cookies, Authorization headers, installation tokens, full production hostname, raw production log lines, user request content, or database contents are recorded."
+}
