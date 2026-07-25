@@ -1,0 +1,55 @@
+{
+  "task": "deepseek-v4-flash-route-migration-root-cause",
+  "checked_at": "2026-07-25T18:00:00+08:00",
+  "root_cause": "deprecated_upstream_model_identifier",
+  "root_cause_confidence": "high",
+  "root_cause_severity": "high_production_blocker",
+  "failed_call_evidence": {
+    "source": "verification/monthly-budget-worker-controlled-real-canary/real-call-result.json",
+    "target_type": "versioned_preview_url",
+    "model": "deepseek-chat",
+    "http_status": 400,
+    "provider_error_code": "invalid_request_error",
+    "provider_error_message_present": true,
+    "retry_attempted": false
+  },
+  "budget_evidence": {
+    "source": "verification/monthly-budget-worker-controlled-real-canary/budget-before-after.json",
+    "platform_reserved_delta_micro_usd": 21,
+    "model_reserved_delta_micro_usd": 21,
+    "platform_call_count_delta": 1,
+    "model_call_count_delta": 1,
+    "two_ledgers_consistent": true,
+    "existing_reservation_modified": false
+  },
+  "code_path_evidence": {
+    "source": "managed-proxy/src/index.ts",
+    "local_worker_generates_invalid_request_error": false,
+    "upstream_status_and_body_forwarded": true,
+    "budget_reserved_before_provider_fetch": true
+  },
+  "config_before_fix": {
+    "source": "managed-proxy/wrangler.jsonc",
+    "allowed_models": "deepseek-chat",
+    "configured_model_key": "deepseek-chat",
+    "upstream_payload_model_before_fix": "deepseek-chat"
+  },
+  "official_sources": [
+    {
+      "name": "DeepSeek API Docs - Change Log",
+      "url": "https://api-docs.deepseek.com/updates/",
+      "recorded_fact": "DeepSeek V4-Pro and V4-Flash are supported with unchanged base_url; model should be deepseek-v4-pro or deepseek-v4-flash; legacy deepseek-chat and deepseek-reasoner stop on 2026-07-24."
+    },
+    {
+      "name": "DeepSeek API Docs - V4 Preview Release",
+      "url": "https://api-docs.deepseek.com/news/news260424/",
+      "recorded_fact": "deepseek-chat and deepseek-reasoner are fully retired and inaccessible after 2026-07-24 15:59 UTC."
+    },
+    {
+      "name": "DeepSeek API Docs - Models & Pricing",
+      "url": "https://api-docs.deepseek.com/quick_start/pricing/",
+      "recorded_fact": "deepseek-v4-flash cache-miss input price is 0.14 USD per 1M tokens and output price is 0.28 USD per 1M tokens; legacy model names are deprecated on 2026-07-24 15:59 UTC."
+    }
+  ],
+  "failed_request_after_retirement": true
+}

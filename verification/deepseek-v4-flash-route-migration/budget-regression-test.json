@@ -1,0 +1,29 @@
+{
+  "task": "deepseek-v4-flash-route-migration-budget-regression-test",
+  "test_file": "managed-proxy/tests/monthly-budget.test.mjs",
+  "client_logical_model": "deepseek-chat",
+  "upstream_model": "deepseek-v4-flash",
+  "pricing": {
+    "input_cache_miss_micro_usd_per_million_tokens": 140000,
+    "output_micro_usd_per_million_tokens": 280000
+  },
+  "fixed_payload": {
+    "raw_request_utf8_bytes": 125,
+    "estimated_input_tokens": 11,
+    "reserved_input_tokens": 125,
+    "reserved_output_tokens": 8,
+    "expected_reservation_micro_usd": 21
+  },
+  "assertions": {
+    "platform_reserved_micro_usd": 21,
+    "platform_call_count": 1,
+    "model_budget_identifier": "deepseek-v4-flash",
+    "model_reserved_micro_usd": 21,
+    "model_call_count": 1,
+    "no_duplicate_reservation": true,
+    "upstream_400_keeps_reservation": true,
+    "upstream_timeout_keeps_reservation": true
+  },
+  "provider_called": false,
+  "passed": true
+}

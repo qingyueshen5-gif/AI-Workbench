@@ -1,0 +1,42 @@
+{
+  "task": "deepseek-v4-flash-route-migration",
+  "created_at": "2026-07-25T18:00:00+08:00",
+  "files": [
+    {
+      "path": "verification/deepseek-v4-flash-route-migration/summary.json",
+      "purpose": "machine-readable task summary"
+    },
+    {
+      "path": "verification/deepseek-v4-flash-route-migration/report.md",
+      "purpose": "human-readable report"
+    },
+    {
+      "path": "verification/deepseek-v4-flash-route-migration/commands.log",
+      "purpose": "command evidence log"
+    },
+    {
+      "path": "verification/deepseek-v4-flash-route-migration/root-cause-evidence.json",
+      "purpose": "root cause evidence"
+    },
+    {
+      "path": "verification/deepseek-v4-flash-route-migration/traffic-containment.json",
+      "purpose": "production traffic containment evidence"
+    },
+    {
+      "path": "verification/deepseek-v4-flash-route-migration/route-config-before-after.json",
+      "purpose": "route and pricing config before/after"
+    },
+    {
+      "path": "verification/deepseek-v4-flash-route-migration/upstream-payload-test.json",
+      "purpose": "upstream payload assertion summary"
+    },
+    {
+      "path": "verification/deepseek-v4-flash-route-migration/budget-regression-test.json",
+      "purpose": "budget regression assertion summary"
+    },
+    {
+      "path": "verification/deepseek-v4-flash-route-migration/test-results.json",
+      "purpose": "local validation result summary"
+    }
+  ]
+}

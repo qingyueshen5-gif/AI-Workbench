@@ -25,7 +25,9 @@ AI Workbench v0.4.6 Alpha 已公开发布。③A 总验收和 ③B GitHub Releas
 
 第 3B-2a 段远端 D1 migration 已完成：生产 D1 `aiw-managed-proxy` 现已存在 `monthly_platform_budget` 和 `monthly_model_budget` 两张预算表，原有 `daily_usage`、`installations`、`revoked_tokens` 保持存在；两张预算表当前行数均为 0。证据见 `verification/monthly-budget-production-migration/summary.json`。本轮未部署 Worker，未修改 Secrets，未调用真实 provider；预算表已创建但生产钱包刹车尚未生效。
 
-第 3B-2b1 段部署候选已锁定：生产部署前必须保存当前稳定 Worker version 和回滚目标。本轮已确认当前生产流量版本 `16333442-925a-4b11-a3d1-d6249d2492ba`、当前 deployment `61aa34dd-c20a-42b4-a3c6-1ca474a81e5e`，并以当前稳定版本作为回滚目标；`/health` 和 `/v1/models` 均 HTTP 200。`managed-proxy/wrangler.jsonc` 已显式配置 50 USD 平台政策上限、40 USD 模型硬上限和 `deepseek-chat` 公开价格参数。证据见 `verification/monthly-budget-worker-deploy-readiness/summary.json`。本轮未部署 Worker，未修改 Secrets，未调用真实 provider；部署候选已锁定但生产钱包刹车尚未生效。
+第 3B-2b1 段部署候选已锁定：生产部署前必须保存当前稳定 Worker version 和回滚目标。本轮已确认当前生产流量版本 `16333442-925a-4b11-a3d1-d6249d2492ba`、当前 deployment `61aa34dd-c20a-42b4-a3c6-1ca474a81e5e`，并以当前稳定版本作为回滚目标；`/health` 和 `/v1/models` 均 HTTP 200。`managed-proxy/wrangler.jsonc` 当时显式配置 50 USD 平台政策上限、40 USD 模型硬上限和 `deepseek-chat` 公开价格参数。证据见 `verification/monthly-budget-worker-deploy-readiness/summary.json`。本轮未部署 Worker，未修改 Secrets，未调用真实 provider；部署候选已锁定但生产钱包刹车尚未生效。
+
+第 3B-2b2d 后续根因修复本地候选已完成：产品负责人确认真实聊天 HTTP 400 根因为旧 DeepSeek 上游模型名 `deepseek-chat` 已在 2026-07-24 15:59 UTC 后退役。本轮先将已知失败候选 version `483e4fae-3af8-40fa-ab83-4551f08b519e` 从 1% 正常生产流量撤回到 0%，旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 恢复 100%，当前 active deployment 为 `d9acb146-b720-4e09-b2b8-0257b93fc407`。本地代码已实现客户端逻辑模型 `deepseek-chat` 到上游正式模型 `deepseek-v4-flash` 的显式路由，预算明细新路径按实际计费模型 `deepseek-v4-flash` 记录；16 项 Managed Proxy 测试和 TypeScript 检查通过。既有 21 micro-USD 历史预留未修改。未上传新 Worker version，未部署生产修复，未修改 Secrets 或 D1 schema，未发起新的真实 provider 调用。证据见 `verification/deepseek-v4-flash-route-migration/summary.json`。
 
 ## 当前架构
 
@@ -52,7 +54,7 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 详细未完成清单以 `CURRENT_PROGRESS_AUDIT.md` 为唯一权威。本文件只展示摘要：
 
 - 电脑环境治理审计已完成；第一批安全清理仍为 partial，用户 npm 缓存仍因 `EPERM` 未清理，Windows 临时文件仍需产品负责人手动确认。
-- 第 3B-2b1 段部署候选已锁定，当前等待产品负责人验收；未经批准不得部署 Worker 或进入第 3B-2b2 段。
+- DeepSeek V4 Flash 路由迁移本地候选已完成，当前等待产品负责人验收；未经批准不得上传或部署新 Worker version，不得发起新的真实模型调用。
 - 首屏 3-5 条示例指令、反馈入口、安全和隐私告知尚未完成。
 - 3-5 名真实用户测试尚未开始。
 - 长期记忆、任务历史和状态卡、质量检查层、自动任务拆解和分配尚未完成。
@@ -62,9 +64,9 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 
 当前唯一下一步以 `NEXT_STEP.md` 为唯一权威：
 
-等待产品负责人验收第 3B-2b2d 段候选 Versioned Preview 单笔真实预算链路失败后预留结果。未经批准不得将新预算 Worker 切换到 100% 流量，不得发起第二笔主动真实模型调用。
+等待产品负责人验收 DeepSeek V4 Flash 路由迁移本地候选。未经批准不得上传或部署新 Worker version，不得发起新的真实模型调用。
 
-不得把新预算 Worker 切换到 100% 流量、发起第二笔主动真实模型调用、修改 Secrets、进入后续段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发。
+不得上传或部署新 Worker version、发起新的真实模型调用、修改 Secrets、进入后续段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发。
 
 ## 产品方向文件索引
 
@@ -118,12 +120,13 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 - 第 3B-2b1 段部署候选已由产品负责人验收通过，验收提交 `982d6a324727465cd89911325d13e3f395b58142`。
 - 已上传新的 Cloudflare Worker Preview version `483e4fae-3af8-40fa-ab83-4551f08b519e`，Preview alias 为 `budget-candidate-3b2b2a`。
 - Preview URL 已验证 `/health`、`/v1/models` 和未认证聊天拒绝路径；未使用真实安装 Token，未调用真实 provider。
-- 当前 active deployment 已更新为 `55b20f6c-1a50-446b-95cc-18ebf0e6cbe1`，99% 正常生产流量仍指向稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba`，新预算 version `483e4fae-3af8-40fa-ab83-4551f08b519e` 正常生产流量为 1%。
-- 远端 `monthly_platform_budget` 和 `monthly_model_budget` 仍为空。
-- 新预算 Worker 已开始承载 1% 正常生产流量，但尚未全量；本轮未主动真实模型调用。100% 切换必须等待产品负责人批准后进入后续段。
+- 当前 active deployment 已更新为 `d9acb146-b720-4e09-b2b8-0257b93fc407`，100% 正常生产流量指向稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba`，已知失败预算候选 version `483e4fae-3af8-40fa-ab83-4551f08b519e` 正常生产流量为 0%。
+- 远端 `monthly_platform_budget` 和 `monthly_model_budget` 保留第 3B-2b2d 失败真实调用产生的 21 micro-USD 和 call_count 1。
+- 已知失败预算候选不再承载正常生产流量；本地 V4 Flash 路由修复尚未上传到 Cloudflare。100% 切换必须等待产品负责人批准后进入后续段。
 - 第 3B-2b2d 段尝试单笔受控真实预算链路验证：预留金额按生产公式计算为 21 micro-USD，但一次性临时脚本的唯一注册尝试未返回 HTTP 状态、未取得 Token，因此没有执行真实聊天请求，没有取得真实调用前预算预留证据。新预算 Worker 仍只承载 1%，尚未切到 100%；40 USD 耗尽路径仍由本地并发和边界测试证明，不会在生产主动消耗到上限。
 - 第 3B-2b2d 阻塞恢复诊断：本地 Node 内置 fetch 未显式使用代理时对生产 Worker 在响应头前连接超时，显式 undici `ProxyAgent` 后无付费 GET/OPTIONS/无状态 POST 可取得 HTTP 响应。但未取得独立证据证明 version override 命中新预算 version，因此本轮未再次注册、未发起聊天、未调用 provider、未写预算。
 - 第 3B-2b2d 候选 Preview 单笔真实链路：改用候选 version Preview URL 后，注册成功，唯一真实聊天返回 HTTP 400 `invalid_request_error`；预算预留已在 provider 前写入，平台总账和模型明细各 +21 micro-USD、call_count +1。生产域名仍为旧版本 99%、新预算版本 1%，尚未切到 100%，本轮不得写成 passed。
+- 第 3B-2b2d 根因修复本地候选：已确认旧上游模型名退役，撤回失败候选 1% 流量；本地实现 `deepseek-chat` 逻辑模型到 `deepseek-v4-flash` 上游模型路由，预算明细按实际计费模型记录。该修复尚未上传或部署，不得写成 production fixed 或 real provider path passed。
 
 ## 第三方 Agent/工具升级管理规则
 

@@ -197,21 +197,25 @@ function baseEnv(overrides = {}) {
     MODEL_PRICE_CONFIG_JSON: JSON.stringify({
       'deepseek-chat': {
         provider: 'deepseek',
+        upstreamModel: 'deepseek-v4-flash',
         inputCacheMissMicroUsdPerMillionTokens: 1000000,
         outputMicroUsdPerMillionTokens: 1000000
       },
       'model-a': {
         provider: 'mock',
+        upstreamModel: 'model-a',
         inputCacheMissMicroUsdPerMillionTokens: 1000000,
         outputMicroUsdPerMillionTokens: 1000000
       },
       'model-b': {
         provider: 'mock',
+        upstreamModel: 'model-b',
         inputCacheMissMicroUsdPerMillionTokens: 1000000,
         outputMicroUsdPerMillionTokens: 1000000
       },
       'model-c': {
         provider: 'mock',
+        upstreamModel: 'model-c',
         inputCacheMissMicroUsdPerMillionTokens: 1000000,
         outputMicroUsdPerMillionTokens: 1000000
       }
@@ -257,22 +261,77 @@ test('budget below cap allows mock upstream', async () => {
   const env = baseEnv();
   const { token } = await register(worker, env);
   let upstreamCalls = 0;
+  let upstreamPayload = null;
   const originalFetch = globalThis.fetch;
-  globalThis.fetch = async () => {
+  globalThis.fetch = async (url, options = {}) => {
     upstreamCalls += 1;
+    upstreamPayload = JSON.parse(String(options.body || '{}'));
     return new Response(JSON.stringify({ usage: { completion_tokens: 3 }, choices: [] }), { status: 200 });
   };
   try {
-    const response = await worker.default.fetch(chatRequest(token, payload()), env);
+    const requestPayload = payload();
+    const response = await worker.default.fetch(chatRequest(token, requestPayload), env);
     assert.equal(response.status, 200);
     assert.equal(upstreamCalls, 1);
+    assert.equal(requestPayload.model, 'deepseek-chat');
+    assert.equal(upstreamPayload.model, 'deepseek-v4-flash');
     const row = [...env.DB.monthlyBudget.values()][0];
     assert.equal(row.call_count, 1);
     assert.ok(row.reserved_micro_usd > 0);
+    assert.equal(row.model, 'deepseek-v4-flash');
     assert.equal([...env.DB.platformBudget.values()][0].reserved_micro_usd, row.reserved_micro_usd);
   } finally {
     globalThis.fetch = originalFetch;
   }
+});
+
+test('deepseek-chat logical model reserves v4 flash pricing and one upstream request', async () => {
+  const worker = await loadWorker();
+  const env = baseEnv({
+    MODEL_PRICE_CONFIG_JSON: JSON.stringify({
+      'deepseek-chat': {
+        provider: 'deepseek',
+        upstreamModel: 'deepseek-v4-flash',
+        inputCacheMissMicroUsdPerMillionTokens: 140000,
+        outputMicroUsdPerMillionTokens: 280000
+      }
+    })
+  });
+  const { token } = await register(worker, env);
+  let upstreamCalls = 0;
+  let upstreamPayload = null;
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url, options = {}) => {
+    upstreamCalls += 1;
+    upstreamPayload = JSON.parse(String(options.body || '{}'));
+    return new Response(JSON.stringify({ usage: { completion_tokens: 1 }, choices: [] }), { status: 200 });
+  };
+  try {
+    const p = payload('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 8);
+    assert.equal(Buffer.byteLength(JSON.stringify(p), 'utf8'), 125);
+    const response = await worker.default.fetch(chatRequest(token, p), env);
+    assert.equal(response.status, 200);
+    assert.equal(upstreamCalls, 1);
+    assert.equal(p.model, 'deepseek-chat');
+    assert.equal(upstreamPayload.model, 'deepseek-v4-flash');
+    assert.equal(env.DB.platformBudget.get('2026-07').reserved_micro_usd, 21);
+    assert.equal(env.DB.monthlyBudget.get('2026-07|deepseek-v4-flash').reserved_micro_usd, 21);
+    assert.equal(env.DB.platformBudget.get('2026-07').call_count, 1);
+    assert.equal(env.DB.monthlyBudget.get('2026-07|deepseek-v4-flash').call_count, 1);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('models endpoint exposes deepseek-chat as logical alias', async () => {
+  const worker = await loadWorker();
+  const env = baseEnv();
+  const response = await worker.default.fetch(new Request('https://worker.test/v1/models'), env);
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.data[0].id, 'deepseek-chat');
+  assert.equal(body.data[0].model_type, 'logical_alias');
+  assert.equal(body.data[0].upstream_model, 'deepseek-v4-flash');
 });
 
 test('exact cap allows once and next call is rejected before upstream', async () => {
@@ -347,6 +406,29 @@ test('upstream timeout and 500 do not refund reservation', async () => {
   }
 });
 
+test('upstream 400 does not refund reservation after provider request', async () => {
+  const worker = await loadWorker();
+  const env = baseEnv();
+  const { token } = await register(worker, env);
+  let upstreamCalls = 0;
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => {
+    upstreamCalls += 1;
+    return new Response(JSON.stringify({ error: { code: 'invalid_request_error' } }), { status: 400 });
+  };
+  try {
+    const p = payload('bad request');
+    const amount = reservedAmountFor(p);
+    const response = await worker.default.fetch(chatRequest(token, p), env);
+    assert.equal(response.status, 400);
+    assert.equal(upstreamCalls, 1);
+    assert.equal(env.DB.platformBudget.get('2026-07').reserved_micro_usd, amount);
+    assert.equal(env.DB.monthlyBudget.get('2026-07|deepseek-v4-flash').reserved_micro_usd, amount);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test('D1 budget failure and unknown price fail closed before upstream', async () => {
   const worker = await loadWorker();
   const env = baseEnv();
@@ -376,6 +458,46 @@ test('D1 budget failure and unknown price fail closed before upstream', async ()
   }
 });
 
+test('missing or empty upstream model fails closed before upstream', async () => {
+  const worker = await loadWorker();
+  const env = baseEnv({
+    MODEL_PRICE_CONFIG_JSON: JSON.stringify({
+      'deepseek-chat': {
+        provider: 'deepseek',
+        inputCacheMissMicroUsdPerMillionTokens: 1000000,
+        outputMicroUsdPerMillionTokens: 1000000
+      }
+    })
+  });
+  const { token } = await register(worker, env);
+  let upstreamCalls = 0;
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => {
+    upstreamCalls += 1;
+    return new Response('{}', { status: 200 });
+  };
+  try {
+    const missing = await worker.default.fetch(chatRequest(token, payload()), env);
+    assert.equal(missing.status, 503);
+    assert.equal((await missing.json()).error.code, 'model_price_unavailable');
+
+    env.MODEL_PRICE_CONFIG_JSON = JSON.stringify({
+      'deepseek-chat': {
+        provider: 'deepseek',
+        upstreamModel: '   ',
+        inputCacheMissMicroUsdPerMillionTokens: 1000000,
+        outputMicroUsdPerMillionTokens: 1000000
+      }
+    });
+    const empty = await worker.default.fetch(chatRequest(token, payload()), env);
+    assert.equal(empty.status, 503);
+    assert.equal((await empty.json()).error.code, 'model_price_unavailable');
+    assert.equal(upstreamCalls, 0);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test('month switch uses a new ledger row', async () => {
   const worker = await loadWorker();
   const env = baseEnv();
@@ -386,8 +508,8 @@ test('month switch uses a new ledger row', async () => {
     assert.equal((await worker.default.fetch(chatRequest(token, payload()), env)).status, 200);
     env.CURRENT_MONTH_OVERRIDE = '2026-08';
     assert.equal((await worker.default.fetch(chatRequest(token, payload()), env)).status, 200);
-    assert.ok(env.DB.monthlyBudget.has('2026-07|deepseek-chat'));
-    assert.ok(env.DB.monthlyBudget.has('2026-08|deepseek-chat'));
+    assert.ok(env.DB.monthlyBudget.has('2026-07|deepseek-v4-flash'));
+    assert.ok(env.DB.monthlyBudget.has('2026-08|deepseek-v4-flash'));
     assert.ok(env.DB.platformBudget.has('2026-07'));
     assert.ok(env.DB.platformBudget.has('2026-08'));
   } finally {

@@ -1,0 +1,22 @@
+{
+  "task": "deepseek-v4-flash-route-migration-test-results",
+  "typecheck": {
+    "command": "npx.cmd tsc --noEmit --skipLibCheck --moduleResolution node --module ES2022 --target ES2022 worker-configuration.d.ts src/index.ts",
+    "exit_code": 0,
+    "notes": [
+      "worker-configuration.d.ts was generated with Wrangler for this check and then removed from the working tree to avoid committing a large generated runtime type file.",
+      "An earlier direct tsc attempt without Worker runtime types failed because D1Database and dependency type resolution were not configured."
+    ]
+  },
+  "managed_proxy_tests": {
+    "command": "npm.cmd test",
+    "exit_code": 0,
+    "tests": 16,
+    "passed": 16,
+    "failed": 0
+  },
+  "json_files_validated": true,
+  "provider_called": false,
+  "new_worker_version_uploaded": false,
+  "production_code_deployed": false
+}

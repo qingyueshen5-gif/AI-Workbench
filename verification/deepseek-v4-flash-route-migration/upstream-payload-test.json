@@ -1,0 +1,30 @@
+{
+  "task": "deepseek-v4-flash-route-migration-upstream-payload-test",
+  "test_file": "managed-proxy/tests/monthly-budget.test.mjs",
+  "tests": [
+    {
+      "name": "budget below cap allows mock upstream",
+      "client_model": "deepseek-chat",
+      "upstream_payload_model": "deepseek-v4-flash",
+      "monthly_model_budget_identifier": "deepseek-v4-flash",
+      "passed": true
+    },
+    {
+      "name": "deepseek-chat logical model reserves v4 flash pricing and one upstream request",
+      "client_model": "deepseek-chat",
+      "upstream_payload_model": "deepseek-v4-flash",
+      "client_payload_mutated": false,
+      "upstream_calls": 1,
+      "passed": true
+    },
+    {
+      "name": "models endpoint exposes deepseek-chat as logical alias",
+      "models_endpoint_id": "deepseek-chat",
+      "model_type": "logical_alias",
+      "upstream_model": "deepseek-v4-flash",
+      "passed": true
+    }
+  ],
+  "provider_called": false,
+  "uses_mock_upstream": true
+}

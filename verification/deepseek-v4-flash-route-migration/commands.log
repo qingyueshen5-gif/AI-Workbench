@@ -1,0 +1,29 @@
+2026-07-25T17:53:00+08:00 | command: git status --short --branch | exit_code: 0 | output: clean; main...origin/main
+2026-07-25T17:53:00+08:00 | command: git rev-parse HEAD | exit_code: 0 | output: 18e89497b2b28402b8fcf5ffd8e7a8c9b6d016da
+2026-07-25T17:53:00+08:00 | command: git rev-parse origin/main | exit_code: 0 | output: 18e89497b2b28402b8fcf5ffd8e7a8c9b6d016da
+2026-07-25T17:53:00+08:00 | command: git merge-base --is-ancestor c734c1b950c53e92cee366ac6b4ab64bfcb2ffe2 HEAD | exit_code: 0 | output: ancestor=true
+2026-07-25T17:53:00+08:00 | command: git diff c734c1b950c53e92cee366ac6b4ab64bfcb2ffe2..HEAD -- managed-proxy | exit_code: 0 | output: no diff
+2026-07-25T17:53:00+08:00 | command: git diff c734c1b950c53e92cee366ac6b4ab64bfcb2ffe2..HEAD -- model-proxy.mjs src electron server.mjs | exit_code: 0 | output: no diff
+2026-07-25T17:53:00+08:00 | command: git fetch origin --prune | exit_code: 1 | output: SEC_E_NO_CREDENTIALS; no credential repair attempted
+2026-07-25T17:53:00+08:00 | command: npx.cmd wrangler --version | exit_code: 0 | output: 4.113.0; log file EPERM warning only
+2026-07-25T17:53:00+08:00 | command: npx.cmd wrangler versions deploy --help | exit_code: 0 | output: help read; supports version@percentage and --dry-run
+2026-07-25T17:53:00+08:00 | command: npx.cmd wrangler deployments list --json | exit_code: 0 | output: active before d9 run was 55b20f6c; stable 99; failed candidate 1
+2026-07-25T17:53:25+08:00 | command: npx.cmd wrangler versions deploy 16333442-925a-4b11-a3d1-d6249d2492ba@100 483e4fae-3af8-40fa-ab83-4551f08b519e@0 --message "3B-2b2d contain deprecated deepseek-chat candidate" --dry-run -y | exit_code: 0 | output: dry-run selected stable 100 and failed candidate 0; no deploy
+2026-07-25T17:54:24+08:00 | command: npx.cmd wrangler versions deploy 16333442-925a-4b11-a3d1-d6249d2492ba@100 483e4fae-3af8-40fa-ab83-4551f08b519e@0 --message "3B-2b2d contain deprecated deepseek-chat candidate" -y | exit_code: 0 | output: deployed active d9acb146-b720-4e09-b2b8-0257b93fc407; stable 100; failed candidate 0
+2026-07-25T17:55:03+08:00 | command: npx.cmd wrangler deployments list --json | exit_code: 0 | output: active after d9acb146-b720-4e09-b2b8-0257b93fc407; stable 100; failed candidate 0
+2026-07-25T17:55:03+08:00 | command: Invoke-WebRequest /health and /v1/models | exit_code: 1 | output: local PowerShell network timeout; not classified as production failure
+2026-07-25T17:55:03+08:00 | command: npx.cmd wrangler d1 execute aiw-managed-proxy --remote budget aggregate query --json | exit_code: 0 | output: platform 21/call_count 1; model 21/call_count 1; changed_db false
+2026-07-25T17:55:30+08:00 | command: node --use-env-proxy no-fee production GET /health and /v1/models | exit_code: 0 | output: both HTTP 200; no provider call
+2026-07-25T17:59:23+08:00 | command: npm.cmd test | exit_code: 0 | output: node --test tests/*.test.mjs; tests 16; pass 16; fail 0
+2026-07-25T18:00:37+08:00 | command: npx.cmd tsc --noEmit --skipLibCheck --moduleResolution node --module ES2022 --target ES2022 worker-configuration.d.ts src/index.ts | exit_code: 0 | output: passed
+2026-07-25T18:08:44+08:00 | command: npm.cmd run docs:generate-handoff | exit_code: 0 | output: AI-Workbench-Handoff.md refreshed
+2026-07-25T18:08:44+08:00 | command: npm.cmd run verify:docs-consistency | exit_code: 0 | output: passed
+2026-07-25T18:09:02+08:00 | command: npm.cmd test | exit_code: 0 | output: node --test tests/*.test.mjs; tests 16; pass 16; fail 0
+2026-07-25T18:09:06+08:00 | command: npx.cmd wrangler types worker-configuration.d.ts | exit_code: 0 | output: generated temporary Worker runtime types; log file EPERM warning only
+2026-07-25T18:09:12+08:00 | command: npx.cmd tsc --noEmit --skipLibCheck --moduleResolution node --module ES2022 --target ES2022 worker-configuration.d.ts src/index.ts | exit_code: 0 | output: passed
+2026-07-25T18:09:05+08:00 | command: npx.cmd wrangler deployments list --json | exit_code: 0 | output: active d9acb146-b720-4e09-b2b8-0257b93fc407; stable 100; failed candidate 0
+2026-07-25T18:09:05+08:00 | command: npx.cmd wrangler d1 execute aiw-managed-proxy --remote budget aggregate query --json | exit_code: 0 | output: platform 21/call_count 1; model 21/call_count 1; changed_db false
+2026-07-25T18:09:20+08:00 | command: git grep high-entropy secret patterns | exit_code: 1 | output: no matches
+2026-07-25T18:09:20+08:00 | command: git grep generic auth words | exit_code: 0 | output: only source/test placeholders and existing redaction policy references reviewed; no real secret found
+2026-07-25T18:09:20+08:00 | command: node --use-env-proxy no-fee production GET /health and /v1/models | exit_code: 0 | output: both HTTP 200; no provider call
+2026-07-25T18:09:20+08:00 | command: git diff --check | exit_code: 0 | output: no whitespace errors

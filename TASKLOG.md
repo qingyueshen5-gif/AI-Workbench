@@ -2,11 +2,11 @@
 
 > 仓库文件是唯一事实来源。每个任务下达、完成、验收和交接都必须写回本仓库，不能只留在对话里。
 
-最新更新：2026-07-24
+最新更新：2026-07-25
 
 ## 当前一句话状态
 
-AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 公开发布、产品方向收口、文档基准防漂移机制、电脑环境治理审计、产品定位修正、阶段性总审核（砍薄版）、生存体检和第 3A 段本地钱包刹车。第一批安全清理遗留目录已在重启后处理，用户 npm 缓存仍因 `EPERM` 未清理；Windows 临时文件需产品负责人手动确认。当前等待产品负责人验收第 3A 段本地钱包刹车，未经批准不得部署生产环境或进入第 3B 段。
+AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 公开发布、产品方向收口、文档基准防漂移机制、电脑环境治理审计、产品定位修正、阶段性总审核（砍薄版）、生存体检、第 3A 段本地钱包刹车、生产 D1 预算表、Preview/0%/1% 灰度和第 3B-2b2d 真实预算预留验证。第 3B-2b2d provider 成功链路因 DeepSeek 旧模型名退役失败；已撤回失败候选 1% 流量，并在本地完成 `deepseek-chat` 逻辑模型到 `deepseek-v4-flash` 上游模型路由修复。当前等待产品负责人验收 DeepSeek V4 Flash 路由迁移本地候选，未经批准不得上传或部署新 Worker version，不得发起新的真实模型调用。
 
 ## 已完成任务
 
@@ -38,6 +38,7 @@ AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 
 | 第 3B-2b2a 段：Preview 上传验证 | 已完成 Preview 上传验证 | 产品负责人验收通过 3B-2b1 后批准进入 3B-2b2a。本轮仅上传已锁定候选为 Worker Preview version `483e4fae-3af8-40fa-ab83-4551f08b519e`，验证 Preview URL 的 `/health`、`/v1/models` 和未认证聊天拒绝路径；active deployment 和 100% 生产流量仍指向原稳定 version，远端预算表仍为空。未部署 Worker，未修改 Secrets，未使用真实安装 Token，未调用真实 provider。 | `verification/monthly-budget-worker-preview-upload/summary.json`、`verification/monthly-budget-worker-preview-upload/report.md` |
 | 产品战略与升级路径 | 已完成 | 将“省时间”作为产品单点核心价值写入 `PRODUCT.md`，补充双人群价值、人机分工闭环、技术够用原则和长期升级路径；在 `PRINCIPLES.md` 写入“了解与开发分离”，明确前沿方向可以学习但不得在地基稳固、成本可控、有真实用户前启动工程开发。本轮只改文档，未改功能代码，未改变 `NEXT_STEP.md` 当前唯一下一步。 | `tasks/2026-07-24-产品战略与升级路径.md` |
 | 第 3B-2b2b 段：零流量 deployment | 已完成零流量验证 | 产品负责人验收通过 3B-2b2a 后批准进入 3B-2b2b，并在严格基线 blocked 后批准以文档提交 `37ab9c2` 为新基线继续。本轮用 `wrangler versions deploy` 将新预算 version 加入 active deployment，但流量为 0%；旧稳定 version 继续 100%。通过 production hostname version override 验证候选 version 的健康、模型列表和未认证聊天拒绝路径；预算表仍为空。未使用真实安装 Token，未调用真实 provider，未修改 Secrets，未执行回滚。上一段完整 Preview URL 当前文件已脱敏，历史不重写。 | `verification/monthly-budget-worker-zero-traffic-deployment/summary.json`、`verification/monthly-budget-worker-zero-traffic-deployment/report.md` |
+| DeepSeek V4 Flash 路由迁移本地候选 | 本地候选完成，等待验收 | 产品负责人确认 3B-2b2d HTTP 400 根因高度确定为旧 DeepSeek 上游模型名退役；本轮先将失败候选 version 从 1% 撤回到 0%，旧稳定 version 恢复 100%。本地实现逻辑模型 `deepseek-chat` 到上游正式模型 `deepseek-v4-flash` 的显式路由，预算明细按实际计费模型记录；16 项 Managed Proxy 测试和 TypeScript 检查通过。既有 21 micro-USD 失败预留保留，未上传新 Worker version，未部署生产修复，未修改 Secrets/D1 schema，未发起新的真实 provider 调用。 | `verification/deepseek-v4-flash-route-migration/summary.json`、`verification/deepseek-v4-flash-route-migration/report.md` |
 | 第 3B-2b2c 段：1% 生产灰度 | 已完成，观察可信度受低流量限制 | 产品负责人验收通过 3B-2b2b 后批准进入 3B-2b2c，并拍板钱包刹车采用灰度切流量。开始前确认仓库 clean、HEAD=origin/main、`managed-proxy` 无 diff、active deployment 为旧 100%/新 0%、预算表为空、健康端点 200；`git fetch` 因本机凭据 `SEC_E_NO_CREDENTIALS` 失败但未影响 HEAD=origin/main。dry-run 正确后用 `wrangler versions deploy` 将旧稳定 version 调为 99%、新预算 version 调为 1%。20 分钟观察加 5 分钟缓冲完成，生产 `/health` 和 `/v1/models` 共 11 轮均 200，version override GET 通过；tail 未输出可见事件，未确认自然候选流量。预算表仍为空，Secrets 和 D1 schema 未变，未主动真实模型调用，未触发回滚。 | `verification/monthly-budget-worker-one-percent-canary/summary.json`、`verification/monthly-budget-worker-one-percent-canary/report.md` |
 | 第 3B-2b2d 段：单笔真实预算链路验证 | blocked_before_paid_call | 产品负责人验收通过 3B-2b2c 后批准在 99%/1% 灰度下对新预算 version 执行最多一笔注册和最多一笔真实聊天。开始前确认仓库 clean、HEAD=origin/main、`managed-proxy` 无 diff、active deployment 仍为 99%/1%、预算表为空、健康端点 200；`git fetch` 仍因本机凭据 `SEC_E_NO_CREDENTIALS` 失败但未修改凭据。预留计算为 21 micro-USD，低于 100 micro-USD 门槛。一次性临时 Node 脚本只尝试 1 次注册，未返回 HTTP 状态且未取得 Token；按不得重试边界停止，聊天请求 0 次，未调用 provider，预算表、installations 和 daily_usage 均无增量，Secrets/D1 schema/Worker 代码未变，未触发回滚。 | `verification/monthly-budget-worker-controlled-real-canary/summary.json`、`verification/monthly-budget-worker-controlled-real-canary/report.md` |
 | 第 3B-2b2d 段：阻塞恢复诊断 | blocked_transport_cause_unresolved | 产品负责人确认上次阻塞处理正确后批准继续同一段，先诊断注册无 HTTP 状态原因。上次 evidence 缺少异常详情；本轮无付费诊断确认 Node 内置 fetch 未显式使用代理时出现 `UND_ERR_CONNECT_TIMEOUT`，显式 undici `ProxyAgent` 后 GET/OPTIONS/无状态 POST 可取得 HTTP 响应，根因分类 `system_proxy_error`。但未取得独立证据证明 version override 命中新预算 version，因此不满足再次注册条件。新增注册 0 次、聊天 0 次、provider 调用 0 次、预算写入 0；流量仍 99%/1%，未回滚。 | `verification/monthly-budget-worker-controlled-real-canary/summary.json`、`verification/monthly-budget-worker-controlled-real-canary/transport-diagnosis.json` |

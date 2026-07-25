@@ -78,11 +78,12 @@
 - 第 3B-2b2c 段 1% 生产灰度 one_percent_canary_observation_limited_by_low_traffic：产品负责人验收通过 3B-2b2b 后批准执行 1% 灰度。本轮 active deployment 更新为 `55b20f6c-1a50-446b-95cc-18ebf0e6cbe1`，旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 为 99%，新预算 version `483e4fae-3af8-40fa-ab83-4551f08b519e` 为 1%。20 分钟主动观察和 5 分钟指标缓冲完成；生产 `/health` 11 次和 `/v1/models` 11 次均 HTTP 200，version override 无付费 GET 检查通过。整体 tail 和候选错误 tail 未输出可见事件，未确认自然候选版本 invocation，因此可信度受低流量限制。预算表仍为 0 行/0 预留，未主动调用真实 provider，未修改 Secrets、D1 schema 或 Managed Proxy 功能代码，未触发回滚。证据见 `verification/monthly-budget-worker-one-percent-canary/summary.json`。新预算 Worker 当前仅 1% 正常生产流量，尚未全量。
 - 第 3B-2b2d 段单笔真实预算链路验证 blocked_before_paid_call：产品负责人验收通过 3B-2b2c 后批准在 99%/1% 灰度状态下向新预算 version 发起最多一笔受控真实模型请求。本轮开始前仓库 clean，HEAD=origin/main=`db4e055273c4cd8a3639fe61e322644d5ed5a908`，`managed-proxy` 无 diff；active deployment 仍为 `55b20f6c-1a50-446b-95cc-18ebf0e6cbe1`，旧稳定 version 99%，新预算 version 1%。生产和候选 override 的 `/health` 与 `/v1/models` 均 HTTP 200，Secrets 名称与 D1 schema 未变，预算表为空。预计算预留金额为 21 micro-USD，满足 100 micro-USD 安全门槛；一次性临时 Node 脚本只尝试 1 次注册，但未返回 HTTP 状态且未取得 Token，因此没有执行聊天请求、没有调用真实 provider、没有预算或 usage 增量、没有触发回滚。证据见 `verification/monthly-budget-worker-controlled-real-canary/summary.json`。本轮不得写成真实预算链路通过。
 - 第 3B-2b2d 段阻塞恢复诊断 blocked_transport_cause_unresolved：产品负责人确认上次阻塞处理正确后批准继续同一段，先诊断注册无 HTTP 状态原因。本轮仓库 clean，HEAD=origin/main=`a36dfc0acb53bc8a636a5fcf7ce605c118156199`，`managed-proxy` 无 diff；生产仍为旧稳定 99%、新预算 1%，预算表仍为空，Secrets 和 D1 schema 未变。上次 evidence 未保存异常详情，本轮无付费诊断确认 Node 内置 fetch 未显式使用代理时在响应头前连接超时，cause code `UND_ERR_CONNECT_TIMEOUT`；显式 undici `ProxyAgent` 后同一 Node 环境可取得 GET/OPTIONS/无状态 POST 的 HTTP 响应，根因分类 `system_proxy_error`。但未取得独立证据证明 version override 命中新预算 version，因此不满足再次注册条件；本轮新增注册 0 次，累计注册仍 1 次，聊天 0 次，provider 调用 0 次，预算写入 0，未回滚。证据见 `verification/monthly-budget-worker-controlled-real-canary/summary.json`。
-- 第 3B-2b2d 段候选 Versioned Preview 单笔真实链路 real_preview_call_failed_after_budget_reservation：产品负责人确认 transport 根因后批准改用候选 version Preview URL。本轮 Preview 无付费检查 `/health` 200、`/v1/models` 200、未认证聊天 401 `missing_token`；注册 1 次成功，唯一聊天 1 次返回 HTTP 400 `invalid_request_error`，无重试。预算账本已在 provider 前预留：平台总账 +21 micro-USD/+1 call，`deepseek-chat` 模型明细 +21 micro-USD/+1 call，增量等于预计算值；installations +1，daily_usage +2 requests/+2 input tokens/+0 output tokens。生产 active deployment 仍为旧版本 99%、新预算版本 1%，Secrets、D1 schema 和 Managed Proxy 代码未变，未回滚。证据见 `verification/monthly-budget-worker-controlled-real-canary/summary.json`。本轮不得写成 passed。
+- 第 3B-2b2d 段候选 Versioned Preview 单笔真实链路 real_preview_call_failed_after_budget_reservation：产品负责人确认 transport 根因后批准改用候选 version Preview URL。本轮 Preview 无付费检查 `/health` 200、`/v1/models` 200、未认证聊天 401 `missing_token`；注册 1 次成功，唯一聊天 1 次返回 HTTP 400 `invalid_request_error`，无重试。预算账本已在 provider 前预留：平台总账 +21 micro-USD/+1 call，`deepseek-chat` 模型明细 +21 micro-USD/+1 call，增量等于预计算值；installations +1，daily_usage +2 requests/+2 input tokens/+0 output tokens。生产 active deployment 当时仍为旧版本 99%、新预算版本 1%，Secrets、D1 schema 和 Managed Proxy 代码未变，未回滚。证据见 `verification/monthly-budget-worker-controlled-real-canary/summary.json`。本轮不得写成 passed。
+- DeepSeek V4 Flash 路由迁移本地候选 new_provider_model_route_candidate_ready_locally：产品负责人确认 HTTP 400 根因为旧上游模型名 `deepseek-chat` 退役后，本轮先将已知失败候选 version `483e4fae-3af8-40fa-ab83-4551f08b519e` 从 1% 正常生产流量撤回到 0%，旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 恢复 100%，active deployment 为 `d9acb146-b720-4e09-b2b8-0257b93fc407`。本地代码实现逻辑模型 `deepseek-chat` 到上游正式模型 `deepseek-v4-flash` 的显式路由，预算明细改按实际计费模型 `deepseek-v4-flash` 记录；16 项 Managed Proxy 测试和 TypeScript 检查通过。既有 21 micro-USD 历史预留未修改。未上传新 Worker version，未部署生产修复，未修改 Secrets 或 D1 schema，未发起新的真实 provider 调用。证据见 `verification/deepseek-v4-flash-route-migration/summary.json`。
 
 未完成：
 
-- 等待产品负责人验收第 3B-2b2d 段候选 Versioned Preview 单笔真实预算链路失败后预留结果。未经批准不得将新预算 Worker 切换到 100% 流量，不得发起第二笔主动真实模型调用。
+- 等待产品负责人验收 DeepSeek V4 Flash 路由迁移本地候选。未经批准不得上传或部署新 Worker version，不得发起新的真实模型调用。
 - 实际电脑清理。
 - 首屏 3-5 条示例指令。
 - 反馈入口和安全/隐私告知。
@@ -98,7 +99,7 @@
 - 跨网站复杂执行。
 - 国际化和区域合规。
 
-当前唯一下一步：等待产品负责人验收第 3B-2b2d 段候选 Versioned Preview 单笔真实预算链路失败后预留结果。未经批准不得将新预算 Worker 切换到 100% 流量，不得发起第二笔主动真实模型调用。
+当前唯一下一步：等待产品负责人验收 DeepSeek V4 Flash 路由迁移本地候选。未经批准不得上传或部署新 Worker version，不得发起新的真实模型调用。
 
 <!-- AIW_CAPABILITY_STATUS_END -->
 

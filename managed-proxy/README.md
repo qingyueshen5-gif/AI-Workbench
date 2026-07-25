@@ -44,5 +44,5 @@ Use the returned `workers.dev` URL as the public managed proxy URL for `model-pr
 - Do not log Authorization headers.
 - Do not log prompts or responses.
 - Do not let clients choose an upstream URL.
-- Only `deepseek-chat` is allowed in the first alpha.
+- Only client-facing logical model `deepseek-chat` is allowed in the first alpha; the Worker routes it to the configured upstream provider model.
 - `MANAGED_PROXY_ENABLED=false` is the emergency stop.

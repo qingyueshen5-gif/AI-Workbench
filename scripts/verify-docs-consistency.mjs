@@ -36,7 +36,7 @@ const scannedFiles = [
 ];
 
 const ignoredHistoricalPaths = ['CHANGELOG.md', 'TASKLOG.md', 'tasks/**', 'verification/**', 'research/**'];
-const expectedNextStep = '等待产品负责人验收第 3B-2b2d 段候选 Versioned Preview 单笔真实预算链路失败后预留结果。未经批准不得将新预算 Worker 切换到 100% 流量，不得发起第二笔主动真实模型调用。';
+const expectedNextStep = '等待产品负责人验收 DeepSeek V4 Flash 路由迁移本地候选。未经批准不得上传或部署新 Worker version，不得发起新的真实模型调用。';
 
 function readText(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');

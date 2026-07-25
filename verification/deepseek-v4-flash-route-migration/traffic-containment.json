@@ -1,0 +1,33 @@
+{
+  "task": "deepseek-v4-flash-route-migration-traffic-containment",
+  "worker_name": "ai-workbench-managed-proxy",
+  "stable_version_id": "16333442-925a-4b11-a3d1-d6249d2492ba",
+  "failed_candidate_version_id": "483e4fae-3af8-40fa-ab83-4551f08b519e",
+  "active_deployment_before": "55b20f6c-1a50-446b-95cc-18ebf0e6cbe1",
+  "stable_traffic_before": 99,
+  "failed_candidate_traffic_before": 1,
+  "dry_run_completed": true,
+  "traffic_deployment_command": "npx.cmd wrangler versions deploy 16333442-925a-4b11-a3d1-d6249d2492ba@100 483e4fae-3af8-40fa-ab83-4551f08b519e@0 --message \"3B-2b2d contain deprecated deepseek-chat candidate\" -y",
+  "active_deployment_after": "d9acb146-b720-4e09-b2b8-0257b93fc407",
+  "stable_traffic_after": 100,
+  "failed_candidate_traffic_after": 0,
+  "third_version_present": false,
+  "production_health_after": {
+    "health_status": 200,
+    "models_status": 200
+  },
+  "existing_platform_budget_reserved_micro_usd": 21,
+  "existing_model_budget_reserved_micro_usd": 21,
+  "existing_budget_call_count": 1,
+  "existing_reservation_modified": false,
+  "secrets_modified": false,
+  "d1_schema_modified": false,
+  "new_worker_version_uploaded": false,
+  "production_code_deployed": false,
+  "provider_called": false,
+  "notes": [
+    "This restores production traffic to the prior stable Worker version only.",
+    "This does not prove the prior stable version can make successful provider calls after the DeepSeek model retirement.",
+    "The failed budget candidate remains in the active deployment at 0% traffic."
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "task": "deepseek-v4-flash-route-migration-route-config",
+  "before": {
+    "allowed_models": "deepseek-chat",
+    "model_price_config": {
+      "deepseek-chat": {
+        "provider": "deepseek",
+        "upstreamModel": null,
+        "inputCacheMissMicroUsdPerMillionTokens": 140000,
+        "outputMicroUsdPerMillionTokens": 280000
+      }
+    },
+    "upstream_payload_model_for_deepseek_chat": "deepseek-chat"
+  },
+  "after": {
+    "allowed_models": "deepseek-chat",
+    "model_price_config": {
+      "deepseek-chat": {
+        "provider": "deepseek",
+        "upstreamModel": "deepseek-v4-flash",
+        "inputCacheMissMicroUsdPerMillionTokens": 140000,
+        "outputMicroUsdPerMillionTokens": 280000
+      }
+    },
+    "client_logical_model": "deepseek-chat",
+    "upstream_payload_model_for_deepseek_chat": "deepseek-v4-flash",
+    "monthly_model_budget_identifier": "deepseek-v4-flash"
+  },
+  "design_constraints": {
+    "client_can_keep_requesting_deepseek_chat": true,
+    "client_can_override_upstream_model": false,
+    "platform_budget_is_only_hard_cap": true,
+    "model_budget_is_detail_only": true,
+    "d1_schema_modified": false,
+    "token_format_modified": false
+  }
+}

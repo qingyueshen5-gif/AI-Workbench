@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Unreleased - DeepSeek V4 Flash 路由迁移本地候选
+
+- 产品负责人确认第 3B-2b2d HTTP 400 根因为生产候选仍向 DeepSeek 发送已退役的 `deepseek-chat` 上游模型名。
+- 先用 `wrangler versions deploy` 将已知失败候选 version `483e4fae-3af8-40fa-ab83-4551f08b519e` 从 1% 撤回到 0%，旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 恢复 100%；该操作只调整流量，不上传新代码。
+- Managed Proxy 增加逻辑模型到正式上游模型的显式路由：客户端仍可请求 `deepseek-chat`，Worker 内部发送给 DeepSeek 的 payload 改为 `deepseek-v4-flash`。
+- `MODEL_PRICE_CONFIG_JSON` 增加 `upstreamModel` 字段，并保持 DeepSeek V4 Flash 当前 cache-miss input 140000 micro-USD / 1M tokens、output 280000 micro-USD / 1M tokens。
+- 新预算明细按实际计费模型 `deepseek-v4-flash` 记录；既有 `deepseek-chat` 21 micro-USD 失败预留保留，不删除、不退款。
+- 本地 TypeScript 检查通过，Managed Proxy 16 项测试通过，覆盖上游 payload、21 micro-USD 预算回归、fail-closed、上游 400/超时不退款、并发和跨模型平台总账。
+- 本轮未执行 `wrangler versions upload`，未执行 `wrangler deploy`，未部署生产修复，未修改 Secrets 或 D1 schema，未发起新的真实模型调用。
+
 ## Unreleased - 3B-2b2d 单笔真实预算链路验证
 
 - 产品负责人验收通过第 3B-2b2c 段后，批准在 99%/1% 灰度下尝试一笔受控真实预算链路验证，不直接切 100%。

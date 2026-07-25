@@ -138,6 +138,7 @@ function tokenUsageFromPayload(payload: any) {
 
 type ModelPrice = {
   provider: string;
+  upstreamModel: string;
   inputCacheMissMicroUsdPerMillionTokens: number;
   outputMicroUsdPerMillionTokens: number;
 };
@@ -145,11 +146,13 @@ type ModelPrice = {
 const defaultModelPrices: Record<string, ModelPrice> = {
   'deepseek-chat': {
     provider: 'deepseek',
+    upstreamModel: 'deepseek-v4-flash',
     inputCacheMissMicroUsdPerMillionTokens: 140000,
     outputMicroUsdPerMillionTokens: 280000
   },
   'deepseek-v4-flash': {
     provider: 'deepseek',
+    upstreamModel: 'deepseek-v4-flash',
     inputCacheMissMicroUsdPerMillionTokens: 140000,
     outputMicroUsdPerMillionTokens: 280000
   }
@@ -166,6 +169,9 @@ function modelPrices(env: Env): Record<string, ModelPrice> {
 function priceForModel(env: Env, model: string) {
   const price = modelPrices(env)[model];
   if (!price) throw new Error('missing_model_price');
+  if (typeof price.upstreamModel !== 'string' || !price.upstreamModel.trim()) {
+    throw new Error('missing_upstream_model');
+  }
   for (const [key, value] of Object.entries({
     inputCacheMissMicroUsdPerMillionTokens: price.inputCacheMissMicroUsdPerMillionTokens,
     outputMicroUsdPerMillionTokens: price.outputMicroUsdPerMillionTokens
@@ -216,7 +222,7 @@ async function reserveMonthlyModelBudget(env: Env, model: string, amountMicroUsd
      WHERE month_key = ?
        AND reserved_micro_usd + ? <= ?`
   ).bind(amountMicroUsd, at, month, amountMicroUsd, cap).run();
-  const changed = Number(platformResult?.meta?.changes || platformResult?.changes || 0);
+  const changed = Number(platformResult?.meta?.changes || (platformResult as any)?.changes || 0);
   if (changed !== 1) return false;
   const modelResult = await env.DB.prepare(
     `UPDATE monthly_model_budget
@@ -226,7 +232,7 @@ async function reserveMonthlyModelBudget(env: Env, model: string, amountMicroUsd
      WHERE month_key = ?
        AND model = ?`
   ).bind(amountMicroUsd, at, month, model).run();
-  const modelChanged = Number(modelResult?.meta?.changes || modelResult?.changes || 0);
+  const modelChanged = Number(modelResult?.meta?.changes || (modelResult as any)?.changes || 0);
   if (modelChanged !== 1) throw new Error('model_budget_detail_unavailable');
   return true;
 }
@@ -379,21 +385,23 @@ async function chatCompletions(request: Request, env: Env) {
   const limited = await enforceUsage(env, auth.installHash, ip);
   if (limited) return limited;
   const model = String(payload.model || '');
+  let route: ModelPrice;
   try {
-    const price = priceForModel(env, model);
+    route = priceForModel(env, model);
     const reserveInput = reservedInputTokens(usage.inputTokens, new Blob([raw]).size);
     const reserveOutput = Number(payload.max_tokens);
-    const reservation = reservationAmountMicroUsd(price, reserveInput, reserveOutput);
-    const reserved = await reserveMonthlyModelBudget(env, model, reservation);
+    const reservation = reservationAmountMicroUsd(route, reserveInput, reserveOutput);
+    const reserved = await reserveMonthlyModelBudget(env, route.upstreamModel.trim(), reservation);
     if (!reserved) {
       return json({ error: { message: '共享模型服务本月额度已用完，请稍后再试。', code: 'monthly_budget_exhausted' } }, { status: 429 });
     }
   } catch (error: any) {
-    const code = error?.message === 'missing_model_price' || String(error?.message || '').startsWith('bad_model_price')
+    const code = error?.message === 'missing_model_price' || error?.message === 'missing_upstream_model' || String(error?.message || '').startsWith('bad_model_price')
       ? 'model_price_unavailable'
       : 'monthly_budget_unavailable';
     return json({ error: { message: '共享模型服务预算系统暂时不可用，请稍后再试。', code } }, { status: 503 });
   }
+  const upstreamPayload = { ...payload, model: route.upstreamModel.trim() };
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort('upstream timeout'), configNumber(env.UPSTREAM_TIMEOUT_MS, 60000));
   try {
@@ -403,7 +411,7 @@ async function chatCompletions(request: Request, env: Env) {
         'content-type': 'application/json',
         authorization: `Bearer ${env.DEEPSEEK_API_KEY}`
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(upstreamPayload),
       signal: controller.signal
     });
     const text = await upstream.text();
@@ -436,7 +444,14 @@ export default {
       });
     }
     if (url.pathname === '/v1/models') {
-      return json({ object: 'list', data: allowedModels(env).map((id) => ({ id, object: 'model', owned_by: 'deepseek' })) });
+      const prices = modelPrices(env);
+      return json({ object: 'list', data: allowedModels(env).map((id) => ({
+        id,
+        object: 'model',
+        owned_by: prices[id]?.provider || 'deepseek',
+        model_type: prices[id]?.upstreamModel && prices[id].upstreamModel !== id ? 'logical_alias' : 'provider_model',
+        upstream_model: prices[id]?.upstreamModel || id
+      })) });
     }
     if (request.method === 'POST' && url.pathname === '/v1/install/register') return register(request, env);
     if (request.method === 'POST' && url.pathname === '/v1/install/refresh') return refresh(request, env);
