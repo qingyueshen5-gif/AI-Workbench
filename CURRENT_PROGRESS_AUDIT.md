@@ -181,7 +181,29 @@
 | 59 | 崩溃恢复 | 桌面端、环境自检 | 桌面端、QA、日志 | 崩溃后用户要能继续。 | `candidate_after_current_stage`。 | 陌生机器不崩部分完成；崩溃恢复体系未完整。 | 错误日志、环境自检。 | `verification/clean-machine/summary.json`、本轮补齐。 | watchdog、日志、UI。 | 可审计并行。 | 不暴露 traceback。 | 待拍板。 |
 | 60 | 数据备份和恢复 | 上下文、记忆、环境 | 数据、桌面端、安全 | 用户本地数据和证据不能轻易丢。 | `unknown_needs_audit`。 | 项目资产备份已做；产品用户数据备份未明确。 | 本地数据结构、隐私。 | `verification/pc-environment-governance/summary.json`，产品侧记录不足。 | 本地数据/导出恢复。 | 研究可并行。 | 用户可控、隐私。 | 待拍板。 |
 | 61 | 产品分析和质量体系 | 执行/检查/修复、反馈日志 | QA、数据、产品 | 持续发现质量问题。 | `candidate_after_current_stage`。 | verification 制度已建；产品内质量数据未做。 | 埋点、错误日志、真人试用。 | `EXECUTION_PROTOCOL.md`、本轮补入 `PRODUCT.md`。 | 指标、报告、验收。 | 可并行设计。 | 指标不能夸大。 | 待拍板。 |
-| 62 | 其他仓库中已提出但未列出的任务 | 全部 | 技术文档、产品、审计 | 防止历史任务散落丢失。 | `unknown_needs_audit`。 | 已搜索并纳入当前 62 条；后续发现继续补。 | 新对话/历史审计。 | `TASKLOG.md`、`CHANGELOG.md`、`research/`，需要持续维护。 | 文档。 | 可审计并行，写回串行。 | 不伪造未执行验收。 | 持续补录，需拍板。 |
+| 62 | 其他仓库中已提出但未列出的任务 | 全部 | 技术文档、产品、审计 | 防止历史任务散落丢失。 | `unknown_needs_audit`。 | 已搜索并纳入当前 66 条；后续发现继续补。 | 新对话/历史审计。 | `TASKLOG.md`、`CHANGELOG.md`、`research/`，需要持续维护。 | 文档。 | 可审计并行，写回串行。 | 不伪造未执行验收。 | 持续补录，需拍板。 |
+| 63 | 国内内部研发指挥入口 | 通讯入口、多渠道指挥 | 产品、API、安全、Codex、成本 | 使用者是产品负责人本人；希望通过手机向 AI Workbench 派发研发任务，再交给本地 Codex。 | `approved_not_started`，当前只研究架构、安全、成本和可行性。 | 候选入口飞书；目标是任务接收、交给本地 Codex、结果回飞书、高风险操作重新确认；未开发。 | 统一任务入口、身份权限、Codex 本地隔离执行、成本框架。 | 本轮补入 `CURRENT_PROGRESS_AUDIT.md` 和 `PRODUCT.md`，原先笼统为飞书/通讯入口，不完整。 | 入口适配器、任务网关、权限确认；本轮不改代码。 | 可与 v0.4.7 辅助研究并行，不得阻塞主线；与 Telegram 内部入口共享核心网关。 | 高风险操作必须单独确认；验收标准为手机发任务->AI Workbench 接收->本地 Codex 隔离执行测试->结果返回->产品负责人决定是否继续。 | 首选入口仍待产品负责人批准。 |
+| 64 | 国际内部研发指挥入口 | 通讯入口、多渠道指挥 | 产品、API、安全、Codex、国际化、成本 | 使用者是产品负责人本人；通过国际通用入口验证远程指挥 AI Workbench 和本地 Codex。 | `approved_not_started`，当前只研究，不开发。 | 候选入口 Telegram；目标与任务 63 相同，用于国际通用入口和国际环境验证；未开发。 | 统一任务入口、身份权限、Codex 本地隔离执行、成本框架、账号条件。 | 本轮补入 `CURRENT_PROGRESS_AUDIT.md` 和 `PRODUCT.md`，原先记录不完整。 | Telegram adapter、任务网关、权限确认；本轮不改代码。 | 可与飞书入口做方案比较，不能同时开发两个入口。 | 同任务 63；额外验证国际可用性、稳定性、平台规则和成本。 | 首选入口仍待产品负责人批准。 |
+| 65 | 国内外部用户入口 | 通讯入口、用户入口 | 产品、API、合规、客服、用户运营 | 未来国内用户可能希望通过熟悉的通讯工具使用 AI Workbench。 | `candidate_after_current_stage`，当前不做。 | 候选入口飞书、微信；目标是用户通过外部入口使用同一 AI Workbench 核心；未开发。 | 真实用户需求、隐私告知、账号合规、客服流程、核心调度稳定。 | 本轮补入 `CURRENT_PROGRESS_AUDIT.md` 和 `PRODUCT.md`。 | 入口适配器、用户身份、消息回传。 | 研究可并行，开发必须等用户需求和产品负责人批准。 | 用户数据、授权、平台规则、客服负担；验收看授权、消息往返、核心能力一致和隐私告知。 | 当前不开始，需拍板。 |
+| 66 | 国际外部用户入口 | 通讯入口、用户入口、国际化 | 产品、API、国际化、合规、客服 | 未来国际用户可能通过 Telegram、WhatsApp、Discord 或其他集中渠道使用产品。 | `candidate_after_current_stage`，当前不做。 | 候选入口 Telegram、WhatsApp、Discord、其他国际渠道；未开发。 | 真实国际用户、地区合规、隐私告知、支付和支持能力。 | 本轮补入 `CURRENT_PROGRESS_AUDIT.md` 和 `PRODUCT.md`。 | 国际入口适配器、身份、消息回传。 | 研究可并行，开发串行；不得把核心锁死在 Telegram。 | 地区规则、平台审核、隐私和客服风险；验收看授权、跨地区可用性、消息往返和核心能力一致。 | 当前不开始，需拍板。 |
+
+### 通讯入口成本框架
+
+本轮只建立核算框架，不制造真实付费调用。所有数据必须标记为 `actual`、`estimate` 或 `unknown`，不知道的不得写成 0。
+
+当前首选入口选择状态：`waiting_for_product_owner_channel_selection`。飞书和 Telegram 都是内部研发指挥入口候选；当前不同时开发，先做哪一个由产品负责人根据账号条件、支付、成本、安全和接入难度批准。
+
+| 成本项 | 每天 1 个任务 | 每天 3 个任务 | 每天 10 个任务 | 1 个 Codex 任务 | 2 个并行 Codex 任务 | 3 个并行 Codex 任务 | 当前数据状态 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 飞书内部入口 | unknown | unknown | unknown | unknown | unknown | unknown | `unknown`：未接入、未测算账号/API/消息成本。 |
+| Telegram 内部入口 | unknown | unknown | unknown | unknown | unknown | unknown | `unknown`：未接入、未测算 Bot/API/网络成本。 |
+| AI Link 或其他第三方方案 | unknown | unknown | unknown | unknown | unknown | unknown | `unknown`：未重新核价，不能写成免费或 0。 |
+| 自建 AI Workbench 入口 | estimate：会有本地服务、网关、维护和安全成本 | estimate | estimate | estimate | estimate | estimate | `estimate`：只有成本类别，未做金额测算。 |
+| Codex 使用费用 | unknown | unknown | unknown | unknown | unknown | unknown | `unknown`：本轮不查询或触发付费。 |
+| 大脑模型费用 | actual：生产钱包刹车 40 USD 月硬上限已生效；具体入口任务增量 unknown | actual/unknown | actual/unknown | unknown | unknown | unknown | `actual` 仅限已封板钱包刹车事实；入口增量 unknown。 |
+| 本地电脑运行 | estimate：电力、设备占用和网络稳定性成本 | estimate | estimate | estimate | estimate | estimate | `estimate`：未做精确金额。 |
+| 维护 | estimate：入口、权限、日志、异常处理和平台变更维护成本 | estimate | estimate | estimate | estimate | estimate | `estimate`：未量化。 |
+| 审核和返工 | estimate：GPT 技术证据审核、Claude 产品逻辑复核、产品负责人拍板会增加时间成本 | estimate | estimate | estimate | estimate | estimate | `estimate`：未量化。 |
 
 ## 6. 时间与执行地图
 
@@ -193,7 +215,7 @@
 | 长期产品能力 | Web 端、手机端、多系统、生态扩展、自动更新、数据备份恢复、完整质量体系、团队/开发者能力、国际化。 |
 | 战略研究 | 加密支付、支付商业化、应用商店、宣传品牌营销、生态合作、外部多 Agent 平台。 |
 | 当前不做 | v0.4.7 开发、图片/上下文/手机端/Web 端、多 Agent、支付、加密支付、宣传营销、信息抓取、安全加固工程、任何新阶段。 |
-| 可并行研究 | 用户研究、市场/竞品、支付和合规、UI/UX 草案、虚拟人格测试、测试用例、渠道入口、生态和工具调研。 |
+| 可并行研究 | 国内/国际内部研发指挥入口、虚拟人格测试设计、成熟产品研究、信息收集方案、多 Agent 成本测算、用户研究、市场/竞品、支付和合规、UI/UX 草案、测试用例、渠道入口、生态和工具调研。 |
 | 可隔离并行开发 | 小型 UI 候选、测试脚本候选、文案候选、外部 Agent 隔离补丁；不得直接 push main，必须由 Codex 统一集成。 |
 | 必须串行集成 | `NEXT_STEP.md`、产品定义、已锁定决策、当前进度、功能代码、预算/模型路由、Cloudflare/D1/Secrets、Release 和安装包。 |
 
