@@ -64,7 +64,7 @@ export function buildHandoffSnapshot() {
   const release = readJson(files.release);
 
   const done = summarizeCapabilities(capabilityMarked, '已完成', 10);
-  const notDone = summarizeCapabilities(capabilityMarked, '未完成', 20);
+  const notDone = summarizeCapabilities(capabilityMarked, '未完成', 10);
   const directionHints = [
     ...firstMatchingLines(product, ['一个输入框', '长期用户范围', '产品价值'], 3),
     ...firstMatchingLines(vision, ['质量基线', '状态差', '状态正常', '很强', '全球'], 3),
@@ -106,6 +106,13 @@ ${done.join('\n')}
 ## 未完成能力摘要
 
 ${notDone.join('\n')}
+
+## 产品地图基准
+
+- 产品能力地图：见 PRODUCT.md 的“完整产品能力地图”，当前覆盖 23 个产品模块。
+- 专业工作流地图：见 EXECUTION_PROTOCOL.md 的“专业工作流地图”，当前覆盖产品、研究、设计、工程、数据、安全、合规、发布、市场、运营和审计等岗位。
+- 任务归属地图：见 CURRENT_PROGRESS_AUDIT.md 的“任务归属地图”，当前覆盖 62 条已提出任务线，并统一状态枚举。
+- 时间与执行地图：见 CURRENT_PROGRESS_AUDIT.md 的“时间与执行地图”，区分当前真实问题、首批市场交付前必须做、真人试用后再决定、长期能力、战略研究、当前不做、可并行研究、可隔离并行开发和必须串行集成。
 
 ## 当前唯一下一步
 

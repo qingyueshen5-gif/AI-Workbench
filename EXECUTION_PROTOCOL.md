@@ -389,3 +389,87 @@ summary 状态写 `failed`、`blocked`、`partial` 或 `pending`。
 - 是否允许结束阶段。
 
 阶段没有通过独立验收和产品负责人批准，不得宣布阶段结束，不得进入下一阶段。
+
+## 15. 专业工作流地图
+
+本节是专业岗位和协作归属的权威地图。岗位可以由人、GPT/Claude/Codex 或外部 Agent 辅助承担，但 `main` 集成、测试、commit 和 push 只能由 Codex 在授权范围内统一执行。
+
+| 岗位/能力 | 负责模块 | 具体任务 | 必读文件 | 可用工具或 Agent | 能否并行 | 不可多人同时改 | 输出交给谁 | 集成者 | 验收者 | 当前启用 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 产品负责人 | 全部 | 定方向、优先级、关键取舍、风险接受、阶段拍板。 | `AI-Workbench-Handoff.md`、`NEXT_STEP.md`、`THINKING.md`、`PRINCIPLES.md`、`GROWTH_LOG.md` | GPT、Claude、Codex 回报 | 思考可并行，拍板串行 | `NEXT_STEP.md`、已锁定决策 | GPT/Codex | 产品负责人 | 产品负责人 | 是 |
+| 产品经理 | 产品定义、路线、v0.4.7、真人试用 | 把用户问题转成范围、验收和优先级建议。 | `PRODUCT.md`、`DECISIONS.md`、`CURRENT_PROGRESS_AUDIT.md` | GPT、Claude | 可并行研究 | `PRODUCT.md`、`DECISIONS.md` | 产品负责人 | Codex | 产品负责人/Claude | 需要时 |
+| 用户研究 | 真人试用、反馈、市场验证 | 访谈、试用任务、用户画像、流失关口。 | `PRODUCT.md`、`THINKING.md`、`CURRENT_PROGRESS_AUDIT.md` | Claude、表格、问卷工具 | 可并行 | 用户反馈原始资料 | 产品负责人 | Codex 整理 | 产品负责人 | 待启用 |
+| UI 设计 | 基础体验、官网、桌面/Web/移动 | 一个输入框、状态、错误、视觉质量。 | `PRODUCT.md`、`PRINCIPLES.md` | 截图审查、虚拟人格 | 可并行出方案 | `src/` 同一页面 | 产品负责人 | Codex | 产品负责人/Claude | 待启用 |
+| UX 设计 | 任务流程、权限、失败恢复 | 首次使用、确认、拒绝、恢复、清除。 | `PRODUCT.md`、`THINKING.md`、`PRINCIPLES.md` | GPT、Claude | 可并行 | 产品流程文档 | 产品负责人 | Codex | 产品负责人 | 待启用 |
+| 前端工程 | 桌面渲染层、状态和交互 | 输入、消息、附件、错误、反馈入口。 | `PRODUCT.md`、`ARCHITECTURE.md`、`src/` | Codex、Playwright | 隔离分支可并行 | `src/` | Codex | Codex | Codex/QA | 未启用 |
+| 桌面端工程 | Windows 安装、启动、更新、卸载 | Electron、NSIS、watchdog、兼容性。 | `package.json`、`electron/`、`SETUP.md` | Codex、GitHub Actions | 部分可并行 | `electron/`、打包配置 | Codex | Codex | Codex/QA | 未启用 |
+| Web 工程 | Web 端和同步 | 浏览器访问、账户、部署、会话一致性。 | `PRODUCT.md`、`ARCHITECTURE.md` | Codex、Cloudflare | 研究可并行 | Web/API 文件 | Codex | Codex | 产品负责人 | 当前不启用 |
+| 移动端工程 | iOS/Android/鸿蒙 | 移动输入、图片、通知、商店发布。 | `PRODUCT.md`、`VISION.md` | 移动框架调研 | 研究可并行 | 移动端代码 | 产品负责人 | Codex 或专门工程 | 产品负责人 | 当前不启用 |
+| 后端工程 | API、任务、记忆、错误 | 本地 API、状态、数据、恢复。 | `ARCHITECTURE.md`、`server.mjs` | Codex、自动化测试 | 隔离可并行 | `server.mjs`、数据 schema | Codex | Codex | Codex/QA | 未启用 |
+| API 工程 | Provider、通道、工具接口 | 统一接口、错误码、兼容性。 | `ARCHITECTURE.md`、`managed-proxy/README.md` | Codex、官方文档 | 可并行研究 | API 契约 | Codex | Codex | Codex/Claude | 未启用 |
+| AI 和模型调度工程 | 模型/Agent/工具调度、模型分层 | 路由、质量/成本权衡、fallback。 | `ARCHITECTURE.md`、`DECISIONS.md` | GPT、Codex、测试模型 | 方案可并行 | `model-proxy.mjs`、`managed-proxy/src/` | 产品负责人 | Codex | 产品负责人/Claude | 当前不启用 |
+| Agent 工作流工程 | 多 Agent、任务拆解、执行恢复 | 编排、状态、并行和冲突处理。 | `ARCHITECTURE.md`、`EXECUTION_PROTOCOL.md` | GPT、Claude、外部 Agent | 研究可并行 | 工作流核心代码 | Codex | Codex | 产品负责人 | 当前不启用 |
+| 上下文和记忆工程 | 会话、记忆、压缩 | 防串线、摘要、清除、恢复。 | `ARCHITECTURE.md`、`THINKING.md` | GPT、Codex | 方案可并行 | 记忆数据结构 | Codex | Codex | 产品负责人/QA | 当前不启用 |
+| 多模态工程 | 图片和文件 | 上传、解析、模型能力、隐私。 | `PRODUCT.md`、`PRINCIPLES.md` | 模型文档、Codex | 研究可并行 | 附件和上传代码 | Codex | Codex | 产品负责人/QA | 当前不启用 |
+| 数据工程 | 埋点、日志、反馈分析 | 事件 schema、存储、查询、脱敏。 | `DECISIONS.md`、`PRODUCT.md` | 数据工具、Codex | 方案可并行 | 日志/事件 schema | 产品负责人 | Codex | 隐私/产品负责人 | 当前不启用 |
+| 埋点和日志工程 | v0.4.7 反馈机制 | 最小元数据、错误码、关闭/清除。 | `DECISIONS.md`、`GROWTH_LOG.md` | Codex、QA | 方案可并行 | 采集代码和 schema | 产品负责人 | Codex | 隐私/QA | 当前不启用 |
+| 安全工程 | 防御性安全、权限、供应链 | Secret、依赖、Prompt Injection、安装包完整性。 | `PRINCIPLES.md`、`CURRENT_PROGRESS_AUDIT.md` | 安全扫描、Codex | 审查可并行 | 安全配置、Secrets 相关文件 | Codex | Codex | 独立审计 | 候选 |
+| 隐私和合规 | 数据、权限、支付、跨平台 | 告知、同意、撤回、保存周期、平台规则。 | `PRINCIPLES.md`、`DECISIONS.md` | Claude、法律/平台文档 | 可并行研究 | 隐私文案和数据字段 | 产品负责人 | Codex | 产品负责人/Claude | 候选 |
+| 测试和质量保证 | 全模块 | 验收场景、回归、真实用户检查。 | `EXECUTION_PROTOCOL.md`、`verification/` | Codex、Playwright、虚拟人格 | 可并行设计 | verification 同一目录 | Codex | Codex | 产品负责人/Claude | 需要时 |
+| 自动化测试 | 回归和 CI | 脚本、日志、可重复验证。 | `package.json`、`scripts/` | Codex、GitHub Actions | 可并行设计 | `scripts/` 同一脚本 | Codex | Codex | Codex | 需要时 |
+| DevOps | 构建、发布、部署 | CI、Release、环境变量、回滚。 | `package.json`、`CHANGELOG.md` | Codex、GitHub、Cloudflare | 研究可并行，部署串行 | CI/Release/Cloudflare 配置 | 产品负责人 | Codex | 产品负责人 | 未启用 |
+| Cloudflare 和基础设施 | Managed Proxy、D1、Worker | Worker、D1、Secrets、流量、监控。 | `managed-proxy/`、`verification/managed-proxy-production/summary.json` | Codex、Wrangler | 只读审计可并行，生产操作串行 | `managed-proxy/`、Cloudflare 配置 | 产品负责人 | Codex | 独立审计/产品负责人 | 当前不操作 |
+| 打包和发布 | 安装包、Release、应用商店 | NSIS、签名、哈希、发布记录。 | `package.json`、`CHANGELOG.md` | Codex、GitHub Actions | 研究可并行，发布串行 | Release 和 tag | 产品负责人 | Codex | 产品负责人 | 未启用 |
+| 支付和商业化 | 免费额度、收费、自带 Key | 方案、合规、账单、退款、欺诈。 | `DECISIONS.md`、`GROWTH_LOG.md` | 支付产品研究 | 可并行研究 | 支付配置和用户数据 | 产品负责人 | Codex | 产品负责人/合规 | 当前不启用 |
+| 加密支付研究 | 加密支付 | 法律、平台规则、资产安全、替代方案。 | `VISION.md`、`GROWTH_LOG.md` | 公开资料、合规审查 | 只研究 | 不改代码 | 产品负责人 | 无 | 产品负责人 | 战略研究 |
+| 品牌 | 定位、命名、视觉 | 可信、简单、不过度承诺。 | `PRODUCT.md`、`VISION.md` | Claude、设计工具 | 可并行 | 品牌文案 | 产品负责人 | Codex | 产品负责人 | 未启用 |
+| 宣传页面 | 官网、下载页、演示 | 只宣传已完成能力，提供下载和案例。 | `README.md`、`PRODUCT.md`、`CURRENT_PROGRESS_AUDIT.md` | 前端、截图 | 可并行草案 | 公开页面 | Codex | Codex | 产品负责人 | 当前不启用 |
+| 内容营销 | 内容、案例、社媒 | 用户教育、真实案例、边界说明。 | `PRODUCT.md`、`THINKING.md` | Claude/GPT | 可并行 | 公开文案 | 产品负责人 | Codex | 产品负责人 | 当前不启用 |
+| 市场营销 | 渠道、增长、国际市场 | 找真实用户，不夸大能力。 | `PRODUCT.md`、`VISION.md` | 市场调研工具 | 可并行研究 | 市场计划 | 产品负责人 | Codex 整理 | 产品负责人 | 当前不启用 |
+| 用户运营 | 试用、反馈、支持 | 招募、跟进、问题分类。 | `PRODUCT.md`、`CURRENT_PROGRESS_AUDIT.md` | 表格/问卷 | 可并行 | 用户反馈原始数据 | 产品负责人 | Codex 整理 | 产品负责人 | 待启用 |
+| 客户支持 | 问题解释、恢复路径 | 安装失败、预算到顶、崩溃、卸载。 | `PRODUCT.md`、`SETUP.md` | FAQ、日志 | 可并行 | 支持话术 | 产品负责人 | Codex | 产品负责人 | 待启用 |
+| 国际化和本地化 | 多语言、多地区 | 语言、日期、地区规则、支付。 | `VISION.md` | 翻译/地区资料 | 可并行研究 | i18n 资源 | Codex | Codex | 产品负责人 | 当前不启用 |
+| 生态合作 | 模型/Agent/工具合作 | 接入、准入、质量、合规。 | `VISION.md`、`PRINCIPLES.md` | 公开资料、商务记录 | 可并行研究 | 合作决策 | 产品负责人 | Codex | 产品负责人 | 长期 |
+| 成本和预算管理 | 钱包、安全、跑道 | 成本测算、预算刹车、用量观察。 | `CURRENT_PROGRESS_AUDIT.md`、`verification/` | 计算脚本、Cloudflare 证据 | 分析可并行，生产变更串行 | 预算配置和算法 | 产品负责人 | Codex | 独立审计 | 底座完成，持续观察 |
+| 技术文档 | 架构、交接、任务记录 | 权威归属、Handoff、任务地图。 | 全部权威文档 | Codex | 可并行审阅，写回串行 | `CONTEXT.md`、`TASKLOG.md`、`CURRENT_PROGRESS_AUDIT.md` | 产品负责人 | Codex | 产品负责人/Claude | 是 |
+| 独立审计和验收 | 阶段封板 | GitHub 证据审计、diff、verification 核对。 | `EXECUTION_PROTOCOL.md`、对应 verification | Claude/GPT | 可独立并行 | 不直接改 main | 产品负责人 | 无 | 产品负责人 | 阶段结束时 |
+
+## 16. 多 Agent 并行和文件边界
+
+多 Agent 可以并行存在于研究、方案、测试和审计层，但不能并行失控修改产品核心链路。
+
+允许并行：
+
+- 市场、用户、竞品、合规、支付和生态研究；
+- UI/UX 草案、虚拟人格测试、测试用例设计；
+- 不同 Agent 在隔离分支或补丁文件中产出候选方案；
+- Claude/GPT 对已 push 的 GitHub 证据做独立审计。
+
+必须串行集成：
+
+- `NEXT_STEP.md` 当前唯一下一步；
+- `DECISIONS.md` 已锁定决策；
+- `CURRENT_PROGRESS_AUDIT.md` 当前状态；
+- `PRODUCT.md` 产品定义；
+- `PRINCIPLES.md` 铁律；
+- `managed-proxy/src/`、`model-proxy.mjs`、`src/`、D1 schema、Cloudflare 配置、预算、模型路由、Release、安装包。
+
+绝对不能由多个 Agent 同时直接修改的文件包括：
+
+- `NEXT_STEP.md`
+- `DECISIONS.md`
+- `CURRENT_PROGRESS_AUDIT.md`
+- `CONTEXT.md`
+- `TASKLOG.md`
+- `CHANGELOG.md`
+- `AI-Workbench-Handoff.md`
+- `PRODUCT.md`
+- `PRINCIPLES.md`
+- `EXECUTION_PROTOCOL.md`
+- `package.json`
+- `model-proxy.mjs`
+- `managed-proxy/src/`
+- `managed-proxy/wrangler.jsonc`
+- D1 schema、Secrets、Release、安装包和生产流量配置。
+
+外部多 Agent 不得直接 push 到 `main`，不得读取未授权 Secret 或用户数据。Codex 是唯一代码集成人：负责合并候选、运行测试、生成证据、commit 和 push。产品负责人仍只对一个产品阶段作最终批准。
