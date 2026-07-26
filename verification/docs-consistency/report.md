@@ -4,7 +4,7 @@
 - package.json.version：0.4.6
 - CONTEXT.md 版本：0.4.6
 - Release 版本：v0.4.6
-- 当前唯一下一步：等待产品负责人批准下一阶段范围和执行指令。
+- 当前唯一下一步：等待产品负责人审核 v0.4.7 可执行施工图，并批准第一批 2–3 个实施工作包。
 - Handoff 生成校验：passed
 - Handoff 幂等校验：passed
 

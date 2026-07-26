@@ -39,7 +39,7 @@ const scannedFiles = [
 ];
 
 const ignoredHistoricalPaths = ['CHANGELOG.md', 'TASKLOG.md', 'tasks/**', 'verification/**', 'research/**'];
-const expectedNextStep = '等待产品负责人批准下一阶段范围和执行指令。';
+const expectedNextStep = '等待产品负责人审核 v0.4.7 可执行施工图，并批准第一批 2–3 个实施工作包。';
 
 function readText(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');

@@ -87,14 +87,15 @@
 - Version 13 的 1% 生产灰度 version13_one_percent_canary_observation_limited_by_low_traffic：产品负责人验收通过 version 13 DeepSeek V4 Flash 非思考真实 Preview 链路后批准执行 1% 灰度。本轮先纠正旧 verification summary 中 run1/run2 顶层字段歧义；随后复用现有 version 13 `cf002344-57ee-4c3f-86a6-115ca66c8b5f`，未上传新 version，未修改 Worker、Wrangler 配置、Secrets 或 D1 schema。active deployment 更新为 `9952d7cb-2d99-483a-85f7-c9ada1a09db4`，旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 承载 99%，version 13 承载 1%。20 分钟主动观察和 5 分钟指标缓冲完成；生产 `/health`、`/v1/models` 和 Preview GET 检查均 HTTP 200，候选 tail/error tail 窗口未观察到 JSON invocation 或 runtime error，未触发回滚。因未捕获足够自然候选 invocation，观察可信度受低流量限制。预算保持平台 44/2、历史 `deepseek-chat` 21/1、`deepseek-v4-flash` 23/1；Codex 本轮主动注册 0 次、聊天 0 次、provider 调用 0 次。证据见 `verification/version13-one-percent-production-canary/summary.json`。
 - Version 13 全量生产切换 version13_full_production_active_observation_limited_by_low_traffic：产品负责人验收通过 version 13 的 1% 正常生产灰度后批准 100% 全量。本轮复用现有 version 13 `cf002344-57ee-4c3f-86a6-115ca66c8b5f`，未上传新 version，未修改 Worker、Wrangler 配置、Secrets、D1 schema、routes 或 domains；只用 `wrangler versions deploy` 将 active deployment 更新为 `0400b7aa-49fe-460d-ac6d-3ed5bfdb0480`，且该 deployment 只包含 version 13，承载 100% 正常生产流量。30 分钟主动观察和 5 分钟指标缓冲完成；生产 `/health`、`/v1/models` 和 Preview GET 检查均 HTTP 200，error tail 窗口未观察到 JSON runtime error，未触发回滚。预算保持平台 44/2、历史 `deepseek-chat` 21/1、`deepseek-v4-flash` 23/1；Codex 本轮主动注册 0 次、聊天 0 次、provider 调用 0 次。钱包刹车与 V4 Flash 非思考路由已处于 active production version，但未捕获足够自然生产 invocation，长期真实用户样本仍不足。证据见 `verification/version13-full-production-promotion/summary.json`。
 - 第 3 阶段钱包刹车正式封板 PASS_AFTER_CONDITIONS_RESOLVED：GPT 技术验收初始结论为 `CONDITIONAL_PASS`，Claude 逻辑复核提出需要确认两张账本非整体原子是否可能绕过硬上限；代码和测试复核确认属于安全的情况 A。平台总账 `monthly_platform_budget` 是唯一用于决定是否允许继续调用 provider 的硬刹车，模型明细 `monthly_model_budget` 只用于审计和分类统计。平台总账的硬上限预留通过带额度条件的单条更新完成，属于硬刹车所依赖的条件原子操作；模型明细账在平台预留成功后单独更新，不与平台总账构成一个整体原子事务。如果模型明细账更新失败，请求会 fail closed，provider 不会被调用；平台总账已产生的保守预留保持不退款，后续请求仍以平台总账判断剩余额度，因此只可能更早停止，不可能突破 40 USD 模型调用硬上限。产品负责人已批准正式结束第 3 阶段。
+- v0.4.7 可执行施工图 audit_completed_docs_only：本轮从代码、配置、测试、安装脚本和现有文档审计 v0.4.7 市场基础可用性缺口，形成 9 个模块状态、公共底层清单、施工顺序、8 个工作包和第一批 2–3 个推荐工作包。状态只是施工图，不代表 v0.4.7 功能开发已启动；本轮未修改功能代码、未调用真实模型、未启动 Agent、未部署、未接入任何通讯入口。
 
 未完成：
 
-- 等待产品负责人批准下一阶段范围和执行指令。
+- 等待产品负责人审核 v0.4.7 可执行施工图，并批准第一批 2–3 个实施工作包。
 - 实际电脑清理。
 - 首屏 3-5 条示例指令。
 - 反馈入口和安全/隐私告知。
-- v0.4.7 产品内埋点与错误日志：需求已确认，尚未设计和开发；隐私告知需要覆盖埋点字段、目的、范围、保存方式和用户权利；第 3 阶段已封板，但 v0.4.7 仍未启动，需等待产品负责人批准下一阶段范围和执行指令。
+- v0.4.7 产品内埋点与错误日志：需求已确认，尚未开发；已纳入本轮施工图的工作包 E，需等待产品负责人审核施工图并批准第一批工作包。
 - 桌面端预算到顶错误展示与用户引导：后端已有错误码 `monthly_budget_exhausted` 和中文提示“共享模型服务本月额度已用完，请稍后再试。”；本阶段没有独立证明桌面端会以清晰、友好的方式展示该提示，记录到 v0.4.7 或首批真人试用前检查。
 - 3-5 名真实用户测试。
 - 长期记忆。
@@ -108,7 +109,7 @@
 - 跨网站复杂执行。
 - 国际化和区域合规。
 
-当前唯一下一步：等待产品负责人批准下一阶段范围和执行指令。
+当前唯一下一步：等待产品负责人审核 v0.4.7 可执行施工图，并批准第一批 2–3 个实施工作包。
 
 <!-- AIW_CAPABILITY_STATUS_END -->
 
@@ -116,7 +117,7 @@
 
 状态枚举固定为：`completed_and_verified`、`active_current_stage`、`approved_not_started`、`candidate_after_current_stage`、`waiting_for_real_user_feedback`、`strategic_research`、`personal_growth_or_external_dependency`、`blocked`、`rejected_or_deferred`、`unknown_needs_audit`。
 
-当前没有 `active_current_stage` 的产品实施任务；唯一下一步仍是等待产品负责人批准下一阶段范围和执行指令。
+当前没有 `active_current_stage` 的产品实施任务；唯一下一步仍是等待产品负责人审核 v0.4.7 可执行施工图，并批准第一批 2–3 个实施工作包。
 
 | # | 任务线 | 产品模块 | 专业岗位 | 真实问题/用户 | 状态与证据 | 已完成/未完成/子模块 | 依赖 | 记录位置与完整性 | 预计涉及 | 并行/冲突 | 信任/安全/验证 | 当前是否开始/拍板 |
 | ---: | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -225,13 +226,108 @@
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；Workbench、Hermes、OpenClaw 三类执行入口都已通过 `18800` 调用当前生产 provider DeepSeek，验收摘要在 `verification/unified-model-proxy/summary.json`。DeepSeek 是当前实现细节，后续 provider 必须可替换。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。第 3 阶段钱包刹车与 DeepSeek V4 Flash 非思考 version 13 全量生产已通过技术验收、逻辑复核和产品负责人最终批准，状态为 `PASS_AFTER_CONDITIONS_RESOLVED`。自然用户规模稳定性仍未证明；唯一下一步是等待产品负责人批准下一阶段范围和执行指令。
+- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。第 3 阶段钱包刹车与 DeepSeek V4 Flash 非思考 version 13 全量生产已通过技术验收、逻辑复核和产品负责人最终批准，状态为 `PASS_AFTER_CONDITIONS_RESOLVED`。自然用户规模稳定性仍未证明；本轮已形成 v0.4.7 施工图，唯一下一步是等待产品负责人审核 v0.4.7 可执行施工图，并批准第一批 2–3 个实施工作包。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
+## 7. v0.4.7 可执行施工图
+
+本节是 v0.4.7 第 1 步“审计现有代码并建立施工图”的权威记录。状态标签只使用：`completed_and_verified`、`implemented_not_verified`、`partially_implemented`、`not_implemented`、`unknown_needs_audit`、`blocked`、`deferred_after_v047`。本节不代表功能开发已经启动。
+
+### 7.1 当前代码真实结构
+
+- 桌面壳：`electron/main.cjs` 启动本机模型代理 `model-proxy.mjs` 和应用服务 `server.mjs`，默认检查 `18800`、`8787`，失败时加载中文 fallback page。
+- 前端：`src/main.jsx` 和 `src/styles.css` 实现聊天主界面、输入框、会话列表、任务侧栏、基础 Markdown、伪流式显示、网络重试和本地数据保存。
+- 应用服务：`server.mjs` 提供 `/api/data`、`/api/readiness`、`/api/chat-message`、Agent health、错误归一化、健康修复、版本检查和静态资源。
+- 模型代理：`model-proxy.mjs` 监听 `127.0.0.1:18800`，当前 provider registry 只有 DeepSeek；本机 key 优先，安装版默认走 Managed Proxy；公开模型仍是 `deepseek-chat` 逻辑名。
+- 生产代理：`managed-proxy/src/index.ts` 已完成钱包刹车、`deepseek-chat` 到 `deepseek-v4-flash` 非思考路由和 D1 预算账本，生产已封板。
+- Agent 雏形：`agents/registry.mjs`、`agents/adapter-contract.mjs`、`agents/router.mjs`、`agents/adapters/*.mjs` 定义 DeepSeek、Hermes、OpenClaw adapter，但面向市场的统一任务状态、权限确认和多入口调度还不完整。
+- 本地数据：`runtime-paths.mjs` 把用户数据、日志、证据放到 `%APPDATA%\ai-workbench` 或用户目录 fallback；`server.mjs` 的 `workbench.json` 保存 messages、conversations、tasks、runs、memories。
+- 安装发布：`package.json`、`build/installer.nsh` 和 `electron-builder` 支持 v0.4.6 Windows NSIS 安装包；自动更新、非中文系统完整验收和陌生真人验收未完成。
+
+### 7.2 9 个模块审计
+
+| 模块 | 状态 | 真实代码位置 | 已实现 | 主要缺口 | v0.4.7 市场及格线 |
+| --- | --- | --- | --- | --- | --- |
+| 1. 模型调用和任务执行底层 | `partially_implemented` | `server.mjs`、`model-proxy.mjs`、`agents/*`、`managed-proxy/src/index.ts` | Workbench/Hermes/OpenClaw 都可经 `18800` 调当前生产 provider；Managed Proxy 有生产钱包刹车和 V4 Flash 非思考路由。 | 本地 `model-proxy.mjs` provider registry 只有 DeepSeek；模型能力、价格、路由、错误仍分散在本机代理和 Worker；没有统一 model capability schema；Codex 只是研发工具，不是产品运行模型。 | 先抽出最小 provider/model capability 配置和统一调用/错误结构，不接新模型；保留 DeepSeek 低成本执行者定位。 |
+| 2. 基础对话和界面 | `partially_implemented` | `src/main.jsx`、`src/styles.css`、`server.mjs` | 输入框、发送、Enter 发送/Shift+Enter 换行、加载中、伪流式、网络重试、失败文案、本地会话、新建/删除/重命名、基础 Markdown、长内容滚动、自动滚动。 | 无真正取消；无用户可点重试；无复制按钮；无代码块专门渲染；链接不自动可点击；首屏只有 1 条示例；预算撞顶无专门 UI；用户对长任务状态感知不足。 | 首屏 3–5 条示例、明确 loading/cancel/retry、复制、代码块和链接、预算到顶中文提示、基础状态提示。 |
+| 3. 图片能力 | `not_implemented` | `src/main.jsx`、`server.mjs` | 静态资源 MIME 包含常见图片类型，仅用于前端静态文件。 | 无粘贴/拖入/选择/预览/删除/多图/大小格式限制/压缩/上传/后端接收/provider 多模态格式/隐私提示/失败恢复。 | 最低及格线需先做可见附件结构、预览删除、大小格式限制、隐私提示、失败提示；图片理解是否进 v0.4.7 需单独拍板。 |
+| 4. 文件能力 | `partially_implemented` | `agents/adapters/hermes.mjs`、`server.mjs` | Hermes 有 `read_file_summarize` 工具意图和本地文件读取执行路径。 | 前端不能选择文件；没有统一附件结构；没有 PDF/Word/Excel/Markdown/代码文件解析策略；没有临时文件生命周期；可能只靠自然语言路径，不适合陌生用户。 | v0.4.7 先支持文本/Markdown/代码或先只做文件入口审计，PDF/Office 优先评估成熟解析库，不自研大解析系统。 |
+| 5. 上下文和会话 | `partially_implemented` | `src/main.jsx`、`server.mjs`、`runtime-paths.mjs` | 同一会话消息保存在本地 JSON；会话列表、新建、删除、重命名、应用重启后可读取数据结构；旧 messages 可迁移为 default conversation。 | 未做会话恢复专项验收；无长对话限制；无上下文压缩；模型调用只发送当前输入或工具短上下文，不发送完整多轮历史给模型；无用户可见数据位置/清除全部；跨会话串线风险未专项测试。 | v0.4.7 必须证明同一会话连续性、不同会话隔离、本地保存和重启恢复；高级上下文压缩可后置，但必须有长度限制。 |
+| 6. 反馈、埋点、错误日志和隐私 | `partially_implemented` | `electron/main.cjs`、`runtime-paths.mjs`、`model-proxy.mjs`、`server.mjs`、`errors/normalize.mjs` | Electron 启动日志、模型代理调用日志、systemErrors、错误归一化已有；后端可记录失败经验。 | 无反馈入口；无正/负反馈；无用户补充说明；无产品埋点 schema；无日志保留期限、查看/删除、拒绝开关；未证明不采集正文、图片、文件或凭据。 | 最小数据原则：默认不记录完整对话正文、图片正文、文件正文、Secret、Token、Cookie、Authorization；只记录必要元数据并提供隐私告知。 |
+| 7. 安装、启动、环境自检和恢复 | `partially_implemented` | `electron/main.cjs`、`readiness.mjs`、`health/self-heal.mjs`、`build/installer.nsh`、`scripts/verify-install-release.mjs` | Windows 安装/卸载、服务自启、端口/依赖 readiness、fallback page、smoke test、日志目录已存在。 | 端口冲突恢复不够主动；防火墙/代理/非中文 Windows/陌生真人安装未充分验证；自动更新未做；用户同意后配置流程不完整；崩溃恢复和卸载数据保留说明不足。 | 陌生用户能下载、安装、启动；缺环境时看懂原因；配置前征得同意；失败可恢复或退出。 |
+| 8. 测试、虚拟人格和真人验收 | `partially_implemented` | `scripts/verify*.mjs`、`scripts/capture*.mjs`、`verification/*` | 已有单元/集成/安装/发布/Cloudflare/文档一致性验证脚本和大量 evidence。 | 没有 v0.4.7 模块级测试矩阵；虚拟人格测试未脚本化；图片/文件/上下文/日志隐私/预算撞顶 UI/非中文系统/真人下载安装验收未建立。 | 建立 v0.4.7 验收矩阵，覆盖虚拟人格、UI、会话、图片文件、日志隐私、安装和真人试用；虚拟人格不能替代真人。 |
+| 9. 内部研发提速和并行执行 | `partially_implemented` | `EXECUTION_PROTOCOL.md`、`agents/*`、`research/channel-connection-plan.md` | 多 Agent 原则、入口拆分、Agent adapter 雏形、OpenClaw/Hermes 调用已有。 | 没有飞书/Telegram 内部入口；没有手机任务接收、任务编号、文件驱动协调 Agent 执行器、独立 worktree 并行和高风险审批产品化链路。 | 作为辅助研究线，不阻塞 v0.4.7 主线；底层保持入口适配器可替换。 |
+
+文档与代码不一致或容易误读的点：
+
+- 文档长期描述的图片、文件、多模态、上下文压缩、反馈埋点、手机端、Web 端、多入口和多模型分层都属于战略或候选任务，不是当前已实现功能。
+- `agents/definitions.mjs` 中 OpenClaw capabilities 包含 `feishu`、`telegram`、`discord` 等词，但仓库没有真实通讯入口接入；只能说明候选能力标签存在。
+- `src/main.jsx` 有 `storage.fileSizeBytes` 元数据展示来源，但没有用户文件上传能力；不能写成文件能力已完成。
+- `model-proxy.mjs` 有 provider registry 形态，但当前只有 DeepSeek provider；不能写成完整多 provider 生产分层已完成。
+- 后端已有 `monthly_budget_exhausted` 中文提示来自 Managed Proxy，但桌面端专门展示和用户引导尚未独立验证。
+
+### 7.3 公共底层清单
+
+| 公共底层 | 当前是否存在 | 是否需要重构 | 依赖方 | 不先做的返工风险 | 是否第一批 |
+| --- | --- | --- | --- | --- | --- |
+| 统一输入结构 | 部分存在：`/api/chat-message` 只接 `{content, conversationId}` | 需要 | UI、图片、文件、会话、Agent | 图片/文件会各自造参数 | 是 |
+| 文字/图片/文件统一消息结构 | 不存在 | 需要 | UI、后端、provider、日志 | 附件与会话、隐私、重试全返工 | 是 |
+| 统一任务状态 | 部分存在：tasks/runs 有 running/done/failed | 需要收敛 | Agent、UI、验收 | UI 状态、取消、重试不一致 | 是 |
+| 统一错误结构 | 部分存在：`errors/normalize.mjs` 和 Managed Proxy error | 需要映射 | UI、日志、预算撞顶 | 各模块各写错误文案 | 是 |
+| 统一取消和重试机制 | 部分存在：前端网络重试、adapter cancel | 需要 | UI、Agent、模型请求 | 长任务无法恢复，重复请求风险 | 是 |
+| 会话数据结构 | 部分存在：conversations/messages | 需要加版本和边界 | 上下文、附件、恢复 | 后续迁移困难 | 是 |
+| 本地持久化 | 部分存在：runtime `workbench.json` | 需要隐私/清除/备份策略 | 会话、日志、反馈 | 用户数据不可控 | 是 |
+| provider 抽象 | 部分存在：`model-proxy.mjs` provider registry、Worker 路由 | 需要最小化 | 模型调用、测试 | 多模型时散改 UI/业务 | 是 |
+| 模型能力声明 | 部分存在：`agents/definitions.mjs` 和 Worker `/v1/models` | 需要统一 | 图片、文件、分层 | 不知道哪个模型能看图/长上下文 | 是 |
+| 文件和图片临时存储边界 | 不存在 | 需要 | 图片、文件、隐私 | 内容泄漏或残留 | 是 |
+| 日志字段和隐私边界 | 部分存在：日志文件和 systemErrors | 需要 | 反馈、埋点、QA | 误记正文或凭据 | 是 |
+| 权限检查 | 部分存在：健康修复和高权限说明 | 需要 | 文件、系统操作、入口 | 擅自操作用户环境 | 是 |
+| 成本记录接口 | 部分存在：Managed Proxy D1 预算 | 暂不改生产，可加客户端成本状态映射 | 预算提示、测试 | 前端无法解释预算到顶 | 否，先做 UI 映射 |
+| 测试夹具和模拟 provider | 部分存在：managed-proxy tests、verify 脚本 | 需要 v0.4.7 专用 | 所有模块 | 付费/真实环境测试成本高 | 是 |
+
+### 7.4 施工顺序
+
+| 类别 | 内容 |
+| --- | --- |
+| A. 必须先完成的公共底层 | 工作包 A：统一输入/消息/错误/任务状态、最小 provider/model capability 抽象、测试 mock provider；工作包 E 的日志隐私 schema 可与 A 并行设计但最终需同 A 对齐。 |
+| B. 公共底层确定后可并行开发 | 工作包 B 基础界面状态、工作包 C 图片与文件入口、工作包 D 上下文与会话保存恢复、工作包 E 反馈埋点、工作包 F 安装环境恢复、工作包 G 测试矩阵。 |
+| C. 必须最后统一集成 | `src/main.jsx`、`server.mjs`、统一消息结构、会话迁移、日志隐私开关、安装包验收、Release 候选；由 Codex 统一集成。 |
+| D. 真人测试前必须完成 | 首屏示例、发送/取消/重试/复制/错误展示、预算到顶提示、基础隐私告知、反馈入口、会话恢复、安装启动降级、日志最小化、v0.4.7 验收矩阵。 |
+| E. v0.4.7 后继续优化 | 高级上下文压缩、完整多模型分层、手机端/Web 端、外部通讯入口、支付、加密支付、宣传营销、信息收集和完整多 Agent 编排。 |
+
+### 7.5 工作包
+
+| 工作包 | 目标 | 为什么现在做 | 前置依赖 | 输出 | 会修改的实际文件 | 禁止修改 | 可并行/冲突 | 安全边界 | 成本状态 | 工作量 | 测试和验收 | 当前状态 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| A. 公共底层、统一输入和模型抽象 | 建立文字/图片/文件统一消息结构、统一错误、任务状态、最小 provider/model capability、mock provider | 后续 UI、图片、文件、上下文都会依赖 | 产品负责人批准工作包；不得接新模型 | 数据结构、接口契约、迁移策略、测试夹具 | `server.mjs`、`model-proxy.mjs`、`agents/*`、`errors/normalize.mjs`、`src/main.jsx` 少量契约适配、`scripts/verify*.mjs` | `managed-proxy/src/`、Cloudflare、D1 schema、Secrets、生产配置、package version | 可与 E/G 设计并行；与 B/C/D 实现冲突 | 不读用户真实文件；不碰 Secret；不碰生产；失败即停止并保留 diff | `estimate`：Codex、高质量模型复核、mock 测试；DeepSeek 真实调用 `unknown` 且本包不调用 | large | 单元/集成/mock provider/数据迁移测试；验收为旧文本聊天不退化、结构可承载附件 | `ready_to_start` |
+| B. 基础界面与交互状态 | 补齐首屏示例、加载、取消、重试、复制、代码块、链接、预算到顶提示 | 直接决定用户第一关是否留下 | A 的错误/状态契约至少冻结 | 市场基础聊天体验 | `src/main.jsx`、`src/styles.css`、必要 `scripts/capture*.mjs` | 模型路由、Managed Proxy、D1、生产配置 | A 未冻结前不宜开；与 C/D 同改 UI 有冲突 | 不接触用户文件/Secret/生产；预算提示只做展示 | `estimate`：Codex、UI 验收；真实模型调用 `unknown` 且需批准 | medium | UI 截图、键盘、失败、预算错误 mock、长内容 | `not_ready_to_start` |
+| C. 图片与文件 | 做附件入口、预览删除、格式大小限制、最小文本文件支持或图片可用性判断 | 图片/文件可能是市场基础缺口，但范围需控 | A 的消息结构、E 的隐私边界 | 附件 MVP 或明确后置报告 | `src/main.jsx`、`src/styles.css`、`server.mjs`、可能新增测试脚本 | Managed Proxy、生产、多模态 provider、Secret、package version | 可在 A 后与 D/E 并行；与 B 同改输入框冲突 | 默认不记录正文；临时文件位置和删除规则明确；用户同意后发送 | `unknown`：解析库、多模态模型、存储费用；不能写 0 | large | 图片/文件 UI、大小格式、失败恢复、隐私扫描 | `not_ready_to_start` |
+| D. 上下文与会话保存恢复 | 证明同会话连续、不同会话隔离、重启恢复、清空/删除和长度限制 | 多轮是市场及格线 | A 的消息结构 | 会话 v0.4.7 可用性闭环 | `server.mjs`、`src/main.jsx`、`runtime-paths.mjs`、`scripts/verify*.mjs` | Managed Proxy、D1、生产流量、Secret | 可在 A 后与 B/E 并行；与 C 附件持久化交叉 | 只读写本地 runtime；提供清除；防串会话 | `estimate`：本地测试；长上下文真实模型费用 `unknown` | medium | 重启恢复、隔离、长度限制、删除、迁移回归 | `not_ready_to_start` |
+| E. 反馈、埋点、错误日志和隐私 | 建立最小数据 schema、反馈入口、错误编号、日志保留/查看/删除/拒绝和隐私告知 | 真人试用前必须知道失败原因且不能伤害信任 | 可与 A 共同定义字段 | 最小化日志和反馈闭环 | `server.mjs`、`src/main.jsx`、`src/styles.css`、`runtime-paths.mjs`、`errors/normalize.mjs`、`scripts/verify*.mjs` | 用户正文采集默认禁止、Secret、生产配置、Cloudflare | 可与 A/G 并行设计；与 B UI 有小冲突 | 不记录完整对话/图片/文件正文；不记录凭据；用户可拒绝/删除 | `estimate`：本地日志；第三方埋点 `unknown` 且当前不接 | medium | 隐私扫描、日志字段测试、反馈提交/删除、错误码展示 | `ready_to_start` |
+| F. 安装、环境自检和崩溃恢复 | 强化陌生 Windows 下载/安装/启动/端口/网络/代理/非中文环境/卸载数据说明 | 第二关决定用户能不能开始 | B/E 基础错误和隐私口径 | 安装和恢复验收矩阵 | `electron/main.cjs`、`readiness.mjs`、`health/self-heal.mjs`、`build/installer.nsh`、`scripts/verify-install-release.mjs` | package version、Release、Cloudflare、D1、Secret | 可独立研究，代码集成需串行 | 不擅自扫描无关系统；配置前需同意；可退出恢复 | `unknown`：真人安装、非中文系统、回归测试成本 | large | 安装/smoke/卸载/端口冲突/非中文系统/崩溃日志 | `not_ready_to_start` |
+| G. 测试、虚拟人格和质量验收 | 建立 v0.4.7 验收矩阵、虚拟人格、mock、UI、安装、隐私和真人验收清单 | 先定义验收，防止做完不可验 | 无，可先文档和脚本设计 | 验收矩阵和自动化脚本候选 | `scripts/verify*.mjs`、`scripts/capture*.mjs`、`verification/`、`TASKLOG.md`、`EXECUTION_PROTOCOL.md` | 功能代码、生产、真实模型 | 可与 A/E 并行；不直接改产品逻辑 | 不跑付费测试；不上传数据；虚拟人格不替代真人 | `estimate`：脚本和本地测试；虚拟人格模型调用 `unknown` | medium | docs/test matrix 通过，mock 覆盖预算撞顶/网络/隐私 | `ready_to_start` |
+| H. 内部研发提速通道研究 | 研究飞书/Telegram 内部入口、本地 Codex、任务编号、独立 worktree、高风险审批 | 提升研发效率，但不能阻塞 v0.4.7 | 产品负责人选入口；公共网关边界 | 研究报告和后续独立工作包 | `research/channel-connection-plan.md`、`CURRENT_PROGRESS_AUDIT.md`、`EXECUTION_PROTOCOL.md` | 任何入口代码、机器人、Secret、生产、Codex 远程执行 | 可并行研究，不和主线抢文件 | 不接入平台、不创建机器人、不发外部消息 | `unknown`：飞书/Telegram/API/Codex/维护费用 | small | 只读方案审计；验收为成本/安全/可行性表 | `not_ready_to_start` |
+
+预算说明：`actual` 仅限已经封板的钱包刹车生产事实；本轮没有制造新的真实付费调用。工作包的 Codex、高质量模型复核、虚拟人格、第三方组件、文件解析、云存储、日志埋点、多 Agent、真人安装、返工和集成成本均按 `estimate` 或 `unknown` 记录，不知道的不得写成 0。
+
+推荐第一批等待产品负责人批准的工作包：
+
+1. 工作包 A：先冻结统一输入、消息、错误、任务状态和模型能力契约。原因是 B/C/D/E 都会依赖它；不先做会导致输入框、附件、会话、日志各自返工。
+2. 工作包 E：与 A 并行设计最小日志、反馈和隐私边界。原因是真人试用前必须能收集失败但不能采集过量数据；文件冲突主要在 `server.mjs` 和 `src/main.jsx`，需要 Codex 统一集成。
+3. 工作包 G：与 A/E 并行建立验收矩阵和 mock 测试。原因是先有验收标准，后续 B/C/D/F 才能分包开发；它主要改测试和文档，和 A/E 冲突低。
+
+仍需产品负责人拍板：
+
+- v0.4.7 是否必须包含图片理解，还是只做附件入口和图片能力可用性判断。
+- v0.4.7 是否必须支持 PDF/Word/Excel，还是先做文本/Markdown/代码文件。
+- 是否批准 A/E/G 作为第一批实施工作包。
+- 是否允许后续工作包为测试使用 mock provider；真实模型调用仍需单独批准。
+- 陌生真人试用的 1–2 名目标用户、地区、语言和设备范围。
+
 ## 5. 近期优先级
 
-1. 等待产品负责人批准下一阶段范围和执行指令。
+1. 等待产品负责人审核 v0.4.7 可执行施工图，并批准第一批 2–3 个实施工作包。
 2. 模型分层调度与上下文压缩只能在产品负责人明确批准后执行。
 3. v0.4.7 首屏示例、反馈入口和安全告知。
 4. 3-5 名真实用户测试。

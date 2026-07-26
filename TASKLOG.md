@@ -6,7 +6,7 @@
 
 ## 当前一句话状态
 
-AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 公开发布、产品方向收口、文档基准防漂移机制、电脑环境治理审计、产品定位修正、阶段性总审核（砍薄版）、生存体检、第 3A 段本地钱包刹车、生产 D1 预算表、Preview/0%/1% 灰度和第 3B-2b2d 真实预算预留验证。DeepSeek 旧上游模型名退役后，已完成 `deepseek-chat` 逻辑模型到 `deepseek-v4-flash` 的非思考兼容修复，并上传 version 13 完成无付费 Preview、真实 Preview 链路、1% 生产灰度和 100% 全量生产切换。version 13 当前承载 100% 正常生产流量；观察窗口正常但受低自然生产流量限制。第 3 阶段钱包刹车与 version 13 全量生产已完成技术验收、逻辑复核和产品负责人最终批准，状态为 `PASS_AFTER_CONDITIONS_RESOLVED`。当前唯一下一步是等待产品负责人批准下一阶段范围和执行指令；本轮新增完整产品能力、专业工作流、任务归属与时间执行地图，用于产品负责人审核和后续排期。未经批准不得进入模型分层、上下文压缩、v0.4.7 或其他新阶段，不得发起新的主动真实模型调用。
+AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 公开发布、产品方向收口、文档基准防漂移机制、电脑环境治理审计、产品定位修正、阶段性总审核（砍薄版）、生存体检、第 3 阶段钱包刹车正式封板、完整产品能力/专业工作流/任务归属地图、20 块产品战略和国际多渠道入口战略。version 13 当前承载 100% 正常生产流量；观察窗口正常但受低自然生产流量限制。本轮完成 v0.4.7 可执行施工图：基于真实代码审计 9 个模块，识别公共底层、施工顺序、8 个工作包，并推荐第一批 A/E/G 三个候选工作包等待产品负责人审核。当前唯一下一步是等待产品负责人审核 v0.4.7 可执行施工图，并批准第一批 2–3 个实施工作包；未经批准不得进入模型分层、上下文压缩、v0.4.7 功能开发或其他新阶段，不得发起新的主动真实模型调用。
 
 ## 已完成任务
 
@@ -44,6 +44,7 @@ AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 
 | 第 3 阶段钱包刹车正式封板 | 已完成 | 产品负责人批准 `ACCEPT_CONDITIONAL_PASS`，第 3 阶段最终状态为 `PASS_AFTER_CONDITIONS_RESOLVED`。本轮只修正文档和 verification 表述：明确平台总账是唯一硬刹车，模型明细只做审计和分类统计；两张账本不是整体原子事务，模型明细失败会 fail closed、provider 不调用、平台保守预留不退款，只会更早耗尽预算，不会突破 40 USD 硬上限。整理真实 Preview 报告 run1/run2 标题，记录自然用户规模稳定性尚未证明，以及桌面端预算到顶提示展示需放入 v0.4.7 或首批真人试用前检查。本轮未修改功能代码或生产环境，未重新部署，未调用真实模型，未启动新阶段。 | `tasks/2026-07-26-第3阶段钱包刹车正式封板.md` |
 | AI Workbench 完整产品能力、专业工作流、任务归属与长期发展地图 | 已完成 | 梳理 23 个产品能力模块、34 类专业岗位、62 条任务线和时间执行分类；把产品定义、专业工作流、任务归属、并行/串行边界、用户信任、第一批用户缺口、两个用户流失关口、市场质量线、v0.4.7 完整候选范围和长期愿景边界写入现有权威文档。`NEXT_STEP.md` 保持原文不变；本轮只改文档、Handoff 生成源和文档一致性证据，未修改功能代码或生产环境，未启动 v0.4.7、图片、上下文、手机端、Web 端、多 Agent、支付、加密支付、宣传营销或其他实施任务。 | `PRODUCT.md`、`EXECUTION_PROTOCOL.md`、`CURRENT_PROGRESS_AUDIT.md`、`THINKING.md`、`PRINCIPLES.md`、`VISION.md`、`DECISIONS.md` |
 | 固化 20 块产品战略并补充国际多渠道入口 | 已完成 | 固化 20 块产品战略；明确飞书、微信、Telegram、WhatsApp、Discord 都只是 AI Workbench 外部入口适配器，核心不绑定单一平台；将通讯入口拆成国内内部研发指挥入口、国际内部研发指挥入口、国内外部用户入口、国际外部用户入口四条任务；补充 `waiting_for_product_owner_channel_selection`、入口成本框架、文件驱动无隐藏长期记忆协调 Agent、并行任务开工门槛、快但不免检、DeepSeek 与高质量模型分工。本轮只改文档和 Handoff 生成源，未修改 `NEXT_STEP.md`，未修改功能代码或生产环境，未启动 v0.4.7、飞书、Telegram、多 Agent、支付、信息收集、具身智能或其他实施任务。 | `PRODUCT.md`、`CURRENT_PROGRESS_AUDIT.md`、`EXECUTION_PROTOCOL.md`、`DECISIONS.md`、`THINKING.md`、`PRINCIPLES.md`、`VISION.md`、`GROWTH_LOG.md` |
+| 建立 AI Workbench v0.4.7 可执行施工图并推荐第一批实施任务 | 已完成施工图，等待产品负责人审核 | 真实读取前端、应用服务、本机模型代理、Agent adapter、错误归一化、readiness、Electron、安装配置、验证脚本、Managed Proxy 代码和测试，只做文档审计。记录 9 个模块状态：模型底层、基础界面、图片、文件、上下文会话、反馈埋点日志隐私、安装环境恢复、测试虚拟人格真人验收、内部研发提速。建立公共底层清单、施工顺序和 A-H 8 个工作包；推荐第一批候选为 A 公共底层、E 反馈日志隐私、G 测试验收。未修改功能代码或生产环境，未调用真实模型，未启动 Agent、入口或部署。 | `CURRENT_PROGRESS_AUDIT.md`、`CURRENT_TASK.md`、`NEXT_STEP.md`、`CONTEXT.md` |
 | 第 3B-2b2b 段：零流量 deployment | 已完成零流量验证 | 产品负责人验收通过 3B-2b2a 后批准进入 3B-2b2b，并在严格基线 blocked 后批准以文档提交 `37ab9c2` 为新基线继续。本轮用 `wrangler versions deploy` 将新预算 version 加入 active deployment，但流量为 0%；旧稳定 version 继续 100%。通过 production hostname version override 验证候选 version 的健康、模型列表和未认证聊天拒绝路径；预算表仍为空。未使用真实安装 Token，未调用真实 provider，未修改 Secrets，未执行回滚。上一段完整 Preview URL 当前文件已脱敏，历史不重写。 | `verification/monthly-budget-worker-zero-traffic-deployment/summary.json`、`verification/monthly-budget-worker-zero-traffic-deployment/report.md` |
 | DeepSeek V4 Flash 路由迁移本地候选 | 本地候选完成，等待验收 | 产品负责人确认 3B-2b2d HTTP 400 根因高度确定为旧 DeepSeek 上游模型名退役；本轮先将失败候选 version 从 1% 撤回到 0%，旧稳定 version 恢复 100%。本地实现逻辑模型 `deepseek-chat` 到上游正式模型 `deepseek-v4-flash` 的显式路由，预算明细按实际计费模型记录；16 项 Managed Proxy 测试和 TypeScript 检查通过。既有 21 micro-USD 失败预留保留，未上传新 Worker version，未部署生产修复，未修改 Secrets/D1 schema，未发起新的真实 provider 调用。 | `verification/deepseek-v4-flash-route-migration/summary.json`、`verification/deepseek-v4-flash-route-migration/report.md` |
 | DeepSeek V4 Flash 修复 Worker Preview | Preview 已上传并通过无付费验证，等待验收 | 产品负责人验收本地候选后批准只上传新 Worker version 并执行无付费 Preview 验证。新修复 Worker version `a7eb385b-84df-4a45-b554-0aca40b6b407` / version number `12` 已上传，Preview alias 为 `budget-v4-flash-candidate`；Preview `/health` 200、`/v1/models` 200、未认证聊天 401 `missing_token`。active deployment 和正常生产流量未变化，旧稳定 version 100%，失败候选 0%，新修复 version 0%。既有 21 micro-USD 预算历史保留，未注册 installation，未调用真实 provider，未修改 Secrets/D1 schema。 | `verification/deepseek-v4-flash-worker-preview-upload/summary.json`、`verification/deepseek-v4-flash-worker-preview-upload/report.md` |
@@ -66,7 +67,7 @@ AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 
 | 打开后知道能干嘛 | 未完成 | 首屏放 3-5 条能点即跑的示例指令。 |
 | 办不成时是人话不是崩 | 部分完成 | 已有 readiness 降级说明；后续继续补失败自愈、重试和人话解释。 |
 | 反馈出口 + 一句安全告知 | 未完成 | 增加反馈渠道和基础安全告知。 |
-| v0.4.7 产品内埋点与错误日志 | 未开始 | 需求已确认；第 3 阶段已封板，但 v0.4.7 仍需等待产品负责人批准下一阶段范围和执行指令后才可开工。只允许最小化工作台内部交互元数据，原始用户输入和模型回答正文当前未批准采集。 |
+| v0.4.7 产品内埋点与错误日志 | 未开始 | 已纳入 v0.4.7 施工图工作包 E；等待产品负责人审核施工图并批准第一批工作包后才可开工。只允许最小化工作台内部交互元数据，原始用户输入和模型回答正文当前未批准采集。 |
 | 桌面端预算到顶错误展示与用户引导 | 未开始 | 后端已有 `monthly_budget_exhausted` 和“共享模型服务本月额度已用完，请稍后再试。”；桌面端是否清晰、友好展示尚未独立证明，放入 v0.4.7 或首批真人试用前检查。 |
 | 模型分层调用 | 未开始/暂缓 | 等上线最小集前三条稳定后再做；不要抢跑。 |
 | 手机端 | 未开始 | 等桌面上线闭环后再排期。 |
