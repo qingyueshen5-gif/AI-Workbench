@@ -660,6 +660,7 @@ export {
   loadTask,
   listTasks,
   readLogs,
+  currentHead,
   codexContract,
   redact,
   normalizeTaskCard,

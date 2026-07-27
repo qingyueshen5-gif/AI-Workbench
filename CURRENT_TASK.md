@@ -5,25 +5,25 @@
 
 ## 当前主线
 
-本轮唯一任务：修复 AI Workbench 本地 Codex 任务网关 v0.1 的 Windows Codex CLI 启动适配，并完成一次真实只读验收。
+本轮唯一任务：建立 AI Workbench 飞书渠道适配最小闭环 v0.1。
 
 任务性质：
 
-- 本地 Codex CLI 正式调用方式审计；
-- 任务卡、状态机、人工批准、独立 branch/worktree、事件账本和日志脱敏；
-- mock Codex adapter 和自动化测试；
-- Windows `.cmd` 启动器修复；
-- 一次真实只读 Codex smoke 验收；
-- 为未来飞书入口保留渠道适配边界。
+- 飞书官方 Node SDK 审计和安装；
+- WebSocket 长连接入口适配；
+- 飞书文本命令解析、owner 鉴权、一次性配对和报告群绑定；
+- 飞书渠道调用现有本地任务网关；
+- mock Feishu adapter 自动化测试；
+- 飞书人工配置清单和真实 smoke 阻塞证据。
 
-本轮是内部研发任务调度基础设施开发，不接入飞书、Telegram、微信或其他渠道，不建立监工 Agent，不调用 Hermes 或子 Agent，不逆向或绕过 AI Link，不读取登录凭据，不启动 v0.4.7 工作包 A/E/G，不修改生产环境，不部署，不创建 Release，不修改 package version。
+本轮是内部研发任务入口开发，只接入 AI Workbench 自己控制的飞书企业自建应用适配层；不恢复原来的监工 Agent，不创建多个数字员工，不调用 Hermes、GPT 或子 Agent，不逆向或绕过 AI Link，不读取登录凭据，不启动 v0.4.7 工作包 A/E/G，不修改生产环境，不部署，不创建 Release，不修改 package version。
 
 本轮写回目标：
 
-- `CURRENT_PROGRESS_AUDIT.md`：本地 Codex 任务网关 v0.1 状态、调用契约、测试和真实 smoke 结果。
+- `CURRENT_PROGRESS_AUDIT.md`：飞书渠道适配 v0.1 状态、SDK 契约、测试和真实 smoke 阻塞原因。
 - `CURRENT_TASK.md`：本轮任务和边界。
-- `NEXT_STEP.md`：更新为等待产品负责人审核任务网关真实只读验收结果，并决定是否进入飞书渠道适配最小闭环。
-- `EXECUTION_PROTOCOL.md`：补充任务网关、worktree 和渠道适配边界。
+- `NEXT_STEP.md`：更新为等待产品负责人完成飞书企业自建应用的最小权限配置，并执行真实闭环 smoke。
+- `EXECUTION_PROTOCOL.md`：补充飞书渠道适配、owner 鉴权、报告群和通知边界。
 - `CONTEXT.md`、`TASKLOG.md`、`CHANGELOG.md`、`AI-Workbench-Handoff.md`：同步当前基准和交接摘要。
 
 ## 上轮主线封板事实
@@ -72,7 +72,7 @@
 - 产品负责人正式批准 `ACCEPT_CONDITIONAL_PASS`，第 3 阶段最终状态为 `PASS_AFTER_CONDITIONS_RESOLVED`。
 - 自然用户规模稳定性尚未证明；后续由真实用户试用和产品埋点继续验证。
 - 后端已有预算到顶错误码 `monthly_budget_exhausted` 和中文提示“共享模型服务本月额度已用完，请稍后再试。”；桌面端是否清晰、友好展示尚未独立证明，记录到 v0.4.7 或首批真人试用前检查。
-- 当前唯一下一步是等待产品负责人审核本地Codex任务网关真实只读验收结果，并决定是否进入飞书渠道适配最小闭环；未经批准不得进入飞书适配、监工 Agent、模型分层、上下文压缩、v0.4.7 功能开发或其他新阶段，不得发起新的主动真实模型调用。
+- 当前唯一下一步是等待产品负责人完成飞书企业自建应用的最小权限配置，并执行飞书到本地Codex真实闭环smoke；未经批准不得恢复监工 Agent、模型分层、上下文压缩、v0.4.7 功能开发或其他新阶段，不得发起新的主动真实模型调用。
 
 ## 最近完成
 
@@ -130,6 +130,6 @@
 
 ## 当前唯一下一步
 
-当前唯一下一步以 `NEXT_STEP.md` 为准：等待产品负责人审核本地Codex任务网关真实只读验收结果，并决定是否进入飞书渠道适配最小闭环。
+当前唯一下一步以 `NEXT_STEP.md` 为准：等待产品负责人完成飞书企业自建应用的最小权限配置，并执行飞书到本地Codex真实闭环smoke。
 
-完成本轮后必须停止，等待产品负责人验收任务网关；version 13 当前 100% active production，不进入飞书适配、监工 Agent、模型分层、上下文压缩、v0.4.7 功能开发、第二批清理或其他任务。
+完成本轮后必须停止，等待产品负责人配置飞书应用并批准真实 smoke；version 13 当前 100% active production，不恢复监工 Agent、模型分层、上下文压缩、v0.4.7 功能开发、第二批清理或其他任务。

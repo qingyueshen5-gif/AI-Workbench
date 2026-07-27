@@ -89,10 +89,11 @@
 - 第 3 阶段钱包刹车正式封板 PASS_AFTER_CONDITIONS_RESOLVED：GPT 技术验收初始结论为 `CONDITIONAL_PASS`，Claude 逻辑复核提出需要确认两张账本非整体原子是否可能绕过硬上限；代码和测试复核确认属于安全的情况 A。平台总账 `monthly_platform_budget` 是唯一用于决定是否允许继续调用 provider 的硬刹车，模型明细 `monthly_model_budget` 只用于审计和分类统计。平台总账的硬上限预留通过带额度条件的单条更新完成，属于硬刹车所依赖的条件原子操作；模型明细账在平台预留成功后单独更新，不与平台总账构成一个整体原子事务。如果模型明细账更新失败，请求会 fail closed，provider 不会被调用；平台总账已产生的保守预留保持不退款，后续请求仍以平台总账判断剩余额度，因此只可能更早停止，不可能突破 40 USD 模型调用硬上限。产品负责人已批准正式结束第 3 阶段。
 - v0.4.7 可执行施工图 audit_completed_docs_only：本轮从代码、配置、测试、安装脚本和现有文档审计 v0.4.7 市场基础可用性缺口，形成 9 个模块状态、公共底层清单、施工顺序、8 个工作包和第一批 2–3 个推荐工作包。状态只是施工图，不代表 v0.4.7 功能开发已启动；本轮未修改功能代码、未调用真实模型、未启动 Agent、未部署、未接入任何通讯入口。
 - 本地 Codex 任务网关 v0.1 local_gateway_and_real_codex_smoke_passed：本轮修复 Windows `.cmd` 启动适配，根因为 Node/Windows 直接 `spawn('codex.cmd', ...)` 在进程创建前返回 `spawn EINVAL`；现在通过 `%ComSpec% /d /s /c call "codex.cmd" ...` 受控启动，prompt 仍走 stdin，不进入命令行。已确认本机 Codex CLI `codex-cli 0.144.4`，正式非交互入口为 `codex.cmd exec`，支持 stdin、`--cd`、`--json`、`--sandbox` 和 `--output-last-message`；实测不支持 `--ask-for-approval`，已从调用契约移除，人工批准由任务网关状态机强制。新增 launcher fixture 测试覆盖 `.cmd`、带空格路径、cwd、stdin/stdout/stderr、退出码、超时/取消和 shell 注入防护；`npm.cmd run verify:task-gateway`、`npm.cmd run verify`、无模型 `codex.cmd --version`、无模型 `codex.cmd exec --help` 均通过。唯一新增真实只读 Codex smoke 启动 1 次，得到正确只读输出，worktree 已清理，文件修改为空，无 commit、push、deploy、scope violation、auth/quota/billing 错误；费用状态 `unknown`。真实 smoke 后发现网关后置 Git 检查缺少 `safe.directory`，已改为 per-call 临时配置，不修改全局 Git 配置。证据见 `verification/local-codex-task-gateway-v01/summary.json`。
+- 飞书渠道适配最小闭环 v0.1 feishu_channel_implementation_passed_live_smoke_blocked_by_credentials_or_permissions：本轮使用 AI Workbench 自己控制的飞书企业自建应用方案，安装并审计官方 SDK `@larksuiteoapi/node-sdk@1.71.1`，实测支持 `WSClient`、`im.message.receive_v1` 和 `client.im.v1.message.create`。新增 `scripts/feishu-task-channel.mjs` 和 `scripts/verify-feishu-task-channel.mjs`，飞书层只负责接收文本命令、owner 鉴权、一次性配对、报告群绑定、调用现有任务网关、回复状态和发送脱敏摘要；任务执行仍由本地任务网关和独立 worktree 中的 Codex 负责。新增 npm 命令 `feishu-channel:start`、`feishu-channel:check`、`verify:feishu-channel`，新增 `.env.example` 只列变量名。mock Feishu 测试通过，覆盖非文本拒绝、未授权拦截、配对过期/一次性、重复事件去重、群普通消息忽略、群 @ 触发、报告群绑定、started/completed/failed/blocked/cancelled 通知、通知去重、通知失败不改变任务结果、prompt 不进群通知和不自动 push/deploy。当前本机未配置 `FEISHU_APP_ID` 和 `FEISHU_APP_SECRET`，真实长连接、ping、报告群绑定和飞书到本地 Codex 真实 smoke 未执行。证据见 `verification/feishu-task-channel-v01/summary.json`。
 
 未完成：
 
-- 等待产品负责人审核本地Codex任务网关真实只读验收结果，并决定是否进入飞书渠道适配最小闭环。
+- 等待产品负责人完成飞书企业自建应用的最小权限配置，并执行飞书到本地Codex真实闭环smoke。
 - 实际电脑清理。
 - 首屏 3-5 条示例指令。
 - 反馈入口和安全/隐私告知。
@@ -110,7 +111,7 @@
 - 跨网站复杂执行。
 - 国际化和区域合规。
 
-当前唯一下一步：等待产品负责人审核本地Codex任务网关真实只读验收结果，并决定是否进入飞书渠道适配最小闭环。
+当前唯一下一步：等待产品负责人完成飞书企业自建应用的最小权限配置，并执行飞书到本地Codex真实闭环smoke。
 
 <!-- AIW_CAPABILITY_STATUS_END -->
 
@@ -118,7 +119,7 @@
 
 状态枚举固定为：`completed_and_verified`、`active_current_stage`、`approved_not_started`、`candidate_after_current_stage`、`waiting_for_real_user_feedback`、`strategic_research`、`personal_growth_or_external_dependency`、`blocked`、`rejected_or_deferred`、`unknown_needs_audit`。
 
-当前没有 `active_current_stage` 的产品实施任务；唯一下一步仍是等待产品负责人审核本地Codex任务网关真实只读验收结果，并决定是否进入飞书渠道适配最小闭环。
+当前没有 `active_current_stage` 的产品实施任务；唯一下一步仍是等待产品负责人完成飞书企业自建应用的最小权限配置，并执行飞书到本地Codex真实闭环smoke。
 
 | # | 任务线 | 产品模块 | 专业岗位 | 真实问题/用户 | 状态与证据 | 已完成/未完成/子模块 | 依赖 | 记录位置与完整性 | 预计涉及 | 并行/冲突 | 信任/安全/验证 | 当前是否开始/拍板 |
 | ---: | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -149,7 +150,7 @@
 | 25 | Linux | 多系统和生态扩展 | 桌面端、发布、QA | 覆盖开发者/专业用户。 | `strategic_research`。 | 未开始。 | 核心能力稳定。 | 本轮补入 `PRODUCT.md`。 | 打包、依赖。 | 研究可并行。 | 发行版差异。 | 当前不做。 |
 | 26 | 鸿蒙 | 手机端 App、多系统扩展 | 移动端、本地化、合规 | 中国移动生态可能需要。 | `strategic_research`。 | 未开始。 | 手机端策略和用户分布。 | 本轮补入 `PRODUCT.md`。 | 移动端代码/商店。 | 研究可并行。 | 平台规则。 | 当前不做。 |
 | 27 | 微信入口 | 通讯入口 | API、生态、合规、客服 | 用户可能在微信触达。 | `strategic_research`。 | 未开始。 | 用户分布、平台规则。 | `research/channel-connection-plan.md`，记录较完整。 | Channel adapter。 | 研究可并行，接入串行。 | 授权、隐私、平台限制。 | 当前不做。 |
-| 28 | 飞书入口 | 通讯入口 | API、生态、合规 | 团队用户可能在飞书。 | `strategic_research`。 | 调研存在，未实现。 | 用户分布、账号规则。 | `research/channel-connection-plan.md`、`VISION.md`。 | Feishu adapter。 | 研究可并行。 | 权限和消息数据。 | 当前不做。 |
+| 28 | 飞书入口 | 通讯入口 | API、生态、合规 | 团队用户可能在飞书；当前优先用于产品负责人内部研发指挥。 | `approved_not_started` 用于外部/团队用户入口；内部研发适配见任务 63。 | 通用入口原则和调研存在；本轮只实现内部研发最小适配，真实飞书 smoke 因凭据/权限未执行。 | 产品负责人自建应用配置、账号规则。 | `research/channel-connection-plan.md`、`VISION.md`、`verification/feishu-task-channel-v01/summary.json`。 | Feishu adapter。 | 内部研发 smoke 可继续；外部用户入口仍需另行批准。 | 权限、消息数据、App Secret 不入仓库。 | 外部用户入口当前不做；内部 smoke 等待配置。 |
 | 29 | Telegram 入口 | 通讯入口 | API、国际化、合规 | 国际用户通讯入口候选。 | `strategic_research`。 | 未实现。 | 国际用户验证。 | `research/channel-connection-plan.md`。 | Bot/API adapter。 | 研究可并行。 | 平台规则、隐私。 | 当前不做。 |
 | 30 | WhatsApp 入口 | 通讯入口 | API、国际化、合规 | 国际用户候选入口。 | `strategic_research`。 | 未记录充分，未实现。 | 用户分布和 Meta 平台规则。 | 本轮补入 `PRODUCT.md`，原先不完整。 | WhatsApp API。 | 研究可并行。 | 平台审核和数据。 | 当前不做。 |
 | 31 | Discord 入口 | 通讯入口 | API、开发者生态、合规 | 开发者/社区入口候选。 | `strategic_research`。 | 未记录充分，未实现。 | 用户分布。 | 本轮补入 `PRODUCT.md`，原先不完整。 | Discord bot。 | 研究可并行。 | 权限和社区规则。 | 当前不做。 |
@@ -184,7 +185,7 @@
 | 60 | 数据备份和恢复 | 上下文、记忆、环境 | 数据、桌面端、安全 | 用户本地数据和证据不能轻易丢。 | `unknown_needs_audit`。 | 项目资产备份已做；产品用户数据备份未明确。 | 本地数据结构、隐私。 | `verification/pc-environment-governance/summary.json`，产品侧记录不足。 | 本地数据/导出恢复。 | 研究可并行。 | 用户可控、隐私。 | 待拍板。 |
 | 61 | 产品分析和质量体系 | 执行/检查/修复、反馈日志 | QA、数据、产品 | 持续发现质量问题。 | `candidate_after_current_stage`。 | verification 制度已建；产品内质量数据未做。 | 埋点、错误日志、真人试用。 | `EXECUTION_PROTOCOL.md`、本轮补入 `PRODUCT.md`。 | 指标、报告、验收。 | 可并行设计。 | 指标不能夸大。 | 待拍板。 |
 | 62 | 其他仓库中已提出但未列出的任务 | 全部 | 技术文档、产品、审计 | 防止历史任务散落丢失。 | `unknown_needs_audit`。 | 已搜索并纳入当前 66 条；后续发现继续补。 | 新对话/历史审计。 | `TASKLOG.md`、`CHANGELOG.md`、`research/`，需要持续维护。 | 文档。 | 可审计并行，写回串行。 | 不伪造未执行验收。 | 持续补录，需拍板。 |
-| 63 | 国内内部研发指挥入口 | 通讯入口、多渠道指挥 | 产品、API、安全、Codex、成本 | 使用者是产品负责人本人；希望通过手机向 AI Workbench 派发研发任务，再交给本地 Codex。 | `approved_not_started`，当前只研究架构、安全、成本和可行性。 | 候选入口飞书；目标是任务接收、交给本地 Codex、结果回飞书、高风险操作重新确认；未开发。 | 统一任务入口、身份权限、Codex 本地隔离执行、成本框架。 | 本轮补入 `CURRENT_PROGRESS_AUDIT.md` 和 `PRODUCT.md`，原先笼统为飞书/通讯入口，不完整。 | 入口适配器、任务网关、权限确认；本轮不改代码。 | 可与 v0.4.7 辅助研究并行，不得阻塞主线；与 Telegram 内部入口共享核心网关。 | 高风险操作必须单独确认；验收标准为手机发任务->AI Workbench 接收->本地 Codex 隔离执行测试->结果返回->产品负责人决定是否继续。 | 首选入口仍待产品负责人批准。 |
+| 63 | 国内内部研发指挥入口 | 通讯入口、多渠道指挥 | 产品、API、安全、Codex、成本 | 使用者是产品负责人本人；希望通过手机向 AI Workbench 派发研发任务，再交给本地 Codex。 | `blocked`，状态 `feishu_channel_implementation_passed_live_smoke_blocked_by_credentials_or_permissions`。 | 飞书适配实现和 mock 测试已完成；真实长连接、ping、报告群绑定和飞书到本地 Codex 真实 smoke 因缺少本机 `FEISHU_APP_ID`/`FEISHU_APP_SECRET` 与后台权限配置未执行。 | 产品负责人完成飞书企业自建应用最小权限配置、发布应用、设置本机环境变量。 | `verification/feishu-task-channel-v01/summary.json`、`manual-config-checklist.md`，记录完整。 | `scripts/feishu-task-channel.mjs`、`scripts/verify-feishu-task-channel.mjs`、任务网关。 | 不阻塞 v0.4.7；与 Telegram 内部入口共享任务网关核心。 | owner allowlist/一次性配对、报告群绑定、通知脱敏、App Secret 不入仓库；验收仍需真实飞书 smoke。 | 等待产品负责人配置飞书应用并批准真实 smoke。 |
 | 64 | 国际内部研发指挥入口 | 通讯入口、多渠道指挥 | 产品、API、安全、Codex、国际化、成本 | 使用者是产品负责人本人；通过国际通用入口验证远程指挥 AI Workbench 和本地 Codex。 | `approved_not_started`，当前只研究，不开发。 | 候选入口 Telegram；目标与任务 63 相同，用于国际通用入口和国际环境验证；未开发。 | 统一任务入口、身份权限、Codex 本地隔离执行、成本框架、账号条件。 | 本轮补入 `CURRENT_PROGRESS_AUDIT.md` 和 `PRODUCT.md`，原先记录不完整。 | Telegram adapter、任务网关、权限确认；本轮不改代码。 | 可与飞书入口做方案比较，不能同时开发两个入口。 | 同任务 63；额外验证国际可用性、稳定性、平台规则和成本。 | 首选入口仍待产品负责人批准。 |
 | 65 | 国内外部用户入口 | 通讯入口、用户入口 | 产品、API、合规、客服、用户运营 | 未来国内用户可能希望通过熟悉的通讯工具使用 AI Workbench。 | `candidate_after_current_stage`，当前不做。 | 候选入口飞书、微信；目标是用户通过外部入口使用同一 AI Workbench 核心；未开发。 | 真实用户需求、隐私告知、账号合规、客服流程、核心调度稳定。 | 本轮补入 `CURRENT_PROGRESS_AUDIT.md` 和 `PRODUCT.md`。 | 入口适配器、用户身份、消息回传。 | 研究可并行，开发必须等用户需求和产品负责人批准。 | 用户数据、授权、平台规则、客服负担；验收看授权、消息往返、核心能力一致和隐私告知。 | 当前不开始，需拍板。 |
 | 66 | 国际外部用户入口 | 通讯入口、用户入口、国际化 | 产品、API、国际化、合规、客服 | 未来国际用户可能通过 Telegram、WhatsApp、Discord 或其他集中渠道使用产品。 | `candidate_after_current_stage`，当前不做。 | 候选入口 Telegram、WhatsApp、Discord、其他国际渠道；未开发。 | 真实国际用户、地区合规、隐私告知、支付和支持能力。 | 本轮补入 `CURRENT_PROGRESS_AUDIT.md` 和 `PRODUCT.md`。 | 国际入口适配器、身份、消息回传。 | 研究可并行，开发串行；不得把核心锁死在 Telegram。 | 地区规则、平台审核、隐私和客服风险；验收看授权、跨地区可用性、消息往返和核心能力一致。 | 当前不开始，需拍板。 |
@@ -227,7 +228,7 @@
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；Workbench、Hermes、OpenClaw 三类执行入口都已通过 `18800` 调用当前生产 provider DeepSeek，验收摘要在 `verification/unified-model-proxy/summary.json`。DeepSeek 是当前实现细节，后续 provider 必须可替换。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。第 3 阶段钱包刹车与 DeepSeek V4 Flash 非思考 version 13 全量生产已通过技术验收、逻辑复核和产品负责人最终批准，状态为 `PASS_AFTER_CONDITIONS_RESOLVED`。自然用户规模稳定性仍未证明；v0.4.7 施工图已形成但未开工；本地 Codex 任务网关 v0.1 已通过 mock、launcher、无模型 CLI 和一次真实只读 Codex smoke，唯一下一步是等待产品负责人审核本地Codex任务网关真实只读验收结果，并决定是否进入飞书渠道适配最小闭环。
+- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。第 3 阶段钱包刹车与 DeepSeek V4 Flash 非思考 version 13 全量生产已通过技术验收、逻辑复核和产品负责人最终批准，状态为 `PASS_AFTER_CONDITIONS_RESOLVED`。自然用户规模稳定性仍未证明；v0.4.7 施工图已形成但未开工；本地 Codex 任务网关 v0.1 已通过 mock、launcher、无模型 CLI 和一次真实只读 Codex smoke；飞书渠道适配 v0.1 已通过 mock 测试但真实 smoke 因缺少本机飞书凭据和后台权限配置阻塞，唯一下一步是等待产品负责人完成飞书企业自建应用的最小权限配置，并执行飞书到本地Codex真实闭环smoke。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
@@ -328,7 +329,7 @@
 
 ## 5. 近期优先级
 
-1. 等待产品负责人审核本地Codex任务网关真实只读验收结果，并决定是否进入飞书渠道适配最小闭环。
+1. 等待产品负责人完成飞书企业自建应用的最小权限配置，并执行飞书到本地Codex真实闭环smoke。
 2. 模型分层调度与上下文压缩只能在产品负责人明确批准后执行。
 3. v0.4.7 首屏示例、反馈入口和安全告知。
 4. 3-5 名真实用户测试。

@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Unreleased - 飞书渠道适配最小闭环 v0.1
+
+- 新增官方飞书 SDK `@larksuiteoapi/node-sdk@1.71.1`；实测支持 `WSClient`、`im.message.receive_v1` 和 `client.im.v1.message.create`，长连接模式不需要公网入站地址。
+- 新增 `scripts/feishu-task-channel.mjs`，建立 AI Workbench 自己控制的飞书渠道适配层：文本命令解析、owner allowlist、一次性配对、单聊命令、群 @ 命令、报告群绑定、事件去重、受限回复、绑定报告群通知、通知去重、脱敏和截断。
+- 新增 `scripts/verify-feishu-task-channel.mjs` 和 npm scripts `feishu-channel:start`、`feishu-channel:check`、`verify:feishu-channel`；mock 测试覆盖未授权拦截、配对过期/一次性、未批准不能 run、create 不自动 approve、approve 不自动 run、started/completed/failed/blocked/cancelled 通知、通知失败不改变任务状态、prompt 不进群通知、不执行任意 shell、不调用 GPT/Hermes、不自动 push/deploy。
+- 新增 `.env.example`，只列本地环境变量名称；真实 App ID、App Secret、access token、Cookie、Authorization 和 webhook 均不得进入仓库或普通日志。
+- 当前本机未配置 `FEISHU_APP_ID` 和 `FEISHU_APP_SECRET`，真实飞书长连接、ping、报告群绑定和飞书到本地 Codex 真实 smoke 未执行；状态记录为 `feishu_channel_implementation_passed_live_smoke_blocked_by_credentials_or_permissions`。
+- 本轮没有调用 GPT、Hermes、朋友平台数字员工或生产环境，没有启动 v0.4.7 工作包 A/E/G，没有部署、修改 Cloudflare、D1、Secret、预算或模型路由。
+
 ## Unreleased - 本地 Codex 任务网关 v0.1
 
 - 新增 `scripts/task-gateway.mjs`，建立本地 Codex 任务网关 v0.1：任务卡创建、固定状态机、人工批准、独立 branch/worktree、Codex adapter、stdout/stderr 捕获、超时、取消、最大运行次数、并发限制、事件 JSONL 和日志脱敏。

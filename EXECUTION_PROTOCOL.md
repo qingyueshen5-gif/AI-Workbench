@@ -166,6 +166,45 @@ Windows 本地 Codex 启动契约：
 - 渠道不得直接修改任务状态、Git、生产环境或预算；
 - 飞书渠道适配必须单独批准，不得由任务网关实现自动启动。
 
+## 3.3 飞书渠道适配规则
+
+飞书渠道只用于内部研发任务入口，不是对外产品功能，不代表 AI Workbench 核心绑定飞书。
+
+当前飞书适配固定规则：
+
+- 只使用 AI Workbench 自己控制的飞书企业自建应用；
+- 只使用官方 SDK `@larksuiteoapi/node-sdk`；
+- 使用 WebSocket 长连接接收 `im.message.receive_v1`；
+- 使用应用机器人发送消息接口 `client.im.v1.message.create`；
+- 不使用朋友平台现有飞书应用、App ID 或 App Secret；
+- 不使用群自定义 Webhook 代替应用机器人；
+- 不使用浏览器、键盘或桌面自动化模拟聊天。
+
+权限和凭据边界：
+
+- `FEISHU_APP_ID`、`FEISHU_APP_SECRET` 只能来自本机环境变量或本地安全配置；
+- 不得把 App Secret、access token、Cookie、Authorization、webhook 或真实飞书消息正文写入 Git、普通日志、任务账本或最终报告；
+- owner 只能通过 `FEISHU_ALLOWED_OPEN_IDS` allowlist 或本地终端一次性配对码建立；
+- 不允许自动信任第一个发消息的人；
+- 未授权用户不得看到任务详情、仓库路径、HEAD、日志或错误堆栈。
+
+发送边界：
+
+- 只能回复当前事件来源会话；
+- 只能通知本地已绑定的报告群；
+- 绑定报告群必须从真实群事件读取 `chat_id`，用户不得手工传入任意 `chat_id`；
+- 不得提供任意 `sendArbitraryFeishuMessage(target, content)` 类接口；
+- 通知失败只能记录 `notification_failed`，不得把真实任务状态改成失败。
+
+任务边界：
+
+- 飞书层不得直接创建 worktree、直接启动 Codex、直接修改 Git 或绕过任务网关状态机；
+- `/task create` 只能创建 `waiting_approval` 任务；
+- `/task approve` 不得自动 run；
+- `/task run` 只能运行已批准任务；
+- 任务 prompt 不得进入群通知；
+- 费用无法读取时写 `unknown`，不得写成 0 或免费。
+
 ## 4. 所有大任务必须分段执行
 
 标准阶段固定为：

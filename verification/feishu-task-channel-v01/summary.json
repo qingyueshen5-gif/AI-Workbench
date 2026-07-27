@@ -1,0 +1,72 @@
+{
+  "status": "feishu_channel_implementation_passed_live_smoke_blocked_by_credentials_or_permissions",
+  "startedHead": "3610de78faac0ba6ae34c0e3ae3eba33753a7a4c",
+  "sdk": {
+    "package": "@larksuiteoapi/node-sdk",
+    "version": "1.71.1",
+    "source": "npm registry and installed package inspection",
+    "hasWSClient": true,
+    "hasReceiveEvent": "im.message.receive_v1",
+    "hasMessageCreate": "client.im.v1.message.create"
+  },
+  "connection": {
+    "mode": "WebSocket long connection",
+    "requiresPublicInboundUrl": false,
+    "liveConnectionEstablished": false,
+    "blockedReason": "FEISHU_APP_ID and FEISHU_APP_SECRET are not configured in the current local environment"
+  },
+  "implemented": [
+    "Feishu text command parser",
+    "owner allowlist and one-time pairing flow",
+    "single chat command handling",
+    "group mention command handling",
+    "duplicate event dedupe",
+    "report chat binding from source group event",
+    "restricted source replies",
+    "restricted bound report chat notifications",
+    "task gateway module integration",
+    "started/completed/failed/blocked/cancelled notification summaries",
+    "notification dedupe",
+    "message redaction and truncation",
+    "manual configuration checklist",
+    ".env.example with variable names only"
+  ],
+  "tests": {
+    "verifyFeishuChannel": "passed",
+    "verifyTaskGateway": "passed",
+    "npmVerify": "passed",
+    "liveSmoke": "blocked"
+  },
+  "liveSmoke": {
+    "executed": false,
+    "pingReplyReceived": false,
+    "taskCreated": false,
+    "approved": false,
+    "approveAutoRun": false,
+    "runExecuted": false,
+    "actualCodexRunCount": 0,
+    "startedNotificationReceived": false,
+    "finalNotificationReceived": false,
+    "messageIds": [],
+    "changedFiles": [],
+    "scopeViolation": false,
+    "cleanup": "not_run",
+    "costStatus": "unknown"
+  },
+  "safety": {
+    "readCredentials": false,
+    "printedCredentials": false,
+    "calledGPT": false,
+    "calledHermes": false,
+    "connectedFriendPlatformFeishuApp": false,
+    "modifiedProduction": false,
+    "deployed": false,
+    "startedV047WorkPackagesAEG": false,
+    "modifiedManagedProxy": false,
+    "modifiedCloudflare": false,
+    "modifiedD1": false,
+    "modifiedBudget": false,
+    "modifiedModelRoute": false,
+    "createdRelease": false
+  }
+}

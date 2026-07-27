@@ -3,6 +3,7 @@ dist/
 release*/
 .electron-cache/
 .npm-cache/
+.npm-cache-tmp/
 .npm-cache-r*/
 data/
 .env
@@ -41,3 +42,4 @@ managed-proxy/.wrangler/
 .tmp-install-r1/
 verification/install-release/actions-*/
 .task-gateway-runtime/
+.feishu-task-channel-runtime/

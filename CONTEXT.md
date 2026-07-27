@@ -68,9 +68,9 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 
 当前唯一下一步以 `NEXT_STEP.md` 为唯一权威：
 
-等待产品负责人审核本地Codex任务网关真实只读验收结果，并决定是否进入飞书渠道适配最小闭环。
+等待产品负责人完成飞书企业自建应用的最小权限配置，并执行飞书到本地Codex真实闭环smoke。
 
-不得上传新 Worker version、注册 installation、发起真实模型调用、修改 Secrets、进入后续段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、飞书渠道适配、监工 Agent、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发，除非产品负责人明确批准对应实施工作包。
+不得上传新 Worker version、注册 installation、发起真实模型调用、修改 Secrets、进入后续段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、恢复监工 Agent、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发，除非产品负责人明确批准对应实施工作包。
 
 ## 产品方向文件索引
 
@@ -114,6 +114,16 @@ v0.4.7 市场基础可用性阶段共 5 步：代码审计和施工图、公共�
 已确认 Codex CLI 版本 `codex-cli 0.144.4`，正式非交互入口为 `codex.cmd exec`，支持 stdin、`--cd`、`--json`、`--sandbox`、`--output-last-message` 和退出码；实测不支持 `--ask-for-approval`。网关不读取、复制或输出 Codex/AI Link 登录凭据；连接来源只能确认为使用本机既有 Codex CLI auth/config，费用状态为 `unknown`。
 
 本轮 mock 测试、launcher fixture、无模型 `codex.cmd --version`、无模型 `codex.cmd exec --help` 和原有 `npm.cmd run verify` 通过。原阻塞为 Windows 直接启动 `.cmd` shim 时 `spawn EINVAL`；现改为通过 `%ComSpec% /d /s /c call "codex.cmd" ...` 受控启动，prompt 仍走 stdin。唯一新增真实只读 smoke 启动 1 次，得到正确只读输出，未修改文件、未 commit、未 push、未 deploy、未触发 scope violation，worktree 已清理；费用状态 `unknown`。真实 smoke 后发现网关后置 Git 检查缺少 `safe.directory`，已用 per-call 临时配置修复。
+
+## 飞书渠道适配 v0.1
+
+飞书渠道属于内部研发任务入口，不是对外产品功能，也不是产品核心身份。实现位置为 `scripts/feishu-task-channel.mjs`，mock 验收为 `scripts/verify-feishu-task-channel.mjs`，命令入口为 `npm.cmd run feishu-channel:start`、`npm.cmd run feishu-channel:check` 和 `npm.cmd run verify:feishu-channel`。
+
+已确认官方 SDK 为 `@larksuiteoapi/node-sdk@1.71.1`，支持 `WSClient` 长连接、`im.message.receive_v1` 事件和 `client.im.v1.message.create` 机器人发消息接口。长连接模式不需要公网入站地址。
+
+飞书层只负责接收命令、鉴权、解析文本、调用任务网关、展示状态和主动推送脱敏摘要；不直接修改 Git、worktree、Codex、生产环境或预算。支持 owner allowlist、一次性配对码、单聊控制、群 @ 控制、报告群绑定、事件去重和 started/completed/failed/blocked/cancelled 通知去重。
+
+当前本机未配置 `FEISHU_APP_ID` 和 `FEISHU_APP_SECRET`，真实飞书长连接、ping、报告群绑定和飞书到本地 Codex 真实 smoke 尚未执行；状态为 `feishu_channel_implementation_passed_live_smoke_blocked_by_credentials_or_permissions`。证据见 `verification/feishu-task-channel-v01/summary.json`。
 
 ## 协作分工
 
