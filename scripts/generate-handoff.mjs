@@ -109,11 +109,11 @@ ${notDone.join('\n')}
 
 ## 产品地图基准
 
-- 产品能力地图：见 PRODUCT.md 的“完整产品能力地图”，当前覆盖 23 个产品模块。
-- 二十块产品战略和入口适配层原则：见 PRODUCT.md。AI Workbench 核心不绑定飞书、微信、Telegram、WhatsApp、Discord 或任何单一平台。
-- 专业工作流地图：见 EXECUTION_PROTOCOL.md 的“专业工作流地图”，当前覆盖产品、研究、设计、工程、数据、安全、合规、发布、市场、运营和审计等岗位。
-- 任务归属地图：见 CURRENT_PROGRESS_AUDIT.md 的“任务归属地图”，当前覆盖 66 条已提出任务线，并统一状态枚举；国内/国际内部研发指挥入口、国内/国际外部用户入口已拆分记录。
-- 时间与执行地图：见 CURRENT_PROGRESS_AUDIT.md 的“时间与执行地图”，区分当前真实问题、首批市场交付前必须做、真人试用后再决定、长期能力、战略研究、当前不做、可并行研究、可隔离并行开发和必须串行集成。
+- 25 个知识模块及事实归属：见 CONTEXT.md 的“事实归属表”和“25 个知识模块索引”。
+- 产品能力：见 PRODUCT.md；愿景与演进：见 VISION.md；原则、安全和成本：见 PRINCIPLES.md。
+- 架构、Agent、模型调度、诊断、兼容、通讯入口和恢复：见 ARCHITECTURE.md。
+- 工程、日志证据、测试和项目连续性：见 EXECUTION_PROTOCOL.md。
+- 路线、阶段、优先级和完成度：见 CURRENT_PROGRESS_AUDIT.md；当前唯一下一步只看 NEXT_STEP.md。
 
 ## 当前唯一下一步
 

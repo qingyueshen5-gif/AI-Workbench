@@ -1,97 +1,125 @@
-# DECISIONS.md
+# DECISIONS.md — 已锁定决策
 
-## 已定决策（不可推翻）
+> 本文件是已拍板决定的唯一权威。这里只保留决定、状态、范围和简短理由；产品定义、原则、愿景和论证分别引用对应权威文件。
 
-- 目标用户：普通人（要结果）+ 专业人（要省时间）。
-- 护城河：极致零门槛 + 真办成事 + 死守简单。
-- 全球产品方向：长期不只服务中国或海外某一个市场；不同国家和地区的语言、模型、合规和平台差异由后台逐步适配，用户入口保持一个输入框。
-- 国际多渠道入口架构：AI Workbench 核心不绑定飞书、微信、Telegram、WhatsApp、Discord 或任何单一平台；所有通讯产品都只是外部入口适配器。底层结构固定为“通讯入口 -> AI Workbench 统一任务入口 -> 身份和权限检查 -> 任务编号和调度 -> 模型、Agent、Codex 或工具执行 -> 结果返回原入口”。未来新增入口不得重做整套调度系统。
-- 内部研发指挥入口拆分：国内内部研发指挥入口候选为飞书，国际内部研发指挥入口候选为 Telegram；两者当前只研究架构、安全、成本和可行性，不开发。先做哪一个由产品负责人根据账号条件、支付、成本、安全和接入难度另行批准，当前首选入口状态为 `waiting_for_product_owner_channel_selection`。
-- 外部用户入口拆分：国内外部用户入口候选为飞书/微信，国际外部用户入口候选为 Telegram/WhatsApp/Discord/其他国际用户集中渠道。当前均为未来候选，不启动开发。
-- 一个输入框：用户只表达目标，工作台后台承担上下文读取、任务拆解、模型选择、工具调用、检查、修复和最终交付。
-- 用户状态波动补偿：用户睡眠、情绪、记忆和判断质量会波动；工作台必须保存长期目标、产品初衷、历史决策和当前进度，发现新决定与原方向冲突时主动提醒。
-- 借用生态但掌握控制层：可以使用 GPT、Claude、DeepSeek、Hermes、OpenClaw、浏览器自动化和其他成熟产品作为杠杆；任务状态、长期记忆、任务分配、质量检查、失败恢复、成本控制、执行证据和最终结果审计必须由 AI Workbench 掌握。
-- 模型定位：DeepSeek 是当前低成本生产执行者，不代表 AI Workbench 的能力上限；战略、架构、安全和复杂判断优先使用高质量模型和交叉复核，编程和仓库执行由 Codex 负责。未来由 AI Workbench 根据任务难度选择模型；当前尚未实现完整多模型生产分层。
-- 跨平台执行边界：长期目标是在用户授权和平台规则范围内操作网站和电脑，完成阅读、收集、比较、填写、下载、上传、中断恢复和跨平台交接；不以绕过验证码、安全限制、平台权限或反自动化规则为产品目标。
-- 可持续经营边界：当前阶段不追求利润最大化，但必须逐步达到可持续的盈亏平衡。知名度和真实用户使用优先于短期利润，但不得建立用户越多、亏损越大的不可持续模式。仓库只记录产品层面的资金跑道有限、成本控制和盈亏平衡原则，不写入个人财务数字。
-- 情报收集合规边界：允许产品负责人在本人授权并已登录的浏览器中，以正常人的使用节奏，使用平台面向普通用户提供的功能做个人调研；严禁把该方式扩展为面向全部用户的规模化抓取、反检测、绕过验证码、规避限流或绕过平台权限的功能。
-- 去第三方依赖：三员工模型全经 18800。
-- 共享 key 边界：真实模型 key 只允许 18800 服务端读取；前端、员工配置、OpenClaw/Hermes 只使用本机占位 token。用户本机 `DEEPSEEK_API_KEY` 优先，共享托管 key 作为开箱即用兜底。
-- 上线最小集优先：先过 3 个硬骨头（陌生机器不崩 ✓、共享 key ✓、下载安装 ✓），模型分层/手机端/情报流水线可为上线让路。
-- 后续候选路线：模型分层、手机端和情报流水线仍未实施，不是当前唯一下一步；当前唯一下一步以 `NEXT_STEP.md` 为准。
-- 执行协议：所有大任务采用单一主线、分段执行、逐段验证、失败也留痕；产品负责人批准后才能进入下一阶段。固定规范见 `EXECUTION_PROTOCOL.md`。
-- 发布分段：硬骨头3拆成 3A 候选安装包预验收和 3B GitHub Release 正式发布。3A 未通过时禁止 Release、禁止 tag、禁止把 LAUNCH 硬骨头3标记完成。
-- 安装器策略：3A-R1.2 保持 NSIS oneClick per-user installer，不要求管理员权限；默认安装目录固定为 `%LOCALAPPDATA%\Programs\AIWorkbench`，避免中文用户名环境下默认 per-user 安装目录不稳定落盘。该策略已通过本地 `npm.cmd run verify:install-release` 和 GitHub Actions Run `29935231224` 云端预验收。
-- Actions 判绿策略：3A-R1.3 只有在恢复 GitHub CLI/Git 凭证、读取真实 Actions 日志/artifact，并取得新的 `windows-installer-preflight.yml` success run 后才能判绿。Run `29935231224` 已满足该条件；后续外部流程仍必须取得真实 run 结果后才能判绿。
-- CI Electron runtime 策略：不要在 `package.json` 写死 `build.electronDist=node_modules/electron/dist`；CI 中由 electron-builder 自行解析/下载 Electron runtime，避免 `npm ci` 后该目录不存在导致云端安装包构建失败。
-- shared_managed 生产架构：正式链路锁定为客户端/Workbench/Hermes/OpenClaw -> 本机 `127.0.0.1:18800` -> AI Workbench 自控远程 Managed Proxy -> DeepSeek 官方 API。真实 DeepSeek key 只能存远程服务端 Secret，禁止进入安装包、用户电脑、本机 `.env`、环境变量、日志或进程参数；不采用“Key 随包分发 + 消费限额”方案，限流、预算和紧急关闭只能作为远程服务保护措施。
-- R2.0 历史结论：当时 `shared_managed` 机制测试 passed，但生产注入仍 blocked；该 blocked 已由 R2.1 Cloudflare 生产部署与真实验证解除。R2.1 前不得进入 3B Release、首屏示例、模型分层、手机端或情报流水线。
-- R2.1 结论：Cloudflare Worker、D1、Secrets、生产 URL、真实 DeepSeek 上游、无本机 Key 18800、安装版零配置、刷新/吊销/限流/预算/紧急关闭/中文降级和安全扫描均已通过。R2.1 passed 只允许进入 3A 总验收，不等于 3A 总验收已完成，也不允许直接进入 3B Release。
-- ③A 总验收结论：候选安装包真实安装、快捷方式、安装版后端启动、`managed_remote` 生产对话、中文降级、安全扫描、真实卸载和恢复日常安装版均已通过；证据见 `verification/3a-final/summary.json`。该阶段已完成，后续已进入并通过 ③B。
-- ③B 发布结论：AI Workbench v0.4.6 Alpha 已创建公开 GitHub prerelease，annotated tag `v0.4.6` 指向 ③A 验收提交，安装包和 SHA256 文件已上传，公开下载回测 passed；证据见 `verification/3b-release/summary.json`。上线三大硬骨头整体完成，产品方向已收口，下一任务已调整为电脑环境治理：产品资产备份、单点故障核查和清理候选盘点。
-- 2026-07-24 阶段性总审核优先级调整：产品负责人将当前优先级从电脑环境清理调整为“阶段性总审核（砍薄版）”。本轮只审核三件事：现有产品资产备份是否真的可以恢复；Git 当前内容及完整可达历史是否泄漏真实密钥、Token、密码或其他凭据；文档是否宣称 completed/passed/已完成但没有实现、没有执行或没有真实证据。已有有效 verification 证据且已经判绿的模块不得重复跑完整验收，只检查证据是否存在、是否与结论对应；发现冲突或缺口才深入。审核完成后必须停止，等待产品负责人验收，不得自动进入生存体检、成本熔断、模型分层、v0.4.7 或其他任务。
-- 2026-07-24 阶段性总审核结论：砍薄版审核 passed，证据见 `verification/thin-stage-audit/summary.json`。最新外部备份已做隔离恢复并比对关键文件；当前 Git tracked 内容和完整本地可达历史未发现确认的真实凭据泄漏；未发现 confirmed fake completion。README、CURRENT_PROGRESS_AUDIT、CONTEXT 和 Handoff 中的非关键过期/冲突表述已修正。`git fetch origin --prune` 因本机 Git 凭据 `SEC_E_NO_CREDENTIALS` 失败，远端最新性刷新未完成；不得自动登录或修改凭据，等待产品负责人后续批准处理。
-- 2026-07-24 生存体检执行方式：产品负责人已验收通过阶段性总审核（砍薄版）并批准进入生存体检。生存体检首次执行因任务量大出现 SSE idle timeout，中断后采用“先盘点现场、保护半成品、只补验证和交付收尾”的断点恢复方式，不从头重跑成本调查或计算。
-- 2026-07-24 生存体检结论修正：分析任务 passed_after_boundary_correction，但钱包安全状态 unsafe。原 5/50/100 用户平台月成本 199.12 / 1686.24 / 3338.61 CNY 算术保留，但正式命名为 `uncapped_demand_pressure`，表示未来扩容或放宽限额后高活跃需求全部满足时的规划成本，不代表当前生产限额下可实际发生的正常路径成本。当前限额正常路径在 8000 input + 2048 output token 假设下先撞 `DAILY_TOKEN_LIMIT`，平台每天约 20 次成功模型调用、若每任务 2 次调用则每天约 10 个完整前端任务，月平台成本上界约 40.76 CNY，现金跑道约 7.96 个月。理论最坏成本仍为 `unbounded`，依据是失败/超时/并发逃逸路径不能证明 fail-closed，provider 对失败尝试是否计费为 `cannot_determine_but_not_fail_closed`。证据见 `verification/survival-cost-audit/summary.json`；下一步应等待产品负责人重新验收，不得自动实现熔断。
-- 2026-07-24 第 3A 段本地钱包刹车决策：产品负责人已正式验收生存体检，批准进入第 3A 段。早期测试阶段平台月度总预算政策上限为 50 USD，其中模型调用硬上限 40 USD，基础设施及价格波动预留 10 USD。代码只实现模型 40 USD 硬上限：`PLATFORM_MONTHLY_BUDGET_MICRO_USD=50000000`，`MONTHLY_MODEL_HARD_CAP_MICRO_USD=40000000`。预算计算必须使用整数 micro-USD，调用 provider 前按模型价格保守预留，缺少价格或预算账本不可用时 fail closed，不要求用户填 Key，不向用户转嫁费用。
-- 2026-07-24 第 3A 段本地钱包刹车结论：Managed Proxy 已在本地实现月度模型预算账本、调用前条件原子预留、失败不退款、并发不超支和缺价格/D1 失败 fail-closed；本地 mock 验证 passed，证据见 `verification/monthly-budget-circuit-breaker-local/summary.json`。本轮未部署 Cloudflare Worker，未执行远端 D1 migration，未修改 Secrets，未调用真实 provider；deployment_status 为 `not_deployed`，不得写 production_passed。当时状态是等待产品负责人验收第 3A 段。
-- 2026-07-24 第 3A 段平台合计预算纠偏：产品负责人验收发现首次 3A 实现以 `monthly_model_budget(month_key, model)` 作为硬上限账本，实际会让每个模型各自使用 40 USD，不符合“所有 provider、所有模型合计 40 USD”的政策。现已修正为 `monthly_platform_budget(month_key)` 平台总账执行唯一 40 USD 条件原子预留，`monthly_model_budget` 仅保留为模型明细账和审计用途，不决定是否允许上游调用。本地单模型、跨模型顺序、跨模型并发、明细写入失败 fail-closed 等测试通过；状态为 `local_passed_after_platform_aggregate_correction`，仍未部署生产环境。该段已由产品负责人在提交 `5a334ac8910d04727baaa8885dae86f48ad3400e` 上验收通过。
-- 2026-07-24 第 3B-1 段生产预检与远端 D1 备份：产品负责人正式验收通过第 3A 段，验收提交 `5a334ac8910d04727baaa8885dae86f48ad3400e`，并批准进入第 3B-1 段。本轮只做生产环境预检和远端 D1 部署前备份：确认 Wrangler 4.113.0 已用既有 OAuth 身份登录，目标 Worker 为 `ai-workbench-managed-proxy`，D1 binding 为 `DB`，生产数据库为 `aiw-managed-proxy`，脱敏 database ID 与仓库配置和既有生产 verification 一致。已导出远端 D1 完整 SQL 备份到仓库外 `D:\AI-Workbench-Backups\2026-07-24-managed-proxy-budget-predeploy\`，并完成 SHA256 二次校验和临时 SQLite 恢复验证；证据见 `verification/monthly-budget-production-preflight/summary.json`。本轮未执行远端 migration，未部署 Worker，未修改 Secrets，未调用真实 provider。等待产品负责人验收第 3B-1 段生产预检与远端 D1 备份。未经批准不得执行远端 migration 或部署 Worker。
-- 2026-07-24 第 3B-2a 段远端 D1 migration：产品负责人正式验收通过第 3B-1 段，验收提交 `b85a73ab93ac23d95d3e884eef69c535b1da333d`，并批准进入第 3B-2a 段。本轮只对生产 D1 数据库 `aiw-managed-proxy` 执行预算表 schema migration，创建 `monthly_platform_budget` 和 `monthly_model_budget`。migration 前复核 3B-1 外部备份大小和 SHA256 一致；migration 前只有 `daily_usage`、`installations`、`revoked_tokens` 三张表；migration 后原三张表仍保留，两张预算表存在且行数均为 0。证据见 `verification/monthly-budget-production-migration/summary.json`。本轮未部署 Worker，未修改 Secrets，未调用真实 provider，未执行回滚。预算表已创建但生产钱包刹车尚未生效；等待产品负责人验收第 3B-2a 段。
-- 2026-07-24 第 3B-2b1 段部署候选锁定：产品负责人正式验收通过第 3B-2a 段，验收提交 `900661a120690743990b134e6ff58fc9f8eb12f1`，并批准进入第 3B-2b1 段。生产预算配置必须显式写入 `managed-proxy/wrangler.jsonc`，不得依赖代码 fallback；本轮已显式配置 `PLATFORM_MONTHLY_BUDGET_MICRO_USD=50000000`、`MONTHLY_MODEL_HARD_CAP_MICRO_USD=40000000` 和当前生产模型 `deepseek-chat` 的公开价格参数。本轮只锁定部署候选：本地 12 项测试通过，远端预算表仍存在且为空，当前生产 Worker 版本和回滚目标已只读确认；证据见 `verification/monthly-budget-worker-deploy-readiness/summary.json`。本轮未部署 Worker，未修改 Secrets，未调用真实 provider，生产钱包刹车尚未生效。
-- 2026-07-25 第 3B-2b2a 段 Preview 上传验证：产品负责人正式验收通过第 3B-2b1 段，验收提交 `982d6a324727465cd89911325d13e3f395b58142`，并批准进入第 3B-2b2a 段。本轮只将已锁定候选上传为新的 Cloudflare Worker Preview version `483e4fae-3af8-40fa-ab83-4551f08b519e`，通过 Preview URL 验证 `/health`、`/v1/models` 和未认证聊天拒绝路径；active deployment `61aa34dd-c20a-42b4-a3c6-1ca474a81e5e`、生产流量 version `16333442-925a-4b11-a3d1-d6249d2492ba` 和 100% 流量均保持不变。远端预算表仍存在且为空。证据见 `verification/monthly-budget-worker-preview-upload/summary.json`。本轮未部署 Worker，未修改 Secrets，未使用真实安装 Token，未调用真实 provider；生产钱包刹车尚未生效。
-- 2026-07-25 第 3B-2b2b 段零流量 deployment：产品负责人正式验收通过第 3B-2b2a 段，验收提交 `657ace41faf534ede8f7f50df5153ecc6d9d2733`。本轮起初因当前 HEAD 已是后续文档提交 `37ab9c28a451dcdc858ce783293ef09448b7bc34` 而按严格基线检查 blocked；产品负责人确认该提交未修改 Managed Proxy 功能代码、Wrangler 生产配置、预算算法、Worker version、D1 schema 或当前唯一下一步，并批准以 `37ab9c2` 作为新基线继续。现已用 `wrangler versions deploy` 将新预算 version `483e4fae-3af8-40fa-ab83-4551f08b519e` 加入 active deployment，但正常生产流量为 0%；旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 继续承载 100% 流量。通过 production hostname 的 version override 验证候选 version 的 `/health`、`/v1/models` 和未认证聊天拒绝路径；预算表仍为空。已纠正上一段公开 evidence 中完整 Preview URL，当前文件只保留 alias、脱敏 host 和 host SHA256；不重写 Git 历史，不 force push。证据见 `verification/monthly-budget-worker-zero-traffic-deployment/summary.json`。生产钱包刹车尚未对正常生产流量生效。
-- 2026-07-25 第 3B-2b2c 段 1% 生产灰度：产品负责人正式拍板生产钱包刹车采用灰度切流量，不直接全量上线；第 3B-2b2b 已验收，验收提交 `06933e9958621e7a5a1c05a390a4f168290daa33`。本轮将新预算 Worker version `483e4fae-3af8-40fa-ab83-4551f08b519e` 从 0% 调整到 1% 正常生产流量，旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 保留 99% 并作为回滚目标。灰度观察 20 分钟加 5 分钟指标缓冲完成，健康检查均 HTTP 200，预算表仍为空，未主动调用真实 provider，未修改 Secrets、D1 schema 或功能代码，未触发回滚。由于没有确认到自然候选版本 invocation，状态为 `one_percent_canary_observation_limited_by_low_traffic`；不得写成全量上线或真实模型预算链路完整验证。任何异常必须立即回滚，不允许带病推进；是否进入 100% 全量切换必须等待产品负责人另行批准。
-- 2026-07-25 第 3B-2b2d 段单笔真实预算链路验证：产品负责人已验收通过第 3B-2b2c 段，验收提交 `db4e055273c4cd8a3639fe61e322644d5ed5a908`；因 1% 灰度没有自然请求样本，不直接切 100%，先尝试一笔受控真实预算链路验证。本轮严格执行最多一笔注册和最多一笔聊天、不得重试、真实预算记录不得删除或退款的原则。预留金额按生产公式计算为 21 micro-USD，满足上限，但一次性临时脚本的注册请求未返回 HTTP 状态且未取得 Token，因此没有执行真实聊天请求、没有调用 provider、没有写入预算表。状态为 `blocked_before_paid_call`，证据见 `verification/monthly-budget-worker-controlled-real-canary/summary.json`；新预算 Worker 仍只承载 1%，未经批准不得重试或切换 100%。
-- 2026-07-25 第 3B-2b2d 段阻塞恢复诊断：产品负责人确认上次 `blocked_before_paid_call` 处理符合安全边界，并批准先查明注册无 HTTP 状态原因；根因明确且满足命中新版本确认等条件后才可再注册。本轮确认上次 evidence 缺少异常详情，随后用无付费诊断复现 Node 内置 fetch 直连超时：`TypeError fetch failed`，cause 为 `UND_ERR_CONNECT_TIMEOUT`；显式 undici `ProxyAgent` 后同一 Node 环境可取得 `/health`、`/v1/models`、注册路径 OPTIONS 和无状态 POST 的 HTTP 响应。根因分类为 `system_proxy_error`。但由于未取得独立证据证明 version override 确实命中新预算 version，不满足再次注册条件；本轮新增注册 0 次、聊天 0 次、provider 调用 0 次、预算写入 0，状态为 `blocked_transport_cause_unresolved`。
-- 2026-07-25 第 3B-2b2d 段候选 Preview 单笔真实链路：产品负责人确认 transport 诊断有效，并批准改用候选 version 的 Preview URL 验证预算、D1、Secrets 和 provider 链路。本轮不改变生产 99%/1% 流量，不重新上传 version，不修改代码/Secrets/D1 schema。Preview 无付费检查通过；一次注册成功；唯一一次真实聊天返回 HTTP 400 `invalid_request_error`，未重试。调用前预算预留已执行：平台总账和 `deepseek-chat` 模型明细均增加 21 micro-USD、call_count +1；installations +1，daily_usage +2 请求。本轮状态为 `real_preview_call_failed_after_budget_reservation`，不得写成 passed、100% 全量上线或完整真实预算链路通过。
-- 2026-07-25 DeepSeek V4 Flash 路由迁移决策：产品负责人验收并确认第 3B-2b2d HTTP 400 根因高度确定为旧 DeepSeek 上游模型名 `deepseek-chat` 已在 2026-07-24 15:59 UTC 后退役。产品保持客户端逻辑模型兼容：用户侧和本机代理仍可请求 `deepseek-chat`，Managed Proxy 内部通过显式 `upstreamModel` 路由到正式上游 `deepseek-v4-flash`。既有失败调用产生的 21 micro-USD 平台内部预留保留，不删除、不退款、不修改历史行；后续不得继续用已退役上游模型名重试。当前只形成本地候选，未上传新 Worker version，未部署生产修复，未发起新的真实模型调用。
-- 2026-07-25 DeepSeek V4 Flash 修复 Worker Preview 决策：产品负责人已验收 V4 Flash 路由本地候选，并批准上传为新的 Cloudflare Worker version，但上传与 production deployment 必须分离。本轮只允许无付费 Preview 验证，不允许注册 installation、发起真实模型调用或切换正常生产流量。新修复 version `a7eb385b-84df-4a45-b554-0aca40b6b407` / version number `12` 已上传并通过 Preview `/health`、`/v1/models` 和未认证聊天拒绝检查；active deployment 未变化，真实 provider 路径仍未验证。
-- 2026-07-25 DeepSeek V4 Flash 非思考兼容决策：产品负责人验收第 3B-2b2e Worker Preview 上传验证通过，但在付费验证前确认 version 12 未显式固定 `deepseek-chat` 历史非思考语义，因此 version 12 不用于付费真实验证。为保持客户端逻辑模型 `deepseek-chat` 的通用非思考聊天语义，Managed Proxy 路由配置新增 `thinkingMode: "disabled"`，服务端向 DeepSeek 上游强制发送 `thinking: { "type": "disabled" }`，并覆盖客户端试图传入的 thinking enabled。本轮修正只在本地完成，未上传新 Worker version，未部署，未注册 installation，未调用真实 provider。
-- 2026-07-25 DeepSeek V4 Flash 非思考真实 Preview 验证阻断：产品负责人验收非思考兼容本地候选后批准上传新的非思考兼容 Worker version、执行无付费 Preview 安全门，并在全部通过后最多一次注册和一次真实聊天。本轮新 version `cf002344-57ee-4c3f-86a6-115ca66c8b5f` / version number `13` 已通过 `wrangler versions upload` 上传，Preview alias 为 `budget-v4-nt-real-candidate`；active deployment 仍为 `d9acb146-b720-4e09-b2b8-0257b93fc407`，旧稳定 version 100%，失败候选、version 12 和新 version 13 正常生产流量均为 0%。无付费 Preview 安全门通过且预算保持 21/1、历史 `deepseek-chat` 21/1、无 `deepseek-v4-flash` 行。唯一一次注册请求已消耗并由 D1 证实 installations +1、daily_usage +1；随后一次性脚本在聊天前预算读取阶段因 `spawnSync npx.cmd EINVAL` 崩溃，Token 只存在进程内存且未打印未持久化，真实聊天 0 次、provider 调用 0 次、预算预留 0。本轮状态为 `blocked_after_single_registration_before_real_call`，不得写 `v4_flash_nonthinking_real_path_passed`；未经产品负责人重新批准，不得第二次注册或真实调用。
-- 2026-07-25 DeepSeek V4 Flash 非思考真实 Preview 链路结论：产品负责人确认上次阻断根因为 Windows Node 子进程错误调用 `.cmd` 文件，并批准复用现有 version 13 执行一次新的独立注册和一次真实聊天。本轮未上传新 version、未修改 Worker 代码或 Wrangler 配置、未修改 production deployment、未修改 Secrets 或 D1 schema。执行方式已改为：父级终端直接读 D1，Token 进程只做 undici ProxyAgent 网络注册和聊天，不调用任何子进程。run2 注册 HTTP 200，聊天 HTTP 200，provider model `deepseek-v4-flash`，回答 `OK`，`reasoning_content` 为空，usage 为 prompt 7 / completion 1 / total 8。预算按最终 payload 重新计算为 23 micro-USD；平台总账从 21/1 增至 44/2，`deepseek-v4-flash` 明细从不存在增至 23/1，历史 `deepseek-chat` 保持 21/1。active deployment 仍为 `d9acb146-b720-4e09-b2b8-0257b93fc407`，稳定 version 100%，version 13 正常生产流量 0%。状态为 `v4_flash_nonthinking_real_path_passed`，等待产品负责人验收；未经批准不得把 version 13 加入 production deployment、不得切换 1% 或 100%、不得发起新的主动真实模型调用。
-- 2026-07-25 version 13 的 1% 生产灰度决策：产品负责人已验收 version 13 DeepSeek V4 Flash 非思考真实 Preview 链路，并批准进入 1% 正常生产灰度。本轮复用现有 version `cf002344-57ee-4c3f-86a6-115ca66c8b5f`，只通过 `wrangler versions deploy` 调整 production deployment 流量：旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 承载 99%，version 13 承载 1%，新 active deployment 为 `9952d7cb-2d99-483a-85f7-c9ada1a09db4`。旧稳定 version 是技术回滚目标，但不得把它描述为已验证当前 DeepSeek V4 成功链路的版本。灰度期间不得主动增加付费调用；任何候选异常立即回滚。观察窗口完成且未触发回滚，但未捕获足够自然候选 invocation，状态为 `version13_one_percent_canary_observation_limited_by_low_traffic`。未经产品负责人验收和批准，不得将 version 13 切换到 100%，不得发起新的主动真实模型调用。
-- 2026-07-25 version 13 全量生产切换决策：产品负责人已验收 version 13 的 1% 正常生产灰度，并批准将 version 13 `cf002344-57ee-4c3f-86a6-115ca66c8b5f` 提升到 100% 正常生产流量。全量期间任何异常立即回滚，旧稳定 version `16333442-925a-4b11-a3d1-d6249d2492ba` 继续作为明确技术回滚目标。本轮不得上传新 version、不得主动增加付费调用、不得修改 Worker 代码、Wrangler 配置、Secrets、D1 schema 或预算算法。全量切换已完成，新 active deployment 为 `0400b7aa-49fe-460d-ac6d-3ed5bfdb0480`，只包含 version 13 且承载 100%；30 分钟主动观察和 5 分钟指标缓冲完成，健康检查正常，预算账本未变化，未触发回滚。自然生产调用样本不足，状态为 `version13_full_production_active_observation_limited_by_low_traffic`；不得写成长周期真实用户规模稳定性已证明，也不得自动进入模型分层、上下文压缩或 v0.4.7。
-- 2026-07-26 第 3 阶段钱包刹车正式封板：产品负责人正式批准 `ACCEPT_CONDITIONAL_PASS`，第 3 阶段最终状态为 `PASS_AFTER_CONDITIONS_RESOLVED`。GPT 技术验收初始结论为 `CONDITIONAL_PASS`；Claude 逻辑复核提出需要确认“两张账本非整体原子”是否可能绕过硬上限。实际代码和测试复核确认属于安全的情况 A：平台总账 `monthly_platform_budget` 是唯一用于决定是否允许继续调用 provider 的硬刹车，模型明细 `monthly_model_budget` 只用于审计和分类统计。平台总账的硬上限预留通过带额度条件的单条更新完成，属于硬刹车所依赖的条件原子操作；模型明细账在平台预留成功后单独更新，不与平台总账构成一个整体原子事务。如果模型明细账更新失败，请求会 fail closed，provider 不会被调用；平台总账已产生的保守预留保持不退款；后续请求仍以平台总账判断剩余额度。此时平台总账可能高于模型明细汇总，导致预算更早耗尽，但不会导致预算绕过或超支，因此不属于生产安全阻断。后端预算到顶错误码 `monthly_budget_exhausted` 和中文提示“共享模型服务本月额度已用完，请稍后再试。”已经存在；桌面端是否清晰、友好展示该提示尚未独立证明，记录到 v0.4.7 或首批真人试用前检查。自然用户规模验证仍有限，不得写成长周期大量真实用户稳定性已证明。第 3 阶段正式结束，下一阶段尚未启动。
+## 记录规则
 
-## v0.4.7 范围补充：产品内埋点与错误日志
+- `locked`：已生效，除非产品负责人明确替代，不得擅自推翻。
+- `deferred`：方向认可，但当前未批准开工。
+- `superseded`：已被后续决定替代，保留引用关系，不删除历史证据。
+- 每项决定只在本文件写全；其他当前文档只引用编号。
 
-- v0.4.7 现阶段确定包含：首屏示例、用户反馈入口、安全与隐私告知、产品内部埋点、产品内部错误日志。
-- v0.4.7 完整候选范围同时纳入以下市场可用性审计项：桌面端预算撞顶中文提示、图片粘贴/上传/理解的可用性判断、上下文和会话连续性的可用性判断、基础加载/失败/重试/恢复体验、真人试用前基础质量检查。
-- 图片和上下文是否全部在 v0.4.7 实现，需要后续单独设计和工作量判断；当前只锁定“已发现真实缺口，需进入市场可用性审计范围”，不代表已经批准开发。
-- 该决定只锁定未来范围，不代表现在启动开发。第 3 阶段虽已封板，但 v0.4.7 仍需等待产品负责人另行批准范围和执行指令后才可开工。
+## 已锁定决定
 
-### v0.4.7 埋点和错误日志需求
+### D-001 双核心用户与普通人优先
 
-目的：大部分用户遇到问题时可能只会说“不好用”并离开，不会主动说明具体卡点。因此工作台需要通过产品自身的运行记录，帮助后续判断用户在哪一步失败、哪个功能失败、发生什么错误、响应耗时多久、哪些问题重复出现。
+- 状态：`locked`
+- 决定：服务普通人和专业人，普通人是当前优先基本盘。
+- 产品定义：`PRODUCT.md`
 
-当前拟记录范围仅限用户与 AI Workbench 本身的交互元数据：
+### D-002 一个输入框与后台承担复杂度
 
-- 功能名称或功能 ID；
-- 操作阶段；
-- 成功或失败；
-- 错误类型或脱敏错误码；
-- 响应耗时；
-- 应用版本；
-- 必要且最小化的运行环境类别；
-- 事件时间。
+- 状态：`locked`
+- 决定：用户表达目标，系统负责上下文、拆解、调度、执行、检查、恢复和交付；不要求用户选择模型或管理环境。
+- 原则：`PRINCIPLES.md`
 
-当前不批准默认采集：
+### D-003 模型和 Agent 无关
 
-- 用户在其他软件中的行为；
-- 用户浏览的其他网页；
-- 键盘监听；
-- 屏幕内容；
-- 工作台之外的系统活动；
-- 完整 Token；
-- Secret；
-- Authorization Header；
-- 密码；
-- 未经批准的用户输入正文；
-- 未经批准的模型回答正文。
+- 状态：`locked`
+- 决定：DeepSeek 是当前生产实现，不是产品定位；核心对多 Provider、多 Agent 和工具保持开放。
+- 架构：`ARCHITECTURE.md`
 
-默认规则：不采集原始正文，只记录完成排错所需的最小元数据。
+### D-004 控制层必须自持
 
-未来如确需扩大范围，必须单独提出产品方案，说明采集字段、用途、保存周期、访问权限、用户告知方式，并在需要时取得用户同意，通过产品负责人批准后才能实施。
+- 状态：`locked`
+- 决定：任务状态、中央记忆、权限、调度、质量检查、失败恢复、成本控制和证据审计归 AI Workbench 所有。
+- 架构：`ARCHITECTURE.md`
 
-v0.4.7 的安全与隐私告知必须明确告诉用户：产品会记录哪些运行信息、记录目的、明确不记录哪些内容、数据是否发送到服务端、保存时间、谁可以访问、是否可以关闭或清除。这些具体数值和实现方式在 v0.4.7 正式设计阶段决定，本轮不得提前猜测保存周期或服务器架构。
+### D-005 共享 Key 与 Managed Proxy
+
+- 状态：`locked`
+- 决定：用户本机 Key 优先，平台可提供受控共享 Key 兜底；真实生产 Key 只存在受控 Secret，不进入安装包、前端、用户电脑或公开仓库。
+- 当前实现证据：`verification/managed-proxy-production/summary.json`
+
+### D-006 成本走可控通道
+
+- 状态：`locked`
+- 决定：生产模型调用必须经过可预算、可审计、可限流的 AI Workbench 受控通道；开工前先估成本，未知费用写 `unknown`。
+- 原则：`PRINCIPLES.md`
+
+### D-007 第3阶段钱包刹车
+
+- 状态：`locked`
+- 决定：平台模型调用月度硬上限为 40 USD；平台总账是硬刹车，模型明细用于审计。预算异常必须 fail closed，不能调用 Provider 后再补账。
+- 证据：`verification/monthly-budget-circuit-breaker-local/`、`verification/version13-full-production-promotion/`
+
+### D-008 v0.4.7 范围边界
+
+- 状态：`locked`
+- 决定：v0.4.7 当前是可执行施工图，尚未自动开工；范围包括首批市场基础及格线、反馈/埋点/错误日志候选和测试验收。任何工作包须单独满足预算、安全、权限、输出、验收和集成条件。
+- 进度：`CURRENT_PROGRESS_AUDIT.md`
+
+### D-009 v0.4.7 数据最小化
+
+- 状态：`locked`
+- 决定：只允许最小必要的工作台内部交互元数据和错误信息候选；原始用户输入、模型回答正文及工作台外行为未获批准采集。必须提供告知、关闭和清除能力。
+- 安全原则：`PRINCIPLES.md`
+
+### D-010 图片和文件进入产品及格线
+
+- 状态：`locked`
+- 决定：图片和文件能力属于正式产品基本项，但是否进入具体版本，以 `CURRENT_PROGRESS_AUDIT.md` 的路线状态为准。
+- 产品定义：`PRODUCT.md`
+
+### D-011 通讯入口与核心解耦
+
+- 状态：`locked`
+- 决定：飞书、微信、Telegram、WhatsApp、Discord 等只是入口适配器，均不得成为核心调度系统的唯一依赖。
+- 架构：`ARCHITECTURE.md`
+
+### D-012 内外通讯线分离
+
+- 状态：`locked`
+- 决定：内部研发指挥入口和外部用户通讯入口是两条独立产品线；内部入口可先准备，但必须先计算日成本和权限风险。外部入口不因内部工具完成而视为完成。
+- 当前状态：`CURRENT_PROGRESS_AUDIT.md`
+
+### D-013 飞书内部入口边界
+
+- 状态：`locked`
+- 决定：使用 AI Workbench 自己控制的飞书企业自建应用和官方 SDK；凭据只在本机安全配置；渠道只调用任务网关，不直接操作 Git、Codex、生产或预算。
+- 架构：`ARCHITECTURE.md`
+
+### D-014 高风险动作逐次确认
+
+- 状态：`locked`
+- 决定：支付、删除、对外发消息、跨账号和权限变更每次单独确认，不允许永久或模糊授权。
+- 原则：`PRINCIPLES.md`
+
+### D-015 合规信息获取
+
+- 状态：`locked`
+- 决定：信息抓取只使用公开渠道、官方 API、合法授权和合规开源；不绕验证码、登录和技术保护，不偷数据，不追踪工作台外行为。
+- 产品定义：`PRODUCT.md`
+
+### D-016 收费暂缓但商业化不能缺席
+
+- 状态：`locked`
+- 决定：当前不以收费和利润最大化为主线，先验证真实用户价值；商业化、国内外收款、定价和盈亏平衡是正式产品必备模块，待路线批准后实施。
+- 产品定义：`PRODUCT.md`
+
+### D-017 文件驱动的无隐藏记忆协调
+
+- 状态：`locked`
+- 决定：协调 Agent 只派活、跟踪和汇总；项目记忆写回仓库，高风险交还产品负责人，执行结果必须独立验收。
+- 架构：`ARCHITECTURE.md`
+- 执行：`EXECUTION_PROTOCOL.md`
+
+### D-018 快速推进但不免检
+
+- 状态：`locked`
+- 决定：当前优先推进和快速上线，先完成可靠及格线；任何结果仍需真实验证，细节进入后续迭代。
+- 原则：`PRINCIPLES.md`
+
+## 未改变的当前状态
+
+当前版本、完成度和下一步不在本文件维护：版本以 `package.json` 为准，进度以 `CURRENT_PROGRESS_AUDIT.md` 为准，唯一下一步以 `NEXT_STEP.md` 为准。

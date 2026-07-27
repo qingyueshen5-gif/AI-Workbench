@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Unreleased - 25 模块知识归档与权威归属去重
+
+- 建立 `CONTEXT.md` 事实归属表和 25 模块索引，明确每项事实只在一个权威文件写全，其他文件只引用。
+- 去重并重构 `PRODUCT.md`、`VISION.md`、`PRINCIPLES.md`、`THINKING.md`、`DECISIONS.md`、`CONTEXT.md`；当前阶段总方针置于 `PRINCIPLES.md` 最前。
+- 将产品架构、Agent、模型调度、故障诊断、环境兼容、飞书/AI Link 和故障恢复统一归入现有 `ARCHITECTURE.md`，未新建第二份架构文档。
+- 将工程经验、日志与证据、测试体系和项目连续性统一归入 `EXECUTION_PROTOCOL.md`；将路线和模块完成度继续归入 `CURRENT_PROGRESS_AUDIT.md`。
+- 更新 Handoff 生成源并刷新自动快照；文档一致性检查通过。历史 `tasks/`、`verification/` 和既有 CHANGELOG 记录未重写。
+
 ## Unreleased - 飞书渠道适配最小闭环 v0.1
 
 - 新增官方飞书 SDK `@larksuiteoapi/node-sdk@1.71.1`；实测支持 `WSClient`、`im.message.receive_v1` 和 `client.im.v1.message.create`，长连接模式不需要公网入站地址。

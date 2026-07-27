@@ -2,7 +2,7 @@
 
 > 仓库文件是唯一事实来源。每个任务下达、完成、验收和交接都必须写回本仓库，不能只留在对话里。
 
-最新更新：2026-07-26
+最新更新：2026-07-27
 
 ## 当前一句话状态
 
@@ -12,6 +12,7 @@ AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 
 
 | 任务 | 状态 | 做了什么 | 验收产物 |
 | --- | --- | --- | --- |
+| 25 模块知识归档与权威归属去重 | 已完成 | 建立事实归属表；去重六份核心文档；将 25 模块归入 PRODUCT/VISION/PRINCIPLES/ARCHITECTURE/EXECUTION_PROTOCOL/CURRENT_PROGRESS_AUDIT/DECISIONS/THINKING；更新 Handoff 生成源并通过文档一致性检查。未改功能代码、生产环境和当前唯一下一步，未重写历史任务与验收证据。 | `CONTEXT.md`、`verification/docs-consistency/summary.json` |
 | 统一模型入口 | 已完成 | Workbench、Hermes、OpenClaw 三个员工的模型调用统一收敛到本机 `18800` 代理；`model-proxy.mjs` 已扩展为 provider registry。 | `verification/unified-model-proxy/summary.json` |
 | 硬骨头1：陌生机器不崩 | 已完成 | 启动路径改为缺依赖降级；首次运行自动创建 config/data/logs/evidence；18800/Hermes/OpenClaw/端口异常统一返回中文未就绪状态。 | `verification/clean-machine/summary.json`、`verification/clean-machine/readiness-report.md` |
 | 硬骨头2：共享 key 落地 | 已完成 | 18800 网关支持共享托管 key 兜底；用户本机 key 优先；前端、Hermes、OpenClaw 和员工配置只使用本机占位 token。 | `verification/shared-key/summary.json` |
