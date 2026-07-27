@@ -88,10 +88,11 @@
 - Version 13 全量生产切换 version13_full_production_active_observation_limited_by_low_traffic：产品负责人验收通过 version 13 的 1% 正常生产灰度后批准 100% 全量。本轮复用现有 version 13 `cf002344-57ee-4c3f-86a6-115ca66c8b5f`，未上传新 version，未修改 Worker、Wrangler 配置、Secrets、D1 schema、routes 或 domains；只用 `wrangler versions deploy` 将 active deployment 更新为 `0400b7aa-49fe-460d-ac6d-3ed5bfdb0480`，且该 deployment 只包含 version 13，承载 100% 正常生产流量。30 分钟主动观察和 5 分钟指标缓冲完成；生产 `/health`、`/v1/models` 和 Preview GET 检查均 HTTP 200，error tail 窗口未观察到 JSON runtime error，未触发回滚。预算保持平台 44/2、历史 `deepseek-chat` 21/1、`deepseek-v4-flash` 23/1；Codex 本轮主动注册 0 次、聊天 0 次、provider 调用 0 次。钱包刹车与 V4 Flash 非思考路由已处于 active production version，但未捕获足够自然生产 invocation，长期真实用户样本仍不足。证据见 `verification/version13-full-production-promotion/summary.json`。
 - 第 3 阶段钱包刹车正式封板 PASS_AFTER_CONDITIONS_RESOLVED：GPT 技术验收初始结论为 `CONDITIONAL_PASS`，Claude 逻辑复核提出需要确认两张账本非整体原子是否可能绕过硬上限；代码和测试复核确认属于安全的情况 A。平台总账 `monthly_platform_budget` 是唯一用于决定是否允许继续调用 provider 的硬刹车，模型明细 `monthly_model_budget` 只用于审计和分类统计。平台总账的硬上限预留通过带额度条件的单条更新完成，属于硬刹车所依赖的条件原子操作；模型明细账在平台预留成功后单独更新，不与平台总账构成一个整体原子事务。如果模型明细账更新失败，请求会 fail closed，provider 不会被调用；平台总账已产生的保守预留保持不退款，后续请求仍以平台总账判断剩余额度，因此只可能更早停止，不可能突破 40 USD 模型调用硬上限。产品负责人已批准正式结束第 3 阶段。
 - v0.4.7 可执行施工图 audit_completed_docs_only：本轮从代码、配置、测试、安装脚本和现有文档审计 v0.4.7 市场基础可用性缺口，形成 9 个模块状态、公共底层清单、施工顺序、8 个工作包和第一批 2–3 个推荐工作包。状态只是施工图，不代表 v0.4.7 功能开发已启动；本轮未修改功能代码、未调用真实模型、未启动 Agent、未部署、未接入任何通讯入口。
+- 本地 Codex 任务网关 v0.1 local_gateway_passed_real_codex_smoke_blocked：本轮实现 `scripts/task-gateway.mjs` 和 `scripts/verify-task-gateway.mjs`，新增 `task-gateway`、`verify:task-gateway` npm 命令。已确认本机 Codex CLI `codex-cli 0.144.4`，正式非交互入口为 `codex.cmd exec`，支持 stdin、`--cd`、`--json`、`--sandbox`、`--ask-for-approval` 和 `--output-last-message`。网关支持结构化任务卡、合法状态转换、人工批准、独立 branch/worktree、stdout/stderr 捕获、超时、取消、最大运行次数、并发限制、事件 JSONL、日志脱敏、LocalCLIChannel 和 future FeishuChannel 边界。`npm.cmd run verify:task-gateway` 和 `npm.cmd run verify` 通过；未批准真实任务被拦截。唯一真实只读 Codex smoke 消耗 1 次启动额度，创建并清理独立 worktree，但在 Windows `.cmd` shim 启动阶段 `spawn EINVAL`，未得到真实只读输出；未修改文件、未 push、未部署、未触发 scope violation。后续适配器已改为 `cmd.exe /d /s /c codex.cmd`，但本轮按最多一次真实调用边界不重跑。证据见 `verification/local-codex-task-gateway-v01/summary.json`。
 
 未完成：
 
-- 等待产品负责人审核 v0.4.7 可执行施工图，并批准第一批 2–3 个实施工作包。
+- 等待产品负责人审核本地Codex任务网关v0.1和真实只读验收结果，并决定是否进入飞书渠道适配阶段。
 - 实际电脑清理。
 - 首屏 3-5 条示例指令。
 - 反馈入口和安全/隐私告知。
@@ -109,7 +110,7 @@
 - 跨网站复杂执行。
 - 国际化和区域合规。
 
-当前唯一下一步：等待产品负责人审核 v0.4.7 可执行施工图，并批准第一批 2–3 个实施工作包。
+当前唯一下一步：等待产品负责人审核本地Codex任务网关v0.1和真实只读验收结果，并决定是否进入飞书渠道适配阶段。
 
 <!-- AIW_CAPABILITY_STATUS_END -->
 
@@ -117,7 +118,7 @@
 
 状态枚举固定为：`completed_and_verified`、`active_current_stage`、`approved_not_started`、`candidate_after_current_stage`、`waiting_for_real_user_feedback`、`strategic_research`、`personal_growth_or_external_dependency`、`blocked`、`rejected_or_deferred`、`unknown_needs_audit`。
 
-当前没有 `active_current_stage` 的产品实施任务；唯一下一步仍是等待产品负责人审核 v0.4.7 可执行施工图，并批准第一批 2–3 个实施工作包。
+当前没有 `active_current_stage` 的产品实施任务；唯一下一步仍是等待产品负责人审核本地Codex任务网关v0.1和真实只读验收结果，并决定是否进入飞书渠道适配阶段。
 
 | # | 任务线 | 产品模块 | 专业岗位 | 真实问题/用户 | 状态与证据 | 已完成/未完成/子模块 | 依赖 | 记录位置与完整性 | 预计涉及 | 并行/冲突 | 信任/安全/验证 | 当前是否开始/拍板 |
 | ---: | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -226,7 +227,7 @@
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；Workbench、Hermes、OpenClaw 三类执行入口都已通过 `18800` 调用当前生产 provider DeepSeek，验收摘要在 `verification/unified-model-proxy/summary.json`。DeepSeek 是当前实现细节，后续 provider 必须可替换。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。第 3 阶段钱包刹车与 DeepSeek V4 Flash 非思考 version 13 全量生产已通过技术验收、逻辑复核和产品负责人最终批准，状态为 `PASS_AFTER_CONDITIONS_RESOLVED`。自然用户规模稳定性仍未证明；本轮已形成 v0.4.7 施工图，唯一下一步是等待产品负责人审核 v0.4.7 可执行施工图，并批准第一批 2–3 个实施工作包。
+- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。第 3 阶段钱包刹车与 DeepSeek V4 Flash 非思考 version 13 全量生产已通过技术验收、逻辑复核和产品负责人最终批准，状态为 `PASS_AFTER_CONDITIONS_RESOLVED`。自然用户规模稳定性仍未证明；v0.4.7 施工图已形成但未开工；本地 Codex 任务网关 v0.1 mock 通过但真实 smoke 阻塞，唯一下一步是等待产品负责人审核本地Codex任务网关v0.1和真实只读验收结果，并决定是否进入飞书渠道适配阶段。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
@@ -327,7 +328,7 @@
 
 ## 5. 近期优先级
 
-1. 等待产品负责人审核 v0.4.7 可执行施工图，并批准第一批 2–3 个实施工作包。
+1. 等待产品负责人审核本地Codex任务网关v0.1和真实只读验收结果，并决定是否进入飞书渠道适配阶段。
 2. 模型分层调度与上下文压缩只能在产品负责人明确批准后执行。
 3. v0.4.7 首屏示例、反馈入口和安全告知。
 4. 3-5 名真实用户测试。

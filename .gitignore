@@ -40,3 +40,4 @@ versions/backups/*.json
 managed-proxy/.wrangler/
 .tmp-install-r1/
 verification/install-release/actions-*/
+.task-gateway-runtime/

@@ -1,0 +1,66 @@
+{
+  "status": "local_gateway_passed_real_codex_smoke_blocked",
+  "startedHead": "82578394b3b55560178bd5fe42c56548f6a0c6f5",
+  "codexVersion": "codex-cli 0.144.4",
+  "codexCliContract": {
+    "command": "codex.cmd",
+    "subcommand": "exec",
+    "stdin": true,
+    "cd": true,
+    "json": true,
+    "sandbox": true,
+    "approval": true,
+    "outputLastMessage": true
+  },
+  "implemented": [
+    "task card create/show/list",
+    "fixed status machine",
+    "manual approval gate",
+    "independent branch and worktree",
+    "Codex adapter",
+    "stdout/stderr capture",
+    "timeout and cancellation support",
+    "max run count",
+    "concurrency limit",
+    "event JSONL ledger",
+    "secret redaction",
+    "LocalCLIChannel and future FeishuChannel boundary"
+  ],
+  "tests": {
+    "verifyTaskGateway": "passed",
+    "npmVerify": "passed",
+    "realCodexSmoke": "blocked"
+  },
+  "realCodexSmoke": {
+    "attempted": true,
+    "actualCodexRunCount": 1,
+    "taskId": "real-readonly-smoke-20260727",
+    "baselineHead": "38fbc320e8ec24ac216704d70ab2c5c9cf68a86a",
+    "worktreeCreated": true,
+    "worktreeCleaned": true,
+    "status": "failed",
+    "blockedReason": "spawn EINVAL before Codex task output",
+    "scopeViolation": false,
+    "changedFiles": [],
+    "costStatus": "unknown",
+    "secondRealRunStarted": false
+  },
+  "safety": {
+    "readCredentials": false,
+    "calledHermes": false,
+    "connectedFeishu": false,
+    "modifiedProduction": false,
+    "deployed": false,
+    "startedV047WorkPackagesAEG": false,
+    "modifiedManagedProxy": false,
+    "modifiedCloudflare": false,
+    "modifiedD1": false,
+    "modifiedBudget": false,
+    "modifiedModelRoute": false,
+    "createdRelease": false
+  },
+  "notes": [
+    "The gateway uses existing local Codex CLI auth/config and does not read or copy credentials.",
+    "The only real Codex smoke was blocked by Windows process startup compatibility. The adapter was then changed to launch codex.cmd through cmd.exe, but no second real run was started in this task."
+  ]
+}
