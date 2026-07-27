@@ -17,7 +17,7 @@ Release 类型：public prerelease / Alpha
 
 AI Workbench v0.4.6 Alpha 已公开发布。③A 总验收和 ③B GitHub Release 均已 passed，公开安装包下载回测通过。上线三大硬骨头整体完成，产品方向已收口。
 
-当前尚无真实用户。模型调用成本由平台承担，第 3 阶段钱包刹车已正式封板，平台模型调用 40 USD 月度硬上限已在生产生效；自然用户长期规模稳定性仍未证明。v0.4.7 当前只完成可执行施工图审计，尚未进入功能开发。本轮转向内部研发任务调度基础设施：本地 Codex 任务网关 v0.1 已完成实现和 mock 验收，真实只读 Codex smoke 在进程启动阶段阻塞，未形成完整真实闭环。当前目标是建立可靠产品、真实用户、知名度和可持续经营能力，不是收费或利润最大化。
+当前尚无真实用户。模型调用成本由平台承担，第 3 阶段钱包刹车已正式封板，平台模型调用 40 USD 月度硬上限已在生产生效；自然用户长期规模稳定性仍未证明。v0.4.7 当前只完成可执行施工图审计，尚未进入功能开发。本轮转向内部研发任务调度基础设施：本地 Codex 任务网关 v0.1 已完成实现、mock 验收、Windows 启动器修复和一次真实只读 Codex smoke。当前目标是建立可靠产品、真实用户、知名度和可持续经营能力，不是收费或利润最大化。
 
 生存体检和第 3A 段本地钱包刹车均已由产品负责人验收通过。3A 已完成平台合计预算纠偏和 mock 验证：平台月度总预算政策上限 50 USD，所有 provider/模型合计的模型调用硬上限 40 USD，基础设施及价格波动预留 10 USD；Managed Proxy 使用整数 micro-USD，在调用 provider 前按模型价格保守预留。平台总账的硬上限预留通过 `monthly_platform_budget(month_key)` 带额度条件的单条更新完成，属于硬刹车所依赖的条件原子操作；`monthly_model_budget(month_key, model)` 模型明细账在平台预留成功后单独更新，不与平台总账构成一个整体原子事务。模型明细只做审计和分类统计，不决定硬上限。如果模型明细账更新失败，请求会 fail closed，provider 不会被调用；平台总账已产生的保守预留保持不退款，可能导致预算更早耗尽，但不会导致预算绕过或超支。失败/超时/500 不退款，缺价格或预算账本不可用时 fail closed。证据见 `verification/monthly-budget-circuit-breaker-local/summary.json`。
 
@@ -68,7 +68,7 @@ Workbench / Hermes / OpenClaw -> 127.0.0.1:18800 -> AI Workbench provider-aware 
 
 当前唯一下一步以 `NEXT_STEP.md` 为唯一权威：
 
-等待产品负责人审核本地Codex任务网关v0.1和真实只读验收结果，并决定是否进入飞书渠道适配阶段。
+等待产品负责人审核本地Codex任务网关真实只读验收结果，并决定是否进入飞书渠道适配最小闭环。
 
 不得上传新 Worker version、注册 installation、发起真实模型调用、修改 Secrets、进入后续段、实际电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、飞书渠道适配、监工 Agent、模型分层、上下文压缩、手机端、情报流水线或任何新功能开发，除非产品负责人明确批准对应实施工作包。
 
@@ -111,9 +111,9 @@ v0.4.7 市场基础可用性阶段共 5 步：代码审计和施工图、公共�
 
 网关能力：结构化任务卡、固定状态机、人工批准、独立 branch/worktree、Codex adapter、stdout/stderr 捕获、超时、取消、最大运行次数、并发限制、事件 JSONL、日志脱敏、LocalCLIChannel 和 future FeishuChannel 的边界。任务运行账本默认在用户 runtime 目录；当前 Codex 沙盒不可写 `%APPDATA%` 时回退到 Git 忽略的 `.task-gateway-runtime/`。
 
-已确认 Codex CLI 版本 `codex-cli 0.144.4`，正式非交互入口为 `codex.cmd exec`，支持 stdin、`--cd`、`--json`、`--sandbox`、`--ask-for-approval`、`--output-last-message` 和退出码。网关不读取、复制或输出 Codex/AI Link 登录凭据；连接来源只能确认为使用本机既有 Codex CLI auth/config，费用状态为 `unknown`。
+已确认 Codex CLI 版本 `codex-cli 0.144.4`，正式非交互入口为 `codex.cmd exec`，支持 stdin、`--cd`、`--json`、`--sandbox`、`--output-last-message` 和退出码；实测不支持 `--ask-for-approval`。网关不读取、复制或输出 Codex/AI Link 登录凭据；连接来源只能确认为使用本机既有 Codex CLI auth/config，费用状态为 `unknown`。
 
-本轮 mock 测试通过；原有 `npm.cmd run verify` 通过。唯一真实只读 smoke 已消耗 1 次真实 Codex 启动额度，但在 Windows `.cmd` 进程启动阶段返回 `spawn EINVAL`，未进入真实只读任务输出，状态记录为 `local_gateway_passed_real_codex_smoke_blocked`。后续已把适配器改为通过 `cmd.exe /d /s /c codex.cmd` 启动，等待产品负责人决定是否进入下一轮飞书渠道适配或重新批准真实 smoke。
+本轮 mock 测试、launcher fixture、无模型 `codex.cmd --version`、无模型 `codex.cmd exec --help` 和原有 `npm.cmd run verify` 通过。原阻塞为 Windows 直接启动 `.cmd` shim 时 `spawn EINVAL`；现改为通过 `%ComSpec% /d /s /c call "codex.cmd" ...` 受控启动，prompt 仍走 stdin。唯一新增真实只读 smoke 启动 1 次，得到正确只读输出，未修改文件、未 commit、未 push、未 deploy、未触发 scope violation，worktree 已清理；费用状态 `unknown`。真实 smoke 后发现网关后置 Git 检查缺少 `safe.directory`，已用 per-call 临时配置修复。
 
 ## 协作分工
 

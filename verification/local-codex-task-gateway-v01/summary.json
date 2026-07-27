@@ -1,6 +1,7 @@
 {
-  "status": "local_gateway_passed_real_codex_smoke_blocked",
-  "startedHead": "82578394b3b55560178bd5fe42c56548f6a0c6f5",
+  "status": "local_gateway_and_real_codex_smoke_passed",
+  "startedHead": "28c7911a1966003863bf7636674956ffe0eaaf49",
+  "fixBranchHead": "e94bfd02e6ffd7facee3bbddecc019410251c79c",
   "codexVersion": "codex-cli 0.144.4",
   "codexCliContract": {
     "command": "codex.cmd",
@@ -9,41 +10,85 @@
     "cd": true,
     "json": true,
     "sandbox": true,
-    "approval": true,
-    "outputLastMessage": true
+    "approval": false,
+    "outputLastMessage": true,
+    "unsupportedArgs": [
+      "--ask-for-approval"
+    ]
+  },
+  "diagnosis": {
+    "originalBlocker": "spawn EINVAL",
+    "rootCause": "Node on Windows cannot reliably spawn the .cmd shim directly; the failure happens before Codex CLI execution.",
+    "secondaryContractIssue": "codex-cli 0.144.4 exec does not support --ask-for-approval.",
+    "postSmokeIssue": "The first fixed real smoke produced correct read-only Codex output, then gateway post-validation hit Git dubious ownership because internal worktree Git checks did not pass safe.directory.",
+    "postSmokeFix": "Gateway Git helper now passes -c safe.directory=<cwd> per call without changing global Git configuration."
   },
   "implemented": [
-    "task card create/show/list",
-    "fixed status machine",
-    "manual approval gate",
-    "independent branch and worktree",
-    "Codex adapter",
+    "Windows .cmd launcher through ComSpec",
+    "controlled cmd.exe /d /s /c call command construction",
+    "stdin prompt delivery",
     "stdout/stderr capture",
-    "timeout and cancellation support",
-    "max run count",
-    "concurrency limit",
-    "event JSONL ledger",
-    "secret redaction",
-    "LocalCLIChannel and future FeishuChannel boundary"
+    "timeout and process-tree cancellation preserved",
+    "codex exec contract corrected for codex-cli 0.144.4",
+    "worktree Git post-validation safe.directory handling",
+    "launcher fixture tests for .cmd, space paths, stdin, stdout, stderr, exit code, timeout, and shell injection guard"
   ],
   "tests": {
     "verifyTaskGateway": "passed",
     "npmVerify": "passed",
-    "realCodexSmoke": "blocked"
+    "noModelCodexVersion": "passed",
+    "noModelCodexExecHelp": "passed",
+    "realCodexSmoke": "passed_with_post_validation_fix"
   },
   "realCodexSmoke": {
     "attempted": true,
     "actualCodexRunCount": 1,
-    "taskId": "real-readonly-smoke-20260727",
-    "baselineHead": "38fbc320e8ec24ac216704d70ab2c5c9cf68a86a",
+    "taskId": "real-readonly-smoke-20260727-windows-launch",
+    "baselineHead": "e94bfd02e6ffd7facee3bbddecc019410251c79c",
     "worktreeCreated": true,
     "worktreeCleaned": true,
-    "status": "failed",
-    "blockedReason": "spawn EINVAL before Codex task output",
+    "codexStarted": true,
+    "codexOutputCaptured": true,
+    "status": "read_only_output_successful_gateway_post_validation_fixed_afterward",
+    "blockedReason": "",
     "scopeViolation": false,
     "changedFiles": [],
+    "commitCreated": false,
+    "push": false,
+    "deploy": false,
+    "providerError": false,
+    "authError": false,
+    "quotaOrBillingError": false,
     "costStatus": "unknown",
-    "secondRealRunStarted": false
+    "secondRealRunStarted": false,
+    "outputSummary": {
+      "gitStatus": "## task-gateway/real-readonly-smoke-20260727-windows-launch",
+      "head": "e94bfd02e6ffd7facee3bbddecc019410251c79c",
+      "originMain": "28c7911a1966003863bf7636674956ffe0eaaf49",
+      "topLevelDirectories": [
+        ".github",
+        "agents",
+        "assets",
+        "build",
+        "electron",
+        "errors",
+        "health",
+        "managed-proxy",
+        "research",
+        "scripts",
+        "src",
+        "tasks",
+        "verification",
+        "versions"
+      ],
+      "packageScriptsIncluded": [
+        "verify",
+        "task-gateway",
+        "verify:task-gateway",
+        "docs:generate-handoff",
+        "verify:docs-consistency"
+      ]
+    }
   },
   "safety": {
     "readCredentials": false,
@@ -61,6 +106,8 @@
   },
   "notes": [
     "The gateway uses existing local Codex CLI auth/config and does not read or copy credentials.",
-    "The only real Codex smoke was blocked by Windows process startup compatibility. The adapter was then changed to launch codex.cmd through cmd.exe, but no second real run was started in this task."
+    "The real smoke used exactly one Codex process launch after launcher tests and no-model CLI checks passed.",
+    "The task status file records the first fixed run as failed because the gateway post-validation safe.directory fix was made after that run; the captured Codex output and independent worktree checks show the real smoke was read-only and clean.",
+    "Cost cannot be read from local CLI output and remains unknown."
   ]
 }

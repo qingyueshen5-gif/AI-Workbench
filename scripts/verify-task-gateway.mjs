@@ -38,6 +38,56 @@ const head = run('git', ['rev-parse', 'HEAD'], { cwd: repo }).stdout.trim();
 
 const gateway = await import(`./task-gateway.mjs?verify=${Date.now()}`);
 
+const launcherDir = join(tmpRoot, 'launcher path with spaces');
+await fsp.mkdir(launcherDir, { recursive: true });
+const fixtureCmd = join(launcherDir, 'fixture launcher.cmd');
+const injectionMarker = join(launcherDir, 'INJECTED.txt');
+await fsp.writeFile(fixtureCmd, [
+  '@echo off',
+  'echo ARGS:%*',
+  'echo CWD:%CD%',
+  'set /p LINE=',
+  'echo STDIN:%LINE%',
+  'echo STDERR:%~1 1>&2',
+  'if "%~1"=="fail" exit /b 7',
+  'if "%~1"=="sleep" powershell.exe -NoProfile -Command "Start-Sleep -Seconds 5"',
+  'exit /b 0',
+].join('\r\n'), 'utf8');
+
+const launcherSuccess = await gateway.spawnCapture(fixtureCmd, ['arg one', `safe&echo injected>${injectionMarker}`], {
+  cwd: launcherDir,
+  input: 'stdin payload\n',
+  timeoutMs: 5000,
+});
+assert.equal(launcherSuccess.ok, true);
+assert.equal(launcherSuccess.code, 0);
+assert.match(launcherSuccess.stdout, /ARGS:"arg one" "safe&echo injected>/);
+assert.match(launcherSuccess.stdout, /CWD:.*launcher path with spaces/);
+assert.match(launcherSuccess.stdout, /STDIN:stdin payload/);
+assert.match(launcherSuccess.stderr, /STDERR:arg one/);
+assert.equal(fs.existsSync(injectionMarker), false);
+
+const launcherFailure = await gateway.spawnCapture(fixtureCmd, ['fail'], {
+  cwd: launcherDir,
+  input: 'stdin payload\n',
+  timeoutMs: 5000,
+});
+assert.equal(launcherFailure.ok, false);
+assert.equal(launcherFailure.code, 7);
+
+const launcherTimeout = await gateway.spawnCapture(fixtureCmd, ['sleep'], {
+  cwd: launcherDir,
+  input: 'stdin payload\n',
+  timeoutMs: 100,
+});
+assert.equal(launcherTimeout.ok, false);
+assert.equal(launcherTimeout.timedOut, true);
+
+const launcherSpec = gateway.buildSpawnSpec(fixtureCmd, ['--flag'], { cwd: launcherDir });
+assert.equal(launcherSpec.usesComSpec, process.platform === 'win32');
+assert.equal(launcherSpec.shell, false);
+assert.equal(JSON.stringify(launcherSpec).includes('secret prompt'), false);
+
 const prompt = join(tmpRoot, 'prompt.md');
 await fsp.writeFile(prompt, 'Read git status only.\n', 'utf8');
 const card = {
@@ -126,6 +176,7 @@ const contract = gateway.codexContract();
 assert.equal(contract.command, 'codex.cmd');
 assert.ok(contract.arguments.includes('--json'));
 assert.ok(contract.arguments.includes('read-only'));
+assert.equal(contract.arguments.includes('--ask-for-approval'), false);
 
 console.log(JSON.stringify({
   status: 'passed',
@@ -146,6 +197,13 @@ console.log(JSON.stringify({
     'log_redaction',
     'forbidden_paths',
     'no_push_or_deploy_by_gateway',
-    'cleanup_boundary'
+    'cleanup_boundary',
+    'windows_cmd_launcher',
+    'cmd_path_with_spaces',
+    'launcher_stdin_stdout_stderr',
+    'launcher_exit_code',
+    'launcher_timeout_cancel',
+    'launcher_shell_injection_guard',
+    'prompt_not_in_command_log'
   ]
 }, null, 2));

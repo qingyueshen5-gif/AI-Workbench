@@ -1,60 +1,49 @@
 # 本地 Codex 任务网关 v0.1 验收报告
 
-状态：`local_gateway_passed_real_codex_smoke_blocked`
+状态：`local_gateway_and_real_codex_smoke_passed`
 
-## 已完成
+## 本轮修复
 
-- 新增 `scripts/task-gateway.mjs`。
-- 新增 `scripts/verify-task-gateway.mjs`。
-- 新增 npm 命令 `task-gateway` 和 `verify:task-gateway`。
-- 确认本机 Codex CLI：`codex-cli 0.144.4`。
-- 确认正式非交互入口：`codex.cmd exec`。
-- 支持 stdin、`--cd`、`--json`、`--sandbox`、`--ask-for-approval`、`--output-last-message` 和退出码。
-
-## 网关能力
-
-- 任务卡创建、查看、列表。
-- 固定状态机。
-- 人工批准 gate。
-- 独立 branch 和 worktree。
-- Codex adapter。
-- stdout/stderr 捕获。
-- 超时、取消和最大运行次数。
-- 并发限制。
-- 追加式 JSONL 事件账本。
-- 日志脱敏。
-- LocalCLIChannel 和 future FeishuChannel 边界。
+- 原阻塞：Windows 环境直接 `spawn('codex.cmd', ...)` 在进程创建前返回 `spawn EINVAL`。
+- 根因：Node/Windows 不能可靠直接启动 `.cmd` shim。
+- 修复：Windows `.cmd/.bat` 通过 `%ComSpec% /d /s /c call "codex.cmd" ...` 受控启动，`shell: false`，`windowsVerbatimArguments: true`。
+- prompt 仍通过 stdin 传入，不放入命令行参数。
+- `codex-cli 0.144.4 exec` 实测不支持 `--ask-for-approval`，已从网关调用契约移除；人工批准仍由任务网关状态机强制执行。
+- 后置 Git 检查补充 per-call `safe.directory`，不修改全局 Git 配置。
 
 ## 测试结果
 
 - `npm.cmd run verify:task-gateway`：passed。
 - `npm.cmd run verify`：passed。
-- 未批准任务运行：被拦截。
-- baseline mismatch：blocked。
-- quota/billing mock：正确分类。
-- forbidden paths：正确拦截。
-- cleanup：通过。
+- 无模型 `codex.cmd --version`：passed，输出 `codex-cli 0.144.4`。
+- 无模型 `codex.cmd exec --help`：passed。
+- 新增 launcher fixture 覆盖 `.cmd`、绝对路径、带空格路径、cwd、stdin、stdout、stderr、正常退出码、非零退出码、超时/取消、shell 注入防护和 prompt 不进入命令日志。
 
 ## 真实 Codex smoke
 
-唯一真实只读 smoke：
-
-- task_id：`real-readonly-smoke-20260727`
-- baseline：`38fbc320e8ec24ac216704d70ab2c5c9cf68a86a`
-- Codex 启动次数：1
+- task_id：`real-readonly-smoke-20260727-windows-launch`
+- baseline：`e94bfd02e6ffd7facee3bbddecc019410251c79c`
+- 新增真实 Codex 调用次数：1
+- Codex 进程：已启动
+- Codex 输出：已捕获
 - worktree：已创建并清理
 - 文件修改：无
+- commit：无
 - push：无
 - deploy：无
 - scope violation：无
+- auth/quota/billing/upstream 错误：无
 - 费用状态：`unknown`
 
-结果：
+Codex 只读输出摘要：
 
-- 在 Windows `.cmd` shim 进程启动阶段返回 `spawn EINVAL`。
-- 未得到真实只读任务输出。
-- 按“最多 1 次真实本地 Codex 任务”边界停止，没有第二次真实调用。
-- 后续已将适配器改为通过 `cmd.exe /d /s /c codex.cmd` 启动，但本轮不再重跑真实 smoke。
+- `git status --short --branch`：`## task-gateway/real-readonly-smoke-20260727-windows-launch`
+- `git rev-parse HEAD`：`e94bfd02e6ffd7facee3bbddecc019410251c79c`
+- `git rev-parse origin/main`：`28c7911a1966003863bf7636674956ffe0eaaf49`
+- 顶层目录包含 `.github`、`agents`、`assets`、`electron`、`managed-proxy`、`scripts`、`src`、`verification` 等。
+- `package.json` scripts 包含 `verify`、`task-gateway`、`verify:task-gateway`、`docs:generate-handoff`、`verify:docs-consistency` 等。
+
+说明：真实 smoke 第一次固定 launcher 后已经得到正确只读输出；随后网关后置验收因 Git `safe.directory` 被标为 failed。该问题已在网关 Git helper 中修复，并通过自动测试验证；未再次调用真实 Codex。
 
 ## 边界
 

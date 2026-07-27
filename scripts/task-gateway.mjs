@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import { spawn } from 'node:child_process';
-import { join, resolve, basename, dirname } from 'node:path';
+import { join, resolve, basename, dirname, extname } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { runtimeRoot } from '../runtime-paths.mjs';
@@ -205,14 +205,53 @@ function validateTask(task) {
   if (task.max_retries < 0) throw gatewayError('invalid_task', 'max_retries must be 0 or greater');
 }
 
+function buildSpawnSpec(command, args = [], options = {}) {
+  const normalizedArgs = args.map((arg) => {
+    if (arg === undefined || arg === null) throw gatewayError('invalid_task', 'Process arguments must be strings');
+    return String(arg);
+  });
+  const normalizedCommand = String(command || '').trim();
+  if (!normalizedCommand) throw gatewayError('invalid_task', 'Process command is required');
+
+  if (process.platform === 'win32' && ['.cmd', '.bat'].includes(extname(normalizedCommand).toLowerCase())) {
+    const commandLine = ['call', quoteCmdArg(normalizedCommand), ...normalizedArgs.map(quoteCmdArg)].join(' ');
+    return {
+      command: process.env.ComSpec || 'cmd.exe',
+      args: ['/d', '/s', '/c', commandLine],
+      displayCommand: `${basename(process.env.ComSpec || 'cmd.exe')} /d /s /c ${basename(normalizedCommand)}`,
+      usesComSpec: true,
+      shell: false,
+      windowsVerbatimArguments: true,
+      cwd: options.cwd || root,
+    };
+  }
+
+  return {
+    command: normalizedCommand,
+    args: normalizedArgs,
+    displayCommand: basename(normalizedCommand),
+    usesComSpec: false,
+    shell: false,
+    windowsVerbatimArguments: false,
+    cwd: options.cwd || root,
+  };
+}
+
+function quoteCmdArg(value) {
+  return `"${String(value).replace(/"/g, '""')}"`;
+}
+
 function spawnCapture(command, args, options = {}) {
   return new Promise((resolvePromise) => {
     let child;
+    let spec;
     try {
-      child = spawn(command, args, {
-        cwd: options.cwd || root,
+      spec = buildSpawnSpec(command, args, options);
+      child = spawn(spec.command, spec.args, {
+        cwd: spec.cwd,
         windowsHide: true,
-        shell: false,
+        shell: spec.shell,
+        windowsVerbatimArguments: spec.windowsVerbatimArguments,
         env: options.env || process.env,
         stdio: options.input === undefined ? ['ignore', 'pipe', 'pipe'] : ['pipe', 'pipe', 'pipe'],
       });
@@ -245,8 +284,7 @@ function spawnCapture(command, args, options = {}) {
 }
 
 function spawnCodex(args, options = {}) {
-  if (process.platform !== 'win32') return spawnCapture('codex', args, options);
-  return spawnCapture(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', 'codex.cmd', ...args], options);
+  return spawnCapture(process.platform === 'win32' ? 'codex.cmd' : 'codex', args, options);
 }
 
 function killProcess(pid) {
@@ -257,7 +295,8 @@ function killProcess(pid) {
 }
 
 async function git(args, cwd = root, options = {}) {
-  const result = await spawnCapture('git', args, { cwd, timeoutMs: options.timeoutMs || 30000 });
+  const safeArgs = ['-c', `safe.directory=${cwd.replace(/\\/g, '/')}`, ...args];
+  const result = await spawnCapture('git', safeArgs, { cwd, timeoutMs: options.timeoutMs || 30000 });
   if (!result.ok && !options.allowFailure) {
     throw gatewayError(options.reason || 'worktree_failed', `git ${args.join(' ')} failed: ${result.stderr || result.stdout}`);
   }
@@ -362,8 +401,6 @@ async function runCodex(task) {
     '--json',
     '--sandbox',
     'read-only',
-    '--ask-for-approval',
-    'untrusted',
     '--cd',
     task.worktree,
     '--output-last-message',
@@ -377,7 +414,8 @@ async function runCodex(task) {
     onChild: async (child) => {
       task.process_id = child.pid || null;
       await saveTask(task);
-      await appendEvent(task.task_id, 'codex_started', { pid: child.pid, command: process.platform === 'win32' ? 'cmd.exe /d /s /c codex.cmd' : 'codex', args });
+      const spec = buildSpawnSpec(process.platform === 'win32' ? 'codex.cmd' : 'codex', args, { cwd: task.worktree });
+      await appendEvent(task.task_id, 'codex_started', { pid: child.pid, command: spec.displayCommand, args });
     },
     onStdout: async (chunk) => fsp.appendFile(stdoutPath(task.task_id), redact(chunk), 'utf8').catch(() => {}),
     onStderr: async (chunk) => fsp.appendFile(stderrPath(task.task_id), redact(chunk), 'utf8').catch(() => {}),
@@ -534,7 +572,7 @@ async function readLogs(taskId) {
 function codexContract() {
   return {
     command: 'codex.cmd',
-    arguments: ['exec', '--json', '--sandbox', 'read-only', '--ask-for-approval', 'untrusted', '--cd', '<worktree>', '--output-last-message', '<runtime-file>', '-'],
+    arguments: ['exec', '--json', '--sandbox', 'read-only', '--cd', '<worktree>', '--output-last-message', '<runtime-file>', '-'],
     working_directory: '<task worktree>',
     prompt_input: 'stdin via "-"',
     stdout: 'JSONL events captured and redacted to runtime task log',
@@ -542,7 +580,7 @@ function codexContract() {
     exit_code: 'child process close code',
     cancellation: 'taskkill /pid <pid> /T /F on Windows',
     timeout: 'AIW_TASK_GATEWAY_CODEX_TIMEOUT_MS, default 120000',
-    approval_mode: 'Codex --ask-for-approval untrusted plus gateway-level explicit approve',
+    approval_mode: 'gateway-level explicit approve; current codex-cli 0.144.4 exec does not expose --ask-for-approval',
     sandbox: 'read-only for v0.1 real smoke by default',
     secret_redaction: 'Token/API Key/Cookie/Authorization/password/user home path redaction before event persistence',
     connection_source: 'uses existing local Codex CLI auth/config; gateway does not read or copy credentials',
@@ -628,5 +666,8 @@ export {
   assertTransition,
   checkScope,
   classifyCodexFailure,
+  buildSpawnSpec,
+  spawnCapture,
+  spawnCodex,
   gatewayRoot,
 };

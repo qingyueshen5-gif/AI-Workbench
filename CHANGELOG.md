@@ -3,9 +3,10 @@
 ## Unreleased - 本地 Codex 任务网关 v0.1
 
 - 新增 `scripts/task-gateway.mjs`，建立本地 Codex 任务网关 v0.1：任务卡创建、固定状态机、人工批准、独立 branch/worktree、Codex adapter、stdout/stderr 捕获、超时、取消、最大运行次数、并发限制、事件 JSONL 和日志脱敏。
-- 新增 `scripts/verify-task-gateway.mjs` 和 npm scripts `task-gateway`、`verify:task-gateway`，mock adapter 覆盖任务卡解析、必填字段、状态转换、未批准不能运行、baseline mismatch、worktree 隔离、并发/次数限制、取消、失败分类、日志脱敏、forbidden paths、no push/deploy 和 cleanup。
-- 已确认本机 Codex CLI 版本 `codex-cli 0.144.4`，正式非交互入口为 `codex.cmd exec`，支持 stdin、`--cd`、`--json`、`--sandbox`、`--ask-for-approval` 和 `--output-last-message`；网关不读取或复制登录凭据。
-- 唯一真实只读 Codex smoke 已消耗 1 次真实启动额度，但在 Windows `.cmd` 进程启动阶段返回 `spawn EINVAL`，未形成完整真实只读输出；状态记录为 `local_gateway_passed_real_codex_smoke_blocked`。后续已修正适配器改走 `cmd.exe /d /s /c codex.cmd`，但本轮不再启动第二次真实调用。
+- 新增 `scripts/verify-task-gateway.mjs` 和 npm scripts `task-gateway`、`verify:task-gateway`，mock adapter 覆盖任务卡解析、必填字段、状态转换、未批准不能运行、baseline mismatch、worktree 隔离、并发/次数限制、取消、失败分类、日志脱敏、forbidden paths、no push/deploy 和 cleanup；本轮补充 launcher fixture，覆盖 Windows `.cmd`、带空格路径、cwd、stdin/stdout/stderr、退出码、超时/取消和 shell 注入防护。
+- 已确认本机 Codex CLI 版本 `codex-cli 0.144.4`，正式非交互入口为 `codex.cmd exec`，支持 stdin、`--cd`、`--json`、`--sandbox` 和 `--output-last-message`；实测不支持 `--ask-for-approval`。网关不读取或复制登录凭据。
+- 修复 Windows 本地 Codex 启动适配：直接 `spawn('codex.cmd', ...)` 会在进程创建前 `spawn EINVAL`，现通过 `%ComSpec% /d /s /c call "codex.cmd" ...` 受控启动，prompt 仍通过 stdin 传入；后置 Git 检查使用 per-call `safe.directory`，不改全局 Git 配置。
+- 唯一真实只读 Codex smoke 新增真实调用 1 次，已得到正确只读输出；worktree 已清理，文件修改为空，无 commit、push、deploy、scope violation、auth/quota/billing 错误，费用状态 `unknown`。状态记录为 `local_gateway_and_real_codex_smoke_passed`。
 - 本轮没有接入飞书、Hermes、子 Agent 或生产环境，没有启动 v0.4.7 工作包 A/E/G，没有部署、push 生产、修改 Cloudflare、D1、Secret、预算或模型路由。
 
 ## Unreleased - v0.4.7 可执行施工图

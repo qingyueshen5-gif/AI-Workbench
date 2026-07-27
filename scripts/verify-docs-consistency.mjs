@@ -39,7 +39,7 @@ const scannedFiles = [
 ];
 
 const ignoredHistoricalPaths = ['CHANGELOG.md', 'TASKLOG.md', 'tasks/**', 'verification/**', 'research/**'];
-const expectedNextStep = '等待产品负责人审核本地Codex任务网关v0.1和真实只读验收结果，并决定是否进入飞书渠道适配阶段。';
+const expectedNextStep = '等待产品负责人审核本地Codex任务网关真实只读验收结果，并决定是否进入飞书渠道适配最小闭环。';
 
 function readText(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');

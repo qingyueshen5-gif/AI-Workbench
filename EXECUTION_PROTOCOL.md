@@ -143,6 +143,16 @@ v0.4.7 工作包不得默认修改 `managed-proxy/src/`、Cloudflare 配置、D1
 - 不在命令行参数中暴露 Secret；
 - 任务日志必须脱敏。
 
+Windows 本地 Codex 启动契约：
+
+- 当前本机 Codex CLI 版本为 `codex-cli 0.144.4`；
+- 正式非交互入口为 `codex.cmd exec`；
+- `exec` 支持 stdin、`--cd`、`--json`、`--sandbox` 和 `--output-last-message`；
+- `exec` 当前不支持 `--ask-for-approval`，不得把该参数写入调用契约；
+- Windows `.cmd/.bat` 不得直接 `spawn`，必须通过受控的 `%ComSpec% /d /s /c call "..."` 启动；
+- prompt 必须通过 stdin 传入，不得放入命令行参数；
+- Git worktree 后置检查使用 per-call `safe.directory`，不得为了通过验收修改全局 Git 配置。
+
 默认并发限制：
 
 - 同时运行 Codex 任务数默认 1；
