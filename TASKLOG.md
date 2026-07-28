@@ -6,9 +6,20 @@
 
 ## 当前一句话状态
 
-`AW-ENV-BASELINE-001`已验收；`AW-AILINK-READINESS-001`确认UI与Session最小就绪、当前2个工作流和1个AI Link主实例，但workflow creator的18765上游请求是否经过7890没有可审计证明，最终`blocked_proxy_path_unverified`，不得执行生成。
+`AW-AILINK-ROUTE-AND-REVIEW-001`完成只读路由定性和现有版本3方案审查：上游为`functional_but_unmanaged_route`，没有必须经过7890的证据；方案为`review_passed_with_nonblocking_notes`，明确`new_generation_not_required`。当前等待产品负责人验收后决定是否进入人工确认现有方案的独立审批门。
 
 ## 最近完成任务
+
+## 2026-07-28｜AW-AILINK-ROUTE-AND-REVIEW-001｜AI Link上游路由定性与已有协作方案只读审查
+
+- 产品负责人验收`AW-AILINK-READINESS-001`并批准只读路由定性和版本3方案审查，不批准生成、调整或确认。
+- 安装包和运行配置确认workflow creator经18765由Node fetch访问AI Link自有LLM上游；18766不是该链路入口。
+- 直连和经7890均可访问上游公开根路径，TLS证书和HTTP行为一致；没有该域名必须经7890的证据。
+- 客户端缺少明确DIRECT/分流策略、Node代理dispatcher、监控、超时重试和fallback，最终分类`functional_but_unmanaged_route`。
+- 完整审查草稿3：五个角色齐全，协调监工单入口、总集成单一最终集成、产品负责人双审批门、原生@响应和权限边界合格，产品定位模型中立。
+- 审查结果`review_passed_with_nonblocking_notes`；明确`new_generation_not_required`，无需版本4或第三个同目标工作流。
+- 未修改工作流、未确认方案、未创建员工或飞书群、未修改运行环境或产品代码。
+- 证据：`verification/ai-link-route-and-review/`。
 
 ## 2026-07-28｜AW-AILINK-READINESS-001｜AI Link单次受控生成前最小就绪核验
 

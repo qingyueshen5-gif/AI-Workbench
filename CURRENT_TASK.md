@@ -5,47 +5,53 @@
 
 ## 当前主线
 
-任务编号：`AW-AILINK-READINESS-001`
+任务编号：`AW-AILINK-ROUTE-AND-REVIEW-001`
 
-任务名称：AI Link单次受控生成前最小就绪核验。
+任务名称：AI Link上游路由定性与已有协作方案只读审查。
 
-任务性质：只读UI、Session、工作流状态、请求路径与人工一次提交保护核验；纯文档交付。
-
-## 本轮目标
-
-在不执行生成、不创建员工或飞书群、不修改AI Link、代理、网络或产品代码的前提下，明确是否具备“一次且仅一次”的受控workflow生成条件。
+任务性质：只读安装包、运行配置、非付费网络路径与现有工作流草稿审查；纯文档交付。
 
 ## 完成状态
 
-- AI Link v0.2.12 UI完整可交互；员工、协作群和现有草稿详情可读取。
-- 登录Session根据只读页面状态判定有效；没有重新登录、认证过期或权限错误。
-- 当前只有1个AI Link主进程族；18765/18766健康。
-- 当前工作流数量为2：`AW-AILINK-GROUP-001`对应草稿为`review_ready/review`、草稿3；另一个工作流为`ready/done`。
-- 没有落盘中的pending/running生成任务，但缺少持久请求ID，孤儿请求无法强审计排除。
-- 已证明workflow creator调用链为UI→IPC→18765→AI Link LLM上游；未证明18765上游fetch经过7890。
-- workflow-creator持久累计计数不可恢复；费用UI基准记录为余额¥111.58、今日用量¥43.42。
-- “单次受控生成操作卡”已形成但未执行。
-- 最终判定：`blocked_proxy_path_unverified`。
+### 路由定性
 
-## 任务分类
+- workflow creator链路确认为renderer→IPC→workflow orchestrator→`127.0.0.1:18765/v1/chat/completions`→Node fetch→AI Link LLM上游。
+- 当前上游是AI Link Session默认/下发的自有LLM网关域名，不是客户端直接访问单一Provider。
+- 直连DNS、TCP、TLS和公开GET可达；经7890公开GET同样可达，未观察到证书、SNI或HTTP状态差异。
+- 安装包未实现`session.setProxy`、代理命令行参数、Node代理dispatcher、域名分流表、超时重试或代理fallback。
+- 没有证据表明该上游必须经过7890；“未连接7890”不再作为故障结论。
+- 最终分类：`functional_but_unmanaged_route`。当前直连功能可用，但缺少明确策略、监控、fallback和权威设计文档。
 
-本次单次生成唯一仍然硬阻塞：
+### 版本3方案审查
 
-- `AW-ENV-FIX-PROXY-001`中的workflow creator上游实际路由证明与可审计证据。
+- 当前工作流数量仍为2。
+- `workflow-3da933e691b5`仍为`review_ready/review`、草稿3、`pendingBlueprint=null`、`lastError=null`。
+- 五个角色全部存在：协调监工、A架构开发、E隐私开发、G测试验收、总集成。
+- 协调监工是唯一入口，总集成是唯一最终集成角色，产品负责人拥有两个正式审批门。
+- 飞书群运行逻辑为原生@才响应，未被@不调用模型。
+- 方案禁止未经审批合并、生产部署、扩大范围和总集成代写；没有默认支付、Secret修改、删除或账号操作权限。
+- 方案没有将产品写成DeepSeek客户端，符合模型中立定位。
+- 审查分类：`review_passed_with_nonblocking_notes`。
+- 结论：`new_generation_not_required`；不需要重新生成，创建前不强制人工修改。
 
-本轮已满足最小核验、正式执行前需即时复核：
+## 非阻塞说明
 
-- `AW-ENV-FIX-READINESS-001`中的UI和Session部分；
-- `AW-ENV-FIX-IDEMPOTENCY-001`中的人工单次提交保护部分。
+1. 人工确认现有方案不等于正式开工审批；正式开发仍受方案内开工门控制。
+2. 协调监工和G测试验收的员工分配仍待后续人工选择，这是确认流程状态，不是蓝图结构缺陷。
+3. 正式开工前应在任务卡中明确AI Link本机代理端口与AI Workbench 18800在不同执行域中的实际入口，避免概念混用。
 
-完整幂等、Checkpoint、自动Preflight、单实例锁、飞书自动重连、结构化日志、网络对照和完整路由治理移至后续工程，未删除也未标记完成。
+## 任务阻塞关系
+
+- `AW-ENV-FIX-PROXY-001`不再硬阻塞现有版本3方案的人工确认；保留为长期路由治理与可观测性任务。
+- 完整幂等、Checkpoint、自动Preflight、单实例锁、飞书重连、结构化日志、Wi-Fi/热点对照和完整路由治理均保留为后续工程。
+- 本轮不确认方案，不准备员工，不绑定飞书，不创建群，不启动正式开发。
 
 ## 明确边界
 
-本轮没有点击“让 AI 生成方案”，没有发起付费workflow生成，没有创建或修改工作流、员工、飞书群，没有修改AI Link安装文件、系统代理、DNS、注册表、代理节点、产品代码或生产配置。
+本轮没有点击生成或调整草稿，没有发起模型调用，没有修改或确认工作流，没有创建员工或飞书群，没有修改AI Link、代理、网络、DNS、注册表、产品代码或生产配置。
 
 ## 当前唯一下一步
 
-等待产品负责人验收 `AW-AILINK-READINESS-001`；在workflow creator代理路径得到可审计证明前，不得执行受控生成。
+等待产品负责人验收 `AW-AILINK-ROUTE-AND-REVIEW-001`；验收通过后进入人工确认现有版本3方案的审批门，不重新生成。
 
 完成文档提交和推送后立即停止，不自动进入下一阶段。

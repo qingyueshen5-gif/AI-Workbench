@@ -42,7 +42,7 @@ const scannedFiles = [
 ];
 
 const ignoredHistoricalPaths = ['CHANGELOG.md', 'TASKLOG.md', 'tasks/**', 'verification/**', 'research/**'];
-const expectedNextStep = '等待产品负责人验收 AW-AILINK-READINESS-001；在workflow creator代理路径得到可审计证明前，不得执行受控生成。';
+const expectedNextStep = '等待产品负责人验收 AW-AILINK-ROUTE-AND-REVIEW-001；验收通过后进入人工确认现有版本3方案的审批门，不重新生成。';
 
 function readText(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
@@ -229,6 +229,12 @@ function main() {
     if (aiLinkReadiness.ui?.status !== 'complete_and_interactive' || aiLinkReadiness.session?.status !== 'valid_by_read_only_ui_evidence') errors.push('AI Link UI或Session核验状态不正确。');
     if (aiLinkReadiness.workflows?.count !== 2 || aiLinkReadiness.aiLink?.mainInstanceFamilies !== 1) errors.push('AI Link工作流数量或主实例基准不正确。');
     if (aiLinkReadiness.proxyPath?.status !== 'proxy_path_unverified' || aiLinkReadiness.proxyPath?.externalProxy7890Verified !== false) errors.push('AI Link代理路径判定不正确。');
+    const routeReview = readJson('verification/ai-link-route-and-review/summary.json');
+    if (routeReview.taskId !== 'AW-AILINK-ROUTE-AND-REVIEW-001') errors.push('AI Link路由与方案审查Task ID不正确。');
+    if (routeReview.generationExecuted !== false || routeReview.workflowModified !== false || routeReview.workflowConfirmed !== false) errors.push('AI Link路由与方案审查越过只读边界。');
+    if (routeReview.route?.classification !== 'functional_but_unmanaged_route' || routeReview.route?.expectedVia7890 !== false) errors.push('AI Link上游路由分类不正确。');
+    if (routeReview.workflowReview?.reviewClassification !== 'review_passed_with_nonblocking_notes' || routeReview.workflowReview?.generationRequirement !== 'new_generation_not_required') errors.push('AI Link版本3方案审查结论不正确。');
+    if (routeReview.workflowReview?.workflowCount !== 2 || routeReview.workflowReview?.draftVersion !== 3 || routeReview.workflowReview?.roleCount !== 5) errors.push('AI Link版本3方案工作流、草稿或角色基准不正确。');
 
     log.push('文档一致性检查完成。');
   } catch (error) {

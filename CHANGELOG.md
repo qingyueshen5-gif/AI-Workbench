@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## Unreleased - AI Link上游路由定性与版本3方案只读审查
+
+- 完成`AW-AILINK-ROUTE-AND-REVIEW-001`：只读审计AI Link v0.2.12安装包、运行配置、自有LLM上游网络属性和现有版本3工作流。
+- 确认workflow creator链路为renderer→IPC→workflow orchestrator→18765→Node fetch→AI Link LLM上游；18766不是该请求入口。
+- 直连和经7890访问AI Link自有LLM域名均成功，证书、SNI和HTTP行为无异常；代码没有要求该域名必须经过7890。
+- 安装包未实现明确DIRECT/分流表、Node代理dispatcher、超时重试、路由监控或代理fallback，路由分类为`functional_but_unmanaged_route`。
+- 完整审查`workflow-3da933e691b5`草稿3：五个计划角色齐全，协调监工单入口、总集成单一最终集成、产品负责人双审批门、原生@响应和权限边界合格，产品定位模型中立。
+- 方案审查分类为`review_passed_with_nonblocking_notes`；明确`new_generation_not_required`，不需要版本4或第三个同目标工作流。
+- `PROXY-001`不再硬阻塞现有版本3方案人工确认，保留为长期路由治理任务。
+- 本轮未生成、调整或确认方案，未创建员工或飞书群，未修改AI Link、代理、网络、产品代码或生产配置。
+
 ## Unreleased - AI Link单次受控生成前最小就绪核验
 
 - 完成`AW-AILINK-READINESS-001`：只读验证AI Link v0.2.12 UI完整可交互、登录Session有效、只有1个主进程族、18765/18766健康。

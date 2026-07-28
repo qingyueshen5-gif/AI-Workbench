@@ -1,0 +1,82 @@
+{
+  "taskId": "AW-AILINK-ROUTE-AND-REVIEW-001",
+  "capturedAt": "2026-07-28T22:35:00+08:00",
+  "generationExecuted": false,
+  "workflowModified": false,
+  "workflowConfirmed": false,
+  "workersCreated": false,
+  "feishuGroupCreated": false,
+  "route": {
+    "classification": "functional_but_unmanaged_route",
+    "upstreamHost": "ai-link-llm.lhmxrzs.cn",
+    "chain": [
+      "renderer workflow:generate",
+      "Electron IPC",
+      "workflow-orchestrator",
+      "127.0.0.1:18765/v1/chat/completions",
+      "Node fetch",
+      "AI Link LLM upstream"
+    ],
+    "expectedVia7890": false,
+    "mustUse7890Evidence": false,
+    "direct": {
+      "dns": "resolved",
+      "tcp443": "reachable",
+      "tls": "verified_tls13",
+      "http": 200
+    },
+    "via7890": {
+      "http": 200
+    },
+    "sameHttpBehaviorObserved": true,
+    "explicitDirectPolicy": false,
+    "explicitSplitPolicy": false,
+    "explicitNodeProxyDispatcher": false,
+    "retryOrProxyFallback": false,
+    "unconfirmed": [
+      "official route design documentation",
+      "server-side provider fallback",
+      "same-time original Wi-Fi versus hotspot comparison",
+      "historical fetch failure single root cause"
+    ]
+  },
+  "workflowReview": {
+    "workflowId": "workflow-3da933e691b5",
+    "businessTask": "AW-AILINK-GROUP-001",
+    "status": "review_ready",
+    "stage": "review",
+    "draftVersion": 3,
+    "pendingBlueprint": null,
+    "lastError": null,
+    "workflowCount": 2,
+    "thirdSameObjectiveWorkflow": false,
+    "generatingRequestObserved": false,
+    "roleCount": 5,
+    "roles": [
+      "协调监工",
+      "A架构开发",
+      "E隐私开发",
+      "G测试验收",
+      "总集成"
+    ],
+    "singleEntryRole": "协调监工",
+    "finalIntegrationOwner": "总集成",
+    "approvalOwner": "product_owner",
+    "approvalGateCount": 2,
+    "requiresMention": true,
+    "modelNeutral": true,
+    "productionDeployAllowedByDefault": false,
+    "paymentAllowedByDefault": false,
+    "secretModificationAllowedByDefault": false,
+    "reviewClassification": "review_passed_with_nonblocking_notes",
+    "manualModificationRequiredBeforeConfirmation": false,
+    "regenerationRequired": false,
+    "generationRequirement": "new_generation_not_required",
+    "nonblockingNotes": [
+      "方案确认不等于正式开工审批",
+      "协调监工和G测试验收的员工分配仍待后续人工选择",
+      "正式开工前应明确AI Link本机代理与AI Workbench 18800在不同执行域中的实际入口"
+    ]
+  },
+  "nextStep": "等待产品负责人验收AW-AILINK-ROUTE-AND-REVIEW-001；验收通过后进入人工确认现有版本3方案的审批门，不重新生成。"
+}
