@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Unreleased - Environment Ops 基础问题资产化
+
+- 新增 `ENVIRONMENT_OPS_ISSUES.md`，以统一格式归档2026-07-27至2026-07-28的17项电脑、进程、网络、代理、AI Link、飞书、海外账号、支付/API和用户体验问题。
+- 将 AI Link 当前状态锁定为 `temporarily_recovered`，不宣称永久修复。
+- 在现有架构内建立 Environment Ops（运行环境保障），不创建第二套一级模块。
+- 在执行协议中加入 Incident 处理流程、12项付费/正式任务 Preflight 和一次安全复测规则。
+- 建立 P0 任务/账号安全、P1 基础环境、P2 官方支付/API、P3 工作群创建、P4 正式开发的顺序。
+- 本轮只修改文档；未修改产品代码、AI Link、代理、网络、账号、支付或生产环境，未发起付费调用，未创建员工或飞书群。
+
 ## Unreleased - 25 模块知识归档与权威归属去重
 
 - 建立 `CONTEXT.md` 事实归属表和 25 模块索引，明确每项事实只在一个权威文件写全，其他文件只引用。

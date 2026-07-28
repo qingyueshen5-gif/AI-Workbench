@@ -94,3 +94,39 @@ npm.cmd run verify:docs-consistency
 需要提交的任务只有在以下条件满足后才能报完成：修改已写入、真实验证已执行、证据和历史账本已更新、diff 已检查、敏感信息扫描无问题、commit 存在、push 成功、工作区除明确保留的用户文件外无意外改动、本地 HEAD 与 `origin/main` 一致。
 
 外部发布、生产部署和 Release 仍需单独授权；普通 commit/push 只在用户明确要求时执行。
+
+## Environment Ops 事故处理流程
+
+所有电脑、进程、端口、网络、代理、AI Link、通讯渠道、Provider、账号恢复、支付和预算异常统一执行：
+
+`问题出现 → 自动保存当前任务和草稿 → 冻结重复提交 → 生成唯一 Incident ID → 检查是否产生费用 → 检查是否已部分成功 → 分层检查电脑、进程、端口、网络、代理、应用、渠道和上游 → 保存脱敏证据 → 判断临时恢复或永久修复 → 执行最小风险恢复 → 验证 → 更新 ENVIRONMENT_OPS_ISSUES.md → 更新 Runbook/验收脚本 → 决定是否恢复主线任务`
+
+固定要求：
+
+- Incident ID、task ID、request ID 能关联时必须关联；没有则写 `unknown`，不得编造。
+- 在费用、部分成功和幂等状态确认前，不得重复付费请求或多步骤创建。
+- 页面、Electron IPC、主进程、本地 Gateway、远端 Gateway、Provider 必须分层判断，不能只重复最外层报错。
+- Chromium 网络栈、Node/Undici fetch、系统代理、WinHTTP、环境变量和显式 dispatcher 必须分别检查。
+- 临时恢复统一写 `temporarily_recovered`，不得写 `fully_fixed` 或 `permanently_resolved`。
+- 问题记录格式、状态枚举、严重度和维护责任以 `ENVIRONMENT_OPS_ISSUES.md` 为准。
+
+## 付费生成和正式任务 Preflight
+
+只有以下 12 项全部通过，才允许发起付费生成、正式工作流、员工/群创建或正式开发任务：
+
+1. 本地资源正常；
+2. 应用唯一实例；
+3. 必要端口正常且拥有者正确；
+4. 当前网络基线正常；
+5. 代理模式、分流和本地直连正常；
+6. 国内服务独立可达；
+7. 国外服务独立可达；
+8. 飞书或目标渠道连接正常；
+9. Provider/Gateway 的非付费健康检查正常；
+10. 登录 Session 正常；
+11. 预算、自动充值、幂等和重复费用保护正常；
+12. 草稿、任务状态和恢复检查点已保存。
+
+Preflight 失败必须 fail closed：不点击生成，不调用付费模型，不创建员工或群，不切换未知价格 Provider；必须报告失败层、证据、草稿、费用和最小恢复建议。
+
+安全复测最多一次：先通过非付费健康检查，再生成唯一 request ID，只提交一次，冻结重复点击并等待明确结果；成功时核对对象与计数增量，失败时保存完整 cause 并停止。

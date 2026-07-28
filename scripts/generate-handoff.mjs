@@ -112,6 +112,7 @@ ${notDone.join('\n')}
 - 25 个知识模块及事实归属：见 CONTEXT.md 的“事实归属表”和“25 个知识模块索引”。
 - 产品能力：见 PRODUCT.md；愿景与演进：见 VISION.md；原则、安全和成本：见 PRINCIPLES.md。
 - 架构、Agent、模型调度、诊断、兼容、通讯入口和恢复：见 ARCHITECTURE.md。
+- Environment Ops 问题状态和事故档案：见 ENVIRONMENT_OPS_ISSUES.md；AI Link 当前为 temporarily_recovered。
 - 工程、日志证据、测试和项目连续性：见 EXECUTION_PROTOCOL.md。
 - 路线、阶段、优先级和完成度：见 CURRENT_PROGRESS_AUDIT.md；当前唯一下一步只看 NEXT_STEP.md。
 

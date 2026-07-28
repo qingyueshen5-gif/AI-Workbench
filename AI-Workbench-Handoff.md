@@ -54,7 +54,7 @@ DeepSeek 是当前唯一已接入的生产实现，属于可替换的实现细�
 
 ## 未完成能力摘要
 
-- 等待产品负责人完成飞书企业自建应用的最小权限配置，并执行飞书到本地Codex真实闭环smoke。
+- 完成 Environment Ops 环境基线：只读采集电脑资源、唯一实例、端口、DNS/TCP/TLS、代理模式、国内外服务、飞书/AI Link/Provider 非付费健康、Session、预算保护和草稿保存状态；不做修复、不发起付费调用。
 - 实际电脑清理。
 - 首屏 3-5 条示例指令。
 - 反馈入口和安全/隐私告知。
@@ -70,12 +70,13 @@ DeepSeek 是当前唯一已接入的生产实现，属于可替换的实现细�
 - 25 个知识模块及事实归属：见 CONTEXT.md 的“事实归属表”和“25 个知识模块索引”。
 - 产品能力：见 PRODUCT.md；愿景与演进：见 VISION.md；原则、安全和成本：见 PRINCIPLES.md。
 - 架构、Agent、模型调度、诊断、兼容、通讯入口和恢复：见 ARCHITECTURE.md。
+- Environment Ops 问题状态和事故档案：见 ENVIRONMENT_OPS_ISSUES.md；AI Link 当前为 temporarily_recovered。
 - 工程、日志证据、测试和项目连续性：见 EXECUTION_PROTOCOL.md。
 - 路线、阶段、优先级和完成度：见 CURRENT_PROGRESS_AUDIT.md；当前唯一下一步只看 NEXT_STEP.md。
 
 ## 当前唯一下一步
 
-等待产品负责人完成飞书企业自建应用的最小权限配置，并执行飞书到本地Codex真实闭环smoke。
+完成 Environment Ops 环境基线：只读采集电脑资源、唯一实例、端口、DNS/TCP/TLS、代理模式、国内外服务、飞书/AI Link/Provider 非付费健康、Session、预算保护和草稿保存状态；不做修复、不发起付费调用。
 
 不得自动上传或部署新 Worker version、发起新的真实模型调用、电脑清理、首屏示例、反馈入口、安全告知、真实用户测试、模型分层、上下文压缩、手机端、飞书、Telegram、多 Agent、情报流水线或任何新功能开发，除非产品负责人明确批准对应任务。
 
@@ -117,6 +118,7 @@ DeepSeek 是当前唯一已接入的生产实现，属于可替换的实现细�
 - `DECISIONS.md`：已锁定决策。
 - `CONTEXT.md`：事实归属表、25 模块索引和当前综合入口。
 - `EXECUTION_PROTOCOL.md`：工程经验、日志证据、测试体系和项目连续性。
+- `ENVIRONMENT_OPS_ISSUES.md`：Environment Ops 问题状态、事故时间线和证据索引。
 - `verification/3a-final/summary.json`：③A 总验收证据。
 - `verification/3b-release/summary.json`：v0.4.6 Release 事实证据。
 - `verification/managed-proxy-production/summary.json`：Cloudflare Managed Proxy 生产验证证据。

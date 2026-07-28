@@ -1,6 +1,6 @@
 # 当前真实进度清单
 
-生成时间：2026-07-24
+生成时间：2026-07-28
 
 范围：只按当前仓库真实文件和已提交验收证据盘点；不按记忆猜测。
 
@@ -16,6 +16,7 @@
 | `TASKLOG.md` | 存在 | 任务总账本，记录任务状态、验收产物和缺失文件原因。 |
 | `EXECUTION_PROTOCOL.md` | 存在 | GPT / Codex / Claude / 其他执行助手的任务执行与验收协议。 |
 | `THINKING.md` | 存在 | 产品负责人判断依据，帮助新对话理解结论背后的原因。 |
+| `ENVIRONMENT_OPS_ISSUES.md` | 存在 | 运行环境、网络、代理、AI Link、渠道、账号恢复和支付/API 问题的权威总表。 |
 
 版本号：
 
@@ -90,10 +91,11 @@
 - v0.4.7 可执行施工图 audit_completed_docs_only：本轮从代码、配置、测试、安装脚本和现有文档审计 v0.4.7 市场基础可用性缺口，形成 9 个模块状态、公共底层清单、施工顺序、8 个工作包和第一批 2–3 个推荐工作包。状态只是施工图，不代表 v0.4.7 功能开发已启动；本轮未修改功能代码、未调用真实模型、未启动 Agent、未部署、未接入任何通讯入口。
 - 本地 Codex 任务网关 v0.1 local_gateway_and_real_codex_smoke_passed：本轮修复 Windows `.cmd` 启动适配，根因为 Node/Windows 直接 `spawn('codex.cmd', ...)` 在进程创建前返回 `spawn EINVAL`；现在通过 `%ComSpec% /d /s /c call "codex.cmd" ...` 受控启动，prompt 仍走 stdin，不进入命令行。已确认本机 Codex CLI `codex-cli 0.144.4`，正式非交互入口为 `codex.cmd exec`，支持 stdin、`--cd`、`--json`、`--sandbox` 和 `--output-last-message`；实测不支持 `--ask-for-approval`，已从调用契约移除，人工批准由任务网关状态机强制。新增 launcher fixture 测试覆盖 `.cmd`、带空格路径、cwd、stdin/stdout/stderr、退出码、超时/取消和 shell 注入防护；`npm.cmd run verify:task-gateway`、`npm.cmd run verify`、无模型 `codex.cmd --version`、无模型 `codex.cmd exec --help` 均通过。唯一新增真实只读 Codex smoke 启动 1 次，得到正确只读输出，worktree 已清理，文件修改为空，无 commit、push、deploy、scope violation、auth/quota/billing 错误；费用状态 `unknown`。真实 smoke 后发现网关后置 Git 检查缺少 `safe.directory`，已改为 per-call 临时配置，不修改全局 Git 配置。证据见 `verification/local-codex-task-gateway-v01/summary.json`。
 - 飞书渠道适配最小闭环 v0.1 feishu_channel_implementation_passed_live_smoke_blocked_by_credentials_or_permissions：本轮使用 AI Workbench 自己控制的飞书企业自建应用方案，安装并审计官方 SDK `@larksuiteoapi/node-sdk@1.71.1`，实测支持 `WSClient`、`im.message.receive_v1` 和 `client.im.v1.message.create`。新增 `scripts/feishu-task-channel.mjs` 和 `scripts/verify-feishu-task-channel.mjs`，飞书层只负责接收文本命令、owner 鉴权、一次性配对、报告群绑定、调用现有任务网关、回复状态和发送脱敏摘要；任务执行仍由本地任务网关和独立 worktree 中的 Codex 负责。新增 npm 命令 `feishu-channel:start`、`feishu-channel:check`、`verify:feishu-channel`，新增 `.env.example` 只列变量名。mock Feishu 测试通过，覆盖非文本拒绝、未授权拦截、配对过期/一次性、重复事件去重、群普通消息忽略、群 @ 触发、报告群绑定、started/completed/failed/blocked/cancelled 通知、通知去重、通知失败不改变任务结果、prompt 不进群通知和不自动 push/deploy。当前本机未配置 `FEISHU_APP_ID` 和 `FEISHU_APP_SECRET`，真实长连接、ping、报告群绑定和飞书到本地 Codex 真实 smoke 未执行。证据见 `verification/feishu-task-channel-v01/summary.json`。
+- 基础环境、网络、代理、支付与账号问题资产化 docs_only_completed：新增 `ENVIRONMENT_OPS_ISSUES.md`，归档 2026-07-27 至 2026-07-28 的 17 项真实问题，覆盖电脑、本地进程、代理、网络、国内外兼容、AI Link/飞书、海外账号恢复、官方API支付和用户体验；P0 5项、P1 9项、P2 2项、P3 1项。AI Link 当前状态统一为 `temporarily_recovered`，不得写成永久修复。Environment Ops 已写入架构，执行协议已加入事故流程和12项Preflight。本轮只改文档，不修改产品代码、AI Link、代理、网络、账号、支付或生产环境，不发起付费调用。
 
 未完成：
 
-- 等待产品负责人完成飞书企业自建应用的最小权限配置，并执行飞书到本地Codex真实闭环smoke。
+- 完成 Environment Ops 环境基线：只读采集电脑资源、唯一实例、端口、DNS/TCP/TLS、代理模式、国内外服务、飞书/AI Link/Provider 非付费健康、Session、预算保护和草稿保存状态；不做修复、不发起付费调用。
 - 实际电脑清理。
 - 首屏 3-5 条示例指令。
 - 反馈入口和安全/隐私告知。
@@ -110,8 +112,11 @@
 - 情报流水线。
 - 跨网站复杂执行。
 - 国际化和区域合规。
+- Environment Ops P0/P1：草稿和账号安全、请求幂等、唯一实例、UI/Session/服务一致性、Node/Electron代理适配、国内外分流、网络稳定性和飞书连接稳定性尚未永久修复。
+- Environment Ops P2：OpenAI/Anthropic官方API付款、项目/Workspace、Key和预算小额验证尚未执行。
+- Environment Ops P3：首批开发协作群的一次受控生成、5员工、飞书绑定、建群和只读冒烟尚未执行。
 
-当前唯一下一步：等待产品负责人完成飞书企业自建应用的最小权限配置，并执行飞书到本地Codex真实闭环smoke。
+当前唯一下一步：完成 Environment Ops 环境基线：只读采集电脑资源、唯一实例、端口、DNS/TCP/TLS、代理模式、国内外服务、飞书/AI Link/Provider 非付费健康、Session、预算保护和草稿保存状态；不做修复、不发起付费调用。
 
 <!-- AIW_CAPABILITY_STATUS_END -->
 
@@ -119,7 +124,7 @@
 
 状态枚举固定为：`completed_and_verified`、`active_current_stage`、`approved_not_started`、`candidate_after_current_stage`、`waiting_for_real_user_feedback`、`strategic_research`、`personal_growth_or_external_dependency`、`blocked`、`rejected_or_deferred`、`unknown_needs_audit`。
 
-当前没有 `active_current_stage` 的产品实施任务；唯一下一步仍是等待产品负责人完成飞书企业自建应用的最小权限配置，并执行飞书到本地Codex真实闭环smoke。
+当前没有 `active_current_stage` 的产品实施任务；唯一下一步仍是完成 Environment Ops 环境基线：只读采集电脑资源、唯一实例、端口、DNS/TCP/TLS、代理模式、国内外服务、飞书/AI Link/Provider 非付费健康、Session、预算保护和草稿保存状态；不做修复、不发起付费调用。
 
 | # | 任务线 | 产品模块 | 专业岗位 | 真实问题/用户 | 状态与证据 | 已完成/未完成/子模块 | 依赖 | 记录位置与完整性 | 预计涉及 | 并行/冲突 | 信任/安全/验证 | 当前是否开始/拍板 |
 | ---: | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -228,7 +233,7 @@
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；Workbench、Hermes、OpenClaw 三类执行入口都已通过 `18800` 调用当前生产 provider DeepSeek，验收摘要在 `verification/unified-model-proxy/summary.json`。DeepSeek 是当前实现细节，后续 provider 必须可替换。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。第 3 阶段钱包刹车与 DeepSeek V4 Flash 非思考 version 13 全量生产已通过技术验收、逻辑复核和产品负责人最终批准，状态为 `PASS_AFTER_CONDITIONS_RESOLVED`。自然用户规模稳定性仍未证明；v0.4.7 施工图已形成但未开工；本地 Codex 任务网关 v0.1 已通过 mock、launcher、无模型 CLI 和一次真实只读 Codex smoke；飞书渠道适配 v0.1 已通过 mock 测试但真实 smoke 因缺少本机飞书凭据和后台权限配置阻塞，唯一下一步是等待产品负责人完成飞书企业自建应用的最小权限配置，并执行飞书到本地Codex真实闭环smoke。
+- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。第 3 阶段钱包刹车与 DeepSeek V4 Flash 非思考 version 13 全量生产已通过技术验收、逻辑复核和产品负责人最终批准，状态为 `PASS_AFTER_CONDITIONS_RESOLVED`。自然用户规模稳定性仍未证明；v0.4.7 施工图已形成但未开工；本地 Codex 任务网关 v0.1 已通过 mock、launcher、无模型 CLI 和一次真实只读 Codex smoke；飞书渠道适配 v0.1 已通过 mock 测试但真实 smoke 因缺少本机飞书凭据和后台权限配置阻塞，唯一下一步是完成 Environment Ops 环境基线：只读采集电脑资源、唯一实例、端口、DNS/TCP/TLS、代理模式、国内外服务、飞书/AI Link/Provider 非付费健康、Session、预算保护和草稿保存状态；不做修复、不发起付费调用。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 
@@ -248,8 +253,8 @@
 | 08 | 用户理解 | `PRODUCT.md` | 产品要求已归档，系统化能力未完成 |
 | 09 | 虚拟人格 | `PRODUCT.md` | 立即纳入测试设计，不能替代真人验收 |
 | 10 | 用户体验 | `PRODUCT.md` | 基础桌面体验已有；v0.4.7 及格线待实施 |
-| 11 | 故障诊断 | `ARCHITECTURE.md` | 已有错误归一化和多项真实证据；自动诊断库未完成 |
-| 12 | 环境兼容 | `ARCHITECTURE.md` | Windows/陌生机器基础通过；低配和多平台持续演进 |
+| 11 | 故障诊断 | `ARCHITECTURE.md`、`ENVIRONMENT_OPS_ISSUES.md` | 已建立17项真实问题档案；自动诊断库未完成 |
+| 12 | 环境兼容 | `ARCHITECTURE.md`、`ENVIRONMENT_OPS_ISSUES.md` | Environment Ops边界已建立；代理兼容、分流和网络稳定仍待修复 |
 | 13 | 工程经验 | `EXECUTION_PROTOCOL.md` | 已归档并作为执行规范生效 |
 | 14 | 安全 | `PRINCIPLES.md` | 铁律已生效；持续审计 |
 | 15 | 成本控制 | `PRINCIPLES.md` | 生产钱包刹车已封板；长期成本持续观察 |
@@ -363,11 +368,11 @@
 
 ## 9. 近期优先级
 
-1. 等待产品负责人完成飞书企业自建应用的最小权限配置，并执行飞书到本地Codex真实闭环smoke。
-2. 模型分层调度与上下文压缩只能在产品负责人明确批准后执行。
-3. v0.4.7 首屏示例、反馈入口和安全告知。
-4. 3-5 名真实用户测试。
-5. 合规的竞品和用户反馈情报收集。
+1. P0 任务和账号安全：防草稿丢失、重复请求、重复费用和账号恢复单点。
+2. P1 基础环境稳定：唯一实例、状态一致、代理兼容、国内外分流、网络与飞书稳定。
+3. P2 官方支付和 API 路径：OpenAI/Anthropic 独立 Billing、项目/Workspace、Key、预算和小额验证。
+4. P3 工作群创建：通过 Preflight 后只执行一次受控工作流生成、5员工、飞书绑定、建群和只读冒烟。
+5. P4 正式开发：仅在产品负责人验收并批准后进入。
 
 当前不做：
 
@@ -385,3 +390,7 @@
 - 本机执行安全：未来在用户电脑执行操作前必须建立权限、确认和回滚机制。
 - 尚无真实用户使用数据。
 - 工具链依赖 Codex 等外部工具。
+- AI Link 当前只是 `temporarily_recovered`：Electron 主进程 Node fetch 与系统代理兼容、重复实例、空壳窗口和完整 cause 日志尚未永久解决。
+- 网络责任边界未确认：手机热点改善只是相关性证据，需对比 DNS、TCP、TLS、延迟、丢包、重置、出口和代理节点。
+- 账号恢复风险：海外号码不能成为唯一恢复方式；不得在备用恢复路径建立前删除或解绑现有恢复方式。
+- 工作群创建必须等待 Environment Ops Preflight，不得直接恢复付费生成。

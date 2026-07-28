@@ -43,6 +43,7 @@ Release 类型：public prerelease / Alpha
 | 历史变更 | `CHANGELOG.md` |
 | 真实验收证据 | `verification/` |
 | 调研和候选方案 | `research/` |
+| 运行环境问题状态、事故时间线和证据索引 | `ENVIRONMENT_OPS_ISSUES.md` |
 | 新对话最小快照 | `AI-Workbench-Handoff.md`（自动生成区不得承载独有事实） |
 
 ## 25 个知识模块索引
@@ -59,17 +60,17 @@ Release 类型：public prerelease / Alpha
 | 08 | 用户理解 | `PRODUCT.md` |
 | 09 | 虚拟人格 | `PRODUCT.md` |
 | 10 | 用户体验 | `PRODUCT.md` |
-| 11 | 故障诊断 | `ARCHITECTURE.md` |
-| 12 | 环境兼容 | `ARCHITECTURE.md` |
+| 11 | 故障诊断 | `ARCHITECTURE.md`；个案状态见 `ENVIRONMENT_OPS_ISSUES.md` |
+| 12 | 环境兼容 | `ARCHITECTURE.md`；个案状态见 `ENVIRONMENT_OPS_ISSUES.md` |
 | 13 | 工程经验 | `EXECUTION_PROTOCOL.md` |
 | 14 | 安全 | `PRINCIPLES.md` |
 | 15 | 成本控制 | `PRINCIPLES.md` |
 | 16 | 日志与证据 | `EXECUTION_PROTOCOL.md` |
 | 17 | 测试体系 | `EXECUTION_PROTOCOL.md` |
-| 18 | 飞书/AI Link集成 | `ARCHITECTURE.md` |
+| 18 | 飞书/AI Link集成 | `ARCHITECTURE.md`；个案状态见 `ENVIRONMENT_OPS_ISSUES.md` |
 | 19 | 产品运营与营销 | `PRODUCT.md` |
 | 20 | 项目连续性 | `EXECUTION_PROTOCOL.md` |
-| 21 | 故障恢复 | `ARCHITECTURE.md` |
+| 21 | 故障恢复 | `ARCHITECTURE.md`；个案状态见 `ENVIRONMENT_OPS_ISSUES.md` |
 | 22 | 产品演进 | `VISION.md` |
 | 23 | 决策记录 | `DECISIONS.md` |
 | 24 | 决策者与团队运作 | `THINKING.md` |

@@ -81,3 +81,11 @@ npm run verify
 ## 数据说明
 
 运行数据保存在 `data/workbench.json`。该目录已被 `.gitignore` 忽略，适合本机连续使用 3-7 天后再根据真实反馈迭代。
+
+## 运行环境问题与故障档案
+
+- `ENVIRONMENT_OPS_ISSUES.md`：电脑、本地进程、网络、代理、AI Link、飞书、海外账号恢复和 API 支付路径的问题总表。
+- `ARCHITECTURE.md`：定义 Environment Ops（运行环境保障）永久横向能力。
+- `EXECUTION_PROTOCOL.md`：定义统一事故处理流程和付费/正式任务 Preflight。
+
+AI Link 当前只能描述为 `temporarily_recovered`；任何付费生成前必须先通过 Preflight。

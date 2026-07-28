@@ -7,6 +7,8 @@ const outDir = path.join(root, 'verification/docs-consistency');
 
 const requiredFiles = [
   'EXECUTION_PROTOCOL.md',
+  'ARCHITECTURE.md',
+  'ENVIRONMENT_OPS_ISSUES.md',
   'package.json',
   'PRODUCT.md',
   'VISION.md',
@@ -36,10 +38,11 @@ const scannedFiles = [
   'PRINCIPLES.md',
   'GROWTH_LOG.md',
   'LAUNCH.md',
+  'ENVIRONMENT_OPS_ISSUES.md',
 ];
 
 const ignoredHistoricalPaths = ['CHANGELOG.md', 'TASKLOG.md', 'tasks/**', 'verification/**', 'research/**'];
-const expectedNextStep = '等待产品负责人完成飞书企业自建应用的最小权限配置，并执行飞书到本地Codex真实闭环smoke。';
+const expectedNextStep = '完成 Environment Ops 环境基线：只读采集电脑资源、唯一实例、端口、DNS/TCP/TLS、代理模式、国内外服务、飞书/AI Link/Provider 非付费健康、Session、预算保护和草稿保存状态；不做修复、不发起付费调用。';
 
 function readText(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
@@ -153,6 +156,7 @@ function main() {
         if (line.includes('NEXT_STEP.md')) return false;
         if (line.includes('判断产品下一步')) return false;
         if (line.includes('下一步必须能被新对话读取')) return false;
+        if (line.includes('下一步动作') || line.includes('下一步应由系统') || line.includes('能否重试和下一步')) return false;
         if (line.includes('新想法先记录')) return false;
         if (line.includes('新对话交接')) return false;
         if (/不得|不自动|不能|需要继续执行任务/.test(line)) return false;
@@ -207,6 +211,14 @@ function main() {
 
     const secretFindings = scanForSecrets([...scannedFiles, 'scripts/generate-handoff.mjs', 'scripts/verify-docs-consistency.mjs']);
     errors.push(...secretFindings.map((finding) => `疑似敏感信息：${finding}`));
+
+    const environmentOps = readText('ENVIRONMENT_OPS_ISSUES.md');
+    if (!environmentOps.includes('当前问题总数：**17**')) errors.push('Environment Ops 问题总数不是17。');
+    for (const expected of ['P0 5、P1 9、P2 2、P3 1', 'temporarily_recovered', 'Environment Ops']) {
+      if (!environmentOps.includes(expected)) errors.push(`ENVIRONMENT_OPS_ISSUES.md 缺少关键基准：${expected}`);
+    }
+    if (!readText('ARCHITECTURE.md').includes('Environment Ops（运行环境保障）')) errors.push('ARCHITECTURE.md 未定义 Environment Ops。');
+    if (!readText('EXECUTION_PROTOCOL.md').includes('付费生成和正式任务 Preflight')) errors.push('EXECUTION_PROTOCOL.md 未定义 Environment Ops Preflight。');
 
     log.push('文档一致性检查完成。');
   } catch (error) {

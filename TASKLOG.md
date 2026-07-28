@@ -2,17 +2,18 @@
 
 > 仓库文件是唯一事实来源。每个任务下达、完成、验收和交接都必须写回本仓库，不能只留在对话里。
 
-最新更新：2026-07-27
+最新更新：2026-07-28
 
 ## 当前一句话状态
 
-AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 公开发布、产品方向收口、文档基准防漂移机制、电脑环境治理审计、产品定位修正、阶段性总审核（砍薄版）、生存体检、第 3 阶段钱包刹车正式封板、完整产品能力/专业工作流/任务归属地图、20 块产品战略和国际多渠道入口战略。version 13 当前承载 100% 正常生产流量；观察窗口正常但受低自然生产流量限制。v0.4.7 可执行施工图已完成，但 A/E/G 尚未启动。本地 Codex 任务网关 v0.1 已通过真实只读 smoke。飞书渠道适配 v0.1 已完成本地实现和 mock 验收，真实飞书 smoke 因本机缺少 `FEISHU_APP_ID`/`FEISHU_APP_SECRET` 与后台权限配置阻塞，状态为 `feishu_channel_implementation_passed_live_smoke_blocked_by_credentials_or_permissions`。当前唯一下一步是等待产品负责人完成飞书企业自建应用的最小权限配置，并执行飞书到本地Codex真实闭环smoke；未经批准不得恢复监工 Agent、模型分层、上下文压缩、v0.4.7 功能开发或其他新阶段。
+AI Workbench 已完成统一模型入口、v0.4.6 Alpha 发布、生产钱包刹车、v0.4.7 施工图、本地 Codex 任务网关和飞书渠道适配 mock。2026-07-27 至 2026-07-28 的电脑、网络、代理、AI Link、飞书、海外账号和官方 API 支付问题已进入 `ENVIRONMENT_OPS_ISSUES.md`，共17项：P0 5、P1 9、P2 2、P3 1。AI Link 当前只能写 `temporarily_recovered`；任何付费生成、员工和群创建必须等待 Environment Ops Preflight 通过。
 
 ## 已完成任务
 
 | 任务 | 状态 | 做了什么 | 验收产物 |
 | --- | --- | --- | --- |
 | 25 模块知识归档与权威归属去重 | 已完成 | 建立事实归属表；去重六份核心文档；将 25 模块归入 PRODUCT/VISION/PRINCIPLES/ARCHITECTURE/EXECUTION_PROTOCOL/CURRENT_PROGRESS_AUDIT/DECISIONS/THINKING；更新 Handoff 生成源并通过文档一致性检查。未改功能代码、生产环境和当前唯一下一步，未重写历史任务与验收证据。 | `CONTEXT.md`、`verification/docs-consistency/summary.json` |
+| 基础环境、网络、代理、支付与账号问题资产化 | 已完成文档资产化 | 建立17项统一问题档案和故障时间线；将 Environment Ops 写入现有架构；建立 Incident 流程、12项 Preflight、P0-P4 顺序和敏感信息边界。本轮只改文档，无付费调用、员工、群、AI Link/代理/网络/账号/产品代码变更。 | `ENVIRONMENT_OPS_ISSUES.md`、`ARCHITECTURE.md`、`EXECUTION_PROTOCOL.md` |
 | 统一模型入口 | 已完成 | Workbench、Hermes、OpenClaw 三个员工的模型调用统一收敛到本机 `18800` 代理；`model-proxy.mjs` 已扩展为 provider registry。 | `verification/unified-model-proxy/summary.json` |
 | 硬骨头1：陌生机器不崩 | 已完成 | 启动路径改为缺依赖降级；首次运行自动创建 config/data/logs/evidence；18800/Hermes/OpenClaw/端口异常统一返回中文未就绪状态。 | `verification/clean-machine/summary.json`、`verification/clean-machine/readiness-report.md` |
 | 硬骨头2：共享 key 落地 | 已完成 | 18800 网关支持共享托管 key 兜底；用户本机 key 优先；前端、Hermes、OpenClaw 和员工配置只使用本机占位 token。 | `verification/shared-key/summary.json` |
@@ -78,6 +79,10 @@ AI Workbench 已完成统一模型入口、上线三大硬骨头、v0.4.6 Alpha 
 | 电脑环境治理：产品资产备份、单点故障核查和清理候选盘点 | 已完成 | 已进入第一批安全清理，当前清理结果为 partial。 |
 | 重启后处理第一批遗留空目录，并由产品负责人决定Windows临时文件及第二批软件清理 | 部分完成 | 已处理批准遗留目录；用户 npm 缓存仍因 `EPERM` 失败，Windows 临时文件仍需产品负责人手动确认；不得自动进入第二批清理。 |
 | DeepSeek V4 Flash 非思考兼容 Worker 上传、Preview、真实验证和生产切流 | 第 3 阶段已正式封板 | version 13 已上传并通过无付费 Preview、真实 Preview 链路、1% 生产灰度和 100% 全量生产观察；当前 version 13 承载 100% 正常生产流量。技术验收、逻辑复核和产品负责人最终批准已完成；未经批准不得发起新的主动真实调用或进入模型分层、上下文压缩、v0.4.7 或其他新阶段。 |
+| Environment Ops P0 任务和账号安全 | 未开始 | 先解决草稿保存、重复请求/费用、端到端幂等和账号恢复单点。 |
+| Environment Ops P1 基础环境稳定 | 暂时恢复，未永久修复 | 解决唯一实例、UI/Session/服务一致性、Node/Electron代理、国内外分流、网络和飞书稳定性。 |
+| Environment Ops P2 官方支付和 API | 只调研，未开通 | OpenAI/Anthropic独立Billing、项目/Workspace、Key和预算小额验证。 |
+| Environment Ops P3 首批开发协作群 | blocked | 通过Preflight后只执行一次受控生成、5员工、飞书绑定、建群和只读冒烟。 |
 
 ## 最新 3A-R1.3 结果
 
