@@ -42,7 +42,7 @@ const scannedFiles = [
 ];
 
 const ignoredHistoricalPaths = ['CHANGELOG.md', 'TASKLOG.md', 'tasks/**', 'verification/**', 'research/**'];
-const expectedNextStep = '等待产品负责人验收 AW-ENV-BASELINE-001；不得自动进入任何修复、付费生成、员工或工作群创建。';
+const expectedNextStep = '等待产品负责人验收 AW-AILINK-READINESS-001；在workflow creator代理路径得到可审计证明前，不得执行受控生成。';
 
 function readText(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
@@ -223,6 +223,12 @@ function main() {
     if (environmentBaseline.taskId !== 'AW-ENV-BASELINE-001') errors.push('Environment Ops基线Task ID不正确。');
     if (environmentBaseline.observation?.samples !== 7 || environmentBaseline.observation?.durationSeconds < 1800) errors.push('Environment Ops稳定性观察不足30分钟或少于7个样本。');
     if (environmentBaseline.paidGenerationSafe !== false || environmentBaseline.paidProviderCalls !== 0) errors.push('Environment Ops基线错误放行付费生成或记录了付费调用。');
+    const aiLinkReadiness = readJson('verification/ai-link-readiness/summary.json');
+    if (aiLinkReadiness.taskId !== 'AW-AILINK-READINESS-001') errors.push('AI Link最小就绪核验Task ID不正确。');
+    if (aiLinkReadiness.result !== 'blocked_proxy_path_unverified' || aiLinkReadiness.generationExecuted !== false) errors.push('AI Link最小就绪核验错误放行或执行了生成。');
+    if (aiLinkReadiness.ui?.status !== 'complete_and_interactive' || aiLinkReadiness.session?.status !== 'valid_by_read_only_ui_evidence') errors.push('AI Link UI或Session核验状态不正确。');
+    if (aiLinkReadiness.workflows?.count !== 2 || aiLinkReadiness.aiLink?.mainInstanceFamilies !== 1) errors.push('AI Link工作流数量或主实例基准不正确。');
+    if (aiLinkReadiness.proxyPath?.status !== 'proxy_path_unverified' || aiLinkReadiness.proxyPath?.externalProxy7890Verified !== false) errors.push('AI Link代理路径判定不正确。');
 
     log.push('文档一致性检查完成。');
   } catch (error) {

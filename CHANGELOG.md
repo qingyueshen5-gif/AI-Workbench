@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## Unreleased - AI Link单次受控生成前最小就绪核验
+
+- 完成`AW-AILINK-READINESS-001`：只读验证AI Link v0.2.12 UI完整可交互、登录Session有效、只有1个主进程族、18765/18766健康。
+- 核对当前工作流数量为2；`AW-AILINK-GROUP-001`对应`workflow-3da933e691b5`，状态`review_ready/review`、草稿3，另一工作流为`ready/done`。
+- 安装包代码确认workflow creator链路为renderer→IPC→主进程→`127.0.0.1:18765/v1/chat/completions`→AI Link LLM上游。
+- 核验时AI Link PID没有连接7890，应用代码未见显式Undici代理dispatcher，既有成功生成没有保留可审计网络路径证据；最终`blocked_proxy_path_unverified`。
+- 记录余额¥111.58、今日用量¥43.42和工作流落盘数量2；workflow-creator持久累计计数不可恢复。
+- 形成“单次受控生成操作卡”，明确单击、人工冻结、至少等待10分钟、任何未知或部分成功均不得二次点击。
+- 重新分类任务：当前唯一硬阻塞为代理路径证明；UI/Session与人工一次提交保护已完成最小核验；完整幂等、Checkpoint、Preflight、单实例锁、飞书重连、结构化日志、网络对照和完整路由治理移至后续工程。
+- 本轮未点击生成，未创建或修改工作流、员工、飞书群，未修改AI Link、代理、网络、产品代码或运行配置。
+
 ## Unreleased - Environment Ops只读运行环境基线
 
 - 完成`AW-ENV-BASELINE-001`：只读采集Windows、资源、网络、代理、AI Link、飞书和Git基线，并完成30分17秒、7个样本的稳定性观察。

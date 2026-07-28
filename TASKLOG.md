@@ -6,7 +6,20 @@
 
 ## 当前一句话状态
 
-AI Workbench 已完成统一模型入口、v0.4.6 Alpha 发布、生产钱包刹车、v0.4.7 施工图、本地 Codex 任务网关和飞书渠道适配 mock。2026-07-27 至 2026-07-28 的电脑、网络、代理、AI Link、飞书、海外账号和官方 API 支付问题已进入 `ENVIRONMENT_OPS_ISSUES.md`，共17项：P0 5、P1 9、P2 2、P3 1。AI Link 当前只能写 `temporarily_recovered`；任何付费生成、员工和群创建必须等待 Environment Ops Preflight 通过。
+`AW-ENV-BASELINE-001`已验收；`AW-AILINK-READINESS-001`确认UI与Session最小就绪、当前2个工作流和1个AI Link主实例，但workflow creator的18765上游请求是否经过7890没有可审计证明，最终`blocked_proxy_path_unverified`，不得执行生成。
+
+## 最近完成任务
+
+## 2026-07-28｜AW-AILINK-READINESS-001｜AI Link单次受控生成前最小就绪核验
+
+- 产品负责人验收`AW-ENV-BASELINE-001`并批准进入最小就绪核验，不批准执行生成。
+- 只读确认AI Link UI完整可交互、Session有效、1个主进程族、当前工作流数量2。
+- `AW-AILINK-GROUP-001`对应工作流为`review_ready/review`、草稿3；另一工作流为`ready/done`；没有落盘中的生成中状态。
+- 安装包只读审计确认workflow creator经18765访问AI Link LLM上游；核验时AI Link PID未连接7890，无法证明上游fetch经过7890。
+- workflow-creator持久累计计数不可恢复；记录UI费用快照和两个workflow落盘基准。
+- 完成单次提交操作卡和任务阻塞重分类；最终`blocked_proxy_path_unverified`。
+- 未点击生成，未创建或修改工作流、员工或飞书群，未修改AI Link、代理、网络、产品代码或运行配置。
+- 证据：`verification/ai-link-readiness/`。
 
 ## 已完成任务
 

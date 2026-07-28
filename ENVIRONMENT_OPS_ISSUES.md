@@ -31,6 +31,7 @@
 | 2026-07-28 | 切换手机热点后 AI Link、飞书和代理表现明显改善。 | 仅为相关性证据；尚未确认 Wi-Fi、路由器、运营商、代理节点或目标服务中的最终责任点。 | `temporarily_recovered` |
 | 2026-07-28 | AI Link 当前恢复可用，未新增付费生成、员工、飞书群、重复工作流或项目代码修改。 | 当前可用不等于根因已永久修复。 | `temporarily_recovered` |
 | 2026-07-28 20:45 至 21:23 | 完成 `AW-ENV-BASELINE-001` 只读基线和30分钟稳定性观察。 | AI Link单一主进程族、18765/18766、7890和飞书活动连接在窗口内稳定；OpenAI/Google直连超时而代理可达；UI、Session和Node实际代理路径仍未验证。 | `observed` |
+| 2026-07-28 21:48 至 22:04 | 完成 `AW-AILINK-READINESS-001` 单次受控生成前最小就绪核验。 | UI完整可交互、Session有效、工作流数量2、草稿存在且无落盘中的生成中状态；已证明workflow creator经18765访问AI Link LLM上游，但未证明18765上游fetch经过7890，最终`blocked_proxy_path_unverified`。 | `blocked` |
 
 ## 2.1 当前只读基线快照
 
@@ -41,11 +42,11 @@
 - L3网络：`route_dependent`；国内、飞书和AI Link域名可达，Google/OpenAI直连超时、经7890可达。
 - L4代理：`application_proxy_mismatch`；WinINET和环境变量有代理，WinHTTP直连，AI Link Node实际代理/dispatcher为`unverified`。
 - L5 AI Link后台：`healthy`；18765/18766在7个样本中持续HTTP 200。
-- L6 AI Link桌面端和Session：`unknown`；窗口响应但页面内容和认证状态无法在只读边界内完整验证。
+- L6 AI Link桌面端和Session：最小就绪核验为`healthy`；UI完整可交互，Session根据只读页面证据有效，但尚未建立长期readiness状态机。
 - L7飞书连接：`healthy`；观察期Established TCP始终大于0且客户端持续响应，精确WebSocket状态仍`unverified`。
 - L8国外Provider可达性：`partially_reachable`；401/403只证明到达服务端，不证明认证或Billing有效。
 - 热点线索：`correlated_but_unconfirmed`。
-- 付费生成安全门：`blocked`；本轮没有执行工作流生成。
+- 付费生成安全门：`blocked_proxy_path_unverified`；本轮没有执行工作流生成。
 
 ## 3. 问题总览
 
@@ -452,8 +453,8 @@
 ### 已确认事实
 
 - AI Link版本为v0.2.12。
-- `workflow:generate`请求已从页面进入IPC、主进程和本地`18766`。
-- 失败发生在本地代理向远端模型网关转发阶段，未取得HTTP状态。
+- v0.2.12安装包代码确认`workflow:generate`从页面进入IPC与主进程，再由workflow creator调用本地`18765 /v1/chat/completions`。
+- 18765再由主进程fetch访问AI Link LLM上游；历史失败发生在该上游转发阶段并未取得HTTP状态。
 - Node主进程fetch代码未明确配置代理dispatcher。
 - `127.0.0.1:7890`曾正常监听；`18765/18766`曾正常监听并返回健康状态。
 - 诊断时AI Link远端域名DNS、TCP、TLS及直连/代理HTTPS均可达。
@@ -461,6 +462,8 @@
 - 切换手机热点后表现改善，但这不是根因确认。
 - ChatGPT Plus与OpenAI API独立；Claude Pro与Anthropic API独立。
 - 本轮没有新增付费生成、员工、飞书群、重复工作流或项目代码修改。
+- `AW-AILINK-READINESS-001`确认UI完整、Session有效、工作流数量2，`AW-AILINK-GROUP-001`草稿为`review_ready/review`、草稿3。
+- 核验时AI Link主进程没有连接7890；既有工作流成功未保留可审计路由证据，代理路径仍`unverified`。
 
 ### 仍未确认的假设
 
@@ -505,7 +508,31 @@
 
 ### P3｜工作群创建（1项）
 
-`GROUP-001`。必须在P0/P1 Preflight通过后执行一次受控生成、校验、5员工、飞书绑定、建群和只读冒烟。
+`GROUP-001`。必须在单次生成硬阻塞解除并由产品负责人明确批准后，执行一次受控生成、校验、5员工、飞书绑定、建群和只读冒烟。
+
+## 8. `AW-AILINK-READINESS-001`后的阻塞关系
+
+### A. 单次受控生成硬阻塞
+
+- `PROXY-001 / AW-ENV-FIX-PROXY-001`：只保留workflow creator的18765→上游实际路由证明与可审计证据为当前硬阻塞。
+
+已完成最小核验、但正式点击前必须即时复核：
+
+- `ENV-002 / AW-ENV-FIX-READINESS-001`：UI和Session最小核验；
+- `LINK-002、UX-002 / AW-ENV-FIX-IDEMPOTENCY-001`：人工单次提交保护卡，不等于完整幂等已完成。
+
+### B. 工作群创建后继续实施
+
+- 完整幂等机制与持久请求账本；
+- 网络抖动Checkpoint与续跑；
+- 自动Preflight；
+- AI Link单实例锁；
+- 飞书自动重连；
+- 结构化日志；
+- Wi-Fi与热点受控对照；
+- 完整国内外路由治理。
+
+以上长期任务未删除、未标记完成，只调整其是否阻塞本次单次受控生成。
 
 ### P4｜正式开发
 

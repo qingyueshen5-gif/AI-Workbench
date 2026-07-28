@@ -4,7 +4,7 @@
 - package.json.version：0.4.6
 - CONTEXT.md 版本：0.4.6
 - Release 版本：v0.4.6
-- 当前唯一下一步：等待产品负责人验收 AW-ENV-BASELINE-001；不得自动进入任何修复、付费生成、员工或工作群创建。
+- 当前唯一下一步：等待产品负责人验收 AW-AILINK-READINESS-001；在workflow creator代理路径得到可审计证明前，不得执行受控生成。
 - Handoff 生成校验：passed
 - Handoff 幂等校验：passed
 

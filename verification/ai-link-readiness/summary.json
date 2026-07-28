@@ -1,0 +1,112 @@
+{
+  "taskId": "AW-AILINK-READINESS-001",
+  "capturedAt": "2026-07-28T22:04:00+08:00",
+  "result": "blocked_proxy_path_unverified",
+  "generationExecuted": false,
+  "ui": {
+    "status": "complete_and_interactive",
+    "navigationVerified": ["员工", "协作群", "协作群详情"],
+    "blankShell": false
+  },
+  "session": {
+    "status": "valid_by_read_only_ui_evidence",
+    "reauthRequired": false,
+    "authErrorVisible": false,
+    "secretsCollected": false
+  },
+  "aiLink": {
+    "version": "0.2.12",
+    "mainInstanceFamilies": 1,
+    "electronProcesses": 4,
+    "portsHealthy": [18765, 18766]
+  },
+  "workflows": {
+    "count": 2,
+    "pendingOrRunningGenerationVisible": false,
+    "orphanRequestAuditability": "insufficient_without_persistent_request_id",
+    "items": [
+      {
+        "id": "workflow-3da933e691b5",
+        "businessLabel": "AW-AILINK-GROUP-001",
+        "name": "AI Workbench v0.4.7首批开发协作群",
+        "status": "review_ready",
+        "stage": "review",
+        "draftRevision": 3,
+        "pendingBlueprint": false,
+        "lastError": null,
+        "groupCreated": false
+      },
+      {
+        "id": "workflow-796150e78827",
+        "name": "AI Workbench 只读协作交付验证",
+        "status": "ready",
+        "stage": "done",
+        "draftRevision": 3,
+        "pendingBlueprint": false,
+        "lastError": null,
+        "groupCreated": true
+      }
+    ]
+  },
+  "proxyPath": {
+    "status": "proxy_path_unverified",
+    "verifiedChain": [
+      "renderer workflow:generate IPC",
+      "workflowOrchestrator.generate",
+      "127.0.0.1:18765/v1/chat/completions",
+      "x-aiw-employee: workflow-creator",
+      "18765 main-process fetch to https://ai-link-llm.lhmxrzs.cn"
+    ],
+    "externalProxy7890Verified": false,
+    "aiLinkConnectionTo7890Observed": false,
+    "explicitUndiciDispatcherFound": false,
+    "observedAiLinkRemote": "150.109.83.12:443",
+    "historicalSuccessRouteAuditable": false
+  },
+  "counters": {
+    "workflowCreatorPersistentCount": "unknown_not_persisted",
+    "workflowFiles": 2,
+    "local18765": {
+      "totalRequests": 14,
+      "byPath": {"/health": 12, "/diagnostics": 2},
+      "chatCompletions": 0,
+      "recent": []
+    },
+    "aiWorkers18766": {
+      "totalRequests": 219,
+      "worker5100": 219,
+      "isWorkflowCreatorCount": false
+    }
+  },
+  "costBaseline": {
+    "currency": "CNY",
+    "balance": 111.58,
+    "todayUsage": 43.42,
+    "newGenerationCostThisTask": 0,
+    "note": "UI snapshot only; not per-workflow attribution"
+  },
+  "manualOneSubmitCard": {
+    "completed": true,
+    "minimumWaitMinutesBeforeUnknown": 10,
+    "automaticRetryAllowed": false,
+    "secondClickAllowed": false,
+    "requiresNewApprovalForAnyRetry": true
+  },
+  "hardBlockers": [
+    "AW-ENV-FIX-PROXY-001 proxy-route proof and auditable evidence"
+  ],
+  "minimumChecksSatisfiedButRecheckBeforeExecution": [
+    "AW-ENV-FIX-READINESS-001 UI and Session minimum check",
+    "AW-ENV-FIX-IDEMPOTENCY-001 manual one-submit protection"
+  ],
+  "deferredEngineering": [
+    "complete idempotency and persistent request ledger",
+    "network checkpoint and resume",
+    "automatic preflight",
+    "single-instance lock",
+    "Feishu automatic reconnect",
+    "structured logging",
+    "Wi-Fi/hotspot controlled comparison",
+    "complete domestic/international route governance"
+  ]
+}
