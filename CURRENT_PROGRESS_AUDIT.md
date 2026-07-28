@@ -99,11 +99,13 @@
 
 - AI Link上游路由定性与版本3方案只读审查 completed_and_accepted：分类`functional_but_unmanaged_route`，方案审查`review_passed_with_nonblocking_notes`，明确`new_generation_not_required`。证据见`verification/ai-link-route-and-review/`。
 
-- AI Link版本3方案确认与员工准备 completed_waiting_product_owner_acceptance：方案只确认一次；3名新员工分别创建成功，2名现有员工正确复用；当前`waiting_bindings/bindings`、飞书绑定2/5、`group=null`。证据见`verification/ai-link-confirm-and-prepare/`。
+- AI Link版本3方案确认与员工准备 completed_and_accepted：方案只确认一次；3名新员工分别创建成功，2名现有员工正确复用。证据见`verification/ai-link-confirm-and-prepare/`。
+
+- AI Link首批开发协作群创建与结构核验 completed_waiting_product_owner_acceptance：5/5绑定和正式名称映射核验通过，唯一目标群已创建；当前`ready/done`，群专属Skill 1.0.0在5名员工中一致安装，`requiresMention=true`。证据见`verification/ai-link-group-create/`。
 
 未完成：
 
-- 等待产品负责人验收AW-AILINK-CONFIRM-AND-CREATE-001员工准备结果；验收通过后，单独批准三名新员工的飞书绑定，不自动建群。
+- 等待产品负责人验收AW-AILINK-GROUP-CREATE-001群结构；验收通过后，另行决定是否批准准备阶段的群内只读任务，不自动发送消息或进入正式开发。
 - 实际电脑清理。
 - 首屏 3-5 条示例指令。
 - 反馈入口和安全/隐私告知。
@@ -122,9 +124,9 @@
 - 国际化和区域合规。
 - Environment Ops P0/P1：草稿和账号安全、请求幂等、唯一实例、UI/Session/服务一致性、Node/Electron代理适配、国内外分流、网络稳定性和飞书连接稳定性尚未永久修复。
 - Environment Ops P2：OpenAI/Anthropic官方API付款、项目/Workspace、Key和预算小额验证尚未执行。
-- Environment Ops P3：现有首批开发协作群版本3方案已确认，5名员工已准备；三名新员工飞书绑定、建群和只读冒烟尚未执行。
+- Environment Ops P3：现有首批开发协作群已创建，5名员工绑定和群专属Skill结构已核验；准备阶段群内只读任务和正式开工均尚未批准。
 
-当前唯一下一步：等待产品负责人验收 AW-AILINK-CONFIRM-AND-CREATE-001 员工准备结果；验收通过后，单独批准三名新员工的飞书绑定，不自动建群。
+当前唯一下一步：等待产品负责人验收 AW-AILINK-GROUP-CREATE-001 群结构；验收通过后，另行决定是否批准准备阶段的群内只读任务，不自动发送消息或进入正式开发。
 
 <!-- AIW_CAPABILITY_STATUS_END -->
 
@@ -132,7 +134,7 @@
 
 状态枚举固定为：`completed_and_verified`、`active_current_stage`、`approved_not_started`、`candidate_after_current_stage`、`waiting_for_real_user_feedback`、`strategic_research`、`personal_growth_or_external_dependency`、`blocked`、`rejected_or_deferred`、`unknown_needs_audit`。
 
-当前没有 `active_current_stage` 的产品实施任务；唯一下一步仍是等待产品负责人验收 AW-AILINK-CONFIRM-AND-CREATE-001 员工准备结果；验收通过后，单独批准三名新员工的飞书绑定，不自动建群。
+当前没有 `active_current_stage` 的产品实施任务；唯一下一步仍是等待产品负责人验收 AW-AILINK-GROUP-CREATE-001 群结构；验收通过后，另行决定是否批准准备阶段的群内只读任务，不自动发送消息或进入正式开发。
 
 | # | 任务线 | 产品模块 | 专业岗位 | 真实问题/用户 | 状态与证据 | 已完成/未完成/子模块 | 依赖 | 记录位置与完整性 | 预计涉及 | 并行/冲突 | 信任/安全/验证 | 当前是否开始/拍板 |
 | ---: | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -241,7 +243,7 @@
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；Workbench、Hermes、OpenClaw 三类执行入口都已通过 `18800` 调用当前生产 provider DeepSeek，验收摘要在 `verification/unified-model-proxy/summary.json`。DeepSeek 是当前实现细节，后续 provider 必须可替换。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。第 3 阶段钱包刹车与 DeepSeek V4 Flash 非思考 version 13 全量生产已通过技术验收、逻辑复核和产品负责人最终批准，状态为 `PASS_AFTER_CONDITIONS_RESOLVED`。自然用户规模稳定性仍未证明；v0.4.7 施工图已形成但未开工；本地 Codex 任务网关 v0.1 已通过 mock、launcher、无模型 CLI 和一次真实只读 Codex smoke；飞书渠道适配 v0.1 已通过 mock 测试但真实 smoke 因缺少本机飞书凭据和后台权限配置阻塞，唯一下一步是等待产品负责人验收 AW-AILINK-CONFIRM-AND-CREATE-001 员工准备结果；验收通过后，单独批准三名新员工的飞书绑定，不自动建群。
+- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。第 3 阶段钱包刹车与 DeepSeek V4 Flash 非思考 version 13 全量生产已通过技术验收、逻辑复核和产品负责人最终批准，状态为 `PASS_AFTER_CONDITIONS_RESOLVED`。自然用户规模稳定性仍未证明；v0.4.7 施工图已形成但未开工；首批开发协作群已创建并完成结构核验，唯一下一步是等待产品负责人验收 AW-AILINK-GROUP-CREATE-001 群结构；验收通过后，另行决定是否批准准备阶段的群内只读任务，不自动发送消息或进入正式开发。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 

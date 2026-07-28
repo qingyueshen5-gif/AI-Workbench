@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Unreleased - AI Link首批开发协作群创建与结构核验
+
+- 完成`AW-AILINK-GROUP-CREATE-001`：在5/5绑定、五个worker ID和飞书显示名称映射只读核验通过后，一次创建唯一目标群。
+- 群名为`AI Workbench v0.4.7首批开发协作群`，工作流进入`ready/done`，`lastError=null`。
+- 固化内部名称到飞书显示名称映射：协调角色→协调、A架构开发→架构开发、E隐私开发→隐私开发、测试验收角色→测试验收、总集成→总集成。
+- 五名员工安装同一群专属Skill 1.0.0及内容哈希，`requiresMention=true`；协调为入口，总集成为唯一最终汇总角色。
+- 未重新创建或绑定员工、未重新生成方案、未创建重复目标群、未发送测试消息、未进入正式开发。
+- 新增`verification/ai-link-group-create/`证据。
+
 ## Unreleased - AI Link版本3方案确认与员工准备
 
 - 完成`AW-AILINK-CONFIRM-AND-CREATE-001`批准范围：对`workflow-3da933e691b5`一次确认既有草稿3并准备5名角色员工。

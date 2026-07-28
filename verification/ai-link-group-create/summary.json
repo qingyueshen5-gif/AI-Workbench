@@ -1,0 +1,67 @@
+{
+  "taskId": "AW-AILINK-GROUP-CREATE-001",
+  "workflowId": "workflow-3da933e691b5",
+  "result": "group_created_structure_verified",
+  "group": {
+    "name": "AI Workbench v0.4.7首批开发协作群",
+    "chatIdSuffix": "b102dc",
+    "createdOnce": true,
+    "welcomeSentByProduct": true,
+    "agentTestMessageSent": false,
+    "owner": {
+      "type": "product_owner_confirmed_feishu_account",
+      "nonSensitiveLabel": "当前飞书群主/人工审批人"
+    }
+  },
+  "workflow": {
+    "status": "ready",
+    "stage": "done",
+    "lastError": null,
+    "sha256Before": "4daede4d22e2d540b75b13c0aad1f243ead6997a4f6738f4bb2687db51b1c936",
+    "sha256After": "c955702d6dd2a91485067c7bb18ddb44a1f2c5791e3ac1cbbc8daef2c7cb40ca",
+    "workflowCountBefore": 2,
+    "workflowCountAfter": 2
+  },
+  "mapping": [
+    {"internalRoleName":"协调角色","workflowRole":"协调监工","workerId":"worker-1g20","feishuDisplayName":"协调","entryRole":true,"finalIntegrator":false},
+    {"internalRoleName":"A架构开发","workflowRole":"A架构开发","workerId":"worker-3bp0","feishuDisplayName":"架构开发","entryRole":false,"finalIntegrator":false},
+    {"internalRoleName":"E隐私开发","workflowRole":"E隐私开发","workerId":"worker-5fr0","feishuDisplayName":"隐私开发","entryRole":false,"finalIntegrator":false},
+    {"internalRoleName":"测试验收角色","workflowRole":"G测试验收","workerId":"worker-1u80","feishuDisplayName":"测试验收","entryRole":false,"finalIntegrator":false},
+    {"internalRoleName":"总集成","workflowRole":"总集成","workerId":"worker-2tj0","feishuDisplayName":"总集成","entryRole":false,"finalIntegrator":true}
+  ],
+  "bindingVerification": {
+    "fiveOfFiveConfirmedBeforeCreate": true,
+    "uniqueWorkerIds": 5,
+    "uniqueFeishuBindingIdentities": 5,
+    "duplicateBindingDetected": false,
+    "wrongPersonDetected": false,
+    "omissionDetected": false,
+    "workerIdsChanged": false
+  },
+  "skill": {
+    "skillId": "workflow-3da933e691b5",
+    "version": "1.0.0",
+    "contentHash": "7f5f7324aca4a612337fde2fcbdb732f4cb1737aa88727d4f199039b69a0b9d6",
+    "installedWorkerCount": 5,
+    "identicalCompiledWorkflowSha256": "0139475a93ce74522510d8b1e9afee81e0d230b442c8845b262278221f1f5c85",
+    "requiresMention": true,
+    "triggerType": "manual",
+    "entryRoleId": "coordination-supervisor",
+    "finalIntegratorRoleId": "chief-integrator"
+  },
+  "sideEffects": {
+    "employeeRecreated": false,
+    "employeeRebound": false,
+    "workflowRegenerated": false,
+    "duplicateGroupCreated": false,
+    "testMessageSent": false,
+    "formalDevelopmentStarted": false,
+    "paidModelRequestObserved": false,
+    "accountSecretOrSystemSettingsModified": false
+  },
+  "uiCostSnapshot": {"balanceCny":73.84,"todayUsageCny":81.16,"changed":false},
+  "notes": [
+    "AI Link在正式建群流程中自动发送了产品预设欢迎消息；这不是Agent测试消息。",
+    "群内搜索、@和协作以飞书实际显示名称为准。"
+  ]
+}

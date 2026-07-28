@@ -6,9 +6,20 @@
 
 ## 当前一句话状态
 
-`AW-AILINK-CONFIRM-AND-CREATE-001`已按产品负责人批准一次确认版本3方案并完成员工准备：3名新员工创建事务均为`done`，2名现有员工正确复用，当前`waiting_bindings/bindings`、飞书绑定2/5、`group=null`。已停止，等待单独批准飞书绑定。
+`AW-AILINK-GROUP-CREATE-001`已完成唯一首批开发协作群创建和结构核验：5名员工映射正确，群专属Skill 1.0.0在5名员工中一致安装，`requiresMention=true`，当前`ready/done`。已停止，等待产品负责人验收群结构。
 
 ## 最近完成任务
+
+## 2026-07-29｜AW-AILINK-GROUP-CREATE-001｜首批开发协作群创建与结构核验
+
+- 建群前只读确认五个worker ID未变化、飞书绑定5/5、五个绑定身份唯一，内部角色到飞书显示名称映射完全符合产品负责人最终规则。
+- 一次创建`AI Workbench v0.4.7首批开发协作群`；工作流进入`ready/done`，`lastError=null`。
+- 群内正式名称：协调、架构开发、隐私开发、测试验收、总集成；群内搜索和原生@以这些飞书名称为准。
+- “协调”是日常任务入口；“总集成”是唯一最终汇总和集成角色。
+- 五名员工安装同一`workflow-3da933e691b5 / 1.0.0`群专属Skill及内容哈希，`requiresMention=true`。
+- 未重新绑定或创建员工，未重新生成方案，未创建第三个工作流或重复目标群，未发送测试消息或进入正式开发。
+- AI Link正式建群流程自动发送预设欢迎消息；没有员工模型调用，余额和今日用量未观察到变化。
+- 证据：`verification/ai-link-group-create/`。
 
 ## 2026-07-29｜AW-AILINK-CONFIRM-AND-CREATE-001｜版本3方案确认与员工准备
 
