@@ -42,7 +42,7 @@ const scannedFiles = [
 ];
 
 const ignoredHistoricalPaths = ['CHANGELOG.md', 'TASKLOG.md', 'tasks/**', 'verification/**', 'research/**'];
-const expectedNextStep = '完成 Environment Ops 环境基线：只读采集电脑资源、唯一实例、端口、DNS/TCP/TLS、代理模式、国内外服务、飞书/AI Link/Provider 非付费健康、Session、预算保护和草稿保存状态；不做修复、不发起付费调用。';
+const expectedNextStep = '等待产品负责人验收 AW-ENV-BASELINE-001；不得自动进入任何修复、付费生成、员工或工作群创建。';
 
 function readText(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
@@ -219,6 +219,10 @@ function main() {
     }
     if (!readText('ARCHITECTURE.md').includes('Environment Ops（运行环境保障）')) errors.push('ARCHITECTURE.md 未定义 Environment Ops。');
     if (!readText('EXECUTION_PROTOCOL.md').includes('付费生成和正式任务 Preflight')) errors.push('EXECUTION_PROTOCOL.md 未定义 Environment Ops Preflight。');
+    const environmentBaseline = readJson('verification/environment-ops-readonly-baseline/summary.json');
+    if (environmentBaseline.taskId !== 'AW-ENV-BASELINE-001') errors.push('Environment Ops基线Task ID不正确。');
+    if (environmentBaseline.observation?.samples !== 7 || environmentBaseline.observation?.durationSeconds < 1800) errors.push('Environment Ops稳定性观察不足30分钟或少于7个样本。');
+    if (environmentBaseline.paidGenerationSafe !== false || environmentBaseline.paidProviderCalls !== 0) errors.push('Environment Ops基线错误放行付费生成或记录了付费调用。');
 
     log.push('文档一致性检查完成。');
   } catch (error) {

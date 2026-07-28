@@ -14,6 +14,7 @@ AI Workbench 已完成统一模型入口、v0.4.6 Alpha 发布、生产钱包刹
 | --- | --- | --- | --- |
 | 25 模块知识归档与权威归属去重 | 已完成 | 建立事实归属表；去重六份核心文档；将 25 模块归入 PRODUCT/VISION/PRINCIPLES/ARCHITECTURE/EXECUTION_PROTOCOL/CURRENT_PROGRESS_AUDIT/DECISIONS/THINKING；更新 Handoff 生成源并通过文档一致性检查。未改功能代码、生产环境和当前唯一下一步，未重写历史任务与验收证据。 | `CONTEXT.md`、`verification/docs-consistency/summary.json` |
 | 基础环境、网络、代理、支付与账号问题资产化 | 已完成文档资产化 | 建立17项统一问题档案和故障时间线；将 Environment Ops 写入现有架构；建立 Incident 流程、12项 Preflight、P0-P4 顺序和敏感信息边界。本轮只改文档，无付费调用、员工、群、AI Link/代理/网络/账号/产品代码变更。 | `ENVIRONMENT_OPS_ISSUES.md`、`ARCHITECTURE.md`、`EXECUTION_PROTOCOL.md` |
+| Environment Ops只读运行环境基线 | 已完成，等待产品负责人验收 | 采集Windows、资源、适配器、时间同步、AI Link进程/端口/health、代理、国内外非付费链路、飞书活动连接和Git基线；完成30分17秒7样本观察，建立八层矩阵和13个独立任务草案。网络为route_dependent，代理为application_proxy_mismatch，UI/Session未验证，付费生成仍blocked。未修改运行环境或产品代码。 | `verification/environment-ops-readonly-baseline/summary.json`、`report.md` |
 | 统一模型入口 | 已完成 | Workbench、Hermes、OpenClaw 三个员工的模型调用统一收敛到本机 `18800` 代理；`model-proxy.mjs` 已扩展为 provider registry。 | `verification/unified-model-proxy/summary.json` |
 | 硬骨头1：陌生机器不崩 | 已完成 | 启动路径改为缺依赖降级；首次运行自动创建 config/data/logs/evidence；18800/Hermes/OpenClaw/端口异常统一返回中文未就绪状态。 | `verification/clean-machine/summary.json`、`verification/clean-machine/readiness-report.md` |
 | 硬骨头2：共享 key 落地 | 已完成 | 18800 网关支持共享托管 key 兜底；用户本机 key 优先；前端、Hermes、OpenClaw 和员工配置只使用本机占位 token。 | `verification/shared-key/summary.json` |

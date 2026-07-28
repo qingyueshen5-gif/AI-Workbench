@@ -30,6 +30,22 @@
 | 2026-07-28 | DNS、TCP、TLS、直接 HTTPS 与经 `7890` 的 HTTPS 探测均能到达 AI Link 域名。 | 诊断时远端域名可达；不能反推此前失败一定不是网络抖动。 | `observed` |
 | 2026-07-28 | 切换手机热点后 AI Link、飞书和代理表现明显改善。 | 仅为相关性证据；尚未确认 Wi-Fi、路由器、运营商、代理节点或目标服务中的最终责任点。 | `temporarily_recovered` |
 | 2026-07-28 | AI Link 当前恢复可用，未新增付费生成、员工、飞书群、重复工作流或项目代码修改。 | 当前可用不等于根因已永久修复。 | `temporarily_recovered` |
+| 2026-07-28 20:45 至 21:23 | 完成 `AW-ENV-BASELINE-001` 只读基线和30分钟稳定性观察。 | AI Link单一主进程族、18765/18766、7890和飞书活动连接在窗口内稳定；OpenAI/Google直连超时而代理可达；UI、Session和Node实际代理路径仍未验证。 | `observed` |
+
+## 2.1 当前只读基线快照
+
+详细证据见 `verification/environment-ops-readonly-baseline/report.md` 和 `summary.json`。
+
+- L1电脑与操作系统：`healthy`。
+- L2本地进程和端口：`healthy`；本轮只观察到一个AI Link主进程族，不把4个Electron父子进程误写成4个独立实例。
+- L3网络：`route_dependent`；国内、飞书和AI Link域名可达，Google/OpenAI直连超时、经7890可达。
+- L4代理：`application_proxy_mismatch`；WinINET和环境变量有代理，WinHTTP直连，AI Link Node实际代理/dispatcher为`unverified`。
+- L5 AI Link后台：`healthy`；18765/18766在7个样本中持续HTTP 200。
+- L6 AI Link桌面端和Session：`unknown`；窗口响应但页面内容和认证状态无法在只读边界内完整验证。
+- L7飞书连接：`healthy`；观察期Established TCP始终大于0且客户端持续响应，精确WebSocket状态仍`unverified`。
+- L8国外Provider可达性：`partially_reachable`；401/403只证明到达服务端，不证明认证或Billing有效。
+- 热点线索：`correlated_but_unconfirmed`。
+- 付费生成安全门：`blocked`；本轮没有执行工作流生成。
 
 ## 3. 问题总览
 

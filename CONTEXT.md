@@ -43,7 +43,7 @@ Release 类型：public prerelease / Alpha
 | 历史变更 | `CHANGELOG.md` |
 | 真实验收证据 | `verification/` |
 | 调研和候选方案 | `research/` |
-| 运行环境问题状态、事故时间线和证据索引 | `ENVIRONMENT_OPS_ISSUES.md` |
+| 运行环境问题状态、事故时间线和证据索引 | `ENVIRONMENT_OPS_ISSUES.md`；当前只读基线见`verification/environment-ops-readonly-baseline/` |
 | 新对话最小快照 | `AI-Workbench-Handoff.md`（自动生成区不得承载独有事实） |
 
 ## 25 个知识模块索引

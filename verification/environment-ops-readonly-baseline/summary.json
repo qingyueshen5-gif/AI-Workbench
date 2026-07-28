@@ -1,0 +1,87 @@
+{
+  "taskId": "AW-ENV-BASELINE-001",
+  "status": "completed_read_only_with_unverified_ui_session",
+  "observation": {
+    "baselineStartedAt": "2026-07-28T20:45:19+08:00",
+    "stabilityStartedAt": "2026-07-28T20:53:08.2014671+08:00",
+    "stabilityEndedAt": "2026-07-28T21:23:25.9544242+08:00",
+    "durationSeconds": 1817.7529571,
+    "samples": 7,
+    "interval": "approximately_5_minutes"
+  },
+  "stateMatrix": {
+    "L1_computer_os": "healthy",
+    "L2_local_process_ports": "healthy",
+    "L3_network": "route_dependent",
+    "L4_proxy": "application_proxy_mismatch",
+    "L5_ai_link_backend": "healthy",
+    "L6_ai_link_desktop_session": "unknown",
+    "L7_feishu": "healthy",
+    "L8_foreign_provider_reachability": "partially_reachable"
+  },
+  "aiLink": {
+    "version": "0.2.12",
+    "processFamilyCount": 4,
+    "independentMainInstancesObserved": 1,
+    "portsStable": true,
+    "health18765": 200,
+    "health18766": 200,
+    "automaticRestartObserved": false,
+    "duplicateMainInstanceObserved": false,
+    "ui": "unverified",
+    "session": "unverified",
+    "workflowCount": 2,
+    "persistentDiagnosticLog": "not_found"
+  },
+  "proxy": {
+    "listener7890": true,
+    "winInetEnabled": true,
+    "winHttp": "direct",
+    "httpProxyEnvPresent": true,
+    "httpsProxyEnvPresent": true,
+    "noProxyEnvPresent": false,
+    "aiLinkExplicitProxyFlags": false,
+    "aiLinkNodeDispatcher": "unverified",
+    "exitRegion": "GB",
+    "mode": "unknown",
+    "restartOrSwitchObserved": false
+  },
+  "network": {
+    "localLoopback": "reachable",
+    "defaultGateway": "reachable",
+    "domesticHttps": "reachable_direct_and_proxy",
+    "feishuPublicHttps": "reachable_direct_and_proxy",
+    "google": "proxy_only_in_sample",
+    "openai": "proxy_reached_http_401_direct_timed_out",
+    "anthropic": "direct_and_proxy_reached_http",
+    "aiLinkUpstreams": "reachable_direct_and_proxy"
+  },
+  "feishu": {
+    "clientResponding": true,
+    "establishedTcpNeverZero": true,
+    "exactWebSocketState": "unverified",
+    "recentDisconnectAt": "unknown",
+    "recentReconnectAt": "unknown",
+    "disconnectObservedDuringWindow": false
+  },
+  "hotspotClue": "correlated_but_unconfirmed",
+  "paidGenerationSafe": false,
+  "paidGenerationDecision": "blocked",
+  "paidGenerationBlockers": [
+    "ai_link_ui_and_session_unverified",
+    "electron_node_actual_proxy_route_unverified",
+    "idempotency_and_duplicate_cost_protection_not_verified",
+    "feishu_exact_connection_state_unverified"
+  ],
+  "draftTaskCount": 13,
+  "forbiddenActionsPerformed": [],
+  "paidProviderCalls": 0,
+  "workflowsCreated": 0,
+  "employeesCreated": 0,
+  "feishuGroupsCreated": 0,
+  "productCodeChanged": false,
+  "runtimeConfigurationChanged": false,
+  "evidence": [
+    "verification/environment-ops-readonly-baseline/report.md"
+  ]
+}

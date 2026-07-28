@@ -1,19 +1,19 @@
 # NEXT_STEP.md
 
 <!-- AIW_NEXT_STEP_START -->
-完成 Environment Ops 环境基线：只读采集电脑资源、唯一实例、端口、DNS/TCP/TLS、代理模式、国内外服务、飞书/AI Link/Provider 非付费健康、Session、预算保护和草稿保存状态；不做修复、不发起付费调用。
+等待产品负责人验收 AW-ENV-BASELINE-001；不得自动进入任何修复、付费生成、员工或工作群创建。
 <!-- AIW_NEXT_STEP_END -->
 
 ## 当前状态
 
-- `AW-FOUNDATION-ISSUES-001` 已形成17项问题总表：P0 5、P1 9、P2 2、P3 1。
-- AI Link 当前为 `temporarily_recovered`，不是永久修复。
-- Environment Ops 已写入现有架构，Incident 流程和12项 Preflight 已写入执行协议。
-- 本轮没有付费调用、员工、工作流、飞书群、产品代码、AI Link、代理、网络、账号或支付变更。
+- `AW-ENV-BASELINE-001` 已完成30分钟只读稳定性观察和八层状态矩阵。
+- AI Link后台和本地端口在窗口内稳定；桌面UI与Session仍未验证，历史状态仍为`temporarily_recovered`。
+- 网络为`route_dependent`，代理为`application_proxy_mismatch`，国外Provider仅`partially_reachable`。
+- 当前付费生成安全门为`blocked`；本轮没有付费调用、员工、工作流、飞书群、产品代码或运行配置变更。
 
 ## 当前唯一下一步
 
-完成 Environment Ops 环境基线：只读采集电脑资源、唯一实例、端口、DNS/TCP/TLS、代理模式、国内外服务、飞书/AI Link/Provider 非付费健康、Session、预算保护和草稿保存状态；不做修复、不发起付费调用。
+等待产品负责人验收 AW-ENV-BASELINE-001；不得自动进入任何修复、付费生成、员工或工作群创建。
 
 基线完成后按以下顺序等待逐项批准：
 

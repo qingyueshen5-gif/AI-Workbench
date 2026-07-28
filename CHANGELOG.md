@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Unreleased - Environment Ops只读运行环境基线
+
+- 完成`AW-ENV-BASELINE-001`：只读采集Windows、资源、网络、代理、AI Link、飞书和Git基线，并完成30分17秒、7个样本的稳定性观察。
+- 状态矩阵：L1 healthy、L2 healthy、L3 route_dependent、L4 application_proxy_mismatch、L5 healthy、L6 unknown、L7 healthy、L8 partially_reachable。
+- 记录OpenAI/Google直连超时而经7890到达服务端；不把401/403/404误记为网络失败。
+- AI Link历史状态继续为temporarily_recovered；UI、Session、Node实际代理路径、飞书精确WebSocket状态仍未验证；付费生成继续blocked。
+- 建立13个独立修复/验证任务草案，不执行修复。
+- 本轮只提交文档和验证证据；未修改产品代码或运行配置，未调用付费模型，未创建工作流、员工或飞书群。
+
 ## Unreleased - Environment Ops 基础问题资产化
 
 - 新增 `ENVIRONMENT_OPS_ISSUES.md`，以统一格式归档2026-07-27至2026-07-28的17项电脑、进程、网络、代理、AI Link、飞书、海外账号、支付/API和用户体验问题。

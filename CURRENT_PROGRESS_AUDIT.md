@@ -93,9 +93,11 @@
 - 飞书渠道适配最小闭环 v0.1 feishu_channel_implementation_passed_live_smoke_blocked_by_credentials_or_permissions：本轮使用 AI Workbench 自己控制的飞书企业自建应用方案，安装并审计官方 SDK `@larksuiteoapi/node-sdk@1.71.1`，实测支持 `WSClient`、`im.message.receive_v1` 和 `client.im.v1.message.create`。新增 `scripts/feishu-task-channel.mjs` 和 `scripts/verify-feishu-task-channel.mjs`，飞书层只负责接收文本命令、owner 鉴权、一次性配对、报告群绑定、调用现有任务网关、回复状态和发送脱敏摘要；任务执行仍由本地任务网关和独立 worktree 中的 Codex 负责。新增 npm 命令 `feishu-channel:start`、`feishu-channel:check`、`verify:feishu-channel`，新增 `.env.example` 只列变量名。mock Feishu 测试通过，覆盖非文本拒绝、未授权拦截、配对过期/一次性、重复事件去重、群普通消息忽略、群 @ 触发、报告群绑定、started/completed/failed/blocked/cancelled 通知、通知去重、通知失败不改变任务结果、prompt 不进群通知和不自动 push/deploy。当前本机未配置 `FEISHU_APP_ID` 和 `FEISHU_APP_SECRET`，真实长连接、ping、报告群绑定和飞书到本地 Codex 真实 smoke 未执行。证据见 `verification/feishu-task-channel-v01/summary.json`。
 - 基础环境、网络、代理、支付与账号问题资产化 docs_only_completed：新增 `ENVIRONMENT_OPS_ISSUES.md`，归档 2026-07-27 至 2026-07-28 的 17 项真实问题，覆盖电脑、本地进程、代理、网络、国内外兼容、AI Link/飞书、海外账号恢复、官方API支付和用户体验；P0 5项、P1 9项、P2 2项、P3 1项。AI Link 当前状态统一为 `temporarily_recovered`，不得写成永久修复。Environment Ops 已写入架构，执行协议已加入事故流程和12项Preflight。本轮只改文档，不修改产品代码、AI Link、代理、网络、账号、支付或生产环境，不发起付费调用。
 
+- Environment Ops只读运行环境基线 completed_read_only_with_unverified_ui_session：完成Windows、资源、适配器、时间同步、AI Link进程/端口/health、代理、国内外非付费链路、飞书活动连接和Git基线；完成30分17秒、7样本观察。L1 healthy、L2 healthy、L3 route_dependent、L4 application_proxy_mismatch、L5 healthy、L6 unknown、L7 healthy、L8 partially_reachable。当前付费生成仍blocked，证据见`verification/environment-ops-readonly-baseline/`。
+
 未完成：
 
-- 完成 Environment Ops 环境基线：只读采集电脑资源、唯一实例、端口、DNS/TCP/TLS、代理模式、国内外服务、飞书/AI Link/Provider 非付费健康、Session、预算保护和草稿保存状态；不做修复、不发起付费调用。
+- 等待产品负责人验收AW-ENV-BASELINE-001；不得自动进入任何修复、付费生成、员工或工作群创建。
 - 实际电脑清理。
 - 首屏 3-5 条示例指令。
 - 反馈入口和安全/隐私告知。
@@ -116,7 +118,7 @@
 - Environment Ops P2：OpenAI/Anthropic官方API付款、项目/Workspace、Key和预算小额验证尚未执行。
 - Environment Ops P3：首批开发协作群的一次受控生成、5员工、飞书绑定、建群和只读冒烟尚未执行。
 
-当前唯一下一步：完成 Environment Ops 环境基线：只读采集电脑资源、唯一实例、端口、DNS/TCP/TLS、代理模式、国内外服务、飞书/AI Link/Provider 非付费健康、Session、预算保护和草稿保存状态；不做修复、不发起付费调用。
+当前唯一下一步：等待产品负责人验收 AW-ENV-BASELINE-001；不得自动进入任何修复、付费生成、员工或工作群创建。
 
 <!-- AIW_CAPABILITY_STATUS_END -->
 
@@ -124,7 +126,7 @@
 
 状态枚举固定为：`completed_and_verified`、`active_current_stage`、`approved_not_started`、`candidate_after_current_stage`、`waiting_for_real_user_feedback`、`strategic_research`、`personal_growth_or_external_dependency`、`blocked`、`rejected_or_deferred`、`unknown_needs_audit`。
 
-当前没有 `active_current_stage` 的产品实施任务；唯一下一步仍是完成 Environment Ops 环境基线：只读采集电脑资源、唯一实例、端口、DNS/TCP/TLS、代理模式、国内外服务、飞书/AI Link/Provider 非付费健康、Session、预算保护和草稿保存状态；不做修复、不发起付费调用。
+当前没有 `active_current_stage` 的产品实施任务；唯一下一步仍是等待产品负责人验收 AW-ENV-BASELINE-001；不得自动进入任何修复、付费生成、员工或工作群创建。
 
 | # | 任务线 | 产品模块 | 专业岗位 | 真实问题/用户 | 状态与证据 | 已完成/未完成/子模块 | 依赖 | 记录位置与完整性 | 预计涉及 | 并行/冲突 | 信任/安全/验证 | 当前是否开始/拍板 |
 | ---: | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -233,7 +235,7 @@
 - 上一步做完了什么：上线硬骨头2“共享 key 落地”已完成。18800 服务端支持共享托管 key 兜底，用户本机 `DEEPSEEK_API_KEY` 优先，缺失时读取 `AIW_SHARED_DEEPSEEK_API_KEY` / `MODEL_PROXY_SHARED_API_KEY`；验收摘要在 `verification/shared-key/summary.json`。
 - 统一模型入口：已完成代码实现和验收。`model-proxy.mjs` 已扩展为 provider registry；Workbench、Hermes、OpenClaw 三类执行入口都已通过 `18800` 调用当前生产 provider DeepSeek，验收摘要在 `verification/unified-model-proxy/summary.json`。DeepSeek 是当前实现细节，后续 provider 必须可替换。
 - 模型分层：尚未执行；不要用统一模型入口的验收产物冒充 `verification/model-router/summary.json`。
-- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。第 3 阶段钱包刹车与 DeepSeek V4 Flash 非思考 version 13 全量生产已通过技术验收、逻辑复核和产品负责人最终批准，状态为 `PASS_AFTER_CONDITIONS_RESOLVED`。自然用户规模稳定性仍未证明；v0.4.7 施工图已形成但未开工；本地 Codex 任务网关 v0.1 已通过 mock、launcher、无模型 CLI 和一次真实只读 Codex smoke；飞书渠道适配 v0.1 已通过 mock 测试但真实 smoke 因缺少本机飞书凭据和后台权限配置阻塞，唯一下一步是完成 Environment Ops 环境基线：只读采集电脑资源、唯一实例、端口、DNS/TCP/TLS、代理模式、国内外服务、飞书/AI Link/Provider 非付费健康、Session、预算保护和草稿保存状态；不做修复、不发起付费调用。
+- 现在卡在什么：上线三大硬骨头已完成。3A-R1.3、3A-R2.0、3A-R2.1、③A 总验收和 ③B GitHub Alpha Release 均已 passed；公开 Release 下载回测确认安装包大小和 SHA256 与 ③A 候选包完全一致。产品方向已收口并写入现有文档。第 3 阶段钱包刹车与 DeepSeek V4 Flash 非思考 version 13 全量生产已通过技术验收、逻辑复核和产品负责人最终批准，状态为 `PASS_AFTER_CONDITIONS_RESOLVED`。自然用户规模稳定性仍未证明；v0.4.7 施工图已形成但未开工；本地 Codex 任务网关 v0.1 已通过 mock、launcher、无模型 CLI 和一次真实只读 Codex smoke；飞书渠道适配 v0.1 已通过 mock 测试但真实 smoke 因缺少本机飞书凭据和后台权限配置阻塞，唯一下一步是等待产品负责人验收 AW-ENV-BASELINE-001；不得自动进入任何修复、付费生成、员工或工作群创建。
 - `research/` 里真实存在文件：见第 2 节，共 12 个 `.md` 文件。
 - `research/` 里应该有但缺的文件：`market-intelligence.md`，原因见第 3 节。
 

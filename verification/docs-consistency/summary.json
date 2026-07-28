@@ -3,7 +3,7 @@
   "packageVersion": "0.4.6",
   "contextVersion": "0.4.6",
   "releaseVersion": "v0.4.6",
-  "nextStep": "完成 Environment Ops 环境基线：只读采集电脑资源、唯一实例、端口、DNS/TCP/TLS、代理模式、国内外服务、飞书/AI Link/Provider 非付费健康、Session、预算保护和草稿保存状态；不做修复、不发起付费调用。",
+  "nextStep": "等待产品负责人验收 AW-ENV-BASELINE-001；不得自动进入任何修复、付费生成、员工或工作群创建。",
   "capabilityStatusChecks": [
     {
       "name": "模型分层 未标记为已完成",
@@ -65,5 +65,5 @@
   ],
   "errors": [],
   "warnings": [],
-  "verifiedAt": "2026-07-28T12:21:46.014Z"
+  "verifiedAt": "2026-07-28T13:35:08.457Z"
 }
