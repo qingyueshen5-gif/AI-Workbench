@@ -1,0 +1,88 @@
+{
+  "taskId": "AW-AILINK-CONFIRM-AND-CREATE-001",
+  "scope": "confirm_existing_v3_and_prepare_workers_only",
+  "workflowId": "workflow-3da933e691b5",
+  "confirmationClickCount": 1,
+  "generationExecuted": false,
+  "draftRevisionBefore": 3,
+  "workflowCountBefore": 2,
+  "workflowCountAfter": 2,
+  "before": {
+    "status": "review_ready",
+    "stage": "review",
+    "confirmedAt": null,
+    "group": null,
+    "sha256": "b4e40c3a7b6a4b9fe934c83b771e4e34d14dac166aa2923e88f3eb95252b1b21",
+    "balanceCny": 73.84,
+    "todayUsageCny": 81.16,
+    "workflowCreatorCompletionRequests": 0
+  },
+  "after": {
+    "status": "waiting_bindings",
+    "stage": "bindings",
+    "confirmedAt": "2026-07-28T16:38:24.623Z",
+    "group": null,
+    "lastError": null,
+    "sha256": "8d187e1306c08fe9a02a61d3598efef054197740e3a1e8f98b3ff79db5de3198",
+    "balanceCny": 73.84,
+    "todayUsageCny": 81.16,
+    "workflowCreatorCompletionRequests": 0,
+    "bindingProgress": "2/5"
+  },
+  "roles": [
+    {
+      "roleName": "协调监工",
+      "mode": "reuse",
+      "workerId": "worker-1g20",
+      "workerName": "协调角色",
+      "createdInThisRun": false,
+      "bindingConfirmed": true
+    },
+    {
+      "roleName": "A架构开发",
+      "mode": "create",
+      "workerId": "worker-3bp0",
+      "workerName": "A架构开发",
+      "createdInThisRun": true,
+      "creationTransactionStatus": "done",
+      "bindingConfirmed": false
+    },
+    {
+      "roleName": "E隐私开发",
+      "mode": "create",
+      "workerId": "worker-5fr0",
+      "workerName": "E隐私开发",
+      "createdInThisRun": true,
+      "creationTransactionStatus": "done",
+      "bindingConfirmed": false
+    },
+    {
+      "roleName": "G测试验收",
+      "mode": "reuse",
+      "workerId": "worker-1u80",
+      "workerName": "测试验收角色",
+      "createdInThisRun": false,
+      "bindingConfirmed": true
+    },
+    {
+      "roleName": "总集成",
+      "mode": "create",
+      "workerId": "worker-2tj0",
+      "workerName": "总集成",
+      "createdInThisRun": true,
+      "creationTransactionStatus": "done",
+      "bindingConfirmed": false
+    }
+  ],
+  "uniqueWorkerIds": 5,
+  "duplicateWorkersDetected": false,
+  "partialCreationDetected": false,
+  "employeesPrepared": 5,
+  "employeesCreated": 3,
+  "employeesReused": 2,
+  "feishuBindingExecutedThisRun": false,
+  "groupCreated": false,
+  "testMessageSent": false,
+  "formalDevelopmentStarted": false,
+  "result": "employees_prepared_waiting_feishu_bindings"
+}

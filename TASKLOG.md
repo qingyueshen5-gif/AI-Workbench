@@ -6,9 +6,20 @@
 
 ## 当前一句话状态
 
-`AW-AILINK-ROUTE-AND-REVIEW-001`完成只读路由定性和现有版本3方案审查：上游为`functional_but_unmanaged_route`，没有必须经过7890的证据；方案为`review_passed_with_nonblocking_notes`，明确`new_generation_not_required`。当前等待产品负责人验收后决定是否进入人工确认现有方案的独立审批门。
+`AW-AILINK-CONFIRM-AND-CREATE-001`已按产品负责人批准一次确认版本3方案并完成员工准备：3名新员工创建事务均为`done`，2名现有员工正确复用，当前`waiting_bindings/bindings`、飞书绑定2/5、`group=null`。已停止，等待单独批准飞书绑定。
 
 ## 最近完成任务
+
+## 2026-07-29｜AW-AILINK-CONFIRM-AND-CREATE-001｜版本3方案确认与员工准备
+
+- 产品负责人验收员工分配恢复结果，并批准针对`workflow-3da933e691b5`执行一次“确认方案并准备员工”。
+- 确认控件只执行一次；工作流从`review_ready/review`进入`waiting_bindings/bindings`，写入`confirmedAt`，`group`仍为`null`。
+- 正确复用`worker-1g20 / 协调角色`和`worker-1u80 / 测试验收角色`。
+- 分别创建`worker-3bp0 / A架构开发`、`worker-5fr0 / E隐私开发`、`worker-2tj0 / 总集成`；三项独立事务均为`done`。
+- 五个worker ID唯一，未发现重复员工或部分创建；工作流数量仍为2。
+- 当前飞书绑定2/5；未点击扫码绑定或创建群，未发送员工消息，未进入正式开发。
+- 18765没有模型生成请求；UI余额¥73.84、今日用量¥81.16未观察到变化。
+- 证据：`verification/ai-link-confirm-and-prepare/`。
 
 ## 2026-07-28｜AW-AILINK-ROUTE-AND-REVIEW-001｜AI Link上游路由定性与已有协作方案只读审查
 

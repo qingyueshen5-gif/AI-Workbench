@@ -1,32 +1,34 @@
 # NEXT_STEP.md
 
 <!-- AIW_NEXT_STEP_START -->
-等待产品负责人验收 AW-AILINK-ROUTE-AND-REVIEW-001；验收通过后进入人工确认现有版本3方案的审批门，不重新生成。
+等待产品负责人验收 AW-AILINK-CONFIRM-AND-CREATE-001 员工准备结果；验收通过后，单独批准三名新员工的飞书绑定，不自动建群。
 <!-- AIW_NEXT_STEP_END -->
 
 ## 当前状态
 
-- `AW-AILINK-READINESS-001`已由产品负责人验收通过。
-- `AW-AILINK-ROUTE-AND-REVIEW-001`已完成只读核验。
-- AI Link自有LLM上游直连和经7890均可达；当前代码没有要求该域名经过7890。
-- 路由最终分类为`functional_but_unmanaged_route`：功能可用，但缺少明确分流策略、监控、超时重试和fallback治理。
-- `AW-AILINK-GROUP-001`版本3方案审查结果为`review_passed_with_nonblocking_notes`。
-- 五个角色齐全，单一总集成、产品负责人审批门、原生@响应和权限边界合格。
-- 当前仍只有2个工作流；目标工作流仍为`review_ready/review`、草稿3，无pending或lastError。
-- 明确结论：`new_generation_not_required`。
+- `workflow-3da933e691b5`版本3方案已一次确认成功。
+- 工作流当前为`waiting_bindings/bindings`，`confirmedAt`已写入，`group=null`，`lastError=null`。
+- 当前仍只有2个工作流，没有版本4或第三个同目标工作流。
+- 五个角色员工已准备完成：
+  - 协调监工复用`worker-1g20 / 协调角色`；
+  - A架构开发新建`worker-3bp0`；
+  - E隐私开发新建`worker-5fr0`；
+  - G测试验收复用`worker-1u80 / 测试验收角色`；
+  - 总集成新建`worker-2tj0`。
+- 三个创建事务均为`done`，五个worker ID唯一，无部分创建或重复员工。
+- 飞书绑定当前2/5；三名新员工待绑定，群尚未创建。
+- 没有模型生成、员工测试消息或正式开发。
 
 ## 当前唯一下一步
 
-等待产品负责人验收 AW-AILINK-ROUTE-AND-REVIEW-001；验收通过后进入人工确认现有版本3方案的审批门，不重新生成。
-
-下一阶段若获批准，只允许在AI Link中人工确认现有版本3方案，并在动作前再次核对工作流ID、草稿版本、角色分配和“确认不等于开工”边界；不得自动准备员工、绑定飞书、创建群或启动正式开发。
+等待产品负责人验收员工准备结果；验收通过后，单独批准三名新员工的飞书扫码绑定。
 
 当前不得执行：
 
-- 点击“让AI生成方案”或“让创建工程师调整”；
-- 生成版本4或第三个同目标工作流；
-- 未经新批准确认方案；
-- 创建员工、绑定飞书或创建群；
-- 修改AI Link、代理、网络、注册表或系统设置；
-- 启动v0.4.7 A/E/G或其他正式开发；
-- 部署、付费、密钥或生产操作。
+- 再次点击“确认方案并准备员工”；
+- 点击任何“扫码绑定”；
+- 点击“下一步：创建群聊”；
+- 创建重复员工或第三个工作流；
+- 向员工发送消息；
+- 启动A/E/G正式开发、创建worktree、修改代码或合并main；
+- 部署、付费、Secret或生产操作。

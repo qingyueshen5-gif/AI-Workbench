@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Unreleased - AI Link版本3方案确认与员工准备
+
+- 完成`AW-AILINK-CONFIRM-AND-CREATE-001`批准范围：对`workflow-3da933e691b5`一次确认既有草稿3并准备5名角色员工。
+- 工作流进入`waiting_bindings/bindings`，`confirmedAt`已写入，`group=null`、`lastError=null`，工作流总数仍为2。
+- 复用协调角色和测试验收角色；分别新建A架构开发、E隐私开发、总集成员工，三个创建事务均为`done`。
+- 五个worker ID唯一，未发现重复员工或部分创建；没有版本4、第三个工作流或新模型生成。
+- 当前飞书绑定2/5；本轮未执行三名新员工扫码绑定、未建群、未发员工消息、未进入正式开发。
+- 新增`verification/ai-link-confirm-and-prepare/`证据。
+
 ## Unreleased - AI Link上游路由定性与版本3方案只读审查
 
 - 完成`AW-AILINK-ROUTE-AND-REVIEW-001`：只读审计AI Link v0.2.12安装包、运行配置、自有LLM上游网络属性和现有版本3工作流。

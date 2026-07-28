@@ -42,7 +42,7 @@ const scannedFiles = [
 ];
 
 const ignoredHistoricalPaths = ['CHANGELOG.md', 'TASKLOG.md', 'tasks/**', 'verification/**', 'research/**'];
-const expectedNextStep = '等待产品负责人验收 AW-AILINK-ROUTE-AND-REVIEW-001；验收通过后进入人工确认现有版本3方案的审批门，不重新生成。';
+const expectedNextStep = '等待产品负责人验收 AW-AILINK-CONFIRM-AND-CREATE-001 员工准备结果；验收通过后，单独批准三名新员工的飞书绑定，不自动建群。';
 
 function readText(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');

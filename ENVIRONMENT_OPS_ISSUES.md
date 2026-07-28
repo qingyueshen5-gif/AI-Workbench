@@ -33,6 +33,7 @@
 | 2026-07-28 20:45 至 21:23 | 完成 `AW-ENV-BASELINE-001` 只读基线和30分钟稳定性观察。 | AI Link单一主进程族、18765/18766、7890和飞书活动连接在窗口内稳定；OpenAI/Google直连超时而代理可达；UI、Session和Node实际代理路径仍未验证。 | `observed` |
 | 2026-07-28 21:48 至 22:04 | 完成 `AW-AILINK-READINESS-001` 单次受控生成前最小就绪核验。 | UI完整可交互、Session有效、工作流数量2、草稿存在且无落盘中的生成中状态；已证明workflow creator经18765访问AI Link LLM上游，但未证明18765上游fetch经过7890，最终`blocked_proxy_path_unverified`。 | `blocked` |
 | 2026-07-28 22:31 至 22:35 | 完成 `AW-AILINK-ROUTE-AND-REVIEW-001` 上游路由定性与版本3方案只读审查。 | AI Link自有LLM上游直连和经7890均可达，代码没有要求该上游经过7890，但缺少明确分流、监控、超时重试和fallback，分类为`functional_but_unmanaged_route`；版本3方案`review_passed_with_nonblocking_notes`且`new_generation_not_required`。 | `observed` |
+| 2026-07-29 00:38 至 00:40 | 一次确认版本3方案并准备5名角色员工。 | 3名新员工独立创建成功、2名员工正确复用，当前`waiting_bindings/bindings`且飞书绑定2/5；未建群、未发消息、未启动开发。 | `observed` |
 
 ## 2.1 当前只读基线快照
 
