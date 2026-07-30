@@ -101,11 +101,10 @@
 
 - AI Link版本3方案确认与员工准备 completed_and_accepted：方案只确认一次；3名新员工分别创建成功，2名现有员工正确复用。证据见`verification/ai-link-confirm-and-prepare/`。
 
-- AI Link首批开发协作群创建与结构核验 completed_waiting_product_owner_acceptance：5/5绑定和正式名称映射核验通过，唯一目标群已创建；当前`ready/done`，群专属Skill 1.0.0在5名员工中一致安装，`requiresMention=true`。证据见`verification/ai-link-group-create/`。
+- AI Link 首批开发协作恢复 completed_and_verified：新电脑迁移、环境恢复和 G1 迁移门已由产品负责人验收通过；5/5 正式员工的 workerId/roleId、显示名称、人物画像、职责和权限边界完成复核；唯一目标群已创建并完成结构验收，`workflow-3da933e691b5` 为 `ready/done`、`lastError=null`，绑定 workflow 可真实触发。群专属 Skill 1.0.0 在五名员工中一致安装，`requiresMention=true`。证据见 `verification/ai-link-group-create/` 及产品负责人当前验收结论。
 
 未完成：
 
-- 等待产品负责人验收AW-AILINK-GROUP-CREATE-001群结构；验收通过后，另行决定是否批准准备阶段的群内只读任务，不自动发送消息或进入正式开发。
 - 实际电脑清理。
 - 首屏 3-5 条示例指令。
 - 反馈入口和安全/隐私告知。
@@ -124,9 +123,9 @@
 - 国际化和区域合规。
 - Environment Ops P0/P1：草稿和账号安全、请求幂等、唯一实例、UI/Session/服务一致性、Node/Electron代理适配、国内外分流、网络稳定性和飞书连接稳定性尚未永久修复。
 - Environment Ops P2：OpenAI/Anthropic官方API付款、项目/Workspace、Key和预算小额验证尚未执行。
-- Environment Ops P3：现有首批开发协作群已创建，5名员工绑定和群专属Skill结构已核验；准备阶段群内只读任务和正式开工均尚未批准。
+- Environment Ops P3：首批开发协作群、五名员工绑定、群专属 Skill、工作流真实触发和新电脑恢复验收已完成；v0.4.7 正式开工仍尚未批准。
 
-当前唯一下一步：等待产品负责人验收 AW-AILINK-GROUP-CREATE-001 群结构；验收通过后，另行决定是否批准准备阶段的群内只读任务，不自动发送消息或进入正式开发。
+当前唯一下一步：等待产品负责人审核并明确批准 v0.4.7 第一批工作包（A 公共底层、E 反馈/埋点/错误日志与隐私、G 测试验收）的正式开工范围；批准前不启动功能开发。
 
 <!-- AIW_CAPABILITY_STATUS_END -->
 
@@ -134,7 +133,7 @@
 
 状态枚举固定为：`completed_and_verified`、`active_current_stage`、`approved_not_started`、`candidate_after_current_stage`、`waiting_for_real_user_feedback`、`strategic_research`、`personal_growth_or_external_dependency`、`blocked`、`rejected_or_deferred`、`unknown_needs_audit`。
 
-当前没有 `active_current_stage` 的产品实施任务；唯一下一步仍是等待产品负责人验收 AW-AILINK-GROUP-CREATE-001 群结构；验收通过后，另行决定是否批准准备阶段的群内只读任务，不自动发送消息或进入正式开发。
+当前没有 `active_current_stage` 的产品实施任务；新电脑迁移、环境恢复、五员工验收和 workflow 真实触发均已完成。项目当前等待产品负责人审核并明确批准 v0.4.7 第一批工作包的正式开工范围。
 
 | # | 任务线 | 产品模块 | 专业岗位 | 真实问题/用户 | 状态与证据 | 已完成/未完成/子模块 | 依赖 | 记录位置与完整性 | 预计涉及 | 并行/冲突 | 信任/安全/验证 | 当前是否开始/拍板 |
 | ---: | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |

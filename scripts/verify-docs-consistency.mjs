@@ -42,7 +42,7 @@ const scannedFiles = [
 ];
 
 const ignoredHistoricalPaths = ['CHANGELOG.md', 'TASKLOG.md', 'tasks/**', 'verification/**', 'research/**'];
-const expectedNextStep = '等待产品负责人验收 AW-AILINK-GROUP-CREATE-001 群结构；验收通过后，另行决定是否批准准备阶段的群内只读任务，不自动发送消息或进入正式开发。';
+const expectedNextStep = '等待产品负责人审核并明确批准 v0.4.7 第一批工作包（A 公共底层、E 反馈/埋点/错误日志与隐私、G 测试验收）的正式开工范围；批准前不启动功能开发。';
 
 function readText(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
