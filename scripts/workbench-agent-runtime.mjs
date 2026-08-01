@@ -4,6 +4,9 @@ import { fileURLToPath } from 'node:url';
 import { AgentRuntime } from '../agents/agent-runtime.mjs';
 import { claimJob, completeJob, ensureIpcDirs, listJobs, releaseClaim, writeWorkerState } from './feishu-worker-ipc.mjs';
 import { createHash } from 'node:crypto';
+import { loadApprovedDeepSeekEnv } from './load-approved-deepseek-env.mjs';
+
+loadApprovedDeepSeekEnv();
 
 const root = process.cwd();
 const allowedRoots = [...new Set([root, ...(process.env.AIW_ASSISTANT_ALLOWED_ROOTS || '').split(';').filter(Boolean)])];
