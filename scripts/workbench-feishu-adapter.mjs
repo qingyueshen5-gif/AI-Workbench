@@ -4,7 +4,9 @@ import { createHash } from 'node:crypto';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runtimeRoot } from '../runtime-paths.mjs';
-import { acceptAndEnqueueJob, claimResultDelivery, listResults, markAcknowledged, markDelivered, wasDelivered } from './feishu-worker-ipc.mjs';
+import { ActiveTaskController } from '../agents/active-task-controller.mjs';
+import { ActiveTaskStore } from '../channels/active-task-store.mjs';
+import { acceptMessageOnce, claimResultDelivery, completeJob, enqueueJob, listJobs, listResults, markAcknowledged, markDelivered, messageState, wasDelivered } from './feishu-worker-ipc.mjs';
 
 const root = process.cwd();
 const stateRoot = join(runtimeRoot, 'feishu-workbench-bridge');
@@ -12,6 +14,8 @@ const dedupeDir = join(stateRoot, 'dedupe');
 const eventsPath = join(stateRoot, 'events.jsonl');
 const statusPath = join(stateRoot, 'status.json');
 const adapterLockPath = join(stateRoot, 'locks', 'feishu-adapter.lock');
+const activeTasks = new ActiveTaskStore();
+const activeController = new ActiveTaskController({ store: activeTasks });
 async function acquireAdapterLock() {
   await fsp.mkdir(dirname(adapterLockPath), { recursive: true });
   try {
@@ -73,8 +77,8 @@ export async function startWorkbenchFeishuAdapter() {
   const lark = await import('@larksuiteoapi/node-sdk');
   const config = { appId, appSecret, loggerLevel: lark.LoggerLevel.warn };
   const client = new lark.Client(config);
-  const reply = async (messageId, text) => {
-    const uuid = createHash('sha256').update(`aiw-final:${messageId}`).digest('hex').slice(0, 32);
+  const reply = async (messageId, text, purpose = 'final') => {
+    const uuid = createHash('sha256').update(`aiw-${purpose}:${messageId}`).digest('hex').slice(0, 32);
     let response;
     try {
       response = await client.im.v1.message.reply({ path: { message_id: messageId }, data: { msg_type: 'text', content: JSON.stringify({ text }), uuid } });
@@ -99,8 +103,25 @@ export async function startWorkbenchFeishuAdapter() {
       const text = textOf(data?.message?.content);
       if (!messageId || !text || !(await claimMessage(messageId))) return;
       const receivedAt = Date.now();
-      const accepted = await acceptAndEnqueueJob({ messageId, originalMessageId: messageId, eventId: data?.event_id || '', chatId, conversationId: chatId, openId, text, receivedAt }, { eventId: data?.event_id || '', chatId, conversationId: chatId, openId, text, receivedAt });
-      await event('message_accepted', { messageId, receivedAt, acceptedAt: Date.now(), jobCreated: accepted.enqueued, projectRoot: root, pid: process.pid, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '' });
+      const metadata = { eventId: data?.event_id || '', chatId, conversationId: chatId, openId, text, receivedAt };
+      const acceptedOnce = await acceptMessageOnce(messageId, metadata);
+      if (!acceptedOnce) return;
+      const control = await activeController.handle({ messageId, originalMessageId: messageId, chatId, conversationId: chatId, openId, text, receivedAt });
+      let jobCreated = false;
+      if (control.intercepted) {
+        const controlJob = { messageId, originalMessageId: messageId, chatId, conversationId: chatId, openId, text, receivedAt, controlKind: control.kind, activeTaskId: control.activeTaskId };
+        await completeJob(controlJob, { messageId, originalMessageId: messageId, conversationId: chatId, chatId, ok: true, text: control.text, provider: 'ai-workbench', toolUsed: '', verified: true, controlReply: true, finishedAt: Date.now() });
+        if (control.resume) {
+          const active = await activeTasks.load(chatId);
+          const existing = (await listJobs()).some((item) => item.messageId === active?.originalMessageId);
+          const originalState = active?.originalMessageId ? await messageState(active.originalMessageId) : null;
+          if (active && !existing && !originalState?.result && !originalState?.delivered) jobCreated = await enqueueJob({ messageId: active.originalMessageId, originalMessageId: active.originalMessageId, chatId, conversationId: chatId, openId, text: active.effectiveUserGoal || active.originalUserGoal, receivedAt: active.startedAt, activeTaskId: active.activeTaskId, resumedAt: Date.now() });
+        }
+      } else {
+        jobCreated = await enqueueJob({ messageId, originalMessageId: messageId, eventId: data?.event_id || '', chatId, conversationId: chatId, openId, text, receivedAt });
+        await activeTasks.create({ messageId, originalMessageId: messageId, chatId, conversationId: chatId, text });
+      }
+      await event('message_accepted', { messageId, receivedAt, acceptedAt: Date.now(), jobCreated, controlKind: control.intercepted ? control.kind : '', activeTaskId: control.activeTaskId || messageId, projectRoot: root, pid: process.pid, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '' });
       acknowledge(messageId).then(async (reactionId) => {
         const marked = await markAcknowledged(messageId, { reactionId, emojiType: 'OK' });
         if (marked) await event('message_acknowledged', { messageId, reactionId, emojiType: 'OK', acknowledgedAt: Date.now(), latencyMs: Date.now() - receivedAt });
@@ -129,7 +150,28 @@ export async function startWorkbenchFeishuAdapter() {
     }
     } finally { delivering = false; }
   };
-  const timer = setInterval(() => deliver().catch(async (error) => { await patchStatus({ latestError: error.message }); }), 250);
+  const stageProgressText = (task) => ({
+    understanding: '已经收到任务，正在理解目标并整理上下文。',
+    planning: '已经理解任务，正在整理执行步骤。',
+    executing: task.currentStep === '按任务要求执行电脑、文件或终端操作' ? '执行步骤已经开始，完成后会核对结果。' : `正在${task.currentStep || '执行任务'}。`,
+    verifying: '执行已经结束，正在核对结果。',
+    finalizing: '结果已经确认，正在整理最终回复。'
+  }[task.stage] || '任务正在处理中，完成后会直接回复你。');
+  const sendProgress = async () => {
+    const now = Date.now();
+    for (const task of await activeTasks.list()) {
+      if (!task || ['accepted', 'completed', 'failed', 'paused', 'waiting_user'].includes(task.stage)) continue;
+      if (now - Number(task.startedAt || now) < 8000) continue;
+      if (now - Number(task.lastUserProgressSentAt || 0) < 20000) continue;
+      if (task.lastUserProgressStage === task.stage) continue;
+      try {
+        const replyMessageId = await reply(task.originalMessageId, stageProgressText(task), `progress-${task.stage}`);
+        await activeTasks.update(task.conversationId, { lastUserProgressSentAt: now, lastUserProgressStage: task.stage });
+        await event('progress_delivered', { messageId: task.originalMessageId, activeTaskId: task.activeTaskId, stage: task.stage, replyMessageId, deliveredAt: now });
+      } catch (error) { await event('progress_delivery_failed', { messageId: task.originalMessageId, stage: task.stage, message: error.message }); }
+    }
+  };
+  const timer = setInterval(() => { deliver().catch(async (error) => { await patchStatus({ latestError: error.message }); }); sendProgress().catch(() => {}); }, 1000);
   const ws = new lark.WSClient({
     ...config,
     onReady: () => {

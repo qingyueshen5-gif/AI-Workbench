@@ -6,11 +6,13 @@ import { claimJob, completeJob, ensureIpcDirs, listJobs, releaseClaim, writeWork
 const runtimeEventsPath = join(process.env.AI_WORKBENCH_RUNTIME_DIR || join(process.env.APPDATA || process.env.USERPROFILE || process.cwd(), 'ai-workbench'), 'feishu-workbench-bridge', 'events.jsonl');
 async function runtimeEvent(type, payload = {}) { await fs.mkdir(dirname(runtimeEventsPath), { recursive: true }); await fs.appendFile(runtimeEventsPath, `${JSON.stringify({ at: new Date().toISOString(), type, payload })}\n`, 'utf8'); }
 import { createHash } from 'node:crypto';
+import { ActiveTaskStore } from '../channels/active-task-store.mjs';
 import { loadApprovedDeepSeekEnv } from './load-approved-deepseek-env.mjs';
 
 loadApprovedDeepSeekEnv();
 
 const root = process.cwd();
+const activeTasks = new ActiveTaskStore();
 const allowedRoots = [...new Set([root, ...(process.env.AIW_ASSISTANT_ALLOWED_ROOTS || '').split(';').filter(Boolean)])];
 const statusPath = join(process.env.AI_WORKBENCH_RUNTIME_DIR || join(process.env.APPDATA || process.env.USERPROFILE || root, 'ai-workbench'), 'feishu-workbench-bridge', 'status.json');
 async function patchStatus(patch) {
@@ -69,6 +71,12 @@ export async function supervisorLoop() {
   try {
   while (!stopping) {
     for (const job of await listJobs()) {
+      const active = await activeTasks.load(job.conversationId || job.chatId);
+      if (active?.cancelled || active?.stage === 'failed') {
+        await completeJob(job, { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: false, text: '任务已取消，不会继续执行。', errorClass: 'Cancelled', finishedAt: Date.now() });
+        continue;
+      }
+      if (active?.paused || active?.stage === 'paused' || active?.waitingUser) continue;
       if (!(await claimJob(job, workerId))) continue;
       await runtimeEvent('job_claimed', { messageId: job.messageId, claimedAt: Date.now(), workerId, runtimePid: process.pid });
       try {
