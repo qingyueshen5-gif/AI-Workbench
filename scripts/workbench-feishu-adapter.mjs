@@ -13,7 +13,7 @@ const eventsPath = join(stateRoot, 'events.jsonl');
 const statusPath = join(stateRoot, 'status.json');
 
 function loadEnv() {
-  for (const path of [join(root, '.env.local'), join(root, '.env')]) {
+  for (const path of [join(root, '.env.local'), join(root, '.env'), 'C:\\Users\\qingy\\AI-Workbench\\.env.local']) {
     try {
       for (const raw of fs.readFileSync(path, 'utf8').split(String.fromCharCode(10))) {
         const line = raw.endsWith(String.fromCharCode(13)) ? raw.slice(0, -1) : raw;
