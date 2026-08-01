@@ -19,7 +19,9 @@ export class DeepSeekProvider {
   async healthCheck() {
     try {
       const health = await request(healthUrl, {}, 10000);
-      return { ok: health?.ok === true && health?.defaultProvider === 'deepseek', provider: 'deepseek', model: this.model, transport: 'ai_workbench_model_proxy' };
+      if (!(health?.ok === true && health?.defaultProvider === 'deepseek')) throw new Error('DeepSeek health endpoint is not ready');
+      const probe = await this.generate({ messages: [{ role: 'user', content: '只回复OK' }], employee: 'workbench-feishu-health' });
+      return { ok: Boolean(probe.text), provider: 'deepseek', model: this.model, transport: 'ai_workbench_model_proxy' };
     } catch (error) {
       return { ok: false, provider: 'deepseek', model: this.model, error: error.message };
     }
