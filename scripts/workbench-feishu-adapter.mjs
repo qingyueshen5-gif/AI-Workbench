@@ -82,11 +82,25 @@ export async function startWorkbenchFeishuAdapter() {
     }
   };
   const timer = setInterval(() => deliver().catch(async (error) => { await event('delivery_failed', { message: error.message }); await patchStatus({ latestError: error.message }); }), 250);
-  const ws = new lark.WSClient(config);
-  const started = ws.start({ eventDispatcher: dispatcher });
-  if (started?.catch) started.catch(async (error) => { await event('websocket_failed', { message: error.message }); await patchStatus({ feishu: 'disconnected', latestError: error.message }); });
+  const ws = new lark.WSClient({
+    ...config,
+    onReady: () => {
+      event('websocket_connected', { pid: process.pid, projectRoot: root }).catch(() => {});
+      patchStatus({ backend: 'online', feishu: 'connected', aiLink: 'not_used', hermes: 'not_used', adapterPid: process.pid, projectRoot: root, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '', latestError: '' }).catch(() => {});
+    },
+    onReconnecting: () => patchStatus({ feishu: 'connecting' }).catch(() => {}),
+    onReconnected: () => {
+      event('websocket_reconnected', { pid: process.pid }).catch(() => {});
+      patchStatus({ feishu: 'connected', latestError: '' }).catch(() => {});
+    },
+    onError: (error) => {
+      event('websocket_failed', { message: error?.message || String(error) }).catch(() => {});
+      patchStatus({ feishu: 'disconnected', latestError: error?.message || String(error) }).catch(() => {});
+    }
+  });
+  await patchStatus({ backend: 'online', feishu: 'connecting', aiLink: 'not_used', hermes: 'not_used', adapterPid: process.pid, projectRoot: root, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '', latestError: '' });
+  ws.start({ eventDispatcher: dispatcher });
   await event('adapter_started', { pid: process.pid, projectRoot: root, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '' });
-  await patchStatus({ backend: 'online', feishu: 'connected', aiLink: 'not_used', hermes: 'not_used', adapterPid: process.pid, projectRoot: root, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '' });
   const stop = async () => { clearInterval(timer); await patchStatus({ feishu: 'disconnected' }); ws.close?.(); process.exit(0); };
   process.once('SIGINT', stop); process.once('SIGTERM', stop);
 }
