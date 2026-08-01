@@ -58,9 +58,9 @@ export class CodexProvider {
     let state = {};
     try { state = JSON.parse(await fs.readFile(sessionPath, 'utf8')); } catch {}
     const outputFile = join(providerRoot, `last-${process.pid}-${Date.now()}.txt`);
-    const common = ['--skip-git-repo-check', '--json', '--output-last-message', outputFile];
+    const common = ['--ignore-user-config', '--skip-git-repo-check', '--json', '--output-last-message', outputFile];
     const args = state.sessionId
-      ? ['exec', 'resume', '--skip-git-repo-check', '--json', '--output-last-message', outputFile, state.sessionId, '-']
+      ? ['exec', 'resume', '--ignore-user-config', '--skip-git-repo-check', '--json', '--output-last-message', outputFile, state.sessionId, '-']
       : ['exec', '-', '-C', resolve(workspace), '--sandbox', writable ? 'workspace-write' : 'read-only', ...common];
     const startedAt = Date.now();
     const result = await runCodex(args, prompt, this.timeoutMs);
