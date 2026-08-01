@@ -258,8 +258,12 @@ export async function claimResultDelivery(messageId, metadata = {}) {
     if (exists(deliveredDir, messageId)) { await fsp.rm(target, { force: true }); return false; }
     return true;
   } catch (error) {
-    if (error.code === 'EEXIST') return false;
-    throw error;
+    if (error.code !== 'EEXIST') throw error;
+    const current = await readJson(target, {});
+    const staleMs = Number(process.env.AIW_DELIVERY_CLAIM_STALE_MS || 150000);
+    if (Date.now() - Number(current.claimedAt || 0) <= staleMs) return false;
+    await fsp.rm(target, { force: true });
+    return claimResultDelivery(messageId, metadata);
   }
 }
 
