@@ -1,0 +1,63 @@
+import fs from 'node:fs/promises';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { AgentRuntime } from '../agents/agent-runtime.mjs';
+import { claimJob, completeJob, ensureIpcDirs, listJobs, releaseClaim, writeWorkerState } from './feishu-worker-ipc.mjs';
+
+const root = process.cwd();
+const allowedRoots = [...new Set([root, ...(process.env.AIW_ASSISTANT_ALLOWED_ROOTS || '').split(';').filter(Boolean)])];
+const statusPath = join(process.env.AI_WORKBENCH_RUNTIME_DIR || join(process.env.APPDATA || process.env.USERPROFILE || root, 'ai-workbench'), 'feishu-workbench-bridge', 'status.json');
+async function patchStatus(patch) {
+  let current = {};
+  try { current = JSON.parse(await fs.readFile(statusPath, 'utf8')); } catch {}
+  const parent = dirname(statusPath);
+  await fs.mkdir(parent, { recursive: true });
+  const next = { ...current, ...patch, updatedAt: new Date().toISOString() };
+  const tmp = `${statusPath}.${process.pid}.tmp`;
+  await fs.writeFile(tmp, `${JSON.stringify(next, null, 2)}\n`, 'utf8');
+  await fs.rename(tmp, statusPath);
+}
+const runtime = new AgentRuntime({ root, allowedRoots });
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+export async function supervisorLoop() {
+  await ensureIpcDirs();
+  const workerId = `direct-codex-${process.pid}`;
+  const health = await runtime.models.healthCheck();
+  if (!health.ok || health.authClass !== 'chatgpt_subscription') throw new Error('Codex subscription provider is not ready');
+  await writeWorkerState({
+    workerId, pid: process.pid, status: 'online', role: 'ai-workbench-agent-runtime', gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '',
+    projectRoot: root,
+    chain: ['Feishu Adapter', 'Agent Runtime', 'Model Router', 'Codex Provider', 'Tool Executor', 'Result Verifier', 'Feishu Adapter'],
+    model: { provider: 'codex', transport: 'official_cli_subscription', endpoint: null, aiLink: false, hermes: false, authClass: health.authClass, version: health.version }
+  });
+  await patchStatus({ backend: 'online', codex: 'connected', localTools: 'online', aiLink: 'not_used', hermes: 'not_used', runtimePid: process.pid, projectRoot: root, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '', latestError: '' });
+  let stopping = false;
+  process.once('SIGINT', () => { stopping = true; });
+  process.once('SIGTERM', () => { stopping = true; });
+  while (!stopping) {
+    for (const job of await listJobs()) {
+      if (!(await claimJob(job, workerId))) continue;
+      try {
+        const result = await runtime.handle(job);
+        await completeJob(job, { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: true, text: result.text, provider: result.provider, providerSessionId: result.providerSessionId, toolUsed: result.toolUsed, verified: result.verified, finishedAt: Date.now() });
+        await patchStatus({ latestSuccessfulTask: job.messageId, latestError: '', codex: 'connected', localTools: 'online' });
+      } catch (error) {
+        await completeJob(job, { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: false, text: '这次没有完成，我已经停止。你可以继续发送新消息。', errorClass: error.name || 'Error', finishedAt: Date.now() });
+        await patchStatus({ latestError: error.message || String(error) });
+      } finally { await releaseClaim(job.messageId).catch(() => {}); }
+    }
+    await sleep(250);
+  }
+}
+
+async function main() {
+  const once = process.argv.indexOf('--job-json');
+  if (once >= 0) {
+    const result = await runtime.handle(JSON.parse(process.argv[once + 1] || '{}'));
+    process.stdout.write(JSON.stringify(result));
+    return;
+  }
+  await supervisorLoop();
+}
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch((error) => { process.stderr.write(`${error.message}\n`); process.exitCode = 1; });

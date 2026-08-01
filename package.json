@@ -6,6 +6,9 @@
   "main": "electron/main.cjs",
   "scripts": {
     "dev": "node scripts/dev.mjs",
+    "bridge:start": "node scripts/start-feishu-workbench-bridge.mjs",
+    "bridge:runtime": "node scripts/workbench-agent-runtime.mjs",
+    "bridge:feishu": "node scripts/workbench-feishu-adapter.mjs",
     "api": "node server.mjs",
     "build": "vite build",
     "build:icon": "node scripts/generate-icon.mjs",

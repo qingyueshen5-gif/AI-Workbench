@@ -9,7 +9,7 @@ import { ownerFromAgentId, progressReplyForAgent, isActionIntent } from './agent
 import { verificationRules, verifyRun } from './verification/rules.mjs';
 import { getRecoveryHint, normalizeError } from './errors/normalize.mjs';
 import { checkHealth, repairAll, selfHeal, setupEnv } from './health/self-heal.mjs';
-import { ensureRuntimeDirs, migrateLegacyRuntimeData, runtimeDataFile, runtimeStartupErrorLogFile } from './runtime-paths.mjs';
+import { ensureRuntimeDirs, migrateLegacyRuntimeData, runtimeDataFile, runtimeRoot, runtimeStartupErrorLogFile } from './runtime-paths.mjs';
 import { checkModelAvailability, doctor as versionDoctor, loadMatrix } from './versions/manager.mjs';
 import { collectReadiness, explainPortStatus } from './readiness.mjs';
 
@@ -18,6 +18,7 @@ const dataFile = runtimeDataFile;
 const envFile = join(root, '.env');
 const distDir = join(root, 'dist');
 const port = Number(process.env.PORT || 8787);
+const bridgeStatusPath = join(runtimeRoot, 'feishu-workbench-bridge', 'status.json');
 const modelProxyBaseUrl = String(process.env.MODEL_PROXY_BASE_URL || 'http://127.0.0.1:18800/v1').replace(/\/+$/, '');
 
 ensureRuntimeDirs();
@@ -1596,6 +1597,28 @@ const server = createServer(async (request, response) => {
 
     if (pathname === '/api/data' && request.method === 'GET') {
       sendJson(response, 200, await readDataWithMeta());
+      return;
+    }
+
+    if (pathname === '/api/workbench-runtime-status' && request.method === 'GET') {
+      let status = {};
+      try { status = JSON.parse(await readFile(bridgeStatusPath, 'utf8')); } catch {}
+      sendJson(response, 200, {
+        backend: status.backend || 'offline',
+        feishu: status.feishu || 'disconnected',
+        codex: status.codex || 'disconnected',
+        aiLink: 'not_used',
+        hermes: 'not_used',
+        localTools: status.localTools || 'offline',
+        latestMessageId: status.latestMessageId || '',
+        latestSuccessfulTask: status.latestSuccessfulTask || '',
+        latestError: status.latestError || '',
+        projectRoot: status.projectRoot || root,
+        gitCommit: status.gitCommit || '',
+        runtimePid: status.runtimePid || null,
+        adapterPid: status.adapterPid || null,
+        updatedAt: status.updatedAt || ''
+      });
       return;
     }
 

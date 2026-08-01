@@ -48,6 +48,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [saveError, setSaveError] = useState('');
   const [readiness, setReadiness] = useState(null);
+  const [runtimeStatus, setRuntimeStatus] = useState(null);
   const [selectedTaskId, setSelectedTaskId] = useState('');
   const [panelOpen, setPanelOpen] = useState(false);
   const [conversationPanelOpen, setConversationPanelOpen] = useState(false);
@@ -64,6 +65,14 @@ function App() {
       }
       if (readinessResult.status === 'fulfilled') setReadiness(readinessResult.value);
     }).finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    const refresh = () => fetch('/api/workbench-runtime-status').then((response) => response.json()).then((value) => { if (active) setRuntimeStatus(value); }).catch(() => { if (active) setRuntimeStatus(null); });
+    refresh();
+    const timer = setInterval(refresh, 3000);
+    return () => { active = false; clearInterval(timer); };
   }, []);
 
   useEffect(() => {
@@ -122,6 +131,7 @@ function App() {
             panelOpen={panelOpen}
             setPanelOpen={setPanelOpen}
             setConversationPanelOpen={setConversationPanelOpen}
+            runtimeStatus={runtimeStatus}
           />
           {saveError && (
             <div className="mx-5 mt-4 flex items-start justify-between gap-3 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -406,9 +416,10 @@ function ConversationList({ data, updateData, className, onSelect }) {
   );
 }
 
-function TopBar({ data, panelOpen, setPanelOpen, setConversationPanelOpen }) {
+function TopBar({ data, panelOpen, setPanelOpen, setConversationPanelOpen, runtimeStatus }) {
+  const connected = runtimeStatus?.backend === 'online' && runtimeStatus?.feishu === 'connected' && runtimeStatus?.codex === 'connected' && runtimeStatus?.localTools === 'online';
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between border-b border-zinc-100 px-5">
+    <header className="flex min-h-16 shrink-0 items-center justify-between border-b border-zinc-100 px-5 py-2">
       <div className="flex min-w-0 items-center gap-3">
         <button
           type="button"
@@ -418,7 +429,19 @@ function TopBar({ data, panelOpen, setPanelOpen, setConversationPanelOpen }) {
         >
           <ConversationIcon />
         </button>
-        <h1 className="truncate text-base font-semibold">当前对话</h1>
+        <div className="min-w-0">
+          <h1 className="truncate text-base font-semibold">当前对话</h1>
+          <div className="mt-0.5 flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-zinc-500">
+            <span className={connected ? 'text-emerald-700' : 'text-red-700'}>工作台：{runtimeStatus?.backend === 'online' ? '在线' : '离线'}</span>
+            <span>飞书：{runtimeStatus?.feishu === 'connected' ? '已连接' : '未连接'}</span>
+            <span>Codex：{runtimeStatus?.codex === 'connected' ? '已连接' : '未连接'}</span>
+            <span>AI Link：未使用</span><span>Hermes：未使用</span>
+            <span>本地工具：{runtimeStatus?.localTools === 'online' ? '在线' : '离线'}</span>
+            {runtimeStatus?.latestMessageId && <span title={runtimeStatus.latestMessageId}>最近消息：{runtimeStatus.latestMessageId}</span>}
+            {runtimeStatus?.latestSuccessfulTask && <span title={runtimeStatus.latestSuccessfulTask}>最近成功：{runtimeStatus.latestSuccessfulTask}</span>}
+            {runtimeStatus?.latestError && <span className="text-red-700" title={runtimeStatus.latestError}>最近错误：{runtimeStatus.latestError}</span>}
+          </div>
+        </div>
       </div>
       <button
         onClick={() => setPanelOpen(!panelOpen)}
