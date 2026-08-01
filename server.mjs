@@ -1603,7 +1603,7 @@ const server = createServer(async (request, response) => {
     if (pathname === '/api/workbench-runtime-status' && request.method === 'GET') {
       let status = {};
       try { status = JSON.parse(await readFile(bridgeStatusPath, 'utf8')); } catch {}
-      sendJson(response, 200, {
+      const payload = {
         backend: status.backend || 'offline',
         feishu: status.feishu || 'disconnected',
         codex: status.codex || 'disconnected',
@@ -1618,7 +1618,9 @@ const server = createServer(async (request, response) => {
         runtimePid: status.runtimePid || null,
         adapterPid: status.adapterPid || null,
         updatedAt: status.updatedAt || ''
-      });
+      };
+      payload.ok = payload.backend === 'online' && payload.feishu === 'connected' && payload.codex === 'connected' && payload.localTools === 'online' && !payload.latestError;
+      sendJson(response, 200, payload);
       return;
     }
 
