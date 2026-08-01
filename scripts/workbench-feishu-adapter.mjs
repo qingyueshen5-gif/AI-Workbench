@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runtimeRoot } from '../runtime-paths.mjs';
-import { acceptAndEnqueueJob, claimResultDelivery, listResults, markDelivered, releaseResultDelivery, wasDelivered } from './feishu-worker-ipc.mjs';
+import { acceptAndEnqueueJob, claimResultDelivery, listResults, markAcknowledged, markDelivered, wasDelivered } from './feishu-worker-ipc.mjs';
 
 const root = process.cwd();
 const stateRoot = join(runtimeRoot, 'feishu-workbench-bridge');
@@ -76,7 +76,13 @@ export async function startWorkbenchFeishuAdapter() {
   const reply = async (messageId, text) => {
     const uuid = createHash('sha256').update(`aiw-final:${messageId}`).digest('hex');
     const response = await client.im.v1.message.reply({ path: { message_id: messageId }, data: { msg_type: 'text', content: JSON.stringify({ text }), uuid } });
+    if (response?.code && response.code !== 0) throw new Error(`Feishu reply rejected: code=${response.code}, msg=${response.msg || 'unknown'}`);
     return response?.data?.message_id || '';
+  };
+  const acknowledge = async (messageId) => {
+    const response = await client.im.v1.messageReaction.create({ path: { message_id: messageId }, data: { reaction_type: { emoji_type: 'OK' } } });
+    if (response?.code && response.code !== 0) throw new Error(`Feishu reaction rejected: code=${response.code}, msg=${response.msg || 'unknown'}`);
+    return response?.data?.reaction_id || '';
   };
   const dispatcher = new lark.EventDispatcher({}).register({
     'im.message.receive_v1': async (data) => {
@@ -85,8 +91,13 @@ export async function startWorkbenchFeishuAdapter() {
       const openId = String(data?.sender?.sender_id?.open_id || '');
       const text = textOf(data?.message?.content);
       if (!messageId || !text || !(await claimMessage(messageId))) return;
-      await acceptAndEnqueueJob({ messageId, originalMessageId: messageId, eventId: data?.event_id || '', chatId, conversationId: chatId, openId, text, receivedAt: Date.now() });
-      await event('message_accepted', { messageId, projectRoot: root, pid: process.pid, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '' });
+      const receivedAt = Date.now();
+      const accepted = await acceptAndEnqueueJob({ messageId, originalMessageId: messageId, eventId: data?.event_id || '', chatId, conversationId: chatId, openId, text, receivedAt }, { eventId: data?.event_id || '', chatId, conversationId: chatId, openId, text, receivedAt });
+      await event('message_accepted', { messageId, receivedAt, acceptedAt: Date.now(), jobCreated: accepted.enqueued, projectRoot: root, pid: process.pid, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '' });
+      acknowledge(messageId).then(async (reactionId) => {
+        const marked = await markAcknowledged(messageId, { reactionId, emojiType: 'OK' });
+        if (marked) await event('message_acknowledged', { messageId, reactionId, emojiType: 'OK', acknowledgedAt: Date.now(), latencyMs: Date.now() - receivedAt });
+      }).catch((error) => event('acknowledgement_failed', { messageId, failedAt: Date.now(), latencyMs: Date.now() - receivedAt, message: error.message }));
       await patchStatus({ feishu: 'connected', currentStage: 'received', latestMessageId: messageId, latestError: '' });
     }
   });
@@ -98,19 +109,20 @@ export async function startWorkbenchFeishuAdapter() {
     for (const result of await listResults()) {
       if (await wasDelivered(result.messageId)) { await markDelivered(result); continue; }
       if (!(await claimResultDelivery(result.messageId, { pid: process.pid }))) continue;
+      await event('reply_sender_claimed', { messageId: result.messageId, claimedAt: Date.now(), pid: process.pid });
       try {
         const replyMessageId = await reply(result.originalMessageId || result.messageId, String(result.text || '这次没有完成。'));
         await markDelivered(result, { replyMessageId });
         await event('result_delivered', { messageId: result.messageId, replyMessageId, provider: result.provider || '', toolUsed: result.toolUsed || '', verified: result.verified === true });
         await patchStatus({ currentStage: result.ok ? 'completed' : 'failed', latestSuccessfulTask: result.ok ? result.messageId : (await readStatus()).latestSuccessfulTask || '', latestError: result.ok ? '' : String(result.errorClass || '任务失败') });
       } catch (error) {
-        await releaseResultDelivery(result.messageId);
+        await event('delivery_failed', { messageId: result.messageId, failedAt: Date.now(), message: error.message });
         throw error;
       }
     }
     } finally { delivering = false; }
   };
-  const timer = setInterval(() => deliver().catch(async (error) => { await event('delivery_failed', { message: error.message }); await patchStatus({ latestError: error.message }); }), 250);
+  const timer = setInterval(() => deliver().catch(async (error) => { await patchStatus({ latestError: error.message }); }), 250);
   const ws = new lark.WSClient({
     ...config,
     onReady: () => {

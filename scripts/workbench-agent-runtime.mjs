@@ -3,6 +3,8 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { AgentRuntime } from '../agents/agent-runtime.mjs';
 import { claimJob, completeJob, ensureIpcDirs, listJobs, releaseClaim, writeWorkerState } from './feishu-worker-ipc.mjs';
+const runtimeEventsPath = join(process.env.AI_WORKBENCH_RUNTIME_DIR || join(process.env.APPDATA || process.env.USERPROFILE || process.cwd(), 'ai-workbench'), 'feishu-workbench-bridge', 'events.jsonl');
+async function runtimeEvent(type, payload = {}) { await fs.mkdir(dirname(runtimeEventsPath), { recursive: true }); await fs.appendFile(runtimeEventsPath, `${JSON.stringify({ at: new Date().toISOString(), type, payload })}\n`, 'utf8'); }
 import { createHash } from 'node:crypto';
 import { loadApprovedDeepSeekEnv } from './load-approved-deepseek-env.mjs';
 
@@ -40,7 +42,7 @@ async function acquireRuntimeLock() {
 const runtime = new AgentRuntime({
   root,
   allowedRoots,
-  onStage: async (job, stage) => patchStatus({ currentStage: stage, latestMessageId: job.messageId, codex: stage === 'executing' ? 'busy' : undefined })
+  onStage: async (job, stage) => { await runtimeEvent('job_stage', { messageId: job.messageId, stage, atMs: Date.now(), runtimePid: process.pid }); await patchStatus({ currentStage: stage, latestMessageId: job.messageId, codex: stage === 'executing' ? 'busy' : undefined }); }
 });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -68,9 +70,12 @@ export async function supervisorLoop() {
   while (!stopping) {
     for (const job of await listJobs()) {
       if (!(await claimJob(job, workerId))) continue;
+      await runtimeEvent('job_claimed', { messageId: job.messageId, claimedAt: Date.now(), workerId, runtimePid: process.pid });
       try {
         const result = await runtime.handle(job);
-        await completeJob(job, { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: true, text: result.text, provider: result.provider, providerSessionId: result.providerSessionId, toolUsed: result.toolUsed, verified: result.verified, finishedAt: Date.now() });
+        const finishedAt = Date.now();
+        await completeJob(job, { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: true, text: result.text, provider: result.provider, providerSessionId: result.providerSessionId, toolUsed: result.toolUsed, verified: result.verified, finishedAt });
+        await runtimeEvent('result_generated', { messageId: job.messageId, finishedAt, provider: result.provider, toolUsed: result.toolUsed, verified: result.verified });
         await patchStatus({ currentStage: 'completed', latestSuccessfulTask: job.messageId, latestError: '', deepseek: 'online', codex: 'online', localTools: 'online' });
       } catch (error) {
         await completeJob(job, { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: false, text: '这次没有完成，我已经停止。你可以继续发送新消息。', errorClass: error.name || 'Error', finishedAt: Date.now() });
