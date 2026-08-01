@@ -74,8 +74,15 @@ export async function startWorkbenchFeishuAdapter() {
   const config = { appId, appSecret, loggerLevel: lark.LoggerLevel.warn };
   const client = new lark.Client(config);
   const reply = async (messageId, text) => {
-    const uuid = createHash('sha256').update(`aiw-final:${messageId}`).digest('hex');
-    const response = await client.im.v1.message.reply({ path: { message_id: messageId }, data: { msg_type: 'text', content: JSON.stringify({ text }), uuid } });
+    const uuid = createHash('sha256').update(`aiw-final:${messageId}`).digest('hex').slice(0, 32);
+    let response;
+    try {
+      response = await client.im.v1.message.reply({ path: { message_id: messageId }, data: { msg_type: 'text', content: JSON.stringify({ text }), uuid } });
+    } catch (error) {
+      const code = error?.response?.data?.code ?? error?.code ?? '';
+      const msg = error?.response?.data?.msg || error?.message || 'unknown';
+      throw new Error(`Feishu reply rejected: code=${code}, msg=${msg}`);
+    }
     if (response?.code && response.code !== 0) throw new Error(`Feishu reply rejected: code=${response.code}, msg=${response.msg || 'unknown'}`);
     return response?.data?.message_id || '';
   };
