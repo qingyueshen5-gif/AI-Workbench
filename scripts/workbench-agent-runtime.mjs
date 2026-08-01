@@ -46,16 +46,18 @@ export async function supervisorLoop() {
   await ensureIpcDirs();
   const workerId = `workbench-runtime-${process.pid}`;
   const health = await runtime.models.healthCheck();
-  if (!health.deepseek?.ok) throw new Error('DeepSeek provider is not ready');
+  if (!health.deepseek?.ok) {
+    await patchStatus({ backend: 'online', languageModel: 'DeepSeek', deepseek: 'offline', computerExecutor: 'Codex', codex: health.codex?.ok ? 'online' : 'offline', localTools: 'online', aiLink: 'not_used', hermes: 'not_used', runtimePid: process.pid, projectRoot: root, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '', currentStage: 'failed', latestError: health.deepseek?.error || 'DeepSeek provider is not ready' });
+  }
   if (!health.codex?.ok || health.codex.authClass !== 'chatgpt_subscription') throw new Error('Codex subscription provider is not ready');
   await writeWorkerState({
     workerId, pid: process.pid, status: 'online', role: 'ai-workbench-agent-runtime', gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '',
     projectRoot: root,
     chain: ['Feishu Adapter', 'AI Workbench Runtime', 'DeepSeek Understanding', 'Codex Executor when required', 'AI Workbench Verifier', 'DeepSeek Expression', 'Feishu Reply Sender'],
-    languageModel: { provider: 'deepseek', model: health.deepseek.model, transport: health.deepseek.transport },
+    languageModel: { provider: 'deepseek', model: health.deepseek.model, transport: health.deepseek.transport, status: health.deepseek.ok ? 'online' : 'offline' },
     computerExecutor: { provider: 'codex', transport: 'official_cli_subscription', endpoint: null, aiLink: false, hermes: false, authClass: health.codex.authClass, version: health.codex.version }
   });
-  await patchStatus({ backend: 'online', languageModel: 'DeepSeek', deepseek: 'online', computerExecutor: 'Codex', codex: 'online', localTools: 'online', aiLink: 'not_used', hermes: 'not_used', runtimePid: process.pid, projectRoot: root, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '', currentStage: 'completed', latestError: '' });
+  await patchStatus({ backend: 'online', languageModel: 'DeepSeek', deepseek: health.deepseek.ok ? 'online' : 'offline', computerExecutor: 'Codex', codex: 'online', localTools: 'online', aiLink: 'not_used', hermes: 'not_used', runtimePid: process.pid, projectRoot: root, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '', currentStage: health.deepseek.ok ? 'completed' : 'failed', latestError: health.deepseek.ok ? '' : (health.deepseek.error || 'DeepSeek provider is not ready') });
   let stopping = false;
   process.once('SIGINT', () => { stopping = true; });
   process.once('SIGTERM', () => { stopping = true; });
