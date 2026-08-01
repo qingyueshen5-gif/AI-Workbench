@@ -1606,10 +1606,13 @@ const server = createServer(async (request, response) => {
       const payload = {
         backend: status.backend || 'offline',
         feishu: status.feishu || 'disconnected',
-        codex: status.codex || 'disconnected',
-        aiLink: 'not_used',
-        hermes: 'not_used',
+        languageModel: status.languageModel || 'DeepSeek',
+        deepseek: status.deepseek || 'offline',
+        computerExecutor: status.computerExecutor || 'Codex',
+        codex: status.codex || 'offline',
         localTools: status.localTools || 'offline',
+        currentStage: status.currentStage || '',
+        backendPort: port,
         latestMessageId: status.latestMessageId || '',
         latestSuccessfulTask: status.latestSuccessfulTask || '',
         latestError: status.latestError || '',
@@ -1617,9 +1620,11 @@ const server = createServer(async (request, response) => {
         gitCommit: status.gitCommit || '',
         runtimePid: status.runtimePid || null,
         adapterPid: status.adapterPid || null,
+        aiLink: 'not_used',
+        hermes: 'not_used',
         updatedAt: status.updatedAt || ''
       };
-      payload.ok = payload.backend === 'online' && payload.feishu === 'connected' && payload.codex === 'connected' && payload.localTools === 'online' && !payload.latestError;
+      payload.ok = payload.backend === 'online' && payload.feishu === 'connected' && payload.deepseek === 'online' && ['online', 'busy'].includes(payload.codex) && payload.localTools === 'online' && !payload.latestError;
       sendJson(response, 200, payload);
       return;
     }

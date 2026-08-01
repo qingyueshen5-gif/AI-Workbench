@@ -4,13 +4,29 @@ import { createHash } from 'node:crypto';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runtimeRoot } from '../runtime-paths.mjs';
-import { acceptAndEnqueueJob, listResults, markDelivered, wasDelivered } from './feishu-worker-ipc.mjs';
+import { acceptAndEnqueueJob, claimResultDelivery, listResults, markDelivered, releaseResultDelivery, wasDelivered } from './feishu-worker-ipc.mjs';
 
 const root = process.cwd();
 const stateRoot = join(runtimeRoot, 'feishu-workbench-bridge');
 const dedupeDir = join(stateRoot, 'dedupe');
 const eventsPath = join(stateRoot, 'events.jsonl');
 const statusPath = join(stateRoot, 'status.json');
+const adapterLockPath = join(stateRoot, 'locks', 'feishu-adapter.lock');
+async function acquireAdapterLock() {
+  await fsp.mkdir(dirname(adapterLockPath), { recursive: true });
+  try {
+    const handle = await fsp.open(adapterLockPath, 'wx');
+    await handle.writeFile(`${JSON.stringify({ pid: process.pid, projectRoot: root, startedAt: Date.now() })}\n`);
+    await handle.close();
+  } catch (error) {
+    if (error.code !== 'EEXIST') throw error;
+    let current = {};
+    try { current = JSON.parse(await fsp.readFile(adapterLockPath, 'utf8')); } catch {}
+    try { process.kill(Number(current.pid), 0); throw new Error(`Feishu Adapter already running: ${current.pid}`); }
+    catch (probe) { if (!String(probe.message).startsWith('Feishu Adapter already running')) await fsp.rm(adapterLockPath, { force: true }); else throw probe; }
+    return acquireAdapterLock();
+  }
+}
 
 function loadEnv() {
   for (const path of [join(root, '.env.local'), join(root, '.env'), 'C:\\Users\\qingy\\AI-Workbench\\.env.local']) {
@@ -50,6 +66,7 @@ async function claimMessage(messageId) {
 }
 
 export async function startWorkbenchFeishuAdapter() {
+  await acquireAdapterLock();
   const appId = process.env.FEISHU_APP_ID;
   const appSecret = process.env.FEISHU_APP_SECRET;
   if (!appId || !appSecret) throw new Error('Feishu credentials not configured');
@@ -57,7 +74,8 @@ export async function startWorkbenchFeishuAdapter() {
   const config = { appId, appSecret, loggerLevel: lark.LoggerLevel.warn };
   const client = new lark.Client(config);
   const reply = async (messageId, text) => {
-    const response = await client.im.v1.message.reply({ path: { message_id: messageId }, data: { msg_type: 'text', content: JSON.stringify({ text }) } });
+    const uuid = createHash('sha256').update(`aiw-final:${messageId}`).digest('hex');
+    const response = await client.im.v1.message.reply({ path: { message_id: messageId }, data: { msg_type: 'text', content: JSON.stringify({ text }), uuid } });
     return response?.data?.message_id || '';
   };
   const dispatcher = new lark.EventDispatcher({}).register({
@@ -69,17 +87,28 @@ export async function startWorkbenchFeishuAdapter() {
       if (!messageId || !text || !(await claimMessage(messageId))) return;
       await acceptAndEnqueueJob({ messageId, originalMessageId: messageId, eventId: data?.event_id || '', chatId, conversationId: chatId, openId, text, receivedAt: Date.now() });
       await event('message_accepted', { messageId, projectRoot: root, pid: process.pid, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '' });
-      await patchStatus({ feishu: 'connected', latestMessageId: messageId, latestError: '' });
+      await patchStatus({ feishu: 'connected', currentStage: 'received', latestMessageId: messageId, latestError: '' });
     }
   });
+  let delivering = false;
   const deliver = async () => {
+    if (delivering) return;
+    delivering = true;
+    try {
     for (const result of await listResults()) {
       if (await wasDelivered(result.messageId)) { await markDelivered(result); continue; }
-      const replyMessageId = await reply(result.originalMessageId || result.messageId, String(result.text || '这次没有完成。'));
-      await event('result_delivered', { messageId: result.messageId, replyMessageId, provider: result.provider || '', toolUsed: result.toolUsed || '', verified: result.verified === true });
-      await patchStatus({ latestSuccessfulTask: result.ok ? result.messageId : (await readStatus()).latestSuccessfulTask || '', latestError: result.ok ? '' : String(result.errorClass || '任务失败') });
-      await markDelivered(result);
+      if (!(await claimResultDelivery(result.messageId, { pid: process.pid }))) continue;
+      try {
+        const replyMessageId = await reply(result.originalMessageId || result.messageId, String(result.text || '这次没有完成。'));
+        await markDelivered(result, { replyMessageId });
+        await event('result_delivered', { messageId: result.messageId, replyMessageId, provider: result.provider || '', toolUsed: result.toolUsed || '', verified: result.verified === true });
+        await patchStatus({ currentStage: result.ok ? 'completed' : 'failed', latestSuccessfulTask: result.ok ? result.messageId : (await readStatus()).latestSuccessfulTask || '', latestError: result.ok ? '' : String(result.errorClass || '任务失败') });
+      } catch (error) {
+        await releaseResultDelivery(result.messageId);
+        throw error;
+      }
     }
+    } finally { delivering = false; }
   };
   const timer = setInterval(() => deliver().catch(async (error) => { await event('delivery_failed', { message: error.message }); await patchStatus({ latestError: error.message }); }), 250);
   const ws = new lark.WSClient({
@@ -101,7 +130,7 @@ export async function startWorkbenchFeishuAdapter() {
   await patchStatus({ backend: 'online', feishu: 'connecting', aiLink: 'not_used', hermes: 'not_used', adapterPid: process.pid, projectRoot: root, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '', latestError: '' });
   ws.start({ eventDispatcher: dispatcher });
   await event('adapter_started', { pid: process.pid, projectRoot: root, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '' });
-  const stop = async () => { clearInterval(timer); await patchStatus({ feishu: 'disconnected' }); ws.close?.(); process.exit(0); };
+  const stop = async () => { clearInterval(timer); await patchStatus({ feishu: 'disconnected' }); await fsp.rm(adapterLockPath, { force: true }); ws.close?.(); process.exit(0); };
   process.once('SIGINT', stop); process.once('SIGTERM', stop);
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) startWorkbenchFeishuAdapter().catch(async (error) => { await patchStatus({ feishu: 'disconnected', latestError: error.message }); process.stderr.write(`${error.message}\n`); process.exitCode = 1; });

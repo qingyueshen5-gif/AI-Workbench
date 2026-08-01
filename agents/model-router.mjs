@@ -1,15 +1,16 @@
-import { CodexProvider } from '../agents/adapters/codex-provider.mjs';
+import { DeepSeekProvider } from './adapters/deepseek-provider.mjs';
+import { CodexProvider } from './adapters/codex-provider.mjs';
 
 export class ModelRouter {
   constructor(options = {}) {
-    this.providers = new Map([['codex', options.codex || new CodexProvider(options.codexOptions)]]);
-    this.defaultProvider = 'codex';
+    this.deepseek = options.deepseek || new DeepSeekProvider(options.deepseekOptions);
+    this.codex = options.codex || new CodexProvider(options.codexOptions);
   }
-  async healthCheck() { return this.providers.get(this.defaultProvider).healthCheck(); }
-  async generate(request) {
-    const providerId = request.provider || this.defaultProvider;
-    const provider = this.providers.get(providerId);
-    if (!provider) throw new Error(`Unknown model provider: ${providerId}`);
-    return provider.generate(request);
+  async healthCheck() {
+    const [deepseek, codex] = await Promise.all([this.deepseek.healthCheck(), this.codex.healthCheck()]);
+    return { ok: deepseek.ok && codex.ok, deepseek, codex };
   }
+  async understand(request) { return this.deepseek.generate({ ...request, employee: 'workbench-feishu-understanding' }); }
+  async express(request) { return this.deepseek.generate({ ...request, employee: 'workbench-feishu-expression' }); }
+  async execute(request) { return this.codex.generate(request); }
 }

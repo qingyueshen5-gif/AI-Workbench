@@ -3,6 +3,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { AgentRuntime } from '../agents/agent-runtime.mjs';
 import { claimJob, completeJob, ensureIpcDirs, listJobs, releaseClaim, writeWorkerState } from './feishu-worker-ipc.mjs';
+import { createHash } from 'node:crypto';
 
 const root = process.cwd();
 const allowedRoots = [...new Set([root, ...(process.env.AIW_ASSISTANT_ALLOWED_ROOTS || '').split(';').filter(Boolean)])];
@@ -17,38 +18,63 @@ async function patchStatus(patch) {
   await fs.writeFile(tmp, `${JSON.stringify(next, null, 2)}\n`, 'utf8');
   await fs.rename(tmp, statusPath);
 }
-const runtime = new AgentRuntime({ root, allowedRoots });
+const runtimeLockPath = join(process.env.AI_WORKBENCH_RUNTIME_DIR || join(process.env.APPDATA || process.env.USERPROFILE || root, 'ai-workbench'), 'feishu-workbench-bridge', 'locks', 'runtime.lock');
+async function acquireRuntimeLock() {
+  await fs.mkdir(dirname(runtimeLockPath), { recursive: true });
+  try {
+    const handle = await fs.open(runtimeLockPath, 'wx');
+    await handle.writeFile(`${JSON.stringify({ pid: process.pid, projectRoot: root, startedAt: Date.now() })}\n`);
+    await handle.close();
+  } catch (error) {
+    if (error.code !== 'EEXIST') throw error;
+    let current = {};
+    try { current = JSON.parse(await fs.readFile(runtimeLockPath, 'utf8')); } catch {}
+    try { process.kill(Number(current.pid), 0); throw new Error(`AI Workbench Runtime already running: ${current.pid}`); }
+    catch (probe) { if (!String(probe.message).startsWith('AI Workbench Runtime already running')) await fs.rm(runtimeLockPath, { force: true }); else throw probe; }
+    return acquireRuntimeLock();
+  }
+}
+const runtime = new AgentRuntime({
+  root,
+  allowedRoots,
+  onStage: async (job, stage) => patchStatus({ currentStage: stage, latestMessageId: job.messageId, codex: stage === 'executing' ? 'busy' : undefined })
+});
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 export async function supervisorLoop() {
+  await acquireRuntimeLock();
   await ensureIpcDirs();
-  const workerId = `direct-codex-${process.pid}`;
+  const workerId = `workbench-runtime-${process.pid}`;
   const health = await runtime.models.healthCheck();
-  if (!health.ok || health.authClass !== 'chatgpt_subscription') throw new Error('Codex subscription provider is not ready');
+  if (!health.deepseek?.ok) throw new Error('DeepSeek provider is not ready');
+  if (!health.codex?.ok || health.codex.authClass !== 'chatgpt_subscription') throw new Error('Codex subscription provider is not ready');
   await writeWorkerState({
     workerId, pid: process.pid, status: 'online', role: 'ai-workbench-agent-runtime', gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '',
     projectRoot: root,
-    chain: ['Feishu Adapter', 'Agent Runtime', 'Model Router', 'Codex Provider', 'Tool Executor', 'Result Verifier', 'Feishu Adapter'],
-    model: { provider: 'codex', transport: 'official_cli_subscription', endpoint: null, aiLink: false, hermes: false, authClass: health.authClass, version: health.version }
+    chain: ['Feishu Adapter', 'AI Workbench Runtime', 'DeepSeek Understanding', 'Codex Executor when required', 'AI Workbench Verifier', 'DeepSeek Expression', 'Feishu Reply Sender'],
+    languageModel: { provider: 'deepseek', model: health.deepseek.model, transport: health.deepseek.transport },
+    computerExecutor: { provider: 'codex', transport: 'official_cli_subscription', endpoint: null, aiLink: false, hermes: false, authClass: health.codex.authClass, version: health.codex.version }
   });
-  await patchStatus({ backend: 'online', codex: 'connected', localTools: 'online', aiLink: 'not_used', hermes: 'not_used', runtimePid: process.pid, projectRoot: root, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '', latestError: '' });
+  await patchStatus({ backend: 'online', languageModel: 'DeepSeek', deepseek: 'online', computerExecutor: 'Codex', codex: 'online', localTools: 'online', aiLink: 'not_used', hermes: 'not_used', runtimePid: process.pid, projectRoot: root, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '', currentStage: 'completed', latestError: '' });
   let stopping = false;
   process.once('SIGINT', () => { stopping = true; });
   process.once('SIGTERM', () => { stopping = true; });
+  try {
   while (!stopping) {
     for (const job of await listJobs()) {
       if (!(await claimJob(job, workerId))) continue;
       try {
         const result = await runtime.handle(job);
         await completeJob(job, { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: true, text: result.text, provider: result.provider, providerSessionId: result.providerSessionId, toolUsed: result.toolUsed, verified: result.verified, finishedAt: Date.now() });
-        await patchStatus({ latestSuccessfulTask: job.messageId, latestError: '', codex: 'connected', localTools: 'online' });
+        await patchStatus({ currentStage: 'completed', latestSuccessfulTask: job.messageId, latestError: '', deepseek: 'online', codex: 'online', localTools: 'online' });
       } catch (error) {
         await completeJob(job, { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: false, text: '这次没有完成，我已经停止。你可以继续发送新消息。', errorClass: error.name || 'Error', finishedAt: Date.now() });
-        await patchStatus({ latestError: error.message || String(error) });
+        await patchStatus({ currentStage: 'failed', codex: 'online', latestError: error.message || String(error) });
       } finally { await releaseClaim(job.messageId).catch(() => {}); }
     }
     await sleep(250);
   }
+  } finally { await fs.rm(runtimeLockPath, { force: true }); }
 }
 
 async function main() {

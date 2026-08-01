@@ -417,7 +417,8 @@ function ConversationList({ data, updateData, className, onSelect }) {
 }
 
 function TopBar({ data, panelOpen, setPanelOpen, setConversationPanelOpen, runtimeStatus }) {
-  const connected = runtimeStatus?.backend === 'online' && runtimeStatus?.feishu === 'connected' && runtimeStatus?.codex === 'connected' && runtimeStatus?.localTools === 'online';
+  const connected = runtimeStatus?.ok === true;
+  const stageLabels = { received: '已接收', understanding: '正在理解', executing: '正在执行', verifying: '正在验证', completed: '已完成', failed: '失败' };
   return (
     <header className="flex min-h-16 shrink-0 items-center justify-between border-b border-zinc-100 px-5 py-2">
       <div className="flex min-w-0 items-center gap-3">
@@ -433,13 +434,18 @@ function TopBar({ data, panelOpen, setPanelOpen, setConversationPanelOpen, runti
           <h1 className="truncate text-base font-semibold">当前对话</h1>
           <div className="mt-0.5 flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-zinc-500">
             <span className={connected ? 'text-emerald-700' : 'text-red-700'}>工作台：{runtimeStatus?.backend === 'online' ? '在线' : '离线'}</span>
-            <span>飞书：{runtimeStatus?.feishu === 'connected' ? '已连接' : '未连接'}</span>
-            <span>Codex：{runtimeStatus?.codex === 'connected' ? '已连接' : '未连接'}</span>
-            <span>AI Link：未使用</span><span>Hermes：未使用</span>
+            <span>飞书：{runtimeStatus?.feishu === 'connected' ? '在线' : '离线'}</span>
+            <span>语言理解模型：{runtimeStatus?.languageModel || '—'}</span>
+            <span>DeepSeek API：{runtimeStatus?.deepseek === 'online' ? '在线' : '离线'}</span>
+            <span>电脑执行器：{runtimeStatus?.computerExecutor || '—'}</span>
+            <span>Codex：{runtimeStatus?.codex === 'busy' ? '忙碌' : runtimeStatus?.codex === 'online' ? '在线' : '离线'}</span>
             <span>本地工具：{runtimeStatus?.localTools === 'online' ? '在线' : '离线'}</span>
-            {runtimeStatus?.latestMessageId && <span title={runtimeStatus.latestMessageId}>最近消息：{runtimeStatus.latestMessageId}</span>}
-            {runtimeStatus?.latestSuccessfulTask && <span title={runtimeStatus.latestSuccessfulTask}>最近成功：{runtimeStatus.latestSuccessfulTask}</span>}
-            {runtimeStatus?.latestError && <span className="text-red-700" title={runtimeStatus.latestError}>最近错误：{runtimeStatus.latestError}</span>}
+            <span>当前阶段：{stageLabels[runtimeStatus?.currentStage] || '—'}</span>
+            <span>后台端口：{runtimeStatus?.backendPort || '—'}</span>
+            <span title={runtimeStatus?.gitCommit || ''}>Git：{runtimeStatus?.gitCommit ? runtimeStatus.gitCommit.slice(0, 12) : '—'}</span>
+            <span title={runtimeStatus?.latestMessageId || ''}>最近message_id：{runtimeStatus?.latestMessageId || '—'}</span>
+            <span title={runtimeStatus?.latestSuccessfulTask || ''}>最近成功：{runtimeStatus?.latestSuccessfulTask || '—'}</span>
+            <span className={runtimeStatus?.latestError ? 'text-red-700' : ''} title={runtimeStatus?.latestError || ''}>最近错误：{runtimeStatus?.latestError || '无'}</span>
           </div>
         </div>
       </div>

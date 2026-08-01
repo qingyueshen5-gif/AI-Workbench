@@ -8,6 +8,7 @@ const jobsDir = join(ipcRoot, 'jobs');
 const resultsDir = join(ipcRoot, 'results');
 const claimsDir = join(ipcRoot, 'claims');
 const deliveredDir = join(ipcRoot, 'delivered');
+const deliveryClaimsDir = join(ipcRoot, 'delivery-claims');
 const dedupePath = join(ipcRoot, 'message-dedupe.json');
 const workerStatePath = join(ipcRoot, 'worker-state.json');
 const acceptedDir = join(ipcRoot, 'accepted');
@@ -27,7 +28,7 @@ function safeName(id) { return String(id || '').replace(/[^A-Za-z0-9._-]/g, '_')
 function fileFor(dir, id) { return join(dir, `${safeName(id)}.json`); }
 
 export async function ensureIpcDirs() {
-  await Promise.all([jobsDir, resultsDir, claimsDir, deliveredDir, acceptedDir, acknowledgedDir, archiveDir].map((path) => fsp.mkdir(path, { recursive: true })));
+  await Promise.all([jobsDir, resultsDir, claimsDir, deliveredDir, deliveryClaimsDir, acceptedDir, acknowledgedDir, archiveDir].map((path) => fsp.mkdir(path, { recursive: true })));
 }
 
 function exists(dir, messageId) { return fs.existsSync(fileFor(dir, messageId)); }
@@ -218,7 +219,14 @@ export async function claimJob(job, workerId) {
 
 export async function completeJob(job, result) {
   await ensureIpcDirs();
-  await writeJsonAtomic(fileFor(resultsDir, job.messageId), result);
+  const target = fileFor(resultsDir, job.messageId);
+  try {
+    const handle = await fsp.open(target, 'wx');
+    try { await handle.writeFile(`${JSON.stringify(result, null, 2)}\n`, 'utf8'); }
+    finally { await handle.close(); }
+  } catch (error) {
+    if (error.code !== 'EEXIST') throw error;
+  }
   await fsp.rm(job._path || fileFor(jobsDir, job.messageId), { force: true });
   await fsp.rm(fileFor(claimsDir, job.messageId), { force: true });
 }
@@ -239,17 +247,38 @@ export async function listResults() {
   return results.sort((a, b) => Number(a.finishedAt || 0) - Number(b.finishedAt || 0));
 }
 
-export async function markDelivered(result) {
+export async function claimResultDelivery(messageId, metadata = {}) {
+  await ensureIpcDirs();
+  if (exists(deliveredDir, messageId)) return false;
+  const target = fileFor(deliveryClaimsDir, messageId);
+  try {
+    const handle = await fsp.open(target, 'wx');
+    try { await handle.writeFile(`${JSON.stringify({ messageId, claimedAt: Date.now(), ...metadata }, null, 2)}\n`, 'utf8'); }
+    finally { await handle.close(); }
+    if (exists(deliveredDir, messageId)) { await fsp.rm(target, { force: true }); return false; }
+    return true;
+  } catch (error) {
+    if (error.code === 'EEXIST') return false;
+    throw error;
+  }
+}
+
+export async function releaseResultDelivery(messageId) {
+  await fsp.rm(fileFor(deliveryClaimsDir, messageId), { force: true });
+}
+
+export async function markDelivered(result, metadata = {}) {
   await ensureIpcDirs();
   const marker = fileFor(deliveredDir, result.messageId);
   try {
     const handle = await fsp.open(marker, 'wx');
-    try { await handle.writeFile(`${JSON.stringify({ messageId: result.messageId, deliveredAt: Date.now() }, null, 2)}\n`, 'utf8'); }
+    try { await handle.writeFile(`${JSON.stringify({ messageId: result.messageId, deliveredAt: Date.now(), ...metadata }, null, 2)}\n`, 'utf8'); }
     finally { await handle.close(); }
   } catch (error) {
     if (error.code !== 'EEXIST') throw error;
   }
   await fsp.rm(result._path || fileFor(resultsDir, result.messageId), { force: true });
+  await releaseResultDelivery(result.messageId);
 }
 
 export async function wasDelivered(messageId) {
