@@ -1,0 +1,89 @@
+{
+  "ok": true,
+  "gatewayImportsBusiness": false,
+  "gatewayAlwaysEnqueues": true,
+  "runtimeOwnsActiveTask": true,
+  "realJobEntry": "AgentRuntime.handle",
+  "cases": [
+    {
+      "name": "read",
+      "classification": {
+        "action": "read",
+        "target": "E:\\AI-Workbench\\NEXT_STEP.md",
+        "expectedResult": "当前最重要的目标",
+        "constraints": [
+          "不要修改文件"
+        ],
+        "relationToActiveTask": "new_task",
+        "kind": "new_task",
+        "reason": "explicit_action_and_target",
+        "referencesActiveTask": false,
+        "explicitIndependentTask": true
+      },
+      "provider": "deepseek"
+    },
+    {
+      "name": "continue",
+      "classification": {
+        "action": "",
+        "target": "",
+        "expectedResult": "",
+        "constraints": [],
+        "relationToActiveTask": "continue",
+        "kind": "continue",
+        "reason": "explicit_active_task_control",
+        "referencesActiveTask": true,
+        "explicitIndependentTask": false
+      },
+      "provider": "ai-workbench"
+    },
+    {
+      "name": "pause",
+      "classification": {
+        "action": "",
+        "target": "",
+        "expectedResult": "",
+        "constraints": [],
+        "relationToActiveTask": "pause",
+        "kind": "pause",
+        "reason": "explicit_active_task_control",
+        "referencesActiveTask": true,
+        "explicitIndependentTask": false
+      },
+      "provider": "ai-workbench"
+    },
+    {
+      "name": "cancel",
+      "classification": {
+        "action": "",
+        "target": "",
+        "expectedResult": "",
+        "constraints": [],
+        "relationToActiveTask": "cancel",
+        "kind": "cancel",
+        "reason": "explicit_active_task_control",
+        "referencesActiveTask": true,
+        "explicitIndependentTask": false
+      },
+      "provider": "ai-workbench"
+    },
+    {
+      "name": "progress",
+      "classification": {
+        "action": "",
+        "target": "",
+        "expectedResult": "",
+        "constraints": [],
+        "relationToActiveTask": "progress",
+        "kind": "progress",
+        "reason": "active_task_progress_reference",
+        "referencesActiveTask": false,
+        "explicitIndependentTask": false
+      },
+      "provider": "ai-workbench"
+    }
+  ],
+  "staleDoesNotBlock": true,
+  "runtimeSwitchUsesNewLogicWithoutGatewayRestart": true,
+  "exactlyOnceContract": "one source message -> one Gateway Job -> one Runtime handle -> one Result"
+}

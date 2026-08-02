@@ -82,7 +82,7 @@ export async function supervisorLoop() {
       try {
         const result = await runtime.handle(job);
         const finishedAt = Date.now();
-        await completeJob(job, { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: true, text: result.text, provider: result.provider, providerSessionId: result.providerSessionId, toolUsed: result.toolUsed, verified: result.verified, finishedAt });
+        await completeJob(job, { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: true, text: result.text, provider: result.provider, providerSessionId: result.providerSessionId, toolUsed: result.toolUsed, verified: result.verified, controlKind: result.controlKind || '', activeTaskId: result.activeTaskId || job.messageId, classification: result.classification || null, finishedAt });
         await runtimeEvent('result_generated', { messageId: job.messageId, finishedAt, provider: result.provider, toolUsed: result.toolUsed, verified: result.verified });
         await patchStatus({ currentStage: 'completed', latestSuccessfulTask: job.messageId, latestError: '', deepseek: 'online', codex: 'online', localTools: 'online' });
       } catch (error) {

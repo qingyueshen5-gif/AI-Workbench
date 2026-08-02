@@ -3,6 +3,7 @@ import { ModelRouter } from './model-router.mjs';
 import { ToolExecutor } from '../execution/tool-executor.mjs';
 import { ResultVerifier } from '../execution/result-verifier.mjs';
 import { SessionStore } from '../channels/session-store.mjs';
+import { ActiveTaskController } from './active-task-controller.mjs';
 import { ActiveTaskStore, activeTaskSummary } from '../channels/active-task-store.mjs';
 
 function historyPrompt(history) {
@@ -23,6 +24,7 @@ export class AgentRuntime {
   constructor(options = {}) {
     this.sessions = options.sessions || new SessionStore(options.sessionOptions);
     this.activeTasks = options.activeTasks || new ActiveTaskStore(options.activeTaskOptions);
+    this.activeController = options.activeController || new ActiveTaskController({ store: this.activeTasks, staleAcceptedMs: options.staleAcceptedMs, now: options.now });
     this.models = options.models || new ModelRouter(options.modelOptions);
     this.tools = options.tools || new ToolExecutor({ root: options.root || process.cwd(), allowedRoots: options.allowedRoots || [process.cwd()] });
     this.verifier = options.verifier || new ResultVerifier();
@@ -30,6 +32,9 @@ export class AgentRuntime {
   }
   async handle(job) {
     const conversationId = job.conversationId || job.chatId;
+    const control = await this.activeController.handle(job);
+    if (control.intercepted) return { text: control.text, provider: 'ai-workbench', languageModel: '', codexUsed: false, providerSessionId: '', toolUsed: '', verified: true, controlKind: control.kind, activeTaskId: control.activeTaskId, classification: control.classification };
+    const classification = control.classification;
     const state = await this.sessions.load(conversationId, job.openId);
     let activeTask = await this.activeTasks.load(conversationId);
     if (!activeTask || ['completed', 'failed'].includes(activeTask.stage) || activeTask.originalMessageId !== (job.originalMessageId || job.messageId)) activeTask = await this.activeTasks.create(job);
@@ -84,6 +89,6 @@ export class AgentRuntime {
     await this.sessions.appendMessage(state, { role: 'assistant', text: final, messageId: job.messageId, provider: 'deepseek' });
     await this.activeTasks.addCompletedStep(conversationId, '最终回复已整理');
     await this.activeTasks.update(conversationId, { stage: 'completed', currentStep: '任务已完成', currentActor: 'AI Workbench', paused: false, waitingUser: false, estimatedRemainingRange: '已完成。', latestFailureReason: '' });
-    return { text: final, provider: 'deepseek', languageModel: 'deepseek-chat', codexUsed: Boolean(execution), providerSessionId: execution?.sessionId || '', toolUsed: execution ? 'codex' : '', verified: true };
+    return { text: final, provider: 'deepseek', languageModel: 'deepseek-chat', codexUsed: Boolean(execution), providerSessionId: execution?.sessionId || '', toolUsed: execution ? 'codex' : '', verified: true, classification, activeTaskId: (await this.activeTasks.load(conversationId))?.activeTaskId || job.messageId };
   }
 }
