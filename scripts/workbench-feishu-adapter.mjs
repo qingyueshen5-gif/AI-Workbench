@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runtimeRoot } from '../runtime-paths.mjs';
-import { acceptMessageOnce, claimResultDelivery, enqueueJob, listResults, markAcknowledged, markDelivered, wasDelivered } from './feishu-worker-ipc.mjs';
+import { acceptMessageOnce, claimProgress, claimResultDelivery, enqueueJob, listProgress, listResults, markAcknowledged, markDelivered, markProgressDelivered, recordProgressFailure, validateProgressEvent, wasDelivered, wasProgressDelivered } from './feishu-worker-ipc.mjs';
 
 const root = process.cwd();
 const stateRoot = join(runtimeRoot, 'feishu-workbench-bridge');
@@ -259,7 +259,32 @@ export async function startWorkbenchFeishuAdapter() {
     }
     } finally { delivering = false; }
   };
-  const timer = setInterval(() => { deliver().catch(async (error) => { await patchStatus({ latestError: error.message }); }); }, 1000);
+  let deliveringProgress = false;
+  const deliverProgress = async () => {
+    if (deliveringProgress) return;
+    deliveringProgress = true;
+    try {
+      for (const raw of await listProgress()) {
+        let progress;
+        try { progress = validateProgressEvent(raw); }
+        catch (error) { await event('progress_rejected', { eventId: String(raw?.eventId || ''), message: error.message }); continue; }
+        if (await wasProgressDelivered(progress.eventId)) { await markProgressDelivered(raw); continue; }
+        if (!(await claimProgress(progress.eventId, { gatewayPid: process.pid }))) continue;
+        try {
+          const replyMessageId = await reply(progress.originalMessageId, progress.message);
+          await markProgressDelivered(raw, { replyMessageId, stage: progress.stage });
+          await event('progress_delivered', { eventId: progress.eventId, jobId: progress.jobId, originalMessageId: progress.originalMessageId, stage: progress.stage, replyMessageId, deliveredAt: Date.now() });
+        } catch (error) {
+          await recordProgressFailure(progress.eventId, { message: error.message }).catch(() => {});
+          await event('progress_delivery_failed', { eventId: progress.eventId, jobId: progress.jobId, failedAt: Date.now(), message: error.message });
+        }
+      }
+    } finally { deliveringProgress = false; }
+  };
+  const timer = setInterval(() => {
+    deliver().catch(async (error) => { await patchStatus({ latestError: error.message }); });
+    deliverProgress().catch((error) => event('progress_pump_failed', { message: error.message }).catch(() => {}));
+  }, 1000);
   let ws;
   const wsConfig = {
     ...config,

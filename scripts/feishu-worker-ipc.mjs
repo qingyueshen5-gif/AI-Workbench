@@ -12,6 +12,9 @@ const resultsDir = join(ipcRoot, 'results');
 const claimsDir = join(ipcRoot, 'claims');
 const deliveredDir = join(ipcRoot, 'delivered');
 const deliveryClaimsDir = join(ipcRoot, 'delivery-claims');
+const progressDir = join(ipcRoot, 'progress');
+const progressClaimsDir = join(ipcRoot, 'progress-claims');
+const progressDeliveredDir = join(ipcRoot, 'progress-delivered');
 const dedupePath = join(ipcRoot, 'message-dedupe.json');
 const workerStatePath = process.env.AIW_WORKER_STATE_PATH || join(ipcRoot, 'worker-state.json');
 const acceptedDir = join(ipcRoot, 'accepted');
@@ -31,7 +34,51 @@ function safeName(id) { return String(id || '').replace(/[^A-Za-z0-9._-]/g, '_')
 function fileFor(dir, id) { return join(dir, `${safeName(id)}.json`); }
 
 export async function ensureIpcDirs() {
-  await Promise.all([jobsDir, resultsDir, claimsDir, deliveredDir, deliveryClaimsDir, acceptedDir, acknowledgedDir, archiveDir].map((path) => fsp.mkdir(path, { recursive: true })));
+  await Promise.all([jobsDir, resultsDir, claimsDir, deliveredDir, deliveryClaimsDir, progressDir, progressClaimsDir, progressDeliveredDir, acceptedDir, acknowledgedDir, archiveDir].map((path) => fsp.mkdir(path, { recursive: true })));
+}
+
+const progressStages = new Set(['understanding', 'planning', 'executing', 'verifying', 'finalizing']);
+export function validateProgressEvent(event) {
+  if (!event || typeof event !== 'object') throw new Error('Progress event must be an object');
+  for (const key of ['eventId', 'jobId', 'originalMessageId', 'conversationId', 'stage', 'message']) if (!String(event[key] || '').trim()) throw new Error(`Progress missing ${key}`);
+  if (!progressStages.has(event.stage)) throw new Error('Progress stage is invalid');
+  if (!Number.isFinite(Number(event.createdAt)) || Number(event.createdAt) <= 0) throw new Error('Progress createdAt is invalid');
+  if (String(event.message).length > 500) throw new Error('Progress message is too long');
+  const serialized = JSON.stringify(event);
+  if (/(?:prompt|token|pid|api[_-]?key|secret|authorization|internal[_ -]?reasoning)/i.test(serialized)) throw new Error('Progress contains forbidden internal data');
+  return { eventId: String(event.eventId), jobId: String(event.jobId), originalMessageId: String(event.originalMessageId), conversationId: String(event.conversationId), stage: event.stage, message: String(event.message), createdAt: Number(event.createdAt) };
+}
+export async function enqueueProgress(event) {
+  await ensureIpcDirs();
+  const value = validateProgressEvent(event); const target = fileFor(progressDir, value.eventId);
+  try { const handle = await fsp.open(target, 'wx'); try { await handle.writeFile(`${JSON.stringify(value, null, 2)}\n`, 'utf8'); } finally { await handle.close(); } return true; }
+  catch (error) { if (error.code === 'EEXIST') return false; throw error; }
+}
+export async function listProgress() {
+  await ensureIpcDirs(); const items = [];
+  for (const name of (await fsp.readdir(progressDir)).filter((item) => item.endsWith('.json')).sort()) { const item = await readJson(join(progressDir, name)); if (item) items.push({ ...item, _path: join(progressDir, name) }); }
+  return items.sort((a, b) => Number(a.createdAt || 0) - Number(b.createdAt || 0));
+}
+export async function wasProgressDelivered(eventId) { return exists(progressDeliveredDir, eventId); }
+export async function claimProgress(eventId, metadata = {}) {
+  await ensureIpcDirs(); if (await wasProgressDelivered(eventId)) return false; const target = fileFor(progressClaimsDir, eventId);
+  try { const handle = await fsp.open(target, 'wx'); try { await handle.writeFile(`${JSON.stringify({ eventId, claimedAt: Date.now(), attempts: Number(metadata.attempts || 1), ...metadata }, null, 2)}\n`, 'utf8'); } finally { await handle.close(); } return true; }
+  catch (error) {
+    if (error.code !== 'EEXIST') throw error; const current = await readJson(target, {}); const staleMs = Number(process.env.AIW_PROGRESS_CLAIM_STALE_MS || 5000);
+    if (Date.now() - Number(current.claimedAt || 0) <= staleMs || Number(current.attempts || 1) >= Number(process.env.AIW_PROGRESS_MAX_ATTEMPTS || 3)) return false;
+    await fsp.rm(target, { force: true }); return claimProgress(eventId, { ...metadata, attempts: Number(current.attempts || 1) + 1 });
+  }
+}
+export async function releaseProgressClaim(eventId) { await fsp.rm(fileFor(progressClaimsDir, eventId), { force: true }); }
+export async function recordProgressFailure(eventId, metadata = {}) {
+  const target = fileFor(progressClaimsDir, eventId); const current = await readJson(target, {});
+  await writeJsonAtomic(target, { eventId, claimedAt: Date.now(), attempts: Number(current.attempts || 1), failedAt: Date.now(), ...metadata });
+}
+export async function markProgressDelivered(event, metadata = {}) {
+  await ensureIpcDirs(); const target = fileFor(progressDeliveredDir, event.eventId);
+  try { const handle = await fsp.open(target, 'wx'); try { await handle.writeFile(`${JSON.stringify({ eventId: event.eventId, jobId: event.jobId, deliveredAt: Date.now(), ...metadata }, null, 2)}\n`, 'utf8'); } finally { await handle.close(); } }
+  catch (error) { if (error.code !== 'EEXIST') throw error; }
+  await fsp.rm(event._path || fileFor(progressDir, event.eventId), { force: true }); await releaseProgressClaim(event.eventId);
 }
 
 function exists(dir, messageId) { return fs.existsSync(fileFor(dir, messageId)); }

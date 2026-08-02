@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "progressChannel": "progress",
+  "progressClaim": "progress-claims",
+  "progressDelivered": "progress-delivered",
+  "finalResult": "results",
+  "finalDelivered": "delivered",
+  "progressSentOnce": true,
+  "duplicateSuppressed": true,
+  "restartSafe": true,
+  "progressFailureDoesNotBlockFinal": true,
+  "finalSentOnce": true,
+  "gatewayPureTransport": true,
+  "productionUntouched": true
+}
