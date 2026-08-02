@@ -247,6 +247,21 @@ export async function reconcileIpcState({ nowMs = Date.now(), recoveryMaxAgeMs =
   return report;
 }
 
+export async function recoverExpiredRunClaims({ nowMs = Date.now(), staleMs = Number(process.env.AIW_WORKER_CLAIM_STALE_MS || 150000) } = {}) {
+  await ensureIpcDirs();
+  const recovered = [];
+  for (const name of (await fsp.readdir(claimsDir)).filter((item) => item.endsWith('.json'))) {
+    const path = join(claimsDir, name);
+    const claim = await readJson(path, null);
+    if (!claim?.messageId || !exists(jobsDir, claim.messageId)) continue;
+    const heartbeat = Number(claim.renewedAt || claim.claimedAt || 0);
+    if (heartbeat && nowMs - heartbeat <= staleMs) continue;
+    await archiveFile(path, 'claims', claim.messageId, 'expired_run_lease');
+    recovered.push(claim.messageId);
+  }
+  return recovered;
+}
+
 export async function listJobs() {
   await ensureIpcDirs();
   const names = (await fsp.readdir(jobsDir)).filter((name) => name.endsWith('.json')).sort();

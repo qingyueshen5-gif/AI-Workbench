@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { AgentRuntime } from '../agents/agent-runtime.mjs';
-import { claimJob, completeJob, enqueueProgress, ensureIpcDirs, listJobs, releaseClaim, renewJobClaim, writeWorkerState } from './feishu-worker-ipc.mjs';
+import { claimJob, completeJob, enqueueProgress, ensureIpcDirs, listJobs, recoverExpiredRunClaims, releaseClaim, renewJobClaim, writeWorkerState } from './feishu-worker-ipc.mjs';
 const runtimeEventsPath = join(process.env.AI_WORKBENCH_RUNTIME_DIR || join(process.env.APPDATA || process.env.USERPROFILE || process.cwd(), 'ai-workbench'), 'feishu-workbench-bridge', 'events.jsonl');
 async function runtimeEvent(type, payload = {}) { await fs.mkdir(dirname(runtimeEventsPath), { recursive: true }); await fs.appendFile(runtimeEventsPath, `${JSON.stringify({ at: new Date().toISOString(), type, payload })}\n`, 'utf8'); }
 import { createHash } from 'node:crypto';
@@ -82,6 +82,7 @@ async function executeClaimedJob(job,workerId) {
 export async function supervisorLoop() {
   await acquireRuntimeLock();
   await ensureIpcDirs();
+  await recoverExpiredRunClaims();
   const workerId = `workbench-runtime-${process.pid}`;
   const health = await runtime.models.healthCheck();
   if (!health.deepseek?.ok) {
