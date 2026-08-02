@@ -173,7 +173,7 @@ export async function recoverAcceptedJob(job, { recoveryMaxAgeMs = 10 * 60 * 100
   const acceptedAt = Number(accepted.acceptedAt || accepted.receivedAt || 0);
   if (!acceptedAt || nowMs - acceptedAt > recoveryMaxAgeMs) return false;
   if ([jobsDir, claimsDir, resultsDir, deliveredDir].some((dir) => fs.existsSync(fileFor(dir, job.messageId)))) return false;
-  return enqueueJob({ ...job, originalMessageId: job.originalMessageId || job.messageId });
+  return enqueueJob({ ...job, ...accepted, messageId: job.messageId, originalMessageId: accepted.originalMessageId || job.originalMessageId || job.messageId, acceptedAt });
 }
 
 async function archiveFile(path, category, messageId, reason) {
