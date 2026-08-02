@@ -1,0 +1,159 @@
+{
+  "ok": true,
+  "passed": 16,
+  "cases": [
+    {
+      "name": "new-read-path",
+      "text": "读取 E:\\AI-Workbench\\NEXT_STEP.md，不要修改文件",
+      "action": "read",
+      "target": "E:\\AI-Workbench\\NEXT_STEP.md",
+      "expected_result": "",
+      "constraints": [
+        "不要修改文件"
+      ],
+      "relation_to_active_task": "new_task",
+      "final_classification": "new_task",
+      "should_create_new_job": true,
+      "incorrectly_merged_old_task": false
+    },
+    {
+      "name": "new-delete-constrained",
+      "text": "删除临时文件，但不要删除项目文件",
+      "action": "delete",
+      "target": "临时文件",
+      "expected_result": "完成临时文件删除",
+      "constraints": [
+        "不要删除项目文件"
+      ],
+      "relation_to_active_task": "new_task",
+      "final_classification": "new_task",
+      "should_create_new_job": true,
+      "incorrectly_merged_old_task": false
+    },
+    {
+      "name": "new-check-no-restart",
+      "text": "检查服务状态，不要重启",
+      "action": "check",
+      "target": "服务状态",
+      "expected_result": "服务状态检查结果",
+      "constraints": [
+        "不要重启"
+      ],
+      "relation_to_active_task": "new_task",
+      "final_classification": "new_task",
+      "should_create_new_job": true,
+      "incorrectly_merged_old_task": false
+    },
+    {
+      "name": "new-open-version",
+      "text": "打开package.json，只告诉我版本号",
+      "action": "read",
+      "target": "package.json",
+      "expected_result": "版本号",
+      "constraints": [
+        "只告诉我版本号"
+      ],
+      "relation_to_active_task": "new_task",
+      "final_classification": "new_task",
+      "should_create_new_job": true,
+      "incorrectly_merged_old_task": false
+    },
+    {
+      "name": "new-search-log",
+      "text": "搜索日志，不要修改任何配置",
+      "action": "search",
+      "target": "日志",
+      "expected_result": "日志搜索结果",
+      "constraints": [
+        "不要修改任何配置"
+      ],
+      "relation_to_active_task": "new_task",
+      "final_classification": "new_task",
+      "should_create_new_job": true,
+      "incorrectly_merged_old_task": false
+    },
+    {
+      "name": "correction-reference",
+      "text": "刚才那个任务不要修改文件",
+      "action": "",
+      "target": "",
+      "expected_result": "",
+      "constraints": [
+        "不要修改文件"
+      ],
+      "relation_to_active_task": "correction",
+      "final_classification": "correction",
+      "should_create_new_job": false,
+      "incorrectly_merged_old_task": false
+    },
+    {
+      "name": "correction-change-above",
+      "text": "把上面的要求改成只读",
+      "action": "",
+      "target": "",
+      "expected_result": "",
+      "constraints": [
+        "只读"
+      ],
+      "relation_to_active_task": "correction",
+      "final_classification": "correction",
+      "should_create_new_job": false,
+      "incorrectly_merged_old_task": false
+    },
+    {
+      "name": "continue",
+      "text": "继续刚才的任务",
+      "action": "",
+      "target": "",
+      "expected_result": "",
+      "constraints": [],
+      "relation_to_active_task": "continue",
+      "final_classification": "continue",
+      "should_create_new_job": false,
+      "incorrectly_merged_old_task": false
+    },
+    {
+      "name": "pause",
+      "text": "暂停当前任务",
+      "action": "",
+      "target": "",
+      "expected_result": "",
+      "constraints": [],
+      "relation_to_active_task": "pause",
+      "final_classification": "pause",
+      "should_create_new_job": false,
+      "incorrectly_merged_old_task": false
+    },
+    {
+      "name": "cancel",
+      "text": "取消刚才的读取任务",
+      "action": "read",
+      "target": "",
+      "expected_result": "",
+      "constraints": [],
+      "relation_to_active_task": "cancel",
+      "final_classification": "cancel",
+      "should_create_new_job": false,
+      "incorrectly_merged_old_task": false
+    },
+    {
+      "name": "ordinary-chat",
+      "text": "你好，今天怎么样",
+      "action": "",
+      "target": "",
+      "expected_result": "",
+      "constraints": [],
+      "relation_to_active_task": "new_task",
+      "final_classification": "new_task",
+      "should_create_new_job": true,
+      "incorrectly_merged_old_task": false
+    }
+  ],
+  "stateCases": [
+    "normal_active_task",
+    "completed",
+    "failed",
+    "stale_accepted",
+    "ordinary_chat"
+  ]
+}
