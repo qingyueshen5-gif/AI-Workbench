@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { AgentRuntime } from '../agents/agent-runtime.mjs';
 import { TaskStore } from '../channels/task-store.mjs';
 import { fixtureInterpreter, taskInterpretations } from './task-interpreter-contract-fixtures.mjs';
+import { trustedAuthorizations } from './authorization-context-fixtures.mjs';
 
 class Sessions {
   constructor() { this.states = new Map(); }
@@ -32,7 +33,7 @@ const interpret = (text) => text.includes('NEXT_STEP.md')
   : text.includes('状态')
     ? taskInterpretations.runtimeStatus()
     : text.includes('修改代码')
-      ? { ...taskInterpretations.code(), context: { ...taskInterpretations.code().context, scope: 'controlled_test' } }
+      ? taskInterpretations.code()
       : taskInterpretations.chat();
 const make = () => new AgentRuntime({
   root: tmp,
@@ -102,7 +103,7 @@ assert.equal(status.provider, 'local-status');
 assert.match(status.text, /Gateway PID 1/);
 assert.equal(status.metrics.codexCalls, 0);
 
-const complex = await make().handle({ messageId: 'complex', originalMessageId: 'complex', conversationId: 'x', chatId: 'x', text: '修改代码并运行测试' });
+const complex = await make().handle({ messageId: 'complex', originalMessageId: 'complex', conversationId: 'x', chatId: 'x', openId: 'test-user', text: '修改代码并运行测试', authorizationContexts: trustedAuthorizations({ taskId: 'complex', userId: 'test-user', capabilityIds: ['code.modify','code.execute'] }) });
 assert.equal(complex.metrics.codexCalls, 1);
 await new Promise((resolve) => setTimeout(resolve, 15));
 assert.ok(progress.some((event) => event.jobId === 'complex'));

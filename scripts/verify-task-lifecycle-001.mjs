@@ -9,6 +9,7 @@ import { ContractSessionStore, ContractToolExecutor, ContractModelRouter, Contra
 import { CapabilityRegistry } from '../capabilities/capability-registry.mjs';
 import { CapabilityScheduler } from '../capabilities/capability-scheduler.mjs';
 import { ResultVerifier } from '../execution/result-verifier.mjs';
+import { trustedAuthorizations } from './authorization-context-fixtures.mjs';
 
 const root = await fs.mkdtemp(join(os.tmpdir(), 'aiw-task-lifecycle-'));
 const taskRoot = join(root, 'tasks');
@@ -20,8 +21,8 @@ const clarification = () => ({ taskType: 'clarification', goal: 'clarify target'
 const fileRead = () => ({ taskType: 'file_operation', goal: 'read file', actions: ['read'], targets: [{ type: 'file', path: file }], context: { absolutePath: file }, constraints: ['read only'], riskLevel: 'low', requiredCapabilities: ['file.read'], successCriteria: ['file read evidence'], requiresConfirmation: false, confidence: 0.99 });
 const confirmation = () => ({ taskType: 'commerce', goal: 'place order', actions: ['pay'], targets: [{ type: 'order' }], context: {}, constraints: [], riskLevel: 'high', requiredCapabilities: ['commerce.payment'], successCriteria: ['confirmation first'], requiresConfirmation: true, confidence: 0.95 });
 const unavailable = () => ({ taskType: 'media_creation', goal: 'create video', actions: ['create'], targets: [{ type: 'video' }], context: {}, constraints: [], riskLevel: 'low', requiredCapabilities: ['media.video.create'], successCriteria: ['video exists'], requiresConfirmation: false, confidence: 0.95 });
-const code = () => ({ taskType: 'code_task', goal: 'modify code', actions: ['modify', 'test'], targets: [{ type: 'project', path: root }], context: { scope: 'controlled_test' }, constraints: [], riskLevel: 'medium', requiredCapabilities: ['code.read', 'code.modify', 'code.execute'], successCriteria: ['tests pass'], requiresConfirmation: false, confidence: 0.96 });
-const processStop = () => ({ taskType: 'computer_operation', goal: 'stop controlled process', actions: ['stop'], targets: [{ type: 'process', pid: 12345, name: 'controlled' }], context: { scope: 'controlled_test' }, constraints: ['exact pid only'], riskLevel: 'medium', requiredCapabilities: ['process.list', 'process.stop'], successCriteria: ['pid absent'], requiresConfirmation: false, confidence: 0.98 });
+const code = () => ({ taskType: 'code_task', goal: 'modify code', actions: ['modify', 'test'], targets: [{ type: 'project', path: root }], context: {}, constraints: [], riskLevel: 'medium', requiredCapabilities: ['code.read', 'code.modify', 'code.execute'], successCriteria: ['tests pass'], requiresConfirmation: false, confidence: 0.96 });
+const processStop = () => ({ taskType: 'computer_operation', goal: 'stop controlled process', actions: ['stop'], targets: [{ type: 'process', pid: 12345, name: 'controlled' }], context: {}, constraints: ['exact pid only'], riskLevel: 'medium', requiredCapabilities: ['process.list', 'process.stop'], successCriteria: ['pid absent'], requiresConfirmation: false, confidence: 0.98 });
 
 function makeModels(extra = {}) {
   return new ContractModelRouter({
@@ -178,7 +179,7 @@ const record = (name, details = {}) => cases.push({ name, ...details });
 
 {
   const { runtime } = makeRuntime({ interpretation: code() });
-  const result = await runtime.handle({ messageId: 'code', originalMessageId: 'code', conversationId: 'code-c', chatId: 'code-c', text: '修改代码并运行测试' });
+  const result = await runtime.handle({ messageId: 'code', originalMessageId: 'code', conversationId: 'code-c', chatId: 'code-c', openId: 'test-user', text: '修改代码并运行测试', authorizationContexts: trustedAuthorizations({ taskId: 'code', userId: 'test-user', capabilityIds: ['code.modify','code.execute'] }) });
   assert.equal(result.toolUsed, 'codex');
   assert.equal(result.metrics.codexCalls, 1);
   record('code-execution-terminal');
@@ -187,7 +188,7 @@ const record = (name, details = {}) => cases.push({ name, ...details });
 {
   const processProvider = { async list() { return [{ pid: 12345, name: 'controlled' }]; }, async stop() { return { ok: true, target: { pid: 12345, name: 'controlled' }, verification: { pidAbsent: true }, remaining: false }; } };
   const { runtime } = makeRuntime({ interpretation: processStop(), processProvider });
-  const result = await runtime.handle({ messageId: 'process', originalMessageId: 'process', conversationId: 'process-c', chatId: 'process-c', text: '停止受控进程' });
+  const result = await runtime.handle({ messageId: 'process', originalMessageId: 'process', conversationId: 'process-c', chatId: 'process-c', openId: 'test-user', text: '停止受控进程', authorizationContexts: trustedAuthorizations({ taskId: 'process', userId: 'test-user', capabilityIds: ['process.stop'] }) });
   assert.equal(result.toolUsed, 'process.stop');
   assert.equal(result.metrics.processStopCalls, 1);
   record('process-provider-terminal');

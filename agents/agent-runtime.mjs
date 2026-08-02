@@ -258,7 +258,7 @@ export class AgentRuntime {
       }
 
       task = await this.transition(task, 'scheduling', 'scheduler_started', 'agent-runtime', { requiredCapabilities: interpretation.requiredCapabilities }, progress);
-      const capabilityPlan = this.scheduler.plan(interpretation);
+      const capabilityPlan = this.scheduler.plan(interpretation, { taskId: task.taskId, userId: job.openId || job.userId || '', authorizationContexts: job.authorizationContexts || [] });
       task = await this.tasks.patch(task.taskId, { schedulerAssignment: capabilityPlan });
 
       if (capabilityPlan.status === 'needs_confirmation') {
