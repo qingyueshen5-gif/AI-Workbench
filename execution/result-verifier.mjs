@@ -10,6 +10,15 @@ export class ResultVerifier {
     if (call.type === 'read_file' && !verification.summary && !verification.content && !verification.size && !(verification.results || []).some((item) => item.content || item.size)) throw new Error('文件读取结果为空');
     return { ok: true, verification };
   }
+  verifyCodeResult({capabilities,execution,workspace,writable,successCriteria}) {
+    if(!Array.isArray(capabilities)||!capabilities.length) throw new Error('code能力声明缺失');
+    if(!String(execution?.text||'').trim()) throw new Error('code执行没有返回证据');
+    if(capabilities.includes('code.read')&&!capabilities.includes('code.modify')&&writable) throw new Error('code.read不得获得写权限');
+    if(capabilities.includes('code.modify')&&!writable) throw new Error('code.modify缺少写权限');
+    if(!String(workspace||'').trim()) throw new Error('code执行workspace缺失');
+    if(!Array.isArray(successCriteria)||!successCriteria.length) throw new Error('code任务缺少验收标准');
+    return {ok:true,capabilities,workspace,writable,evidenceText:execution.text};
+  }
   verifyCapabilityResult(capabilityId, result) {
     if (!result?.ok) throw new Error(`能力${capabilityId}未执行成功：${result?.reason || 'unknown'}`);
     if (capabilityId === 'process.list' && !Array.isArray(result.processes)) throw new Error('process.list缺少进程快照');

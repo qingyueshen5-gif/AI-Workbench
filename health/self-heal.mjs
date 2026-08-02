@@ -290,6 +290,7 @@ export async function repairAll(options = {}) {
 
 export async function setupEnv({ envFile, key, value }) {
   const envKey = String(key || '').trim();
+  const allowedKeys = new Set(['DEEPSEEK_API_KEY','SERPER_API_KEY','FEISHU_APP_ID','FEISHU_APP_SECRET','FEISHU_DOMAIN','FEISHU_REPORT_CHAT_ID','FEISHU_ALLOWED_OPEN_IDS']);
   if (!envKey) {
     return {
       ok: false,
@@ -297,6 +298,7 @@ export async function setupEnv({ envFile, key, value }) {
       suggestedActions: [{ action: '点这里重新填写配置', isClickable: true, url: '/api/health/setup-env' }]
     };
   }
+  if (!allowedKeys.has(envKey)) return { ok:false, userMessage:'该配置项不允许通过界面修改。' };
   if (!value) {
     return {
       ok: false,

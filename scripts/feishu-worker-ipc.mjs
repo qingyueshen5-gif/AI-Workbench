@@ -134,8 +134,12 @@ export async function acceptMessageOnce(messageId, metadata = {}) {
 
 export async function acceptAndEnqueueJob(job, metadata = {}) {
   if (!job?.messageId) throw new Error('message_id is required');
-  const accepted = await acceptMessageOnce(job.messageId, metadata);
-  if (!accepted) return { accepted: false, enqueued: false, state: await messageState(job.messageId) };
+  const accepted = await acceptMessageOnce(job.messageId, { ...job, ...metadata, originalMessageId: job.originalMessageId || job.messageId });
+  if (!accepted) {
+    const state=await messageState(job.messageId);
+    if(!state.job&&!state.claim&&!state.result&&!state.delivered){const recovered=await recoverAcceptedJob(job);return {accepted:false,enqueued:recovered,recovered,state:await messageState(job.messageId)};}
+    return { accepted: false, enqueued: false, state };
+  }
   if (process.env.AIW_TEST_CRASH_AFTER_ACCEPT === '1') throw Object.assign(new Error('injected crash after accept'), { code: 'AIW_TEST_CRASH_AFTER_ACCEPT' });
   const enqueued = await enqueueJob(job);
   return { accepted: true, enqueued, state: await messageState(job.messageId) };

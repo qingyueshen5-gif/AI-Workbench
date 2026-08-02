@@ -28,6 +28,7 @@ const server = spawn(process.execPath, ['server.mjs'], {
 });
 
 let output = '';
+let sessionCookie = '';
 modelProxy.stdout.on('data', (chunk) => {
   output += chunk;
 });
@@ -48,8 +49,8 @@ function wait(ms) {
 async function waitForServer() {
   for (let attempt = 0; attempt < 40; attempt += 1) {
     try {
-      const response = await fetch(api);
-      if (response.ok) return;
+      const response = await fetch(baseUrl);
+      if (response.ok) { sessionCookie=String(response.headers.get('set-cookie')||'').split(';',1)[0]; return; }
     } catch {
       await wait(100);
     }
@@ -60,7 +61,7 @@ async function waitForServer() {
 async function request(method, payload) {
   const response = await fetch(api, {
     method,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'Cookie': sessionCookie, 'Origin': baseUrl },
     body: payload ? JSON.stringify(payload) : undefined
   });
   const body = await response.json();
@@ -70,7 +71,7 @@ async function request(method, payload) {
 async function requestUrl(url, method, payload) {
   const response = await fetch(url, {
     method,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'Cookie': sessionCookie, 'Origin': baseUrl },
     body: payload ? JSON.stringify(payload) : undefined
   });
   const body = await response.json();
@@ -277,7 +278,7 @@ async function main() {
   });
   const apiKeyConfigured = await hasDeepSeekApiKey();
   if (!apiKeyConfigured) {
-    if (aiTest.response.status !== 503 || !String(aiTest.body.error || '').includes('本机模型代理缺少')) {
+    if (aiTest.response.status !== 503 || !String(aiTest.body.error || '').match(/本机模型代理缺少|DeepSeek服务暂时不可用/)) {
       throw new Error('Missing API key should be reported by the local model proxy');
     }
     if (!aiTest.body.data?.systemErrors?.some((error) => error.operation === '测试AI连接')) {

@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { AgentRuntime } from '../agents/agent-runtime.mjs';
 import { ContractSessionStore, ContractActiveTaskStore, ContractToolExecutor, ContractModelRouter, ContractVerifier } from './runtime-dependency-contract-fixtures.mjs';
 import { fixtureInterpreter, taskInterpretations } from './task-interpreter-contract-fixtures.mjs';
-const gateway=await fs.readFile(join(process.cwd(),'scripts','workbench-feishu-adapter.mjs'),'utf8');for(const forbidden of ['ActiveTaskController','active-task-controller','IntentRouter','intent-router','control.intercepted','controlKind'])assert.equal(gateway.includes(forbidden),false);assert.match(gateway,/enqueueJob\(\{ messageId/);
+const gateway=await fs.readFile(join(process.cwd(),'scripts','workbench-feishu-adapter.mjs'),'utf8');for(const forbidden of ['ActiveTaskController','active-task-controller','IntentRouter','intent-router','control.intercepted','controlKind'])assert.equal(gateway.includes(forbidden),false);assert.match(gateway,/acceptAndEnqueueJob\(\{ messageId/);
 const root=await fs.mkdtemp(join(os.tmpdir(),'aiw-entry-'));const file=join(root,'NEXT_STEP.md');await fs.writeFile(file,'<!-- AIW_NEXT_STEP_START -->\n契约测试目标。\n<!-- AIW_NEXT_STEP_END -->');
 const models=new ContractModelRouter({understand:async()=>({text:JSON.stringify(taskInterpretations.chat('普通任务已进入Runtime'))}),express:async()=>({text:'Runtime根据依赖返回结果完成表达'}),execute:async()=>({text:'执行结果',sessionId:'s'})});
 const tools=new ContractToolExecutor(async(_id,call)=>{const content=await fs.readFile(call.path,'utf8');return{ok:true,actions:1,results:[{type:'read_file',path:call.path,content,size:Buffer.byteLength(content),sha256:'test-sha256',currentSha256:'test-sha256',verified:true}]}});

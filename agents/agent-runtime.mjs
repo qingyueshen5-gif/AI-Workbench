@@ -86,7 +86,10 @@ export class AgentRuntime {
     const progress = new RuntimeProgressController(job, this.onProgress, this.progressOptions);
     try {
       const control = await this.activeController.handle(job);
-      if (control.intercepted) return { text: control.text, provider: 'ai-workbench', providerSessionId: '', toolUsed: '', verified: true, controlKind: control.kind, activeTaskId: control.activeTaskId, classification: control.classification, metrics: { readFileCalls: 0, codexCalls: 0 } };
+      if (control.intercepted) {
+        if(control.kind==='cancel'||control.kind==='pause') this.models.cancel?.(conversationId);
+        return { text: control.text, provider: 'ai-workbench', providerSessionId: '', toolUsed: '', verified: true, controlKind: control.kind, activeTaskId: control.activeTaskId, classification: control.classification, metrics: { readFileCalls: 0, codexCalls: 0 } };
+      }
       const classification = control.classification;
       const state = await this.sessions.load(conversationId, job.openId);
       let activeTask = await this.activeTasks.load(conversationId);
@@ -163,8 +166,14 @@ export class AgentRuntime {
       await this.stage(job, progress, 'planning');
       const codeTask = interpretation.taskType === 'code_task' && interpretation.requiredCapabilities.some((item) => item.startsWith('code.'));
       if (codeTask) {
-        await this.stage(job, progress, 'executing'); const execution = await this.models.execute({ conversationId, prompt: job.text, workspace: resolve(process.cwd()), writable: true });
-        await this.sessions.appendMessage(state, { role: 'tool', text: execution.text, messageId: job.messageId, provider: 'codex', providerSessionId: execution.sessionId }); await this.stage(job, progress, 'verifying'); await this.stage(job, progress, 'finalizing');
+        const codeCapabilities=interpretation.requiredCapabilities.filter((item)=>item.startsWith('code.'));
+        const writable=codeCapabilities.includes('code.modify');
+        const workspaceTarget=interpretation.targets.find((item)=>item?.type==='project'||item?.type==='workspace');
+        const workspace=resolve(workspaceTarget?.path||process.cwd());
+        const executionPrompt=JSON.stringify({goal:interpretation.goal,actions:interpretation.actions,targets:interpretation.targets,constraints:interpretation.constraints,successCriteria:interpretation.successCriteria,userMessage:job.text});
+        await this.stage(job, progress, 'executing'); const execution = await this.models.execute({ conversationId, prompt: executionPrompt, workspace, writable });
+        await this.sessions.appendMessage(state, { role: 'tool', text: execution.text, messageId: job.messageId, provider: 'codex', providerSessionId: execution.sessionId }); await this.stage(job, progress, 'verifying');
+        this.verifier.verifyCodeResult?.({capabilities:codeCapabilities,execution,workspace,writable,successCriteria:interpretation.successCriteria}); await this.stage(job, progress, 'finalizing');
         const finalModel = await this.models.express({ messages: [{ role: 'system', content: '将已验证执行结果整理为自然中文最终回复。' }, { role: 'user', content: `原问题：${job.text}\n执行结果：${execution.text}` }] }); const text = this.verifier.verifyModelResult(finalModel).text;
         await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: 'deepseek' }); await this.activeTasks.update(conversationId, { stage: 'completed', currentStep: '任务已完成', estimatedRemainingRange: '已完成。' });
         return { text, provider: 'deepseek', providerSessionId: execution.sessionId, toolUsed: 'codex', verified: true, classification, activeTaskId: job.messageId, metrics: { readFileCalls: 0, codexCalls: 1 } };

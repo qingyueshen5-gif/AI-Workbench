@@ -48,6 +48,23 @@ const runtime = new AgentRuntime({
   onStage: async (job, stage) => { await runtimeEvent('job_stage', { messageId: job.messageId, stage, atMs: Date.now(), runtimePid: process.pid }); await patchStatus({ currentStage: stage, latestMessageId: job.messageId, codex: stage === 'executing' ? 'busy' : undefined }); }
 });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const runningJobs=new Map();
+async function executeClaimedJob(job,workerId) {
+  try {
+    const result=await runtime.handle(job);
+    const active=await activeTasks.load(job.conversationId||job.chatId);
+    const stale=!result.controlKind&&active?.originalMessageId===(job.originalMessageId||job.messageId)&&(active.cancelled||active.stage==='failed'||active.paused);
+    const finishedAt=Date.now();
+    await completeJob(job, stale
+      ? {messageId:job.messageId,originalMessageId:job.originalMessageId||job.messageId,conversationId:job.conversationId||job.chatId,chatId:job.chatId,ok:false,text:'',suppressed:true,errorClass:'Superseded',finishedAt}
+      : { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: true, text: result.text, provider: result.provider, providerSessionId: result.providerSessionId, toolUsed: result.toolUsed, verified: result.verified, controlKind: result.controlKind || '', activeTaskId: result.activeTaskId || job.messageId, classification: result.classification || null, finishedAt });
+    await runtimeEvent(stale?'result_suppressed':'result_generated',{messageId:job.messageId,finishedAt,provider:result.provider,toolUsed:result.toolUsed,verified:result.verified});
+    if(!stale)await patchStatus({ currentStage: 'completed', latestSuccessfulTask: job.messageId, latestError: '', deepseek: 'online', codex: 'online', localTools: 'online' });
+  } catch(error) {
+    await completeJob(job,{messageId:job.messageId,originalMessageId:job.originalMessageId||job.messageId,conversationId:job.conversationId||job.chatId,chatId:job.chatId,ok:false,text:'这次没有完成，我已经停止。你可以继续发送新消息。',errorClass:error.name||'Error',finishedAt:Date.now()});
+    await patchStatus({currentStage:'failed',codex:'online',latestError:error.message||String(error)});
+  } finally { await releaseClaim(job.messageId).catch(()=>{});runningJobs.delete(job.messageId); }
+}
 
 export async function supervisorLoop() {
   await acquireRuntimeLock();
@@ -80,16 +97,8 @@ export async function supervisorLoop() {
       if (active?.paused || active?.stage === 'paused' || active?.waitingUser) continue;
       if (!(await claimJob(job, workerId))) continue;
       await runtimeEvent('job_claimed', { messageId: job.messageId, claimedAt: Date.now(), workerId, runtimePid: process.pid });
-      try {
-        const result = await runtime.handle(job);
-        const finishedAt = Date.now();
-        await completeJob(job, { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: true, text: result.text, provider: result.provider, providerSessionId: result.providerSessionId, toolUsed: result.toolUsed, verified: result.verified, controlKind: result.controlKind || '', activeTaskId: result.activeTaskId || job.messageId, classification: result.classification || null, finishedAt });
-        await runtimeEvent('result_generated', { messageId: job.messageId, finishedAt, provider: result.provider, toolUsed: result.toolUsed, verified: result.verified });
-        await patchStatus({ currentStage: 'completed', latestSuccessfulTask: job.messageId, latestError: '', deepseek: 'online', codex: 'online', localTools: 'online' });
-      } catch (error) {
-        await completeJob(job, { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: false, text: '这次没有完成，我已经停止。你可以继续发送新消息。', errorClass: error.name || 'Error', finishedAt: Date.now() });
-        await patchStatus({ currentStage: 'failed', codex: 'online', latestError: error.message || String(error) });
-      } finally { await releaseClaim(job.messageId).catch(() => {}); }
+      const execution=executeClaimedJob(job,workerId);
+      runningJobs.set(job.messageId,execution);
     }
     await sleep(250);
   }

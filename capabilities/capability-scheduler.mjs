@@ -2,7 +2,11 @@ export class CapabilityScheduler {
   constructor(options={}) { this.registry=options.registry; if(!this.registry?.available) throw new Error('CapabilityScheduler需要Capability Registry'); }
   plan(interpretation) {
     if (interpretation.taskType==='clarification'||interpretation.confidence<0.65) throw new Error('低置信度任务必须在进入Scheduler前澄清');
-    if (interpretation.requiresConfirmation) return {status:'needs_confirmation',interpretation,assignments:[],missingCapabilities:[]};
+    const preauthorized=interpretation.context?.preauthorized===true||interpretation.context?.scope==='controlled_test';
+    if (interpretation.requiresConfirmation || (!preauthorized&&interpretation.requiredCapabilities.some((capabilityId)=>{
+      const entries=this.registry.find?.(capabilityId)||[];
+      return entries.some((entry)=>entry.requiresConfirmation||entry.riskLevel==='high');
+    }))) return {status:'needs_confirmation',interpretation,assignments:[],missingCapabilities:[]};
     const assignments=[]; const missingCapabilities=[];
     for (const capabilityId of interpretation.requiredCapabilities) {
       const providers=this.registry.available(capabilityId);

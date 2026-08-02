@@ -1,7 +1,9 @@
 import { createServer } from 'node:http';
+import { randomBytes, timingSafeEqual } from 'node:crypto';
 import { readFile, writeFile, mkdir, stat } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
 import { dirname, extname, join, relative, resolve } from 'node:path';
+import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import { agentDefinitions } from './agents/definitions.mjs';
 import { agentRegistry } from './agents/registry.mjs';
@@ -18,6 +20,8 @@ const dataFile = runtimeDataFile;
 const envFile = join(root, '.env');
 const distDir = join(root, 'dist');
 const port = Number(process.env.PORT || 8787);
+const apiSessionToken = randomBytes(32).toString('base64url');
+const allowedOrigins = new Set([`http://127.0.0.1:${port}`, `http://localhost:${port}`]);
 const bridgeStatusPath = join(runtimeRoot, 'feishu-workbench-bridge', 'status.json');
 const modelProxyBaseUrl = String(process.env.MODEL_PROXY_BASE_URL || 'http://127.0.0.1:18800/v1').replace(/\/+$/, '');
 
@@ -1531,15 +1535,28 @@ function readBody(request) {
   });
 }
 
-function sendJson(response, statusCode, payload) {
+function corsHeaders(request) {
+  const origin = String(request?.headers?.origin || '');
+  return origin && allowedOrigins.has(origin) ? { 'Access-Control-Allow-Origin': origin, 'Vary': 'Origin' } : {};
+}
+function sendJson(response, statusCode, payload, request = null) {
   response.writeHead(statusCode, {
       'Content-Type': 'application/json; charset=utf-8',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET,PUT,POST,OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type'
+      'Cache-Control': 'no-store',
+      ...corsHeaders(request)
     });
   response.end(JSON.stringify(payload));
 }
+function parseCookies(request) { return Object.fromEntries(String(request.headers.cookie || '').split(';').map((item) => item.trim()).filter(Boolean).map((item) => { const index=item.indexOf('='); return index<0?[item,'']:[item.slice(0,index),decodeURIComponent(item.slice(index+1))]; })); }
+function tokenMatches(value) { const actual=Buffer.from(String(value||'')); const expected=Buffer.from(apiSessionToken); return actual.length===expected.length && timingSafeEqual(actual,expected); }
+function isTrustedHost(request) { return new Set([`127.0.0.1:${port}`,`localhost:${port}`]).has(String(request.headers.host || '').toLowerCase()); }
+function isAuthorizedApiRequest(request) {
+  if (!isTrustedHost(request)) return false;
+  const origin=String(request.headers.origin || '');
+  if (origin && !allowedOrigins.has(origin)) return false;
+  return tokenMatches(parseCookies(request).aiw_session);
+}
+const publicReadOnlyApi = new Set(['/api/readiness','/api/workbench-runtime-status']);
 
 const staticMimeTypes = {
   '.html': 'text/html; charset=utf-8',
@@ -1570,6 +1587,10 @@ async function sendStaticFile(request, response, pathname) {
     const body = await readFile(filePath);
     response.writeHead(200, {
       'Content-Type': staticMimeTypes[extname(filePath).toLowerCase()] || 'application/octet-stream',
+      'Set-Cookie': `aiw_session=${encodeURIComponent(apiSessionToken)}; HttpOnly; SameSite=Strict; Path=/`,
+      'Content-Security-Policy': "default-src 'self'; connect-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'",
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
       'Cache-Control': filePath.endsWith('index.html') ? 'no-store' : 'public, max-age=31536000, immutable'
     });
     if (request.method === 'HEAD') response.end();
@@ -1582,10 +1603,14 @@ async function sendStaticFile(request, response, pathname) {
 
 const server = createServer(async (request, response) => {
   if (request.method === 'OPTIONS') {
-      response.writeHead(204, {
-      'Access-Control-Allow-Origin': '*',
+    const origin=String(request.headers.origin || '');
+    if (!isTrustedHost(request) || !allowedOrigins.has(origin)) { response.writeHead(403); response.end(); return; }
+    response.writeHead(204, {
+      'Access-Control-Allow-Origin': origin,
       'Access-Control-Allow-Methods': 'GET,PUT,POST,OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type'
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Credentials': 'true',
+      'Vary': 'Origin'
     });
     response.end();
     return;
@@ -1594,6 +1619,11 @@ const server = createServer(async (request, response) => {
   try {
     const requestUrl = new URL(request.url, 'http://127.0.0.1');
     const pathname = requestUrl.pathname;
+    if (!isTrustedHost(request)) { sendJson(response, 403, { error: 'Forbidden' }, request); return; }
+    if (pathname.startsWith('/api/') && !publicReadOnlyApi.has(pathname) && !isAuthorizedApiRequest(request)) {
+      sendJson(response, 403, { error: 'Forbidden' }, request);
+      return;
+    }
 
     if (pathname === '/api/data' && request.method === 'GET') {
       sendJson(response, 200, await readDataWithMeta());

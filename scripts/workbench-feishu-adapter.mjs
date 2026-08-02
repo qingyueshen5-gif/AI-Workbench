@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runtimeRoot } from '../runtime-paths.mjs';
-import { acceptMessageOnce, claimProgress, claimResultDelivery, enqueueJob, listProgress, listResults, markAcknowledged, markDelivered, markProgressDelivered, recordProgressFailure, validateProgressEvent, wasDelivered, wasProgressDelivered } from './feishu-worker-ipc.mjs';
+import { acceptAndEnqueueJob, claimProgress, claimResultDelivery, listProgress, listResults, markAcknowledged, markDelivered, markProgressDelivered, recordProgressFailure, reconcileIpcState, validateProgressEvent, wasDelivered, wasProgressDelivered } from './feishu-worker-ipc.mjs';
 
 const root = process.cwd();
 const stateRoot = join(runtimeRoot, 'feishu-workbench-bridge');
@@ -157,11 +157,21 @@ async function claimMessage(messageId) {
   } catch (error) { if (error.code === 'EEXIST') return false; throw error; }
 }
 
+function allowedOpenIds() { return new Set(String(process.env.FEISHU_ALLOWED_OPEN_IDS || '').split(/[;,\s]+/).map((item)=>item.trim()).filter(Boolean)); }
+export function authorizeFeishuSender({openId,chatType='p2p',mentioned=true}, allowed=allowedOpenIds()) {
+  if (!allowed.size) return {ok:false,reason:'allowed_open_ids_not_configured'};
+  if (!allowed.has(String(openId||''))) return {ok:false,reason:'sender_not_allowed'};
+  if (chatType!=='p2p'&&!mentioned) return {ok:false,reason:'group_message_without_mention'};
+  return {ok:true};
+}
+
 export async function startWorkbenchFeishuAdapter() {
   await acquireAdapterLock();
   const appId = process.env.FEISHU_APP_ID;
   const appSecret = process.env.FEISHU_APP_SECRET;
   if (!appId || !appSecret) throw new Error('Feishu credentials not configured');
+  if (!allowedOpenIds().size) throw new Error('FEISHU_ALLOWED_OPEN_IDS is required');
+  await reconcileIpcState();
   const appLock = await appIdLockOwner(appId);
   if (appLock.duplicate) throw new Error(`Duplicate Feishu consumer detected for app identity; owner PID=${appLock.owner?.pid || 'unknown'}`);
   const lark = await import('@larksuiteoapi/node-sdk');
@@ -220,20 +230,23 @@ export async function startWorkbenchFeishuAdapter() {
       }
       const { messageId, chatId, text } = parsedMessage;
       const openId = String(parsedMessage.sender?.open_id || data?.sender?.sender_id?.open_id || '');
+      const chatType=String(data?.message?.chat_type || data?.message?.chatType || 'p2p');
+      const mentioned=chatType==='p2p'||Boolean(data?.message?.mentions?.length)||/@_user_\d+/.test(text);
+      const authorization=authorizeFeishuSender({openId,chatType,mentioned});
+      if(!authorization.ok){await event('message_rejected_unauthorized',{messageId,chatId,openIdFingerprint:createHash('sha256').update(openId).digest('hex').slice(0,12),reason:authorization.reason,pid:process.pid});return;}
       if (!messageId) { await event('message_parse_failed', { messageId, messageType: parsedMessage.messageType, message: 'missing_message_id', pid: process.pid }); return; }
       if (!parsedMessage.supported) { await event('unsupported_message_type', { messageId, messageType: parsedMessage.messageType, rawContentType: parsedMessage.rawContentType, attachmentCount: parsedMessage.attachments.length, pid: process.pid }); return; }
       if (!text) { await event('empty_message', { messageId, messageType: parsedMessage.messageType, rawContentType: parsedMessage.rawContentType, pid: process.pid }); return; }
-      if (!(await claimMessage(messageId))) { await event('duplicate_event_ignored', { messageId, pid: process.pid }); return; }
       const receivedAt = rawReceivedAt;
       const metadata = { eventId: data?.event_id || '', chatId, conversationId: chatId, openId, text, receivedAt };
-      const acceptedOnce = await acceptMessageOnce(messageId, metadata);
-      if (!acceptedOnce) return;
+      const accepted = await acceptAndEnqueueJob({ messageId, originalMessageId: messageId, eventId: data?.event_id || '', chatId, conversationId: chatId, openId, text, receivedAt }, metadata);
+      if (!accepted.accepted && !accepted.recovered) { await event('duplicate_event_ignored', { messageId, pid: process.pid }); return; }
       health.lastMessageAcceptedAt = Date.now();
       acknowledge(messageId).then(async (reactionId) => {
         const marked = await markAcknowledged(messageId, { reactionId, emojiType: 'OK' });
         if (marked) await event('message_acknowledged', { messageId, reactionId, emojiType: 'OK', acknowledgedAt: Date.now(), latencyMs: Date.now() - receivedAt });
       }).catch((error) => event('acknowledgement_failed', { messageId, failedAt: Date.now(), latencyMs: Date.now() - receivedAt, message: error.message }));
-      const jobCreated = await enqueueJob({ messageId, originalMessageId: messageId, eventId: data?.event_id || '', chatId, conversationId: chatId, openId, text, receivedAt });
+      const jobCreated = accepted.enqueued;
       await event('message_accepted', { messageId, receivedAt, acceptedAt: Date.now(), jobCreated, projectRoot: root, pid: process.pid, gitCommit: process.env.AIW_GATEWAY_GIT_COMMIT || '' });
       await patchStatus({ feishu: 'connected', currentStage: 'received', latestMessageId: messageId, latestError: '' });
     }
@@ -244,6 +257,7 @@ export async function startWorkbenchFeishuAdapter() {
     delivering = true;
     try {
     for (const result of await listResults()) {
+      if(result.suppressed||!String(result.text||'').trim()){await markDelivered(result,{suppressed:true});await event('result_delivery_suppressed',{messageId:result.messageId});continue;}
       if (await wasDelivered(result.messageId)) { await markDelivered(result); continue; }
       if (!(await claimResultDelivery(result.messageId, { pid: process.pid }))) continue;
       await event('reply_sender_claimed', { messageId: result.messageId, claimedAt: Date.now(), pid: process.pid });
