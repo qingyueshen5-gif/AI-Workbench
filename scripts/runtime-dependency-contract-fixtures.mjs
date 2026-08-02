@@ -31,6 +31,7 @@ export class ContractModelRouter {
 }
 export class ContractVerifier { verifyModelResult(result) { assert.equal(typeof result?.text, 'string'); if (!result.text.trim()) throw new Error('empty model result'); return { ok: true, text: result.text.trim() }; } verifyToolResult(call, verification) { assert.ok(call?.type); assert.equal(verification?.ok, true); return { ok: true, verification }; } }
 export class ContractProgressWriter { constructor() { this.events = []; } async write(event) { for (const key of ['eventId','jobId','originalMessageId','conversationId','stage','message','createdAt']) assert.ok(event[key]); this.events.push(event); return true; } }
+export class ContractTaskInterpreter { constructor(handler) { this.handler = handler; this.calls = []; } async interpret(input) { this.calls.push(input); return this.handler(input); } }
 
 export async function verifyAgentRuntimeDependencyContracts(deps, fixture) {
   const required = { sessions: ['load','save','appendMessage','history'], activeTasks: ['load','save','create','update','addCompletedStep','addToolResult','active','list'], tools: ['execute'], models: ['healthCheck','understand','express','execute'], verifier: ['verifyModelResult','verifyToolResult'], progressWriter: ['write'] };

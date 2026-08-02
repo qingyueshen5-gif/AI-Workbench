@@ -1,0 +1,42 @@
+{
+  "ok": true,
+  "realHandle": true,
+  "aliases": [
+    {
+      "alias": "帮我把受控测试程序关掉",
+      "pid": 28756,
+      "verified": true
+    },
+    {
+      "alias": "受控测试程序别让它在后台运行了",
+      "pid": 21536,
+      "verified": true
+    },
+    {
+      "alias": "把受控测试程序彻底退出一下",
+      "pid": 13504,
+      "verified": true
+    },
+    {
+      "alias": "受控测试程序太占资源了，处理掉",
+      "pid": 41872,
+      "verified": true
+    },
+    {
+      "alias": "先结束受控测试程序，但不要影响AI Workbench",
+      "pid": 23412,
+      "verified": true
+    }
+  ],
+  "processList": true,
+  "controlledProcessesStoppedAndVerified": true,
+  "targetNotFound": true,
+  "ambiguousRejected": true,
+  "protectedRejected": true,
+  "fallback": true,
+  "capabilityUnavailable": true,
+  "needsConfirmation": true,
+  "lowConfidenceClarifies": true,
+  "exactlyOnce": true,
+  "gatewayPureTransport": true
+}

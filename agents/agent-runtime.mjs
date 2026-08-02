@@ -7,13 +7,12 @@ import { SessionStore } from '../channels/session-store.mjs';
 import { ActiveTaskController } from './active-task-controller.mjs';
 import { ActiveTaskStore, activeTaskSummary } from '../channels/active-task-store.mjs';
 import { runtimeRoot } from '../runtime-paths.mjs';
+import { TaskInterpreter } from './task-interpreter.mjs';
+import { CapabilityRegistry } from '../capabilities/capability-registry.mjs';
+import { CapabilityScheduler } from '../capabilities/capability-scheduler.mjs';
+import { LocalProcessProvider } from '../execution/local-process-provider.mjs';
 
 function historyPrompt(history) { return history.slice(-20).map((item) => `${item.role === 'assistant' ? '助手' : item.role === 'tool' ? '执行结果' : '用户'}：${item.text}`).join('\n'); }
-function parseDecision(text) {
-  const value = JSON.parse(String(text || '').trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, ''));
-  if (typeof value.requiresExecution !== 'boolean') throw new Error('DeepSeek decision missing requiresExecution');
-  return { requiresExecution: value.requiresExecution, task: String(value.task || '').trim(), answer: String(value.answer || '').trim() };
-}
 const readOnlyConstraint = /不要修改|只读|仅查看|不要写入|不要删除/;
 const singleFileExt = /\.(?:md|txt|json|ya?ml|toml|csv|log|pdf|docx|xlsx)$/i;
 const followupPattern = /^(?:这个|该|上述|刚才|文件中|文件里|为什么|再|那么|其中|下一步|还有|具体|它)/;
@@ -46,9 +45,33 @@ export class AgentRuntime {
     this.onStage = options.onStage || (async () => {});
     this.onProgress = options.onProgress || (async () => {});
     this.progressOptions = options.progressOptions || {};
+    this.capabilityRegistry = options.capabilityRegistry || new CapabilityRegistry();
+    this.taskInterpreter = options.taskInterpreter || new TaskInterpreter({ model: this.models });
+    this.scheduler = options.scheduler || new CapabilityScheduler({ registry: this.capabilityRegistry });
+    this.providers = new Map(Object.entries(options.providers || { 'local-process-provider': options.processProvider || new LocalProcessProvider() }));
     this.statePaths = options.statePaths || { gateway: resolve(runtimeRoot, 'feishu-workbench-bridge', 'gateway-health.json'), runtime: resolve(runtimeRoot, 'feishu-workbench-bridge', 'ipc', 'worker-state.json'), task: resolve(runtimeRoot, 'feishu-workbench-bridge', 'status.json') };
   }
   async stage(job, progress, stage) { await this.onStage(job, stage); await progress.setStage(stage); }
+  async executeCapabilityPlan(plan, interpretation) {
+    const results = [];
+    for (const assignment of plan.assignments) {
+      let completed = null; let lastError = null;
+      for (const providerSpec of [assignment.primaryProvider, ...assignment.fallbackProviders]) {
+        const provider = this.providers.get(providerSpec.providerId); if (!provider) { lastError = new Error(`Provider未接入：${providerSpec.providerId}`); continue; }
+        try {
+          if (assignment.capabilityId === 'process.list') completed = { providerId: providerSpec.providerId, result: { ok: true, processes: await provider.list() } };
+          else if (assignment.capabilityId === 'process.stop') {
+            const target = interpretation.targets.find((item) => item.type === 'process' || item.type === 'application_process') || {};
+            completed = { providerId: providerSpec.providerId, result: await provider.stop({ pid: target.pid, exactName: target.exactName }) };
+          } else throw new Error(`Runtime尚未接入能力：${assignment.capabilityId}`);
+          this.verifier.verifyCapabilityResult(assignment.capabilityId, completed.result); break;
+        } catch (error) { lastError = error; completed = null; }
+      }
+      if (!completed) throw lastError || new Error(`能力执行失败：${assignment.capabilityId}`);
+      results.push({ capabilityId: assignment.capabilityId, ...completed });
+    }
+    return results;
+  }
   async groundedStatus(text) {
     const read = async (path) => { try { return JSON.parse(await fs.readFile(path, 'utf8')); } catch { return null; } };
     const [gateway, runtime, task] = await Promise.all([read(this.statePaths.gateway), read(this.statePaths.runtime), read(this.statePaths.task)]);
@@ -71,6 +94,41 @@ export class AgentRuntime {
       await this.sessions.appendMessage(state, { role: 'user', text: job.text, messageId: job.messageId });
       await this.activeTasks.update(conversationId, { stage: 'understanding', currentStep: '理解任务并整理上下文', currentActor: 'AI Workbench', paused: false, waitingUser: false });
       await this.stage(job, progress, 'understanding');
+
+      const interpretation = await this.taskInterpreter.interpret({ text: job.text, conversationContext: (state.originalMessages || []).slice(-12), environmentContext: { platform: process.platform } });
+      if (interpretation.taskType === 'clarification' || interpretation.confidence < 0.65) {
+        const text = `需要先澄清：${interpretation.successCriteria.join('；') || interpretation.goal}`;
+        await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: 'task-interpreter' });
+        await this.activeTasks.update(conversationId, { stage: 'waiting_user', waitingUser: true, currentStep: '等待用户澄清', estimatedRemainingRange: '收到澄清后继续。' });
+        return { text, provider: 'task-interpreter', toolUsed: '', verified: true, interpretation, schedulerStatus: 'needs_clarification', metrics: { readFileCalls: 0, codexCalls: 0 } };
+      }
+      const capabilityPlan = this.scheduler.plan(interpretation);
+      if (capabilityPlan.status === 'needs_confirmation') {
+        const text = `该任务需要你确认后才能执行：${interpretation.goal}`;
+        await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: 'capability-scheduler' });
+        await this.activeTasks.update(conversationId, { stage: 'waiting_user', waitingUser: true, currentStep: '等待高风险操作确认', estimatedRemainingRange: '确认后继续。' });
+        return { text, provider: 'capability-scheduler', toolUsed: '', verified: true, interpretation, schedulerStatus: capabilityPlan.status, metrics: { readFileCalls: 0, codexCalls: 0 } };
+      }
+      if (capabilityPlan.status === 'capability_unavailable') {
+        const text = `当前缺少可用能力：${capabilityPlan.missingCapabilities.join('、')}。任务未执行。`;
+        await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: 'capability-scheduler' });
+        await this.activeTasks.update(conversationId, { stage: 'failed', currentStep: '能力不可用', latestFailureReason: text, estimatedRemainingRange: '任务已停止。' });
+        return { text, provider: 'capability-scheduler', toolUsed: '', verified: true, interpretation, schedulerStatus: capabilityPlan.status, metrics: { readFileCalls: 0, codexCalls: 0 } };
+      }
+      const processCapabilities = interpretation.requiredCapabilities.filter((item) => item === 'process.list' || item === 'process.stop');
+      if (processCapabilities.length) {
+        await this.stage(job, progress, 'planning'); await this.stage(job, progress, 'executing');
+        const results = await this.executeCapabilityPlan({ ...capabilityPlan, assignments: capabilityPlan.assignments.filter((item) => processCapabilities.includes(item.capabilityId)) }, interpretation);
+        await this.stage(job, progress, 'verifying');
+        const stopped = results.find((item) => item.capabilityId === 'process.stop'); if (!stopped) throw new Error('process.stop结果缺失');
+        await this.stage(job, progress, 'finalizing');
+        const text = `已完成：${interpretation.goal}。已按精确PID停止${stopped.result.target.name}（PID ${stopped.result.target.pid}），并再次查询确认该PID已不存在。`;
+        await this.sessions.appendMessage(state, { role: 'tool', text: JSON.stringify({ capability: 'process.stop', provider: stopped.providerId, pid: stopped.result.target.pid, verified: true }), messageId: job.messageId, provider: stopped.providerId });
+        await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: stopped.providerId });
+        await this.activeTasks.addToolResult(conversationId, { at: Date.now(), source: stopped.providerId, summary: `process.stop PID ${stopped.result.target.pid} verified` });
+        await this.activeTasks.update(conversationId, { stage: 'completed', currentStep: '任务已完成', estimatedRemainingRange: '已完成。' });
+        return { text, provider: stopped.providerId, toolUsed: 'process.stop', verified: true, interpretation, schedulerStatus: capabilityPlan.status, capabilityResults: results, metrics: { readFileCalls: 0, codexCalls: 0, processStopCalls: 1 } };
+      }
 
       if (statusPattern.test(job.text)) {
         await this.stage(job, progress, 'verifying'); const text = await this.groundedStatus(job.text); await this.stage(job, progress, 'finalizing');
@@ -103,7 +161,8 @@ export class AgentRuntime {
       }
 
       await this.stage(job, progress, 'planning');
-      if (complexPattern.test(job.text)) {
+      const codeTask = interpretation.taskType === 'code_task' && interpretation.requiredCapabilities.some((item) => item.startsWith('code.'));
+      if (codeTask) {
         await this.stage(job, progress, 'executing'); const execution = await this.models.execute({ conversationId, prompt: job.text, workspace: resolve(process.cwd()), writable: true });
         await this.sessions.appendMessage(state, { role: 'tool', text: execution.text, messageId: job.messageId, provider: 'codex', providerSessionId: execution.sessionId }); await this.stage(job, progress, 'verifying'); await this.stage(job, progress, 'finalizing');
         const finalModel = await this.models.express({ messages: [{ role: 'system', content: '将已验证执行结果整理为自然中文最终回复。' }, { role: 'user', content: `原问题：${job.text}\n执行结果：${execution.text}` }] }); const text = this.verifier.verifyModelResult(finalModel).text;
@@ -111,10 +170,13 @@ export class AgentRuntime {
         return { text, provider: 'deepseek', providerSessionId: execution.sessionId, toolUsed: 'codex', verified: true, classification, activeTaskId: job.messageId, metrics: { readFileCalls: 0, codexCalls: 1 } };
       }
 
-      const understanding = await this.models.understand({ messages: [{ role: 'system', content: '你是AI Workbench普通聊天模块。直接自然回答，不调用工具。只输出JSON：{"requiresExecution":false,"task":"","answer":"回答"}。' }, { role: 'user', content: `${historyPrompt(state.originalMessages || [])}\n用户：${job.text}` }], responseFormat: { type: 'json_object' } });
-      const decision = parseDecision(understanding.text); await this.stage(job, progress, 'finalizing'); const text = decision.answer || this.verifier.verifyModelResult(await this.models.express({ prompt: job.text })).text;
+      const conversationTask = interpretation.taskType === 'chat' || interpretation.requiredCapabilities.length === 0;
+      if (!conversationTask) throw new Error(`Runtime尚未接入任务能力：${interpretation.requiredCapabilities.join('、')}`);
+      await this.stage(job, progress, 'planning'); await this.stage(job, progress, 'finalizing');
+      const finalModel = await this.models.express({ messages: [{ role: 'system', content: '根据统一Task Interpreter结构自然回答用户。不得声称执行了未执行的工具或操作。' }, { role: 'user', content: JSON.stringify({ task: interpretation, userMessage: job.text, conversationContext: historyPrompt(state.originalMessages || []) }) }] });
+      const text = this.verifier.verifyModelResult(finalModel).text;
       await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: 'deepseek' }); await this.activeTasks.update(conversationId, { stage: 'completed', currentStep: '任务已完成', estimatedRemainingRange: '已完成。' });
-      return { text, provider: 'deepseek', providerSessionId: '', toolUsed: '', verified: true, classification, activeTaskId: job.messageId, metrics: { readFileCalls: 0, codexCalls: 0 } };
+      return { text, provider: 'deepseek', providerSessionId: '', toolUsed: '', verified: true, interpretation, schedulerStatus: capabilityPlan.status, classification, activeTaskId: job.messageId, metrics: { readFileCalls: 0, codexCalls: 0 } };
     } catch (error) {
       await this.activeTasks.update(conversationId, { stage: 'failed', currentStep: '任务失败', latestFailureReason: error.message || String(error), estimatedRemainingRange: '任务已停止。' }).catch(() => {}); throw error;
     } finally { progress.close(); }

@@ -1,0 +1,469 @@
+{
+  "ok": true,
+  "aliasesNormalized": 5,
+  "outputs": [
+    {
+      "input": "帮我把微信从任务管理器里关掉",
+      "taskType": "computer_operation",
+      "goal": "微信不再运行",
+      "actions": [
+        "identify_running_processes",
+        "stop_target_processes",
+        "verify_target_absent"
+      ],
+      "targets": [
+        {
+          "type": "application_process",
+          "name": "微信",
+          "scope": "current_computer"
+        }
+      ],
+      "context": {
+        "source": "user_request"
+      },
+      "constraints": [
+        "不得影响AI Workbench",
+        "不得影响其他无关程序",
+        "只停止明确匹配的微信用户进程"
+      ],
+      "riskLevel": "medium",
+      "requiredCapabilities": [
+        "process.list",
+        "process.stop"
+      ],
+      "successCriteria": [
+        "停止前列出精确匹配的进程和PID",
+        "停止后再次查询并确认相关进程不存在"
+      ],
+      "requiresConfirmation": false,
+      "confidence": 0.95
+    },
+    {
+      "input": "微信别让它在后台运行了",
+      "taskType": "computer_operation",
+      "goal": "微信不再运行",
+      "actions": [
+        "identify_running_processes",
+        "stop_target_processes",
+        "verify_target_absent"
+      ],
+      "targets": [
+        {
+          "type": "application_process",
+          "name": "微信",
+          "scope": "current_computer"
+        }
+      ],
+      "context": {
+        "source": "user_request"
+      },
+      "constraints": [
+        "不得影响AI Workbench",
+        "不得影响其他无关程序",
+        "只停止明确匹配的微信用户进程"
+      ],
+      "riskLevel": "medium",
+      "requiredCapabilities": [
+        "process.list",
+        "process.stop"
+      ],
+      "successCriteria": [
+        "停止前列出精确匹配的进程和PID",
+        "停止后再次查询并确认相关进程不存在"
+      ],
+      "requiresConfirmation": false,
+      "confidence": 0.93
+    },
+    {
+      "input": "把微信彻底退出一下",
+      "taskType": "computer_operation",
+      "goal": "微信不再运行",
+      "actions": [
+        "identify_running_processes",
+        "stop_target_processes",
+        "verify_target_absent"
+      ],
+      "targets": [
+        {
+          "type": "application_process",
+          "name": "微信",
+          "scope": "current_computer"
+        }
+      ],
+      "context": {
+        "source": "user_request"
+      },
+      "constraints": [
+        "不得影响AI Workbench",
+        "不得影响其他无关程序",
+        "只停止明确匹配的微信用户进程"
+      ],
+      "riskLevel": "medium",
+      "requiredCapabilities": [
+        "process.list",
+        "process.stop"
+      ],
+      "successCriteria": [
+        "停止前列出精确匹配的进程和PID",
+        "停止后再次查询并确认相关进程不存在"
+      ],
+      "requiresConfirmation": false,
+      "confidence": 0.94
+    },
+    {
+      "input": "微信太占资源了，处理掉",
+      "taskType": "computer_operation",
+      "goal": "微信不再运行",
+      "actions": [
+        "identify_running_processes",
+        "stop_target_processes",
+        "verify_target_absent"
+      ],
+      "targets": [
+        {
+          "type": "application_process",
+          "name": "微信",
+          "scope": "current_computer"
+        }
+      ],
+      "context": {
+        "source": "user_request"
+      },
+      "constraints": [
+        "不得影响AI Workbench",
+        "不得影响其他无关程序",
+        "只停止明确匹配的微信用户进程"
+      ],
+      "riskLevel": "medium",
+      "requiredCapabilities": [
+        "process.list",
+        "process.stop"
+      ],
+      "successCriteria": [
+        "停止前列出精确匹配的进程和PID",
+        "停止后再次查询并确认相关进程不存在"
+      ],
+      "requiresConfirmation": false,
+      "confidence": 0.88
+    },
+    {
+      "input": "先结束微信进程，但不要影响AI Workbench",
+      "taskType": "computer_operation",
+      "goal": "微信不再运行",
+      "actions": [
+        "identify_running_processes",
+        "stop_target_processes",
+        "verify_target_absent"
+      ],
+      "targets": [
+        {
+          "type": "application_process",
+          "name": "微信",
+          "scope": "current_computer"
+        }
+      ],
+      "context": {
+        "source": "user_request"
+      },
+      "constraints": [
+        "不得影响AI Workbench",
+        "不得影响其他无关程序",
+        "只停止明确匹配的微信用户进程"
+      ],
+      "riskLevel": "medium",
+      "requiredCapabilities": [
+        "process.list",
+        "process.stop"
+      ],
+      "successCriteria": [
+        "停止前列出精确匹配的进程和PID",
+        "停止后再次查询并确认相关进程不存在"
+      ],
+      "requiresConfirmation": false,
+      "confidence": 0.97
+    },
+    {
+      "input": "读取这个文件并总结",
+      "taskType": "file_operation",
+      "goal": "读取指定文件并总结内容",
+      "actions": [
+        "read",
+        "summarize"
+      ],
+      "targets": [
+        {
+          "type": "file",
+          "reference": "这个文件"
+        }
+      ],
+      "context": {
+        "requiresResolvedReference": true
+      },
+      "constraints": [],
+      "riskLevel": "low",
+      "requiredCapabilities": [
+        "file.read",
+        "conversation"
+      ],
+      "successCriteria": [
+        "基于本轮实际读取内容生成总结",
+        "文件保持不变"
+      ],
+      "requiresConfirmation": false,
+      "confidence": 0.86
+    },
+    {
+      "input": "把这个文件改成只读",
+      "taskType": "file_operation",
+      "goal": "将指定文件权限设置为只读",
+      "actions": [
+        "resolve_target",
+        "change_permissions",
+        "verify_permissions"
+      ],
+      "targets": [
+        {
+          "type": "file",
+          "reference": "这个文件"
+        }
+      ],
+      "context": {
+        "requiresResolvedReference": true
+      },
+      "constraints": [],
+      "riskLevel": "medium",
+      "requiredCapabilities": [
+        "file.permissions.modify"
+      ],
+      "successCriteria": [
+        "目标文件只读属性生效",
+        "重新查询权限确认"
+      ],
+      "requiresConfirmation": false,
+      "confidence": 0.86
+    },
+    {
+      "input": "整理这个文件夹",
+      "taskType": "file_operation",
+      "goal": "整理指定文件夹中的内容",
+      "actions": [
+        "inspect",
+        "propose_or_organize",
+        "verify"
+      ],
+      "targets": [
+        {
+          "type": "directory",
+          "reference": "这个文件夹"
+        }
+      ],
+      "context": {
+        "requiresResolvedReference": true
+      },
+      "constraints": [],
+      "riskLevel": "medium",
+      "requiredCapabilities": [
+        "file.list",
+        "file.manage"
+      ],
+      "successCriteria": [
+        "按明确规则完成整理",
+        "没有丢失文件"
+      ],
+      "requiresConfirmation": true,
+      "confidence": 0.75
+    },
+    {
+      "input": "帮我点一份晚饭",
+      "taskType": "commerce",
+      "goal": "订购一份晚饭",
+      "actions": [
+        "collect_preferences",
+        "select_items",
+        "place_order"
+      ],
+      "targets": [
+        {
+          "type": "meal",
+          "name": "晚饭"
+        }
+      ],
+      "context": {
+        "missing": [
+          "地址",
+          "餐食偏好",
+          "预算"
+        ]
+      },
+      "constraints": [],
+      "riskLevel": "high",
+      "requiredCapabilities": [
+        "commerce.menu.search",
+        "commerce.order",
+        "commerce.payment"
+      ],
+      "successCriteria": [
+        "订单内容、金额、地址经用户确认后提交"
+      ],
+      "requiresConfirmation": true,
+      "confidence": 0.82
+    },
+    {
+      "input": "把这段素材做成短视频",
+      "taskType": "media_creation",
+      "goal": "将指定素材制作成短视频",
+      "actions": [
+        "inspect_media",
+        "edit_video",
+        "render",
+        "verify_output"
+      ],
+      "targets": [
+        {
+          "type": "media",
+          "reference": "这段素材"
+        }
+      ],
+      "context": {
+        "requiresResolvedReference": true
+      },
+      "constraints": [],
+      "riskLevel": "low",
+      "requiredCapabilities": [
+        "media.read",
+        "media.video.create",
+        "file.write"
+      ],
+      "successCriteria": [
+        "输出可播放短视频",
+        "内容与素材和要求一致"
+      ],
+      "requiresConfirmation": false,
+      "confidence": 0.9
+    },
+    {
+      "input": "查一下最近AI行业的重要变化",
+      "taskType": "information_research",
+      "goal": "获取并总结近期AI行业重要变化",
+      "actions": [
+        "search",
+        "source_verify",
+        "summarize"
+      ],
+      "targets": [
+        {
+          "type": "topic",
+          "name": "AI行业重要变化"
+        }
+      ],
+      "context": {
+        "recency": "recent"
+      },
+      "constraints": [
+        "使用可核验来源"
+      ],
+      "riskLevel": "low",
+      "requiredCapabilities": [
+        "web.research",
+        "conversation"
+      ],
+      "successCriteria": [
+        "提供近期且可核验的重要变化和来源"
+      ],
+      "requiresConfirmation": false,
+      "confidence": 0.95
+    },
+    {
+      "input": "修复这个项目中的登录Bug",
+      "taskType": "code_task",
+      "goal": "定位并修复当前项目登录Bug",
+      "actions": [
+        "inspect_code",
+        "reproduce",
+        "modify",
+        "test",
+        "verify"
+      ],
+      "targets": [
+        {
+          "type": "project",
+          "reference": "这个项目"
+        },
+        {
+          "type": "bug",
+          "name": "登录Bug"
+        }
+      ],
+      "context": {
+        "requiresWorkspace": true
+      },
+      "constraints": [],
+      "riskLevel": "medium",
+      "requiredCapabilities": [
+        "code.read",
+        "code.modify",
+        "code.execute"
+      ],
+      "successCriteria": [
+        "Bug可复现后被修复",
+        "相关测试通过",
+        "无明显回归"
+      ],
+      "requiresConfirmation": false,
+      "confidence": 0.92
+    },
+    {
+      "input": "看看电脑为什么卡，能安全处理的就处理",
+      "taskType": "system_diagnosis",
+      "goal": "诊断电脑卡顿原因并只执行安全处理",
+      "actions": [
+        "collect_metrics",
+        "diagnose",
+        "propose_safe_actions",
+        "execute_safe_actions",
+        "verify"
+      ],
+      "targets": [
+        {
+          "type": "computer",
+          "scope": "current"
+        }
+      ],
+      "context": {
+        "permission": "safe_actions_only"
+      },
+      "constraints": [
+        "仅执行安全且可逆操作",
+        "不得影响关键程序或用户数据"
+      ],
+      "riskLevel": "medium",
+      "requiredCapabilities": [
+        "system.diagnose",
+        "process.list",
+        "system.safe_remediation"
+      ],
+      "successCriteria": [
+        "给出证据化原因",
+        "仅执行安全操作",
+        "处理后重新采集指标验证"
+      ],
+      "requiresConfirmation": false,
+      "confidence": 0.9
+    }
+  ],
+  "scheduler": {
+    "processStatus": "ready",
+    "processProviders": [
+      "local-process-provider",
+      "local-process-provider"
+    ],
+    "commerceStatus": "needs_confirmation",
+    "mediaStatus": "capability_unavailable",
+    "mediaMissing": [
+      "media.read",
+      "media.video.create",
+      "file.write"
+    ]
+  },
+  "keywordIntentHardcoding": false
+}

@@ -3,12 +3,12 @@
   "executor": "local read_file",
   "readFileCalls": 1,
   "codexCallsForRead": 0,
-  "simpleReadMs": 2,
+  "simpleReadMs": 5,
   "chatTimesMs": [
     0,
     0,
-    1,
     0,
+    1,
     0
   ],
   "progressGenerated": true,
