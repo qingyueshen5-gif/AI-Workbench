@@ -1,0 +1,62 @@
+{
+  "ok": true,
+  "gatewayPidUnchanged": 7148,
+  "runtimePids": [
+    39740,
+    31216
+  ],
+  "switchWithoutGatewayRestart": true,
+  "failedCandidateRolledBack": true,
+  "deployment": {
+    "runtimeSwitchInProgress": false,
+    "selected": {
+      "root": "E:\\aiw-gateway-switch-fixed\\rc1",
+      "commit": "rc1-commit",
+      "tag": "rc1",
+      "skipGitValidation": true,
+      "validatedAt": 1785644143810
+    },
+    "switchReason": "automatic_fallback",
+    "supervisorPid": 7148,
+    "updatedAt": 1785644144349,
+    "active": {
+      "root": "E:\\aiw-gateway-switch-fixed\\rc1",
+      "commit": "rc1-commit",
+      "tag": "rc1",
+      "skipGitValidation": true,
+      "validatedAt": 1785644143810
+    },
+    "runtimePid": 33456,
+    "lastSwitchCompletedAt": 1785644144340,
+    "lastSwitchError": "",
+    "stoppingCommit": "rc2-commit",
+    "failedTarget": {
+      "root": "E:\\aiw-gateway-switch-fixed\\bad",
+      "commit": "bad-commit",
+      "tag": "bad",
+      "skipGitValidation": true,
+      "validatedAt": 1785644143265
+    },
+    "rollbackInProgress": false,
+    "rollbackReason": "Runtime exited before ready: 2",
+    "lastRollback": {
+      "completed": true,
+      "at": 1785644144348,
+      "from": {
+        "root": "E:\\aiw-gateway-switch-fixed\\bad",
+        "commit": "bad-commit",
+        "tag": "bad",
+        "skipGitValidation": true,
+        "validatedAt": 1785644143090
+      },
+      "to": {
+        "root": "E:\\aiw-gateway-switch-fixed\\rc1",
+        "commit": "rc1-commit",
+        "tag": "rc1",
+        "skipGitValidation": true,
+        "validatedAt": 1785644143803
+      },
+      "reason": "Runtime exited before ready: 2"
+    }
+  }
+}

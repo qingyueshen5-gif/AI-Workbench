@@ -1,0 +1,24 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import { join } from 'node:path';
+import { RuntimeSupervisor, writeRuntimeSelection } from './runtime-supervisor.mjs';
+
+const root='E:\\aiw-gateway-switch-fixed';
+await fs.rm(root,{recursive:true,force:true});
+await fs.mkdir(root,{recursive:true});
+const bridge=join(root,'bridge'); const ipc=join(bridge,'ipc'); await fs.mkdir(join(ipc,'jobs'),{recursive:true});
+process.env.AIW_FEISHU_IPC_DIR=ipc;
+const makeRuntime=async(name,commit,fail=false)=>{const dir=join(root,name);await fs.mkdir(join(dir,'scripts'),{recursive:true});await fs.writeFile(join(dir,'scripts','workbench-agent-runtime.mjs'),`import fs from 'node:fs/promises';import {join} from 'node:path';const ipc=process.env.AIW_FEISHU_IPC_DIR;${fail?'process.exit(2);':''}await fs.mkdir(ipc,{recursive:true});const p=join(ipc,'worker-state.json');await fs.writeFile(p,JSON.stringify({status:'online',pid:process.pid,gitCommit:process.env.AIW_RUNTIME_GIT_COMMIT,projectRoot:process.cwd()}));process.on('SIGTERM',()=>process.exit(0));setInterval(()=>{},1000);`);return {root:dir,commit,tag:name,skipGitValidation:true};};
+const rc1=await makeRuntime('rc1','rc1-commit');const rc2=await makeRuntime('rc2','rc2-commit');const bad=await makeRuntime('bad','bad-commit',true);
+const selectionPath=join(bridge,'runtime-selection.json'), deploymentPath=join(bridge,'deployment-state.json'), workerStatePath=join(ipc,'worker-state.json');
+process.env.AIW_RUNTIME_SELECTION_FILE=selectionPath;process.env.AIW_DEPLOYMENT_STATE_FILE=deploymentPath;
+const supervisor=new RuntimeSupervisor({selectionPath,deploymentPath,workerStatePath,pollMs:50,startTimeoutMs:3000});
+const gatewayPid=process.pid;
+await supervisor.apply({selected:rc1,fallback:rc1});const pid1=supervisor.child.pid;assert.equal(supervisor.current.commit,'rc1-commit');assert.equal(process.pid,gatewayPid);
+await supervisor.apply({selected:rc2,fallback:rc1});const pid2=supervisor.child.pid;assert.notEqual(pid2,pid1);assert.equal(supervisor.current.commit,'rc2-commit');assert.equal(process.pid,gatewayPid);
+await supervisor.apply({selected:bad,fallback:rc1});assert.equal(supervisor.current.commit,'rc1-commit');assert.equal(process.pid,gatewayPid);
+const deployment=JSON.parse(await fs.readFile(deploymentPath,'utf8'));assert.equal(deployment.lastRollback.completed,true);assert.equal(deployment.active.commit,'rc1-commit');
+await supervisor.stopCurrent('test_complete');
+const result={ok:true,gatewayPidUnchanged:gatewayPid,runtimePids:[pid1,pid2],switchWithoutGatewayRestart:true,failedCandidateRolledBack:true,deployment};
+await fs.mkdir(join(process.cwd(),'test-evidence'),{recursive:true});await fs.writeFile(join(process.cwd(),'test-evidence','gateway-runtime-switch.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result));
