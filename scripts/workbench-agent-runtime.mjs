@@ -49,6 +49,10 @@ const runtime = new AgentRuntime({
 });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const runningJobs=new Map();
+export function shouldStopJobForActiveTask(job, active) {
+  const sameTask = Boolean(active && active.activeTaskId === (job.activeTaskId || job.messageId) && active.originalMessageId === (job.originalMessageId || job.messageId));
+  return { sameTask, cancelled: sameTask && active.cancelled === true, blocked: sameTask && (active.cancelled === true || active.paused === true || active.stage === 'paused' || active.waitingUser === true) };
+}
 async function executeClaimedJob(job,workerId) {
   try {
     const result=await runtime.handle(job);
@@ -90,11 +94,12 @@ export async function supervisorLoop() {
   while (!stopping) {
     for (const job of await listJobs()) {
       const active = await activeTasks.load(job.conversationId || job.chatId);
-      if (active?.cancelled || active?.stage === 'failed') {
+      const taskGate = shouldStopJobForActiveTask(job, active);
+      if (taskGate.cancelled) {
         await completeJob(job, { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: false, text: '任务已取消，不会继续执行。', errorClass: 'Cancelled', finishedAt: Date.now() });
         continue;
       }
-      if (active?.paused || active?.stage === 'paused' || active?.waitingUser) continue;
+      if (taskGate.blocked) continue;
       if (!(await claimJob(job, workerId))) continue;
       await runtimeEvent('job_claimed', { messageId: job.messageId, claimedAt: Date.now(), workerId, runtimePid: process.pid });
       const execution=executeClaimedJob(job,workerId);

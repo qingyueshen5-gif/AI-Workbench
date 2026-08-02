@@ -10,6 +10,7 @@ actions/targets/constraints/requiredCapabilities/successCriteria必须为数组�
 低置信度时taskType=clarification，actions为空，successCriteria说明需澄清内容。高风险、付款、不可逆删除、批量系统操作必须requiresConfirmation=true。
 不得因为当前可能缺少工具而拒绝，不得输出Provider名，不得声称任务已经完成。`;
 function parseJson(text) { return JSON.parse(String(text||'').trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'')); }
+function correctionPrompt(error, originalText) { return `上一次Task Interpreter输出不符合契约：${error.message}。请只纠正JSON结构；普通问候、闲聊、问答必须使用taskType=chat。原始用户消息：${originalText}`; }
 export function validateTaskInterpretation(value) {
   for (const key of taskSchema.required) if (!(key in (value||{}))) throw new Error(`Task Interpreter缺少字段 ${key}`);
   if (!allowedTaskTypes.has(value.taskType)) throw new Error('Task Interpreter taskType无效');
@@ -26,8 +27,18 @@ export function validateTaskInterpretation(value) {
 export class TaskInterpreter {
   constructor(options={}) { this.model=options.model; if(!this.model?.understand) throw new Error('TaskInterpreter需要结构化理解模型'); }
   async interpret({text,conversationContext=[],environmentContext={}}) {
-    const result=await this.model.understand({messages:[{role:'system',content:interpreterPrompt},{role:'user',content:JSON.stringify({userMessage:String(text||''),conversationContext,environmentContext})}],responseFormat:{type:'json_object'}});
-    return validateTaskInterpretation(parseJson(result.text));
+    const messages=[{role:'system',content:interpreterPrompt},{role:'user',content:JSON.stringify({userMessage:String(text||''),conversationContext,environmentContext})}];
+    let firstError;
+    try {
+      const result=await this.model.understand({messages,responseFormat:{type:'json_object'}});
+      return validateTaskInterpretation(parseJson(result.text));
+    } catch(error) { firstError=error; }
+    try {
+      const corrected=await this.model.understand({messages:[...messages,{role:'user',content:correctionPrompt(firstError,String(text||''))}],responseFormat:{type:'json_object'}});
+      return validateTaskInterpretation(parseJson(corrected.text));
+    } catch {
+      return {taskType:'clarification',goal:`澄清用户消息：${String(text||'').trim()}`,actions:[],targets:[],context:{fallback:'invalid_task_interpreter_output'},constraints:[],riskLevel:'low',requiredCapabilities:[],successCriteria:['请用户补充或重述需求'],requiresConfirmation:false,confidence:0.5};
+    }
   }
 }
 export { interpreterPrompt };
