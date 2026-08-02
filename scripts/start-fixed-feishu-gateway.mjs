@@ -10,9 +10,10 @@ const baselineCommit = process.env.AIW_BASELINE_RUNTIME_COMMIT || '8d62cdd6432f5
 const ipcRoot = join(runtimeRoot, 'feishu-workbench-bridge', 'ipc');
 const conversationRoot = join(runtimeRoot, 'feishu-workbench-bridge', 'conversations');
 await writeRuntimeSelection({ selected: { root: baselineRoot, commit: baselineCommit, tag: 'v0.4.7-workflow-baseline-rc1' }, fallback: { root: baselineRoot, commit: baselineCommit, tag: 'v0.4.7-workflow-baseline-rc1' }, requestedBy: 'gateway-startup' });
-const common = { ...process.env, AIW_FEISHU_IPC_DIR: ipcRoot, AIW_CONVERSATION_DIR: conversationRoot, AIW_ACTIVE_TASK_DIR: join(runtimeRoot, 'feishu-workbench-bridge', 'active-tasks'), AIW_RUNTIME_GIT_COMMIT: baselineCommit };
+const gatewayCommit = process.env.AIW_GATEWAY_GIT_COMMIT || 'e91da8839ab16c7bb52249b3ecb2897890a6aff3';
+const common = { ...process.env, AIW_FEISHU_IPC_DIR: ipcRoot, AIW_CONVERSATION_DIR: conversationRoot, AIW_ACTIVE_TASK_DIR: join(runtimeRoot, 'feishu-workbench-bridge', 'active-tasks'), AIW_GATEWAY_GIT_COMMIT: gatewayCommit };
 const gateway = spawn(process.execPath, ['scripts/workbench-feishu-adapter.mjs'], { cwd: gatewayRoot, env: common, stdio: 'inherit' });
-const supervisor = spawn(process.execPath, ['scripts/runtime-supervisor.mjs'], { cwd: gatewayRoot, env: common, stdio: 'inherit' });
+const supervisor = spawn(process.execPath, ['scripts/runtime-supervisor.mjs'], { cwd: gatewayRoot, env: { ...common, AIW_RUNTIME_GIT_COMMIT: baselineCommit }, stdio: 'inherit' });
 let stopping=false;
 function stop(code=0){if(stopping)return;stopping=true;gateway.kill('SIGTERM');supervisor.kill('SIGTERM');setTimeout(()=>process.exit(code),100);}
 process.once('SIGINT',()=>stop(0));process.once('SIGTERM',()=>stop(0));
