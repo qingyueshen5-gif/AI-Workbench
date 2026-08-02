@@ -17,7 +17,16 @@ export const gatewayHealthPath = join(bridgeStateRoot, 'gateway-health.json');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function readJson(path, fallback = null) { try { return JSON.parse(await fs.readFile(path, 'utf8')); } catch { return fallback; } }
-async function writeJson(path, value) { await fs.mkdir(dirname(path), { recursive: true }); const temp = `${path}.${process.pid}.${Date.now()}.tmp`; await fs.writeFile(temp, `${JSON.stringify(value, null, 2)}\n`, 'utf8'); await fs.rename(temp, path); }
+async function writeJson(path, value) {
+  await fs.mkdir(dirname(path), { recursive: true });
+  const temp = `${path}.${process.pid}.${Date.now()}.tmp`;
+  await fs.writeFile(temp, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+  try { await fs.rename(temp, path); }
+  catch (error) {
+    if (!['EPERM', 'EACCES', 'EEXIST'].includes(error.code)) { await fs.rm(temp, { force: true }); throw error; }
+    try { await fs.copyFile(temp, path); } finally { await fs.rm(temp, { force: true }); }
+  }
+}
 async function git(root, args) { const { stdout } = await execFileAsync(gitExecutable, ['-c', `safe.directory=${root.replaceAll('\\','/')}`, ...args], { cwd: root, timeout: 10000, windowsHide: true }); return stdout.trim(); }
 async function executableVersion(executable, args, label, cwd) {
   try { const { stdout, stderr } = await execFileAsync(executable, args, { cwd, timeout: 10000, windowsHide: true }); return (stdout || stderr).trim(); }
