@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { runtimeRoot } from '../runtime-paths.mjs';
 
 const execFileAsync = promisify(execFile);
+const gitExecutable = process.env.AIW_GIT_EXECUTABLE || (process.platform === 'win32' ? 'C:/Program Files/Git/cmd/git.exe' : 'git');
 export const bridgeStateRoot = join(runtimeRoot, 'feishu-workbench-bridge');
 export const selectionPath = process.env.AIW_RUNTIME_SELECTION_FILE || join(bridgeStateRoot, 'runtime-selection.json');
 export const deploymentPath = process.env.AIW_DEPLOYMENT_STATE_FILE || join(bridgeStateRoot, 'deployment-state.json');
@@ -14,7 +15,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function readJson(path, fallback = null) { try { return JSON.parse(await fs.readFile(path, 'utf8')); } catch { return fallback; } }
 async function writeJson(path, value) { await fs.mkdir(dirname(path), { recursive: true }); const temp = `${path}.${process.pid}.${Date.now()}.tmp`; await fs.writeFile(temp, `${JSON.stringify(value, null, 2)}\n`, 'utf8'); await fs.rename(temp, path); }
-async function git(root, args) { const { stdout } = await execFileAsync('git', ['-c', `safe.directory=${root.replaceAll('\\','/')}`, ...args], { cwd: root, timeout: 10000, windowsHide: true }); return stdout.trim(); }
+async function git(root, args) { const { stdout } = await execFileAsync(gitExecutable, ['-c', `safe.directory=${root.replaceAll('\\','/')}`, ...args], { cwd: root, timeout: 10000, windowsHide: true }); return stdout.trim(); }
 
 export async function validateRuntimeTarget(target) {
   const root = resolve(target.root || '');
