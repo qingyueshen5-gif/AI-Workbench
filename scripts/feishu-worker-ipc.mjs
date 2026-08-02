@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import { join, dirname, isAbsolute, resolve } from 'node:path';
+import { createHash } from 'node:crypto';
 import { runtimeRoot } from '../runtime-paths.mjs';
 
 const configuredIpcRoot = String(process.env.AIW_FEISHU_IPC_DIR || '').trim();
@@ -32,6 +33,11 @@ async function readJson(path, fallback = null) {
 }
 function safeName(id) { return String(id || '').replace(/[^A-Za-z0-9._-]/g, '_'); }
 function fileFor(dir, id) { return join(dir, `${safeName(id)}.json`); }
+
+export function deliveryIdempotencyKey(messageId, purpose = 'final') {
+  if (!String(messageId || '').trim()) throw new Error('message_id is required');
+  return createHash('sha256').update(`aiw-${purpose}:${messageId}`).digest('hex').slice(0, 32);
+}
 
 export async function ensureIpcDirs() {
   await Promise.all([jobsDir, resultsDir, claimsDir, deliveredDir, deliveryClaimsDir, progressDir, progressClaimsDir, progressDeliveredDir, acceptedDir, acknowledgedDir, archiveDir].map((path) => fsp.mkdir(path, { recursive: true })));
@@ -307,7 +313,7 @@ export async function claimResultDelivery(messageId, metadata = {}) {
   const target = fileFor(deliveryClaimsDir, messageId);
   try {
     const handle = await fsp.open(target, 'wx');
-    try { await handle.writeFile(`${JSON.stringify({ messageId, claimedAt: Date.now(), ...metadata }, null, 2)}\n`, 'utf8'); }
+    try { await handle.writeFile(`${JSON.stringify({ messageId, deliveryKey: deliveryIdempotencyKey(messageId), claimedAt: Date.now(), ...metadata }, null, 2)}\n`, 'utf8'); }
     finally { await handle.close(); }
     if (exists(deliveredDir, messageId)) { await fsp.rm(target, { force: true }); return false; }
     return true;

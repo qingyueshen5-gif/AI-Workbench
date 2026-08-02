@@ -1,0 +1,35 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import { join } from 'node:path';
+
+const root = await fs.mkdtemp(join(os.tmpdir(), 'aiw-delivery-idempotency-'));
+process.env.AIW_FEISHU_IPC_DIR = root;
+process.env.AIW_DELIVERY_CLAIM_STALE_MS = '1000';
+const ipc = await import(`./feishu-worker-ipc.mjs?delivery=${Date.now()}`);
+
+const messageId = 'delivery-message-1';
+const key = ipc.deliveryIdempotencyKey(messageId);
+assert.equal(key, ipc.deliveryIdempotencyKey(messageId));
+assert.notEqual(key, ipc.deliveryIdempotencyKey(messageId, 'progress'));
+assert.equal(key.length, 32);
+assert.equal(await ipc.claimResultDelivery(messageId, { pid: 101 }), true);
+assert.equal(await ipc.claimResultDelivery(messageId, { pid: 102 }), false);
+const claimPath = join(root, 'delivery-claims', `${messageId}.json`);
+const staleClaim = JSON.parse(await fs.readFile(claimPath, 'utf8'));
+await fs.writeFile(claimPath, JSON.stringify({ ...staleClaim, claimedAt: Date.now() - 2000 }));
+assert.equal(await ipc.claimResultDelivery(messageId, { pid: 103 }), true);
+const claim = JSON.parse(await fs.readFile(claimPath, 'utf8'));
+assert.equal(claim.deliveryKey, key);
+assert.equal(claim.pid, 103);
+const resultPath = join(root, 'results', `${messageId}.json`);
+await fs.mkdir(join(root, 'results'), { recursive: true });
+await fs.writeFile(resultPath, JSON.stringify({ messageId, text: 'done' }));
+await ipc.markDelivered({ messageId, _path: resultPath }, { deliveryKey: key, remoteMessageId: 'remote-1' });
+assert.equal(await ipc.wasDelivered(messageId), true);
+assert.equal(await ipc.claimResultDelivery(messageId, { pid: 104 }), false);
+const marker = JSON.parse(await fs.readFile(join(root, 'delivered', `${messageId}.json`), 'utf8'));
+assert.equal(marker.deliveryKey, key);
+assert.equal(marker.remoteMessageId, 'remote-1');
+await fs.rm(root, { recursive: true, force: true });
+console.log(JSON.stringify({ ok: true, module: 'FEISHU-DELIVERY-IDEMPOTENCY-001', stableDeliveryKey: true, staleClaimRecovery: true, deliveredFence: true }));
