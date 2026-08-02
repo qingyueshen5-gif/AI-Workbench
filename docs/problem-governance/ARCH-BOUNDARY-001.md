@@ -9,5 +9,5 @@
 - **修复原则：** Gateway只负责通信、持久化、队列和交付；所有Active Task和Intent语义必须在Runtime领取Job后执行。
 - **自动化回归用例：** `scripts/verify-gateway-runtime-business-boundary.mjs`。
 - **防复发门禁：** Gateway源码禁止导入或引用ActiveTaskController、Intent Router、control语义；合法文本必须无条件写入一个原始Job；Runtime切换测试必须使用`AgentRuntime.handle`这一真实Job入口验证新业务逻辑立即生效。
-- **关联提交：** 待候选提交后回填。
+- **关联提交：** `1e7db6446d61ff6b3872d7b2317d28256a65041b`
 - **是否再次发生：** 否。再次出现时按本门禁失效处理，不得只重启Gateway或追加关键词补丁。
