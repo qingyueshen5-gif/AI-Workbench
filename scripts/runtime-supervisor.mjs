@@ -7,15 +7,39 @@ import { runtimeRoot } from '../runtime-paths.mjs';
 
 const execFileAsync = promisify(execFile);
 const gitExecutable = process.env.AIW_GIT_EXECUTABLE || (process.platform === 'win32' ? 'C:/Program Files/Git/cmd/git.exe' : 'git');
+const npmExecutable = process.env.AIW_NPM_EXECUTABLE || (process.platform === 'win32' ? join(dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js') : 'npm');
+const npmCommand = process.platform === 'win32' ? { executable: process.execPath, args: [npmExecutable, '--version'] } : { executable: npmExecutable, args: ['--version'] };
 export const bridgeStateRoot = join(runtimeRoot, 'feishu-workbench-bridge');
 export const selectionPath = process.env.AIW_RUNTIME_SELECTION_FILE || join(bridgeStateRoot, 'runtime-selection.json');
 export const deploymentPath = process.env.AIW_DEPLOYMENT_STATE_FILE || join(bridgeStateRoot, 'deployment-state.json');
 export const workerStatePath = join(bridgeStateRoot, 'ipc', 'worker-state.json');
+export const gatewayHealthPath = join(bridgeStateRoot, 'gateway-health.json');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function readJson(path, fallback = null) { try { return JSON.parse(await fs.readFile(path, 'utf8')); } catch { return fallback; } }
 async function writeJson(path, value) { await fs.mkdir(dirname(path), { recursive: true }); const temp = `${path}.${process.pid}.${Date.now()}.tmp`; await fs.writeFile(temp, `${JSON.stringify(value, null, 2)}\n`, 'utf8'); await fs.rename(temp, path); }
 async function git(root, args) { const { stdout } = await execFileAsync(gitExecutable, ['-c', `safe.directory=${root.replaceAll('\\','/')}`, ...args], { cwd: root, timeout: 10000, windowsHide: true }); return stdout.trim(); }
+async function executableVersion(executable, args, label, cwd) {
+  try { const { stdout, stderr } = await execFileAsync(executable, args, { cwd, timeout: 10000, windowsHide: true }); return (stdout || stderr).trim(); }
+  catch (error) { throw new Error(`Preflight dependency unavailable: ${label} (${executable}): ${error.message}`); }
+}
+export async function preflightRuntimeSwitch(target, options = {}) {
+  const root = resolve(target.root || '');
+  if (!root || !String(target.commit || '').trim()) throw new Error('Preflight target requires root and full commit');
+  const gitVersion = await executableVersion(gitExecutable, ['--version'], 'git', root);
+  const nodeVersion = await executableVersion(process.execPath, ['--version'], 'node', root);
+  const npmVersion = await executableVersion(npmCommand.executable, npmCommand.args, 'npm', root);
+  const validated = await validateRuntimeTarget(target);
+  if (target.skipGitValidation !== true) await fs.access(join(validated.root, 'package.json'));
+  await fs.access(join(validated.root, 'scripts', 'workbench-agent-runtime.mjs'));
+  await fs.access(options.ipcRoot || dirname(workerStatePath));
+  const gateway = await readJson(options.gatewayHealthPath || gatewayHealthPath, {});
+  if (options.requireGateway !== false) {
+    if (!gateway.processAlive || !gateway.websocketConnected || gateway.connectionState !== 'healthy') throw new Error('Preflight Gateway is not healthy');
+    if (gateway.duplicateConsumerDetected) throw new Error('Preflight detected duplicate Gateway consumer');
+  }
+  return { target: validated, dependencies: { git: { executable: gitExecutable, version: gitVersion }, node: { executable: process.execPath, version: nodeVersion }, npm: { executable: npmExecutable, version: npmVersion } }, gatewayPid: gateway.pid || 0, checkedAt: Date.now() };
+}
 
 export async function validateRuntimeTarget(target) {
   const root = resolve(target.root || '');
@@ -94,8 +118,10 @@ export class RuntimeSupervisor {
     }
   }
   async apply(selection) {
-    const desired = await validateRuntimeTarget(selection.selected);
+    const preflight = await preflightRuntimeSwitch(selection.selected, { ipcRoot: this.ipcRoot, requireGateway: selection.selected?.skipGitValidation === true ? false : undefined });
+    const desired = preflight.target;
     if (this.current?.commit === desired.commit && this.current?.root === desired.root && this.child?.exitCode === null) return;
+    await this.record({ preflightPassed: true, preflightCheckedAt: preflight.checkedAt, preflightTarget: desired, preflightDependencies: preflight.dependencies, preflightGatewayPid: preflight.gatewayPid, lastPreflightError: '' });
     await this.stopCurrent('selection_changed');
     try { await this.startTarget(desired, 'selected'); }
     catch (error) {
@@ -108,7 +134,10 @@ export class RuntimeSupervisor {
   async run() {
     while (!this.stopping) {
       const selection = await readJson(this.selectionPath, null);
-      if (selection?.selected && selection?.fallback) await this.apply(selection);
+      if (selection?.selected && selection?.fallback) {
+        try { await this.apply(selection); }
+        catch (error) { await this.record({ preflightPassed: false, lastPreflightError: error.message, runtimeSwitchInProgress: false }); }
+      }
       await sleep(this.pollMs);
     }
     await this.stopCurrent('supervisor_stop');
