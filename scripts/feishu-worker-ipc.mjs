@@ -264,17 +264,25 @@ export async function claimJob(job, workerId) {
   const claim = fileFor(claimsDir, job.messageId);
   try {
     const handle = await fsp.open(claim, 'wx');
-    try { await handle.writeFile(`${JSON.stringify({ messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, workerId, claimedAt: Date.now() }, null, 2)}\n`, 'utf8'); }
+    try { await handle.writeFile(`${JSON.stringify({ messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, workerId, claimedAt: Date.now(), renewedAt: Date.now() }, null, 2)}\n`, 'utf8'); }
     finally { await handle.close(); }
     return true;
   } catch (error) {
     if (error.code !== 'EEXIST') throw error;
     const current = await readJson(claim, {});
     const staleMs = Number(process.env.AIW_WORKER_CLAIM_STALE_MS || 150000);
-    if (Date.now() - Number(current.claimedAt || 0) <= staleMs) return false;
+    if (Date.now() - Number(current.renewedAt || current.claimedAt || 0) <= staleMs) return false;
     await fsp.rm(claim, { force: true });
     return claimJob(job, workerId);
   }
+}
+
+export async function renewJobClaim(messageId, workerId, metadata = {}) {
+  const path = fileFor(claimsDir, messageId);
+  const current = await readJson(path, null);
+  if (!current || current.workerId !== workerId) return false;
+  await writeJsonAtomic(path, { ...current, ...metadata, messageId, workerId, renewedAt: Date.now() });
+  return true;
 }
 
 export async function completeJob(job, result) {

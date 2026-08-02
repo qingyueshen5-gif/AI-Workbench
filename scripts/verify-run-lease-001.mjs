@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import { join } from 'node:path';
+
+const root = await fs.mkdtemp(join(os.tmpdir(), 'aiw-run-lease-'));
+process.env.AIW_FEISHU_IPC_DIR = root;
+process.env.AIW_WORKER_CLAIM_STALE_MS = '1000';
+const ipc = await import(`./feishu-worker-ipc.mjs?lease=${Date.now()}`);
+const job = { messageId: 'lease-job', originalMessageId: 'lease-job' };
+assert.equal(await ipc.claimJob(job, 'worker-a'), true);
+assert.equal(await ipc.claimJob(job, 'worker-b'), false);
+assert.equal(await ipc.renewJobClaim(job.messageId, 'worker-b'), false);
+assert.equal(await ipc.renewJobClaim(job.messageId, 'worker-a', { sequence: 2 }), true);
+const path = join(root, 'claims', 'lease-job.json');
+let lease = JSON.parse(await fs.readFile(path, 'utf8'));
+assert.equal(lease.workerId, 'worker-a');
+assert.equal(lease.sequence, 2);
+await fs.writeFile(path, JSON.stringify({ ...lease, claimedAt: Date.now() - 2000, renewedAt: Date.now() }));
+assert.equal(await ipc.claimJob(job, 'worker-b'), false, 'fresh renewal must prevent lease theft');
+await fs.writeFile(path, JSON.stringify({ ...lease, claimedAt: Date.now() - 2000, renewedAt: Date.now() - 2000 }));
+assert.equal(await ipc.claimJob(job, 'worker-b'), true, 'expired lease must be recoverable');
+lease = JSON.parse(await fs.readFile(path, 'utf8'));
+assert.equal(lease.workerId, 'worker-b');
+await fs.rm(root, { recursive: true, force: true });
+console.log(JSON.stringify({ ok: true, module: 'RUN-LEASE-001', exclusiveClaim: true, ownerRenewal: true, foreignRenewalRejected: true, heartbeatPreventsTheft: true, expiredLeaseRecovered: true }));

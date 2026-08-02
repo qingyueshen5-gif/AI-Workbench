@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { AgentRuntime } from '../agents/agent-runtime.mjs';
-import { claimJob, completeJob, enqueueProgress, ensureIpcDirs, listJobs, releaseClaim, writeWorkerState } from './feishu-worker-ipc.mjs';
+import { claimJob, completeJob, enqueueProgress, ensureIpcDirs, listJobs, releaseClaim, renewJobClaim, writeWorkerState } from './feishu-worker-ipc.mjs';
 const runtimeEventsPath = join(process.env.AI_WORKBENCH_RUNTIME_DIR || join(process.env.APPDATA || process.env.USERPROFILE || process.cwd(), 'ai-workbench'), 'feishu-workbench-bridge', 'events.jsonl');
 async function runtimeEvent(type, payload = {}) { await fs.mkdir(dirname(runtimeEventsPath), { recursive: true }); await fs.appendFile(runtimeEventsPath, `${JSON.stringify({ at: new Date().toISOString(), type, payload })}\n`, 'utf8'); }
 import { createHash } from 'node:crypto';
@@ -61,6 +61,8 @@ export function shouldStopJobForActiveTask(job, task) {
 }
 export function shouldSuppressCompletedResult(job,task,result={}){const gate=shouldStopJobForActiveTask(job,task);return gate.shouldStop||(!result.controlKind&&task?.originalMessageId===(job.originalMessageId||job.messageId)&&TERMINAL_TASK_STATES.has(task.currentState)&&!task.finalResult);}
 async function executeClaimedJob(job,workerId) {
+  const leaseTimer=setInterval(()=>renewJobClaim(job.messageId,workerId,{runtimePid:process.pid}).catch(()=>{}),Number(process.env.AIW_RUN_LEASE_RENEW_MS||30000));
+  leaseTimer.unref?.();
   try {
     const result=await runtime.handle(job);
     const task=await tasks.load(job.taskId||job.messageId);
@@ -74,7 +76,7 @@ async function executeClaimedJob(job,workerId) {
   } catch(error) {
     await completeJob(job,{messageId:job.messageId,originalMessageId:job.originalMessageId||job.messageId,conversationId:job.conversationId||job.chatId,chatId:job.chatId,ok:false,text:'这次没有完成，我已经停止。你可以继续发送新消息。',errorClass:error.name||'Error',finishedAt:Date.now()});
     await patchStatus({codex:'online',latestError:error.message||String(error)});
-  } finally { await releaseClaim(job.messageId).catch(()=>{});runningJobs.delete(job.messageId); }
+  } finally { clearInterval(leaseTimer);await releaseClaim(job.messageId).catch(()=>{});runningJobs.delete(job.messageId); }
 }
 
 export async function supervisorLoop() {
