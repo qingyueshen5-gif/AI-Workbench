@@ -59,9 +59,14 @@ async function event(type, payload = {}) {
 }
 async function writeJsonAtomic(path, value) {
   await fsp.mkdir(dirname(path), { recursive: true });
-  const tmp = `${path}.${process.pid}.tmp`;
+  const tmp = `${path}.${process.pid}.${Date.now()}.tmp`;
   await fsp.writeFile(tmp, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
-  await fsp.rename(tmp, path);
+  try {
+    await fsp.rename(tmp, path);
+  } catch (error) {
+    if (!['EPERM', 'EACCES', 'EEXIST'].includes(error.code)) { await fsp.rm(tmp, { force: true }); throw error; }
+    try { await fsp.copyFile(tmp, path); } finally { await fsp.rm(tmp, { force: true }); }
+  }
 }
 async function appIdLockOwner(appId) {
   const fingerprint = createHash('sha256').update(String(appId)).digest('hex').slice(0, 16);
@@ -140,17 +145,26 @@ export async function startWorkbenchFeishuAdapter() {
   };
   const dispatcher = new lark.EventDispatcher({}).register({
     'im.message.receive_v1': async (data) => {
-      health.lastEventReceivedAt = Date.now();
+      const rawReceivedAt = Date.now();
+      const rawMessageId = String(data?.message?.message_id || '');
+      health.lastEventReceivedAt = rawReceivedAt;
       health.lastEventType = 'im.message.receive_v1';
-      const messageId = String(data?.message?.message_id || '');
+      await event('raw_event_received', { eventType: 'im.message.receive_v1', messageId: rawMessageId, eventId: String(data?.event_id || ''), receivedAt: rawReceivedAt, pid: process.pid });
+      const messageId = rawMessageId;
       const chatId = String(data?.message?.chat_id || '');
       const openId = String(data?.sender?.sender_id?.open_id || '');
       const text = textOf(data?.message?.content);
-      if (!messageId || !text || !(await claimMessage(messageId))) return;
-      const receivedAt = Date.now();
+      if (!messageId || !text) { await event('raw_event_rejected', { messageId, reason: !messageId ? 'missing_message_id' : 'empty_text', pid: process.pid }); return; }
+      if (!(await claimMessage(messageId))) { await event('duplicate_event_ignored', { messageId, pid: process.pid }); return; }
+      const receivedAt = rawReceivedAt;
       const metadata = { eventId: data?.event_id || '', chatId, conversationId: chatId, openId, text, receivedAt };
       const acceptedOnce = await acceptMessageOnce(messageId, metadata);
       if (!acceptedOnce) return;
+      health.lastMessageAcceptedAt = Date.now();
+      acknowledge(messageId).then(async (reactionId) => {
+        const marked = await markAcknowledged(messageId, { reactionId, emojiType: 'OK' });
+        if (marked) await event('message_acknowledged', { messageId, reactionId, emojiType: 'OK', acknowledgedAt: Date.now(), latencyMs: Date.now() - receivedAt });
+      }).catch((error) => event('acknowledgement_failed', { messageId, failedAt: Date.now(), latencyMs: Date.now() - receivedAt, message: error.message }));
       const control = await activeController.handle({ messageId, originalMessageId: messageId, chatId, conversationId: chatId, openId, text, receivedAt });
       let jobCreated = false;
       if (control.intercepted) {
@@ -167,11 +181,6 @@ export async function startWorkbenchFeishuAdapter() {
         await activeTasks.create({ messageId, originalMessageId: messageId, chatId, conversationId: chatId, text });
       }
       await event('message_accepted', { messageId, receivedAt, acceptedAt: Date.now(), jobCreated, controlKind: control.intercepted ? control.kind : '', activeTaskId: control.activeTaskId || messageId, projectRoot: root, pid: process.pid, gitCommit: process.env.AIW_GATEWAY_GIT_COMMIT || process.env.AIW_RUNTIME_GIT_COMMIT || '' });
-      health.lastMessageAcceptedAt = Date.now();
-      acknowledge(messageId).then(async (reactionId) => {
-        const marked = await markAcknowledged(messageId, { reactionId, emojiType: 'OK' });
-        if (marked) await event('message_acknowledged', { messageId, reactionId, emojiType: 'OK', acknowledgedAt: Date.now(), latencyMs: Date.now() - receivedAt });
-      }).catch((error) => event('acknowledgement_failed', { messageId, failedAt: Date.now(), latencyMs: Date.now() - receivedAt, message: error.message }));
       await patchStatus({ feishu: 'connected', currentStage: 'received', latestMessageId: messageId, latestError: '' });
     }
   });
@@ -258,6 +267,7 @@ export async function startWorkbenchFeishuAdapter() {
     socket.on?.('error', (error) => { health.lastError = error?.message || String(error); });
   };
   const healthTimer = setInterval(async () => {
+    try {
     const now = Date.now();
     bindSocketActivity();
     const sdk = ws?.getConnectionStatus?.() || {};
@@ -277,6 +287,10 @@ export async function startWorkbenchFeishuAdapter() {
     else if (sdkConnected && !stale) health.connectionState = 'healthy';
     else if (sdk.state === 'failed') health.connectionState = 'offline';
     await writeJsonAtomic(gatewayHealthPath, { ...health, sdkState: sdk.state || 'unknown', sdkLastConnectTime: sdk.lastConnectTime || 0, sdkNextConnectTime: sdk.nextConnectTime || 0, sdkReconnectAttempts: sdk.reconnectAttempts || 0, updatedAt: now });
+    } catch (error) {
+      health.lastError = `health_write_failed: ${error?.message || String(error)}`;
+      await event('gateway_health_write_failed', { pid: process.pid, message: health.lastError }).catch(() => {});
+    }
   }, 1000);
   await patchStatus({ backend: 'online', feishu: 'connecting', aiLink: 'not_used', hermes: 'not_used', adapterPid: process.pid, projectRoot: root, gatewayCommit: health.gitCommit, latestError: '' });
   await ws.start({ eventDispatcher: dispatcher });
