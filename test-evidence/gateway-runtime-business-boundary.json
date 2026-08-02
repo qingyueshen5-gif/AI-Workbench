@@ -9,7 +9,7 @@
       "name": "read",
       "classification": {
         "action": "read",
-        "target": "E:\\AI-Workbench\\NEXT_STEP.md",
+        "target": "C:\\Users\\qingy\\AppData\\Local\\Temp\\aiw-entry-pAoSTL\\NEXT_STEP.md",
         "expectedResult": "当前最重要的目标",
         "constraints": [
           "不要修改文件"
@@ -20,7 +20,8 @@
         "referencesActiveTask": false,
         "explicitIndependentTask": true
       },
-      "provider": "deepseek"
+      "provider": "local-read",
+      "toolUsed": "read_file"
     },
     {
       "name": "continue",
@@ -35,7 +36,8 @@
         "referencesActiveTask": true,
         "explicitIndependentTask": false
       },
-      "provider": "ai-workbench"
+      "provider": "ai-workbench",
+      "toolUsed": ""
     },
     {
       "name": "pause",
@@ -50,7 +52,8 @@
         "referencesActiveTask": true,
         "explicitIndependentTask": false
       },
-      "provider": "ai-workbench"
+      "provider": "ai-workbench",
+      "toolUsed": ""
     },
     {
       "name": "cancel",
@@ -65,7 +68,8 @@
         "referencesActiveTask": true,
         "explicitIndependentTask": false
       },
-      "provider": "ai-workbench"
+      "provider": "ai-workbench",
+      "toolUsed": ""
     },
     {
       "name": "progress",
@@ -80,10 +84,13 @@
         "referencesActiveTask": false,
         "explicitIndependentTask": false
       },
-      "provider": "ai-workbench"
+      "provider": "ai-workbench",
+      "toolUsed": ""
     }
   ],
   "staleDoesNotBlock": true,
+  "readFileCalls": 1,
+  "codexCalls": 0,
   "runtimeSwitchUsesNewLogicWithoutGatewayRestart": true,
   "exactlyOnceContract": "one source message -> one Gateway Job -> one Runtime handle -> one Result"
 }

@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "executor": "local read_file",
+  "readFileCalls": 1,
+  "codexCallsForRead": 0,
+  "simpleReadMs": 2,
+  "chatTimesMs": [
+    0,
+    0,
+    1,
+    0,
+    0
+  ],
+  "progressGenerated": true,
+  "statusGrounded": true
+}
