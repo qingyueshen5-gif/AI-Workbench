@@ -84,7 +84,71 @@ async function appIdLockOwner(appId) {
     catch { await fsp.rm(path, { force: true }); return appIdLockOwner(appId); }
   }
 }
-function textOf(content) { try { return JSON.parse(content || '{}').text || ''; } catch { return ''; } }
+function parseJsonContent(content) {
+  if (content && typeof content === 'object') return { value: content, rawContentType: 'object' };
+  if (typeof content !== 'string') return { value: content, rawContentType: typeof content };
+  try { return { value: JSON.parse(content), rawContentType: 'json_string' }; }
+  catch { return { value: content, rawContentType: 'string' }; }
+}
+
+function collectVisibleText(value, output = [], seen = new Set()) {
+  if (typeof value === 'string') { output.push(value); return output; }
+  if (!value || typeof value !== 'object' || seen.has(value)) return output;
+  seen.add(value);
+  if (Array.isArray(value)) {
+    for (const item of value) collectVisibleText(item, output, seen);
+    return output;
+  }
+  if (typeof value.text === 'string') output.push(value.text);
+  if (typeof value.content === 'string' && !('text' in value)) output.push(value.content);
+  const preferred = ['title', 'zh_cn', 'en_us', 'ja_jp', 'content', 'elements'];
+  for (const key of preferred) {
+    if (!(key in value) || (key === 'content' && typeof value.content === 'string')) continue;
+    collectVisibleText(value[key], output, seen);
+  }
+  if (output.length === 0) {
+    for (const [key, nested] of Object.entries(value)) {
+      if (['tag', 'type', 'msg_type', 'image_key', 'file_key', 'file_token'].includes(key)) continue;
+      collectVisibleText(nested, output, seen);
+    }
+  }
+  return output;
+}
+
+export function parseFeishuMessage(message = {}, sender = {}) {
+  const messageId = String(message?.message_id || message?.messageId || '');
+  const messageType = String(message?.message_type || message?.msg_type || message?.messageType || 'unknown');
+  const chatId = String(message?.chat_id || message?.chatId || '');
+  const parsed = parseJsonContent(message?.content);
+  const supported = new Set(['text', 'post', 'interactive', 'unknown']);
+  let text = '';
+  if (messageType === 'text' || messageType === 'unknown') {
+    if (typeof parsed.value === 'string') text = parsed.value;
+    else if (parsed.value && typeof parsed.value.text === 'string') text = parsed.value.text;
+    else text = collectVisibleText(parsed.value).join('\n');
+  } else if (messageType === 'post' || messageType === 'interactive') {
+    text = collectVisibleText(parsed.value).join('\n');
+  }
+  const attachments = [];
+  const scanAttachments = (value, seen = new Set()) => {
+    if (!value || typeof value !== 'object' || seen.has(value)) return;
+    seen.add(value);
+    if (Array.isArray(value)) { for (const item of value) scanAttachments(item, seen); return; }
+    for (const key of ['image_key', 'file_key', 'file_token']) if (value[key]) attachments.push({ type: key, value: String(value[key]) });
+    for (const nested of Object.values(value)) scanAttachments(nested, seen);
+  };
+  scanAttachments(parsed.value);
+  return {
+    messageId,
+    messageType,
+    text: String(text || '').replace(/\r\n/g, '\n'),
+    sender: sender?.sender_id || sender || {},
+    chatId,
+    attachments,
+    rawContentType: parsed.rawContentType,
+    supported: supported.has(messageType),
+  };
+}
 function safeName(id) { return createHash('sha256').update(String(id)).digest('hex'); }
 async function claimMessage(messageId) {
   await fsp.mkdir(dedupeDir, { recursive: true });
@@ -150,11 +214,19 @@ export async function startWorkbenchFeishuAdapter() {
       health.lastEventReceivedAt = rawReceivedAt;
       health.lastEventType = 'im.message.receive_v1';
       await event('raw_event_received', { eventType: 'im.message.receive_v1', messageId: rawMessageId, eventId: String(data?.event_id || ''), receivedAt: rawReceivedAt, pid: process.pid });
-      const messageId = rawMessageId;
-      const chatId = String(data?.message?.chat_id || '');
-      const openId = String(data?.sender?.sender_id?.open_id || '');
-      const text = textOf(data?.message?.content);
-      if (!messageId || !text) { await event('raw_event_rejected', { messageId, reason: !messageId ? 'missing_message_id' : 'empty_text', pid: process.pid }); return; }
+      let parsedMessage;
+      try {
+        parsedMessage = parseFeishuMessage(data?.message || {}, data?.sender || {});
+        await event('message_parsed', { messageId: parsedMessage.messageId, messageType: parsedMessage.messageType, rawContentType: parsedMessage.rawContentType, textLength: parsedMessage.text.length, attachmentCount: parsedMessage.attachments.length, pid: process.pid });
+      } catch (error) {
+        await event('message_parse_failed', { messageId: rawMessageId, messageType: String(data?.message?.message_type || 'unknown'), message: error?.message || String(error), pid: process.pid });
+        return;
+      }
+      const { messageId, chatId, text } = parsedMessage;
+      const openId = String(parsedMessage.sender?.open_id || data?.sender?.sender_id?.open_id || '');
+      if (!messageId) { await event('message_parse_failed', { messageId, messageType: parsedMessage.messageType, message: 'missing_message_id', pid: process.pid }); return; }
+      if (!parsedMessage.supported) { await event('unsupported_message_type', { messageId, messageType: parsedMessage.messageType, rawContentType: parsedMessage.rawContentType, attachmentCount: parsedMessage.attachments.length, pid: process.pid }); return; }
+      if (!text) { await event('empty_message', { messageId, messageType: parsedMessage.messageType, rawContentType: parsedMessage.rawContentType, pid: process.pid }); return; }
       if (!(await claimMessage(messageId))) { await event('duplicate_event_ignored', { messageId, pid: process.pid }); return; }
       const receivedAt = rawReceivedAt;
       const metadata = { eventId: data?.event_id || '', chatId, conversationId: chatId, openId, text, receivedAt };
