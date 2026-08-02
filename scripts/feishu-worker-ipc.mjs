@@ -1,16 +1,19 @@
 import fs from 'node:fs';
 import fsp from 'node:fs/promises';
-import { join, dirname } from 'node:path';
+import { join, dirname, isAbsolute, resolve } from 'node:path';
 import { runtimeRoot } from '../runtime-paths.mjs';
 
-export const ipcRoot = process.env.AIW_FEISHU_IPC_DIR || join(runtimeRoot, 'feishu-worker-ipc');
+const configuredIpcRoot = String(process.env.AIW_FEISHU_IPC_DIR || '').trim();
+if (!configuredIpcRoot) throw new Error('AIW_FEISHU_IPC_DIR is required');
+if (!isAbsolute(configuredIpcRoot)) throw new Error('AIW_FEISHU_IPC_DIR must be absolute');
+export const ipcRoot = resolve(configuredIpcRoot);
 const jobsDir = join(ipcRoot, 'jobs');
 const resultsDir = join(ipcRoot, 'results');
 const claimsDir = join(ipcRoot, 'claims');
 const deliveredDir = join(ipcRoot, 'delivered');
 const deliveryClaimsDir = join(ipcRoot, 'delivery-claims');
 const dedupePath = join(ipcRoot, 'message-dedupe.json');
-const workerStatePath = join(ipcRoot, 'worker-state.json');
+const workerStatePath = process.env.AIW_WORKER_STATE_PATH || join(ipcRoot, 'worker-state.json');
 const acceptedDir = join(ipcRoot, 'accepted');
 const acknowledgedDir = join(ipcRoot, 'acknowledged');
 const archiveDir = join(ipcRoot, 'archive');

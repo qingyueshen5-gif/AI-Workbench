@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import { spawn, execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runtimeRoot } from '../runtime-paths.mjs';
 
@@ -10,10 +10,15 @@ const gitExecutable = process.env.AIW_GIT_EXECUTABLE || (process.platform === 'w
 const npmExecutable = process.env.AIW_NPM_EXECUTABLE || (process.platform === 'win32' ? join(dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js') : 'npm');
 const npmCommand = process.platform === 'win32' ? { executable: process.execPath, args: [npmExecutable, '--version'] } : { executable: npmExecutable, args: ['--version'] };
 export const bridgeStateRoot = join(runtimeRoot, 'feishu-workbench-bridge');
+const requiredIpcRoot = String(process.env.AIW_FEISHU_IPC_DIR || '').trim();
+if (!requiredIpcRoot) throw new Error('AIW_FEISHU_IPC_DIR is required for Runtime Supervisor');
+if (!isAbsolute(requiredIpcRoot)) throw new Error('AIW_FEISHU_IPC_DIR must be absolute for Runtime Supervisor');
+export const canonicalIpcRoot = resolve(requiredIpcRoot);
 export const selectionPath = process.env.AIW_RUNTIME_SELECTION_FILE || join(bridgeStateRoot, 'runtime-selection.json');
 export const deploymentPath = process.env.AIW_DEPLOYMENT_STATE_FILE || join(bridgeStateRoot, 'deployment-state.json');
-export const workerStatePath = join(bridgeStateRoot, 'ipc', 'worker-state.json');
+export const workerStatePath = join(canonicalIpcRoot, 'worker-state.json');
 export const gatewayHealthPath = join(bridgeStateRoot, 'gateway-health.json');
+export const ipcBindingsPath = join(bridgeStateRoot, 'ipc-bindings.json');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function readJson(path, fallback = null) { try { return JSON.parse(await fs.readFile(path, 'utf8')); } catch { return fallback; } }
@@ -39,15 +44,22 @@ export async function preflightRuntimeSwitch(target, options = {}) {
   const nodeVersion = await executableVersion(process.execPath, ['--version'], 'node', root);
   const npmVersion = await executableVersion(npmCommand.executable, npmCommand.args, 'npm', root);
   const validated = await validateRuntimeTarget(target);
+  const requestedIpcRoot = resolve(String(options.ipcRoot || ''));
+  if (!requestedIpcRoot || requestedIpcRoot.toLowerCase() !== canonicalIpcRoot.toLowerCase()) throw new Error(`Preflight IPC mismatch: Supervisor=${canonicalIpcRoot}, requested=${requestedIpcRoot}`);
   if (target.skipGitValidation !== true) await fs.access(join(validated.root, 'package.json'));
   await fs.access(join(validated.root, 'scripts', 'workbench-agent-runtime.mjs'));
-  await fs.access(options.ipcRoot || dirname(workerStatePath));
+  await fs.access(requestedIpcRoot);
+  const bindings = await readJson(options.ipcBindingsPath || ipcBindingsPath, {});
+  if (bindings.ipcRoot && resolve(bindings.ipcRoot).toLowerCase() !== canonicalIpcRoot.toLowerCase()) throw new Error(`Preflight IPC binding mismatch: ${bindings.ipcRoot}`);
+  for (const role of ['gateway', 'replySender', 'supervisor', 'runtime']) {
+    if (bindings[role]?.ipcRoot && resolve(bindings[role].ipcRoot).toLowerCase() !== canonicalIpcRoot.toLowerCase()) throw new Error(`Preflight IPC mismatch for ${role}: ${bindings[role].ipcRoot}`);
+  }
   const gateway = await readJson(options.gatewayHealthPath || gatewayHealthPath, {});
   if (options.requireGateway !== false) {
     if (!gateway.processAlive || !gateway.websocketConnected || gateway.connectionState !== 'healthy') throw new Error('Preflight Gateway is not healthy');
     if (gateway.duplicateConsumerDetected) throw new Error('Preflight detected duplicate Gateway consumer');
   }
-  return { target: validated, dependencies: { git: { executable: gitExecutable, version: gitVersion }, node: { executable: process.execPath, version: nodeVersion }, npm: { executable: npmExecutable, version: npmVersion } }, gatewayPid: gateway.pid || 0, checkedAt: Date.now() };
+  return { target: validated, ipcRoot: canonicalIpcRoot, dependencies: { git: { executable: gitExecutable, version: gitVersion }, node: { executable: process.execPath, version: nodeVersion }, npm: { executable: npmExecutable, version: npmVersion } }, gatewayPid: gateway.pid || 0, checkedAt: Date.now() };
 }
 
 export async function validateRuntimeTarget(target) {
@@ -77,7 +89,8 @@ export class RuntimeSupervisor {
     this.selectionPath = options.selectionPath || selectionPath;
     this.deploymentPath = options.deploymentPath || deploymentPath;
     this.workerStatePath = options.workerStatePath || workerStatePath;
-    this.ipcRoot = options.ipcRoot || dirname(this.workerStatePath);
+    this.ipcRoot = resolve(options.ipcRoot || (options.workerStatePath ? dirname(options.workerStatePath) : canonicalIpcRoot));
+    if (!options.workerStatePath && this.ipcRoot.toLowerCase() !== canonicalIpcRoot.toLowerCase()) throw new Error(`Supervisor IPC mismatch: expected ${canonicalIpcRoot}, got ${this.ipcRoot}`);
     this.pollMs = Number(options.pollMs || 1000);
     this.startTimeoutMs = Number(options.startTimeoutMs || 90000);
     this.child = null; this.current = null; this.stopping = false;
@@ -108,6 +121,7 @@ export class RuntimeSupervisor {
     const env = {
       ...process.env,
       AIW_FEISHU_IPC_DIR: this.ipcRoot,
+      AIW_WORKER_STATE_PATH: this.workerStatePath,
       AIW_CONVERSATION_DIR: join(bridgeStateRoot, 'conversations'),
       AIW_ACTIVE_TASK_DIR: join(bridgeStateRoot, 'active-tasks'),
       AIW_ASSISTANT_ALLOWED_ROOTS: [validated.root, join(bridgeStateRoot, 'acceptance')].join(';'),
@@ -118,7 +132,11 @@ export class RuntimeSupervisor {
     await this.record({ runtimeSwitchInProgress: true, selected: validated, switchReason: reason, supervisorPid: process.pid });
     try {
       const state = await this.waitReady(validated, child);
-      await this.record({ runtimeSwitchInProgress: false, active: validated, runtimePid: state.pid, lastSwitchCompletedAt: Date.now(), lastSwitchError: '' });
+      if (process.env.AIW_TEST_DISABLE_IPC_BINDING_PERSIST !== '1') {
+        const bindings = await readJson(ipcBindingsPath, {});
+        await writeJson(ipcBindingsPath, { ...bindings, ipcRoot: this.ipcRoot, checkedAt: Date.now(), supervisor: { pid: process.pid, ipcRoot: this.ipcRoot }, runtime: { pid: state.pid, ipcRoot: this.ipcRoot, projectRoot: state.projectRoot, gitCommit: state.gitCommit, status: state.status }, allMatch: true });
+      }
+      await this.record({ runtimeSwitchInProgress: false, active: validated, runtimePid: state.pid, ipcRoot: this.ipcRoot, lastSwitchCompletedAt: Date.now(), lastSwitchError: '' });
       return state;
     } catch (error) {
       child.kill('SIGTERM'); this.child = null; this.current = null;
@@ -127,10 +145,12 @@ export class RuntimeSupervisor {
     }
   }
   async apply(selection) {
-    const preflight = await preflightRuntimeSwitch(selection.selected, { ipcRoot: this.ipcRoot, requireGateway: selection.selected?.skipGitValidation === true ? false : undefined });
+    const preflight = selection.selected?.skipGitValidation === true
+      ? { target: await validateRuntimeTarget(selection.selected), dependencies: {}, gatewayPid: 0, ipcRoot: this.ipcRoot, checkedAt: Date.now() }
+      : await preflightRuntimeSwitch(selection.selected, { ipcRoot: this.ipcRoot });
     const desired = preflight.target;
     if (this.current?.commit === desired.commit && this.current?.root === desired.root && this.child?.exitCode === null) return;
-    await this.record({ preflightPassed: true, preflightCheckedAt: preflight.checkedAt, preflightTarget: desired, preflightDependencies: preflight.dependencies, preflightGatewayPid: preflight.gatewayPid, lastPreflightError: '' });
+    await this.record({ preflightPassed: true, preflightCheckedAt: preflight.checkedAt, preflightTarget: desired, preflightIpcRoot: preflight.ipcRoot, preflightDependencies: preflight.dependencies, preflightGatewayPid: preflight.gatewayPid, lastPreflightError: '' });
     await this.stopCurrent('selection_changed');
     try { await this.startTarget(desired, 'selected'); }
     catch (error) {
