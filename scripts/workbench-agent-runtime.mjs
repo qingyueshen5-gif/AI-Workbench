@@ -6,21 +6,23 @@ import { claimJob, completeJob, enqueueProgress, ensureIpcDirs, listJobs, releas
 const runtimeEventsPath = join(process.env.AI_WORKBENCH_RUNTIME_DIR || join(process.env.APPDATA || process.env.USERPROFILE || process.cwd(), 'ai-workbench'), 'feishu-workbench-bridge', 'events.jsonl');
 async function runtimeEvent(type, payload = {}) { await fs.mkdir(dirname(runtimeEventsPath), { recursive: true }); await fs.appendFile(runtimeEventsPath, `${JSON.stringify({ at: new Date().toISOString(), type, payload })}\n`, 'utf8'); }
 import { createHash } from 'node:crypto';
-import { ActiveTaskStore } from '../channels/active-task-store.mjs';
+import { TaskStore, TERMINAL_TASK_STATES } from '../channels/task-store.mjs';
 import { loadApprovedDeepSeekEnv } from './load-approved-deepseek-env.mjs';
 
 loadApprovedDeepSeekEnv();
 
 const root = process.cwd();
-const activeTasks = new ActiveTaskStore();
+const tasks = new TaskStore();
 const allowedRoots = [...new Set([root, ...(process.env.AIW_ASSISTANT_ALLOWED_ROOTS || '').split(';').filter(Boolean)])];
 const statusPath = join(process.env.AI_WORKBENCH_RUNTIME_DIR || join(process.env.APPDATA || process.env.USERPROFILE || root, 'ai-workbench'), 'feishu-workbench-bridge', 'status.json');
+const healthStatusKeys = new Set(['backend','languageModel','deepseek','computerExecutor','codex','localTools','aiLink','hermes','runtimePid','projectRoot','gitCommit','latestError']);
 async function patchStatus(patch) {
   let current = {};
   try { current = JSON.parse(await fs.readFile(statusPath, 'utf8')); } catch {}
   const parent = dirname(statusPath);
   await fs.mkdir(parent, { recursive: true });
-  const next = { ...current, ...patch, updatedAt: new Date().toISOString() };
+  const healthPatch = Object.fromEntries(Object.entries(patch).filter(([key]) => healthStatusKeys.has(key)));
+  const next = { ...current, ...healthPatch, updatedAt: new Date().toISOString() };
   const tmp = `${statusPath}.${process.pid}.tmp`;
   await fs.writeFile(tmp, `${JSON.stringify(next, null, 2)}\n`, 'utf8');
   await fs.rename(tmp, statusPath);
@@ -44,29 +46,34 @@ async function acquireRuntimeLock() {
 const runtime = new AgentRuntime({
   root,
   allowedRoots,
-  onProgress: async (progress) => { await enqueueProgress(progress); await runtimeEvent('progress_generated', { eventId: progress.eventId, jobId: progress.jobId, stage: progress.stage, createdAt: progress.createdAt }); },
-  onStage: async (job, stage) => { await runtimeEvent('job_stage', { messageId: job.messageId, stage, atMs: Date.now(), runtimePid: process.pid }); await patchStatus({ currentStage: stage, latestMessageId: job.messageId, codex: stage === 'executing' ? 'busy' : undefined }); }
+  onProgress: async (progress) => { const task=await tasks.load(progress.taskId||progress.jobId);const gate=shouldStopJobForActiveTask({taskId:progress.taskId||progress.jobId,messageId:progress.originalMessageId,originalMessageId:progress.originalMessageId},task);if(gate.shouldStop){await runtimeEvent('progress_suppressed',{eventId:progress.eventId,taskId:gate.taskId,reason:gate.reason});return;}await enqueueProgress(progress);await runtimeEvent('progress_generated', { eventId: progress.eventId, jobId: progress.jobId, stage: progress.stage, createdAt: progress.createdAt }); },
+  onStage: async (job, stage) => { await runtimeEvent('job_stage', { messageId: job.messageId, taskId: job.taskId, stage, atMs: Date.now(), runtimePid: process.pid }); await patchStatus({ codex: stage === 'executing' ? 'busy' : undefined }); }
 });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const runningJobs=new Map();
-export function shouldStopJobForActiveTask(job, active) {
-  const sameTask = Boolean(active && active.activeTaskId === (job.activeTaskId || job.messageId) && active.originalMessageId === (job.originalMessageId || job.messageId));
-  return { sameTask, cancelled: sameTask && active.cancelled === true, blocked: sameTask && (active.cancelled === true || active.paused === true || active.stage === 'paused' || active.waitingUser === true) };
+export function shouldStopJobForActiveTask(job, task) {
+  const taskId = String(job.taskId || job.messageId || '');
+  const originalMessageId = String(job.originalMessageId || job.messageId || '');
+  const sameTask = Boolean(task && task.taskId === taskId && task.originalMessageId === originalMessageId);
+  const terminalState = sameTask ? String(task.currentState || '') : '';
+  const shouldStop = sameTask && terminalState === 'cancelled' && task.cancelledByUser === true;
+  return { shouldStop, reason: shouldStop ? 'task_cancelled_by_user' : sameTask ? 'task_not_cancelled' : 'different_task', taskId, terminalState, sameTask, cancelled: shouldStop, blocked: shouldStop };
 }
+export function shouldSuppressCompletedResult(job,task,result={}){const gate=shouldStopJobForActiveTask(job,task);return gate.shouldStop||(!result.controlKind&&task?.originalMessageId===(job.originalMessageId||job.messageId)&&TERMINAL_TASK_STATES.has(task.currentState)&&!task.finalResult);}
 async function executeClaimedJob(job,workerId) {
   try {
     const result=await runtime.handle(job);
-    const active=await activeTasks.load(job.conversationId||job.chatId);
-    const stale=!result.controlKind&&active?.originalMessageId===(job.originalMessageId||job.messageId)&&(active.cancelled||active.stage==='failed'||active.paused);
+    const task=await tasks.load(job.taskId||job.messageId);
+    const stale=shouldSuppressCompletedResult(job,task,result);
     const finishedAt=Date.now();
     await completeJob(job, stale
       ? {messageId:job.messageId,originalMessageId:job.originalMessageId||job.messageId,conversationId:job.conversationId||job.chatId,chatId:job.chatId,ok:false,text:'',suppressed:true,errorClass:'Superseded',finishedAt}
       : { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: true, text: result.text, provider: result.provider, providerSessionId: result.providerSessionId, toolUsed: result.toolUsed, verified: result.verified, controlKind: result.controlKind || '', activeTaskId: result.activeTaskId || job.messageId, classification: result.classification || null, finishedAt });
     await runtimeEvent(stale?'result_suppressed':'result_generated',{messageId:job.messageId,finishedAt,provider:result.provider,toolUsed:result.toolUsed,verified:result.verified});
-    if(!stale)await patchStatus({ currentStage: 'completed', latestSuccessfulTask: job.messageId, latestError: '', deepseek: 'online', codex: 'online', localTools: 'online' });
+    if(!stale)await patchStatus({ latestError: '', deepseek: 'online', codex: 'online', localTools: 'online' });
   } catch(error) {
     await completeJob(job,{messageId:job.messageId,originalMessageId:job.originalMessageId||job.messageId,conversationId:job.conversationId||job.chatId,chatId:job.chatId,ok:false,text:'这次没有完成，我已经停止。你可以继续发送新消息。',errorClass:error.name||'Error',finishedAt:Date.now()});
-    await patchStatus({currentStage:'failed',codex:'online',latestError:error.message||String(error)});
+    await patchStatus({codex:'online',latestError:error.message||String(error)});
   } finally { await releaseClaim(job.messageId).catch(()=>{});runningJobs.delete(job.messageId); }
 }
 
@@ -76,7 +83,7 @@ export async function supervisorLoop() {
   const workerId = `workbench-runtime-${process.pid}`;
   const health = await runtime.models.healthCheck();
   if (!health.deepseek?.ok) {
-    await patchStatus({ backend: 'online', languageModel: 'DeepSeek', deepseek: 'offline', computerExecutor: 'Codex', codex: health.codex?.ok ? 'online' : 'offline', localTools: 'online', aiLink: 'not_used', hermes: 'not_used', runtimePid: process.pid, projectRoot: root, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '', currentStage: 'failed', latestError: health.deepseek?.error || 'DeepSeek provider is not ready' });
+    await patchStatus({ backend: 'online', languageModel: 'DeepSeek', deepseek: 'offline', computerExecutor: 'Codex', codex: health.codex?.ok ? 'online' : 'offline', localTools: 'online', aiLink: 'not_used', hermes: 'not_used', runtimePid: process.pid, projectRoot: root, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '', latestError: health.deepseek?.error || 'DeepSeek provider is not ready' });
   }
   if (!health.codex?.ok || health.codex.authClass !== 'chatgpt_subscription') throw new Error('Codex subscription provider is not ready');
   await writeWorkerState({
@@ -86,20 +93,19 @@ export async function supervisorLoop() {
     languageModel: { provider: 'deepseek', model: health.deepseek.model, transport: health.deepseek.transport, status: health.deepseek.ok ? 'online' : 'offline' },
     computerExecutor: { provider: 'codex', transport: 'official_cli_subscription', endpoint: null, aiLink: false, hermes: false, authClass: health.codex.authClass, version: health.codex.version }
   });
-  await patchStatus({ backend: 'online', languageModel: 'DeepSeek', deepseek: health.deepseek.ok ? 'online' : 'offline', computerExecutor: 'Codex', codex: 'online', localTools: 'online', aiLink: 'not_used', hermes: 'not_used', runtimePid: process.pid, projectRoot: root, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '', currentStage: health.deepseek.ok ? 'completed' : 'failed', latestError: health.deepseek.ok ? '' : (health.deepseek.error || 'DeepSeek provider is not ready') });
+  await patchStatus({ backend: 'online', languageModel: 'DeepSeek', deepseek: health.deepseek.ok ? 'online' : 'offline', computerExecutor: 'Codex', codex: 'online', localTools: 'online', aiLink: 'not_used', hermes: 'not_used', runtimePid: process.pid, projectRoot: root, gitCommit: process.env.AIW_RUNTIME_GIT_COMMIT || '', latestError: health.deepseek.ok ? '' : (health.deepseek.error || 'DeepSeek provider is not ready') });
   let stopping = false;
   process.once('SIGINT', () => { stopping = true; });
   process.once('SIGTERM', () => { stopping = true; });
   try {
   while (!stopping) {
     for (const job of await listJobs()) {
-      const active = await activeTasks.load(job.conversationId || job.chatId);
+      const active = await tasks.load(job.taskId || job.messageId);
       const taskGate = shouldStopJobForActiveTask(job, active);
-      if (taskGate.cancelled) {
-        await completeJob(job, { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: false, text: '任务已取消，不会继续执行。', errorClass: 'Cancelled', finishedAt: Date.now() });
+      if (taskGate.shouldStop) {
+        await completeJob(job, { taskId: taskGate.taskId, messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: false, text: '任务已取消，不会继续执行。', terminalState: taskGate.terminalState, errorClass: 'Cancelled', finishedAt: Date.now() });
         continue;
       }
-      if (taskGate.blocked) continue;
       if (!(await claimJob(job, workerId))) continue;
       await runtimeEvent('job_claimed', { messageId: job.messageId, claimedAt: Date.now(), workerId, runtimePid: process.pid });
       const execution=executeClaimedJob(job,workerId);

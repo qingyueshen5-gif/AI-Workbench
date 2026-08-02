@@ -20,7 +20,13 @@ export function validateTaskInterpretation(value) {
   if (typeof value.confidence!=='number'||value.confidence<0||value.confidence>1) throw new Error('Task Interpreter confidence无效');
   if (typeof value.goal!=='string'||!value.goal.trim()) throw new Error('Task Interpreter goal为空');
   if (typeof value.context!=='object'||Array.isArray(value.context)||!value.context) throw new Error('Task Interpreter context必须为对象');
-  if (value.confidence<0.65 && value.taskType!=='clarification') throw new Error('低置信度任务必须澄清');
+  if (value.taskType==='clarification') {
+    const missingFields=value.context?.missingFields;
+    const questions=value.context?.questions;
+    if(!Array.isArray(missingFields)||!missingFields.length) throw new Error('澄清缺少missingFields证据');
+    if(!Array.isArray(questions)||!questions.length) throw new Error('澄清缺少questions证据');
+    if(value.confidence>=0.65) throw new Error('澄清任务置信度必须低于0.65');
+  } else if (value.confidence<0.65) throw new Error('低置信度任务必须提供结构化澄清证据');
   if (value.riskLevel==='high'&&!value.requiresConfirmation) throw new Error('高风险任务必须确认');
   return value;
 }
@@ -36,8 +42,11 @@ export class TaskInterpreter {
     try {
       const corrected=await this.model.understand({messages:[...messages,{role:'user',content:correctionPrompt(firstError,String(text||''))}],responseFormat:{type:'json_object'}});
       return validateTaskInterpretation(parseJson(corrected.text));
-    } catch {
-      return {taskType:'clarification',goal:`澄清用户消息：${String(text||'').trim()}`,actions:[],targets:[],context:{fallback:'invalid_task_interpreter_output'},constraints:[],riskLevel:'low',requiredCapabilities:[],successCriteria:['请用户补充或重述需求'],requiresConfirmation:false,confidence:0.5};
+    } catch(error) {
+      const finalError=new Error(`Task Interpreter输出在受限纠正后仍无效：${error.message}`);
+      finalError.name='TaskInterpretationError';
+      finalError.cause=firstError;
+      throw finalError;
     }
   }
 }
