@@ -1,0 +1,10 @@
+import assert from'node:assert/strict';import fs from'node:fs';import path from'node:path';import{execFileSync}from'node:child_process';
+const root=process.cwd(),name='stable-single-agent-v1',dir=path.join(root,'releases',name);
+const required=['ARCHITECTURE.md','CHANGELOG.md','CAPABILITY_INVENTORY.md','SECURITY_REPORT.md','CODE_GOVERNANCE_REPORT.md','QA_REPORT.md','DEPLOYMENT_CHECKLIST.md','PROBLEM_GOVERNANCE_INDEX.md','VERSION.json','KNOWN_ISSUES.md'];
+for(const file of required)assert.ok(fs.existsSync(path.join(dir,file)),`missing release file: ${file}`);
+const decisions=fs.readdirSync(path.join(root,'docs','DECISIONS')).filter(x=>/^\d{3}-.+\.md$/.test(x));assert.equal(decisions.length,10);
+const version=JSON.parse(fs.readFileSync(path.join(dir,'VERSION.json'),'utf8'));assert.equal(version.version,name);assert.equal(version.tag,name);assert.equal(version.deploymentGate,'GO');assert.equal(version.critical,0);assert.equal(version.high,0);
+const head=execFileSync('git',['-c',`safe.directory=${root.replaceAll('\\','/')}`,'rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();assert.equal(version.commit,head);
+const requiredSections=['为什么这样设计','解决了什么问题','权衡','后续是否允许修改'];for(const file of decisions){const text=fs.readFileSync(path.join(root,'docs','DECISIONS',file),'utf8');for(const section of requiredSections)assert.ok(text.includes(section),`${file} missing ${section}`)}
+const archiveList=execFileSync('git',['-c',`safe.directory=${root.replaceAll('\\','/')}`,'archive','--format=tar',head,'package.json'],{cwd:root,maxBuffer:4*1024*1024});assert.ok(archiveList.length>100,'git archive restore probe is empty');
+console.log(JSON.stringify({ok:true,release:name,files:required.length,decisions:decisions.length,commit:head,restorableByGitArchive:true},null,2));

@@ -1,0 +1,26 @@
+{
+  "version": "stable-single-agent-v1",
+  "commit": "ecf5774d4272acc01f3102c2474eb2e3f962624e",
+  "tag": "stable-single-agent-v1",
+  "releaseTime": "2026-08-02T21:43:35+08:00",
+  "author": {
+    "name": "AI Workbench",
+    "email": "ai-workbench@local"
+  },
+  "description": "AI Workbench single-agent v1 architecture, governance, security and deployment freeze. No new capabilities or providers.",
+  "deploymentGate": "GO",
+  "critical": 0,
+  "high": 0,
+  "architectureChain": [
+    "Task Interpreter",
+    "Scheduler",
+    "Capability Registry",
+    "Provider",
+    "Verifier",
+    "Result"
+  ],
+  "restore": {
+    "gitCheckout": "git checkout stable-single-agent-v1",
+    "expectedCommit": "ecf5774d4272acc01f3102c2474eb2e3f962624e"
+  }
+}
