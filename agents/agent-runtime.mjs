@@ -193,6 +193,10 @@ export class AgentRuntime {
     return results;
   }
 
+  assertProviderAuthorized(assignment) {
+    if (assignment.authorization?.required && assignment.authorization?.valid !== true) throw new Error(`Provider execution authorization missing: ${assignment.capabilityId}`);
+  }
+
   async groundedStatus(text, taskId, conversationId) {
     const read = async (path) => {
       try { return JSON.parse(await fs.readFile(path, 'utf8')); } catch { return null; }
@@ -281,6 +285,7 @@ export class AgentRuntime {
 
       const processCapabilities = interpretation.requiredCapabilities.filter((item) => item === 'process.list' || item === 'process.stop');
       if (processCapabilities.length) {
+        for (const assignment of capabilityPlan.assignments.filter((item) => processCapabilities.includes(item.capabilityId))) this.assertProviderAuthorized(assignment);
         task = await this.transition(task, 'executing', 'process_capability_execution_started', 'agent-runtime', { capabilities: processCapabilities }, progress);
         const results = await this.executeCapabilityPlan({ ...capabilityPlan, assignments: capabilityPlan.assignments.filter((item) => processCapabilities.includes(item.capabilityId)) }, interpretation);
         task = await this.tasks.patch(task.taskId, { providerExecution: { provider: 'local-process-provider', results } });
@@ -336,6 +341,7 @@ export class AgentRuntime {
         const workspaceTarget = interpretation.targets.find((item) => item?.type === 'project' || item?.type === 'workspace');
         const workspace = resolve(workspaceTarget?.path || process.cwd());
         const executionPrompt = JSON.stringify({ goal: interpretation.goal, actions: interpretation.actions, targets: interpretation.targets, constraints: interpretation.constraints, successCriteria: interpretation.successCriteria, userMessage: job.text });
+        for (const assignment of capabilityPlan.assignments.filter((item) => codeCapabilities.includes(item.capabilityId))) this.assertProviderAuthorized(assignment);
         task = await this.transition(task, 'executing', 'code_execution_started', 'agent-runtime', { workspace, writable }, progress);
         const execution = await this.models.execute({ conversationId, prompt: executionPrompt, workspace, writable });
         await this.sessions.appendMessage(state, { role: 'tool', text: execution.text, messageId: job.messageId, provider: 'codex', providerSessionId: execution.sessionId, taskId });
