@@ -206,7 +206,11 @@ export class AgentRuntime {
             const target = interpretation.targets.find((item) => item.path) || {};
             completed = { providerId: providerSpec.providerId, result: await provider.read({ path: target.path, ...runIdentity }) };
           } else throw new Error(`Runtime capability not connected: ${assignment.capabilityId}`);
-          this.verifier.verifyCapabilityResult(assignment.capabilityId, completed.result);
+          const rawVerification = this.verifier.verifyCapabilityResult(assignment.capabilityId, completed.result);
+          const passed = rawVerification?.passed === false ? false : rawVerification?.ok === true;
+          const verification = { ...rawVerification, verifierId: rawVerification?.verifierId || this.verifier.constructor?.name || 'ResultVerifier', verificationMethod: rawVerification?.verificationMethod || providerSpec.verificationMethod || 'capability-result-verification', evidenceReferences: rawVerification?.evidenceReferences || completed.result?.evidence?.evidenceReferences || (completed.result?.evidence?.path ? [completed.result.evidence.path] : []), passed, failureReason: passed ? null : (rawVerification?.failureReason || 'Verifier rejected capability result'), verifiedAt: rawVerification?.verifiedAt || Date.now() };
+          if (!verification.passed) throw Object.assign(new Error(verification.failureReason), { verification });
+          completed = { ...completed, verification };
           break;
         } catch (error) {
           lastError = error;
@@ -328,15 +332,26 @@ export class AgentRuntime {
         const results = started.result;
         task = await this.tasks.patch(task.taskId, { providerExecution: { provider: assignments[0]?.primaryProvider?.providerId || 'grounded-provider', results } });
         task = await this.transition(task, 'verifying', 'grounded_capability_verifying', 'agent-runtime', { capabilities: groundedCapabilities, runId: started.identity.runId }, progress);
-        await this.tasks.bindRunVerification(task.taskId, started.identity, { verified: true, capabilities: groundedCapabilities, ...started.identity });
+        const verificationResults = results.map((item) => item.verification);
+        const verificationRecord = {
+          verifierId: this.verifier.constructor?.name || 'ResultVerifier',
+          verificationMethod: verificationResults.map((item) => item.verificationMethod).join(','),
+          evidenceReferences: verificationResults.flatMap((item) => item.evidenceReferences || []),
+          passed: verificationResults.length === results.length && verificationResults.every((item) => item.passed === true),
+          failureReason: verificationResults.find((item) => item.passed !== true)?.failureReason || null,
+          verifiedAt: Math.max(...verificationResults.map((item) => Number(item.verifiedAt) || 0)),
+          results: verificationResults,
+          ...started.identity
+        };
+        await this.tasks.bindRunVerification(task.taskId, started.identity, verificationRecord);
         const status = results.find((item) => item.capabilityId === 'runtime.status');
         const read = results.find((item) => item.capabilityId === 'file.read');
         const text = status ? status.result.text : `Read \`${read.result.evidence.path}\`. Evidence: size ${read.result.evidence.size} bytes, SHA-256 \`${read.result.evidence.sha256}\`; file was not modified.`;
         const toolUsed = status ? 'runtime.status' : 'file.read';
         const provider = status?.providerId || read?.providerId || 'grounded-provider';
+        const finalResult = { messageId: job.messageId, text, provider, providerSessionId: '', toolUsed, verified: verificationRecord.passed, verification: verificationRecord, interpretation, schedulerStatus: capabilityPlan.status, capabilityResults: results, classification, runId: started.identity.runId, taskRevision: started.identity.taskRevision, metrics: { readFileCalls: read ? 1 : 0, codexCalls: 0 } };
         await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider, taskId });
-        const finalResult = { messageId: job.messageId, text, provider, providerSessionId: '', toolUsed, verified: true, interpretation, schedulerStatus: capabilityPlan.status, capabilityResults: results, classification, runId: started.identity.runId, taskRevision: started.identity.taskRevision, metrics: { readFileCalls: read ? 1 : 0, codexCalls: 0 } };
-        const completed = await this.tasks.finalizeRun(task.taskId, started.identity, { finalResult, finalEvidence: { verified: true, provider, toolUsed, ...started.identity } });
+        const completed = await this.tasks.finalizeRun(task.taskId, started.identity, { finalResult, finalEvidence: { ...verificationRecord, provider, toolUsed } });
         return { ...finalResult, activeTaskId: completed.taskId, taskId: completed.taskId };
       }
 

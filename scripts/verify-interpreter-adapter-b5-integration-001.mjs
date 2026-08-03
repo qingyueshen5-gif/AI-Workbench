@@ -21,7 +21,7 @@ class CountingProvider extends LocalGroundedProvider{
  async status(context){counters.providerStarts++;counters.statusStarts++;return super.status(context);}
  async read(context){counters.providerStarts++;counters.readStarts++;return super.read(context);}
 }
-const provider=new CountingProvider({readState:async()=>({text:'Runtime status: isolated-online.',source:'b5-isolated-worker-state'})});
+const provider=new CountingProvider({readState:async()=>{const readAt=Date.now();return {ok:true,text:'Runtime status: isolated-online.',evidenceSources:[{sourceId:'b5-isolated-worker-state',sourceType:'fixture',read:true,readAt}]};}});
 const tasks=new TaskStore({root:join(root,'tasks'),newRunId:(()=>{let i=0;return()=>`b5-run-${++i}`;})()});
 const sessions=new SessionStore({root:join(root,'sessions')});
 const registry=new CapabilityRegistry();
