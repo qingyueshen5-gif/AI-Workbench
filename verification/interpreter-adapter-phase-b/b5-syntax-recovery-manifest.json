@@ -1,0 +1,13 @@
+{
+  "schema": "ai-workbench.interpreter-adapter-b5-syntax-recovery/v1",
+  "taskId": "INTERPRETER-ADAPTER-PHASE-B5-SYNTAX-RECOVERY-001",
+  "saveStatus": "SAVED",
+  "gateStatus": "WIP_NOT_GATED",
+  "finalAcceptance": false,
+  "syntaxStatus": "PASS",
+  "b5Complete": false,
+  "deployment": "NOT_DEPLOYED",
+  "productionSmokeStarted": false,
+  "sourceInterruptedWipCommit": "3706400747599b97bab1e3b6c555e7ac1c9867ca",
+  "checkCommand": "node --check agents/agent-runtime.mjs"
+}
