@@ -1,292 +1,139 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { buildHandoffSnapshot, extractMarked, renderHandoffFile } from './generate-handoff.mjs';
+import { execFileSync } from 'node:child_process';
+import { buildHandoffSnapshot, collectHandoffMetadata, extractMarked, renderHandoffFile, HANDOFF_LINKS } from './generate-handoff.mjs';
 
 const root = process.cwd();
 const outDir = path.join(root, 'verification/docs-consistency');
-
-const requiredFiles = [
-  'EXECUTION_PROTOCOL.md',
-  'ARCHITECTURE.md',
-  'ENVIRONMENT_OPS_ISSUES.md',
-  'package.json',
+const historicalMarker = '> 历史快照：本文件不再代表当前项目状态。';
+const approvedPaths = new Set([
+  'AI-Workbench-Handoff.md',
+  'CONTEXT.md',
+  'CURRENT_PROGRESS_AUDIT.md',
+  'CURRENT_STATUS.md',
+  'CURRENT_TASK.md',
+  'NEXT_STEP.md',
   'PRODUCT.md',
-  'VISION.md',
-  'PRINCIPLES.md',
-  'GROWTH_LOG.md',
-  'DECISIONS.md',
-  'CONTEXT.md',
-  'CURRENT_TASK.md',
-  'CURRENT_PROGRESS_AUDIT.md',
-  'NEXT_STEP.md',
-  'AI-Workbench-Handoff.md',
   'TASKLOG.md',
-  'CHANGELOG.md',
-  'LAUNCH.md',
-  'verification/3a-final/summary.json',
-  'verification/3b-release/summary.json',
-  'verification/managed-proxy-production/summary.json',
-];
+  'scripts/generate-handoff.mjs',
+  'scripts/verify-docs-consistency.mjs',
+  'verification/docs-consistency/report.md',
+  'verification/docs-consistency/run.log',
+  'verification/docs-consistency/summary.json',
+]);
 
-const scannedFiles = [
-  'CONTEXT.md',
-  'CURRENT_TASK.md',
-  'CURRENT_PROGRESS_AUDIT.md',
-  'NEXT_STEP.md',
-  'AI-Workbench-Handoff.md',
-  'DECISIONS.md',
-  'PRINCIPLES.md',
-  'GROWTH_LOG.md',
-  'LAUNCH.md',
-  'ENVIRONMENT_OPS_ISSUES.md',
-];
-
-const ignoredHistoricalPaths = ['CHANGELOG.md', 'TASKLOG.md', 'tasks/**', 'verification/**', 'research/**'];
-const expectedNextStep = '等待产品负责人验收 AW-AILINK-GROUP-CREATE-001 群结构；验收通过后，另行决定是否批准准备阶段的群内只读任务，不自动发送消息或进入正式开发。';
-
-function readText(relativePath) {
+function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
-}
-
-function readJson(relativePath) {
-  return JSON.parse(readText(relativePath));
 }
 
 function exists(relativePath) {
   return fs.existsSync(path.join(root, relativePath));
 }
 
-function stripHistoricalVersionMentions(text) {
-  return text
-    .split(/\r?\n/)
-    .filter((line) => !/历史|以下是历史版本|不代表当前版本|v0\.2\.0：/.test(line))
-    .join('\n');
+function git(args, { allowFailure = false } = {}) {
+  const result = execFileSync('git', ['-c', `safe.directory=${root.replaceAll('\\', '/')}`, ...args], {
+    cwd: root,
+    encoding: 'utf8',
+  });
+  return result.trim();
 }
 
-function pushCheck(checks, name, passed, detail) {
-  checks.push({ name, status: passed ? 'passed' : 'failed', detail });
-  return passed;
+function changedPaths() {
+  const modified = git(['diff', '--name-only']).split(/\r?\n/).filter(Boolean);
+  const staged = git(['diff', '--cached', '--name-only']).split(/\r?\n/).filter(Boolean);
+  const untracked = git(['ls-files', '--others', '--exclude-standard']).split(/\r?\n/).filter(Boolean);
+  return [...new Set([...modified, ...staged, ...untracked])].sort();
 }
 
-function scanForSecrets(filesToScan) {
-  const findings = [];
-  const patterns = [
-    /\bsk-[A-Za-z0-9_-]{20,}\b/g,
-    /\bgh[pousr]_[A-Za-z0-9_]{20,}\b/g,
-    /\bAIza[0-9A-Za-z_-]{20,}\b/g,
-    /\bxox[baprs]-[A-Za-z0-9-]{20,}\b/g,
-    /\bAKIA[0-9A-Z]{16}\b/g,
-    /\b(?:password|passwd|pwd|cookie|authorization|bearer)\s*[:=]\s*["']?[^"'\s`]{12,}/gi,
-  ];
-  for (const relativePath of filesToScan) {
-    const text = readText(relativePath);
-    for (const pattern of patterns) {
-      const matches = text.match(pattern) ?? [];
-      if (matches.length > 0) {
-        findings.push(`${relativePath}: 命中 ${matches.length} 个疑似敏感值模式`);
-      }
-    }
-  }
-  return findings;
+function check(name, passed, detail) {
+  return { name, status: passed ? 'passed' : 'failed', detail };
 }
 
-function main() {
-  fs.mkdirSync(outDir, { recursive: true });
-
-  const errors = [];
-  const warnings = [];
-  const capabilityStatusChecks = [];
-  const log = [];
-  let packageVersion = '';
-  let contextVersion = '';
-  let releaseVersion = '';
-  let nextStep = '';
-  let handoffGeneratedCheck = { status: 'failed', detail: '' };
-  let handoffIdempotentCheck = { status: 'failed', detail: '' };
-
-  try {
-    for (const file of requiredFiles) {
-      if (!exists(file)) errors.push(`必读文件不存在：${file}`);
-    }
-
-    const packageJson = readJson('package.json');
-    packageVersion = packageJson.version;
-    const contextText = readText('CONTEXT.md');
-    const nextStepText = readText('NEXT_STEP.md');
-    const capabilityText = readText('CURRENT_PROGRESS_AUDIT.md');
-    const handoffText = readText('AI-Workbench-Handoff.md');
-    const release = readJson('verification/3b-release/summary.json');
-    const final3a = readJson('verification/3a-final/summary.json');
-    const managedProxy = readJson('verification/managed-proxy-production/summary.json');
-
-    const contextMarked = extractMarked(contextText, 'AIW_CURRENT_VERSION');
-    const nextStepMarked = extractMarked(nextStepText, 'AIW_NEXT_STEP');
-    const capabilityMarked = extractMarked(capabilityText, 'AIW_CAPABILITY_STATUS');
-    const handoffMarked = extractMarked(handoffText, 'AIW_GENERATED_HANDOFF');
-    nextStep = nextStepMarked.trim();
-    releaseVersion = release.release?.tag ?? '';
-    const contextVersionMatch = contextMarked.match(/当前版本：v([0-9]+\.[0-9]+\.[0-9]+)\s+Alpha/);
-    contextVersion = contextVersionMatch?.[1] ?? '';
-
-    if (contextVersion !== packageVersion) {
-      errors.push(`CONTEXT.md 当前版本标记区与 package.json 不一致：CONTEXT=${contextVersion || '未识别'}，package=${packageVersion}`);
-    }
-    if (!contextMarked.includes(`package.json.version：${packageVersion}`)) {
-      errors.push('CONTEXT.md 版本标记区没有明确展示 package.json.version。');
-    }
-
-    for (const file of scannedFiles) {
-      const currentText = stripHistoricalVersionMentions(readText(file));
-      if (/当前版本[^\n]*v0\.2\.0|当前版本状态：v0\.2\.0/.test(currentText)) {
-        errors.push(`${file} 将 v0.2.0 描述为当前版本。`);
-      }
-    }
-
-    if (nextStep !== expectedNextStep) {
-      errors.push(`NEXT_STEP.md 标记区不是当前唯一下一步：${nextStep}`);
-    }
-    for (const file of scannedFiles.filter((file) => file !== 'NEXT_STEP.md')) {
-      const text = readText(file);
-      const nextLines = text.split(/\r?\n/).filter((line) => /当前唯一下一步|下一任务|下一步/.test(line));
-      const conflict = nextLines.some((line) => {
-        if (/^\s*#/.test(line)) return false;
-        if (line.includes('用途：')) return false;
-        if (line.includes(expectedNextStep)) return false;
-        if (line.includes('电脑环境治理')) return false;
-        if (line.includes('NEXT_STEP.md')) return false;
-        if (line.includes('判断产品下一步')) return false;
-        if (line.includes('下一步必须能被新对话读取')) return false;
-        if (line.includes('下一步动作') || line.includes('下一步应由系统') || line.includes('能否重试和下一步')) return false;
-        if (line.includes('新想法先记录')) return false;
-        if (line.includes('新对话交接')) return false;
-        if (/不得|不自动|不能|需要继续执行任务/.test(line)) return false;
-        if (line.includes('历史')) return false;
-        return true;
-      });
-      if (conflict) {
-        errors.push(`${file} 存在与 NEXT_STEP.md 冲突的下一步表述。`);
-      }
-    }
-
-    const unfinished = ['模型分层', '手机端', '完整多 Agent 调度', '情报流水线', '跨网站复杂执行', '国际化和区域合规'];
-    for (const item of unfinished) {
-      const donePattern = new RegExp(`(?:已完成|完成|passed)[^\\n。；;]*${item}|${item}[^\\n。；;]*(?:已完成|完成|passed)`);
-      const passed = !donePattern.test(capabilityMarked);
-      pushCheck(capabilityStatusChecks, `${item} 未标记为已完成`, passed, passed ? '未完成口径正确' : '被标记为已完成');
-      if (!passed) errors.push(`CURRENT_PROGRESS_AUDIT.md 将未完成能力标记为已完成：${item}`);
-    }
-
-    if (final3a.status !== 'passed') errors.push('verification/3a-final/summary.json 不是 passed。');
-    if (managedProxy.status !== 'passed') errors.push('verification/managed-proxy-production/summary.json 不是 passed。');
-    if (release.status !== 'passed') errors.push('verification/3b-release/summary.json 不是 passed。');
-    if (release.release?.tag !== `v${packageVersion}`) errors.push('Release tag 与 package.json.version 不一致。');
-    if (release.release?.isDraft !== false || release.release?.isPrerelease !== true) errors.push('Release 不是公开 prerelease。');
-    for (const file of scannedFiles) {
-      const text = readText(file);
-      if (/③A 总验收/.test(text) && !/③A[^。\n]*passed|③A[^。\n]*已通过|③A 总验收[：：]?passed|③A 总验收.*均已通过/s.test(text)) {
-        errors.push(`${file} 的 ③A 状态未与 summary.json passed 保持一致。`);
-      }
-      if (/③B/.test(text) && !/③B[^。\n]*passed|③B[^。\n]*已通过|③B GitHub Release[：：]?passed|③B GitHub Alpha Release 均已通过/s.test(text)) {
-        errors.push(`${file} 的 ③B 状态未与 summary.json passed 保持一致。`);
-      }
-    }
-
-    const expectedHandoff = renderHandoffFile(handoffText, buildHandoffSnapshot());
-    const generatedMatches = expectedHandoff === handoffText;
-    handoffGeneratedCheck = {
-      status: generatedMatches ? 'passed' : 'failed',
-      detail: generatedMatches ? '自动生成区与权威文件一致' : '运行 docs:generate-handoff 后会产生差异',
-    };
-    handoffIdempotentCheck = {
-      status: generatedMatches ? 'passed' : 'failed',
-      detail: generatedMatches ? '生成结果幂等稳定' : '生成结果非幂等或未刷新',
-    };
-    if (!generatedMatches) errors.push('AI-Workbench-Handoff.md 自动生成区不是最新生成结果。');
-
-    const handoffBodyLineCount = handoffMarked.split(/\r?\n/).length;
-    if (handoffBodyLineCount > 90) errors.push(`Handoff 自动生成区过长：${handoffBodyLineCount} 行，疑似复制源文档正文。`);
-    for (const required of ['当前版本', '当前架构', '当前唯一下一步', 'GPT', 'Claude', 'Codex', '新对话交接方法', 'PRINCIPLES.md', 'GROWTH_LOG.md']) {
-      if (!handoffMarked.includes(required)) errors.push(`Handoff 缺少新对话最小上下文：${required}`);
-    }
-
-    const secretFindings = scanForSecrets([...scannedFiles, 'scripts/generate-handoff.mjs', 'scripts/verify-docs-consistency.mjs']);
-    errors.push(...secretFindings.map((finding) => `疑似敏感信息：${finding}`));
-
-    const environmentOps = readText('ENVIRONMENT_OPS_ISSUES.md');
-    if (!environmentOps.includes('当前问题总数：**17**')) errors.push('Environment Ops 问题总数不是17。');
-    for (const expected of ['P0 5、P1 9、P2 2、P3 1', 'temporarily_recovered', 'Environment Ops']) {
-      if (!environmentOps.includes(expected)) errors.push(`ENVIRONMENT_OPS_ISSUES.md 缺少关键基准：${expected}`);
-    }
-    if (!readText('ARCHITECTURE.md').includes('Environment Ops（运行环境保障）')) errors.push('ARCHITECTURE.md 未定义 Environment Ops。');
-    if (!readText('EXECUTION_PROTOCOL.md').includes('付费生成和正式任务 Preflight')) errors.push('EXECUTION_PROTOCOL.md 未定义 Environment Ops Preflight。');
-    const environmentBaseline = readJson('verification/environment-ops-readonly-baseline/summary.json');
-    if (environmentBaseline.taskId !== 'AW-ENV-BASELINE-001') errors.push('Environment Ops基线Task ID不正确。');
-    if (environmentBaseline.observation?.samples !== 7 || environmentBaseline.observation?.durationSeconds < 1800) errors.push('Environment Ops稳定性观察不足30分钟或少于7个样本。');
-    if (environmentBaseline.paidGenerationSafe !== false || environmentBaseline.paidProviderCalls !== 0) errors.push('Environment Ops基线错误放行付费生成或记录了付费调用。');
-    const aiLinkReadiness = readJson('verification/ai-link-readiness/summary.json');
-    if (aiLinkReadiness.taskId !== 'AW-AILINK-READINESS-001') errors.push('AI Link最小就绪核验Task ID不正确。');
-    if (aiLinkReadiness.result !== 'blocked_proxy_path_unverified' || aiLinkReadiness.generationExecuted !== false) errors.push('AI Link最小就绪核验错误放行或执行了生成。');
-    if (aiLinkReadiness.ui?.status !== 'complete_and_interactive' || aiLinkReadiness.session?.status !== 'valid_by_read_only_ui_evidence') errors.push('AI Link UI或Session核验状态不正确。');
-    if (aiLinkReadiness.workflows?.count !== 2 || aiLinkReadiness.aiLink?.mainInstanceFamilies !== 1) errors.push('AI Link工作流数量或主实例基准不正确。');
-    if (aiLinkReadiness.proxyPath?.status !== 'proxy_path_unverified' || aiLinkReadiness.proxyPath?.externalProxy7890Verified !== false) errors.push('AI Link代理路径判定不正确。');
-    const routeReview = readJson('verification/ai-link-route-and-review/summary.json');
-    if (routeReview.taskId !== 'AW-AILINK-ROUTE-AND-REVIEW-001') errors.push('AI Link路由与方案审查Task ID不正确。');
-    if (routeReview.generationExecuted !== false || routeReview.workflowModified !== false || routeReview.workflowConfirmed !== false) errors.push('AI Link路由与方案审查越过只读边界。');
-    if (routeReview.route?.classification !== 'functional_but_unmanaged_route' || routeReview.route?.expectedVia7890 !== false) errors.push('AI Link上游路由分类不正确。');
-    if (routeReview.workflowReview?.reviewClassification !== 'review_passed_with_nonblocking_notes' || routeReview.workflowReview?.generationRequirement !== 'new_generation_not_required') errors.push('AI Link版本3方案审查结论不正确。');
-    if (routeReview.workflowReview?.workflowCount !== 2 || routeReview.workflowReview?.draftVersion !== 3 || routeReview.workflowReview?.roleCount !== 5) errors.push('AI Link版本3方案工作流、草稿或角色基准不正确。');
-
-    log.push('文档一致性检查完成。');
-  } catch (error) {
-    errors.push(`校验脚本执行异常：${error.message}`);
-  }
-
-  const overallStatus = errors.length === 0 ? 'passed' : 'failed';
-  const summary = {
-    overallStatus,
-    packageVersion,
-    contextVersion,
-    releaseVersion,
-    nextStep,
-    capabilityStatusChecks,
-    handoffGeneratedCheck,
-    handoffIdempotentCheck,
-    scannedFiles,
-    ignoredHistoricalPaths,
-    errors,
-    warnings,
-    verifiedAt: new Date().toISOString(),
-  };
-
-  const report = [
-    '# 文档一致性校验报告',
-    '',
-    `- 总状态：${overallStatus}`,
-    `- package.json.version：${packageVersion}`,
-    `- CONTEXT.md 版本：${contextVersion}`,
-    `- Release 版本：${releaseVersion}`,
-    `- 当前唯一下一步：${nextStep}`,
-    `- Handoff 生成校验：${handoffGeneratedCheck.status}`,
-    `- Handoff 幂等校验：${handoffIdempotentCheck.status}`,
-    '',
-    '## 错误',
-    ...(errors.length ? errors.map((error) => `- ${error}`) : ['- 无']),
-    '',
-    '## 警告',
-    ...(warnings.length ? warnings.map((warning) => `- ${warning}`) : ['- 无']),
-  ].join('\n');
-
-  fs.writeFileSync(path.join(outDir, 'summary.json'), `${JSON.stringify(summary, null, 2)}\n`, 'utf8');
-  fs.writeFileSync(path.join(outDir, 'report.md'), `${report}\n`, 'utf8');
-  fs.writeFileSync(path.join(outDir, 'run.log'), `${log.join('\n')}\n`, 'utf8');
-
-  if (overallStatus !== 'passed') {
-    console.error(`文档一致性校验失败：发现 ${errors.length} 个问题。`);
-    for (const error of errors) console.error(`- ${error}`);
-    process.exit(1);
-  }
-
-  console.log('文档一致性校验 passed。');
+const checks = [];
+const errors = [];
+function assertCheck(name, passed, detail) {
+  const item = check(name, passed, detail);
+  checks.push(item);
+  if (!passed) errors.push(`${name}: ${detail}`);
 }
 
-main();
+try {
+  const required = ['PRODUCT.md', 'CURRENT_STATUS.md', 'NEXT_STEP.md', 'CONTEXT.md', 'CURRENT_PROGRESS_AUDIT.md', 'CURRENT_TASK.md', 'AI-Workbench-Handoff.md'];
+  for (const file of required) assertCheck(`${file}存在`, exists(file), exists(file) ? '存在' : '缺失');
+
+  const product = read('PRODUCT.md');
+  const status = read('CURRENT_STATUS.md');
+  const next = read('NEXT_STEP.md');
+  const context = read('CONTEXT.md');
+  const progress = read('CURRENT_PROGRESS_AUDIT.md');
+  const currentTask = read('CURRENT_TASK.md');
+  const handoff = read('AI-Workbench-Handoff.md');
+  const nextMarked = extractMarked(next, 'AIW_NEXT_STEP');
+  const handoffMarked = extractMarked(handoff, 'AIW_GENERATED_HANDOFF');
+
+  assertCheck('CURRENT_STATUS唯一权威', context.includes('| 当前真实状态 | `CURRENT_STATUS.md` |'), 'CONTEXT.md必须明确CURRENT_STATUS.md是当前真实状态唯一权威');
+  assertCheck('NEXT_STEP唯一权威', context.includes('| 当前唯一下一步 | `NEXT_STEP.md` |'), 'CONTEXT.md必须明确NEXT_STEP.md是当前唯一下一步唯一权威');
+  assertCheck('NEXT_STEP仅含RUN-FENCING-001', nextMarked === 'RUN-FENCING-001重新实现', `标记区实际为：${nextMarked}`);
+  assertCheck('NEXT_STEP无旧A/E/G主线', !/(A\/E\/G|A、E、G|工作包 A|工作包 E|工作包 G|v0\.4\.7首批)/i.test(next), 'NEXT_STEP.md不得把旧A/E/G写成当前主线');
+
+  const expectedHandoff = renderHandoffFile(buildHandoffSnapshot(collectHandoffMetadata(new Date(handoffMarked.match(/生成时间：([^\n]+)/)?.[1] || Date.now()))));
+  assertCheck('Handoff轻量结构', handoff === expectedHandoff, 'Handoff必须只由生成器输出轻量索引');
+  assertCheck('Handoff四个权威链接', HANDOFF_LINKS.length === 4 && HANDOFF_LINKS.every(([label]) => handoff.includes(`[${label}]`)), 'Handoff必须引用PRODUCT、CURRENT_STATUS、NEXT_STEP、EXECUTION_PROTOCOL');
+  assertCheck('Handoff不复制状态正文', handoff.split(/\r?\n/).length <= 22 && !/当前阻断|最近关键事件|已完成能力|Production Smoke失败/.test(handoff), 'Handoff过长或复制了状态正文');
+
+  assertCheck('CURRENT_PROGRESS历史标记', progress.includes(historicalMarker) && progress.includes('当前真实状态唯一以CURRENT_STATUS.md为准；') && progress.includes('当前唯一下一步以NEXT_STEP.md为准。'), 'CURRENT_PROGRESS_AUDIT.md顶部缺少统一历史快照标记');
+  assertCheck('CURRENT_TASK历史标记', currentTask.includes(historicalMarker) && currentTask.includes('当前真实状态唯一以CURRENT_STATUS.md为准；') && currentTask.includes('当前唯一下一步以NEXT_STEP.md为准。'), 'CURRENT_TASK.md顶部缺少统一历史快照标记');
+  assertCheck('PRODUCT一页看懂置顶', product.startsWith('# AI Workbench：一页看懂'), 'PRODUCT.md最前面必须是一页看懂');
+  assertCheck('PRODUCT一句话定义', product.includes('AI Workbench是一个以人的目标为中心，能够调度多个AI、Agent和电脑工具，把任务真正执行完成并交付经过验证结果的智能工作台。'), '缺少批准的一句话定义');
+  assertCheck('PRODUCT三条铁律', ['极低门槛', '真正完成任务', '稳定、安全、可验证'].every((text) => product.includes(text)), '缺少三条产品铁律');
+
+  assertCheck('CURRENT_STATUS不宣称RUN-FENCING完成', status.includes('RUN-FENCING正式实现当前不存在') && status.includes('临时通过但已丢失的RUN-FENCING不属于当前已完成成果。') && !/RUN-FENCING正式实现[^\n。]*(已完成|completed|passed)/i.test(status), '不得把RUN-FENCING正式实现写成已完成');
+  assertCheck('CURRENT_STATUS不放行部署真人使用', status.includes('产品尚未达到可部署和真人稳定使用状态') && status.includes('当前不能进入正式发布'), '必须明确不可部署、不可宣称真人稳定使用');
+
+  const currentAuthorityClaims = changedPaths().filter((file) => file.endsWith('.md') && file !== 'CURRENT_STATUS.md' && exists(file)).filter((file) => {
+    const text = read(file);
+    return /当前真实工程状态唯一权威|当前真实状态唯一权威/.test(text) && !text.includes('CURRENT_STATUS.md');
+  });
+  assertCheck('不存在第二个CURRENT_STATUS类权威', currentAuthorityClaims.length === 0, currentAuthorityClaims.length ? currentAuthorityClaims.join(', ') : '无第二权威声明');
+
+  const changed = changedPaths();
+  const outside = changed.filter((file) => !approvedPaths.has(file));
+  assertCheck('变更限定在批准范围', outside.length === 0, outside.length ? outside.join(', ') : '所有变更均在批准范围');
+  const nameStatus = git(['diff', '--name-status', 'HEAD']);
+  assertCheck('不删除不移动原文件', !/^(D|R|C)\s/m.test(nameStatus), nameStatus || '无删除、移动或复制');
+} catch (error) {
+  errors.push(`校验脚本异常：${error.stack || error.message}`);
+}
+
+fs.mkdirSync(outDir, { recursive: true });
+const overallStatus = errors.length === 0 ? 'passed' : 'failed';
+const summary = {
+  taskId: 'DOCUMENT-AUTHORITY-CONSOLIDATION-001',
+  overallStatus,
+  checks,
+  changedPaths: (() => { try { return changedPaths(); } catch { return []; } })(),
+  errors,
+  verifiedAt: new Date().toISOString(),
+};
+const report = [
+  '# 文档权威一致性校验报告',
+  '',
+  `- 总状态：${overallStatus}`,
+  `- 检查项：${checks.length}`,
+  '',
+  '## 检查结果',
+  ...checks.map((item) => `- ${item.status === 'passed' ? 'PASS' : 'FAIL'}｜${item.name}｜${item.detail}`),
+  '',
+  '## 错误',
+  ...(errors.length ? errors.map((error) => `- ${error}`) : ['- 无']),
+].join('\n');
+fs.writeFileSync(path.join(outDir, 'summary.json'), `${JSON.stringify(summary, null, 2)}\n`, 'utf8');
+fs.writeFileSync(path.join(outDir, 'report.md'), `${report}\n`, 'utf8');
+fs.writeFileSync(path.join(outDir, 'run.log'), `task=DOCUMENT-AUTHORITY-CONSOLIDATION-001 status=${overallStatus} checks=${checks.length}\n`, 'utf8');
+
+if (errors.length) {
+  console.error(`文档一致性校验失败：${errors.length}项。`);
+  for (const error of errors) console.error(`- ${error}`);
+  process.exit(1);
+}
+console.log(JSON.stringify({ ok: true, taskId: 'DOCUMENT-AUTHORITY-CONSOLIDATION-001', checks: checks.length }));

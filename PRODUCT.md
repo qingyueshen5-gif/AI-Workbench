@@ -1,7 +1,41 @@
+# AI Workbench：一页看懂
+
+**一句话定义：**
+
+AI Workbench是一个以人的目标为中心，能够调度多个AI、Agent和电脑工具，把任务真正执行完成并交付经过验证结果的智能工作台。
+
+**核心流程：**
+
+用户说出目标
+→ 系统理解和拆解
+→ 选择模型、Agent和工具
+→ 执行
+→ 验证
+→ 交付结果
+
+**它是什么、又不是什么：**
+
+1. 它不是DeepSeek、Codex、Claude或某个固定模型的外壳；
+2. 它不是只生成回答的聊天机器人；
+3. 模型、Agent和工具都是可替换的Provider或能力资源；
+4. 用户不需要分别指挥多个Agent；
+5. 用户只在密码、验证码、付款、权限、不可逆操作、对外发布和最终验收时介入；
+6. 当前第一目标是稳定替代AI Link；
+7. 当前先完成“飞书/手机下达任务—电脑执行—进度回传—结果交付”；
+8. 长期目标是成为人与智能系统及现实设备之间的执行接口。
+
+**三条产品铁律：**
+
+- 极低门槛；
+- 真正完成任务；
+- 稳定、安全、可验证。
+
+---
+
 # PRODUCT.md — 产品定义与能力边界
 
-> 本文件只回答：AI Workbench 服务谁、解决什么问题、提供哪些产品能力、如何获得用户与形成可持续商业。
-> 产品愿景见 `VISION.md`；产品铁律见 `PRINCIPLES.md`；架构见 `ARCHITECTURE.md`；已拍板决定见 `DECISIONS.md`；阶段、版本和完成度只看 `CURRENT_PROGRESS_AUDIT.md`。
+> 本文件是“产品是什么”的唯一权威，只回答AI Workbench服务谁、解决什么问题、提供哪些产品能力、如何获得用户与形成可持续商业。
+> 产品愿景见 `VISION.md`；产品铁律见 `PRINCIPLES.md`；架构见 `ARCHITECTURE.md`；已拍板决定见 `DECISIONS.md`；当前事实只看 `CURRENT_STATUS.md`，当前唯一下一步只看 `NEXT_STEP.md`。
 
 ## 产品定义
 
@@ -28,7 +62,7 @@ AI Workbench 是面向普通人和专业人的 AI 工作台，也是模型、Age
 
 ## 正式产品能力地图
 
-本节定义产品应具备的能力，不表示已经完成或自动开工。完成度与阶段只看 `CURRENT_PROGRESS_AUDIT.md`，当前唯一下一步只看 `NEXT_STEP.md`。
+本节定义产品应具备的能力，不表示已经完成或自动开工。当前事实只看 `CURRENT_STATUS.md`，当前唯一下一步只看 `NEXT_STEP.md`；历史完成度盘点可查 `CURRENT_PROGRESS_AUDIT.md`。
 
 ### 07. 信息抓取与竞品观察
 
@@ -85,4 +119,6 @@ AI Workbench 是面向普通人和专业人的 AI 工作台，也是模型、Age
 - 技术系统与故障恢复：`ARCHITECTURE.md`
 - 工程、证据、测试和连续性：`EXECUTION_PROTOCOL.md`
 - 已锁定决定：`DECISIONS.md`
-- 路线、阶段、版本与完成度：`CURRENT_PROGRESS_AUDIT.md`
+- 当前事实、边界和当前任务：`CURRENT_STATUS.md`
+- 当前唯一下一步：`NEXT_STEP.md`
+- 历史路线、阶段、版本与完成度盘点：`CURRENT_PROGRESS_AUDIT.md`

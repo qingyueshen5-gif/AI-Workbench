@@ -1,35 +1,43 @@
-# NEXT_STEP.md
+# NEXT_STEP.md — 当前唯一下一步
 
 <!-- AIW_NEXT_STEP_START -->
-等待产品负责人验收 AW-AILINK-GROUP-CREATE-001 群结构；验收通过后，另行决定是否批准准备阶段的群内只读任务，不自动发送消息或进入正式开发。
+RUN-FENCING-001重新实现
 <!-- AIW_NEXT_STEP_END -->
 
-## 当前状态
+## 目标
 
-- `workflow-3da933e691b5`当前为`ready/done`，`lastError=null`。
-- 唯一目标群`AI Workbench v0.4.7首批开发协作群`已创建。
-- 工作流总数仍为2；没有版本4、第三个工作流或重复目标群。
-- 五名员工的worker ID、绑定和正式显示名称已核验：
-  - `worker-1g20 / 协调角色` → 飞书**协调**；
-  - `worker-3bp0 / A架构开发` → 飞书**架构开发**；
-  - `worker-5fr0 / E隐私开发` → 飞书**隐私开发**；
-  - `worker-1u80 / 测试验收角色` → 飞书**测试验收**；
-  - `worker-2tj0 / 总集成` → 飞书**总集成**。
-- 群内搜索、原生@和协作以飞书显示名称为准。
-- 群主为AI Link中已确认的当前飞书账号，即产品负责人/人工审批人。
-- 五名员工安装同一群专属Skill`1.0.0`，`requiresMention=true`。
-- “协调”是日常任务入口；“总集成”是唯一最终汇总角色。
-- AI Link正式建群流程自动发送了预设欢迎消息；本轮没有发送测试消息或触发模型。
+为每一次业务Provider执行建立唯一、可持久化、可验证的runId身份链。
 
-## 当前唯一下一步
+## 基线
 
-等待产品负责人验收群结构；验收通过后，另行决定是否批准准备阶段的群内只读任务台账与A/E/G工作包整理。
+`bc43431e954f708d74d82b49ce367a73e07d0174`
 
-当前不得执行：
+## 执行顺序
 
-- 重新生成、确认或修改方案；
-- 重新创建、重新绑定或重新扫码员工；
-- 创建第二个同名目标群；
-- 向群内员工发送测试或任务消息；
-- 启动A/E/G正式开发、创建worktree、调用Codex、修改代码或合并main；
-- 部署、付费、Secret、账号或系统配置操作。
+1. TaskStore Run契约；
+2. Provider绑定；
+3. Progress、Verifier、Final绑定；
+4. 取消、Lease接管和恢复；
+5. D0-1A；
+6. 完整回归；
+7. 等待用户批准。
+
+## 完成标准
+
+- RUN-FENCING专项15/15；
+- D0-1A `runtime.status`通过；
+- D0-1A `file.read`通过；
+- Critical/High通过；
+- Mandatory Gates通过；
+- `npm run verify`通过；
+- 每阶段Checkpoint已提交、备份并推送；
+- 不部署。
+
+## 明确禁止
+
+- D0-1B提前施工；
+- Interpreter Adapter提前施工；
+- 自动部署；
+- 未保存成果时reset/clean。
+
+本任务仅在用户再次明确确认后开始；本轮文档治理完成后必须停止。

@@ -1,69 +1,143 @@
 {
+  "taskId": "DOCUMENT-AUTHORITY-CONSOLIDATION-001",
   "overallStatus": "passed",
-  "packageVersion": "0.4.6",
-  "contextVersion": "0.4.6",
-  "releaseVersion": "v0.4.6",
-  "nextStep": "等待产品负责人验收 AW-AILINK-GROUP-CREATE-001 群结构；验收通过后，另行决定是否批准准备阶段的群内只读任务，不自动发送消息或进入正式开发。",
-  "capabilityStatusChecks": [
+  "checks": [
     {
-      "name": "模型分层 未标记为已完成",
+      "name": "PRODUCT.md存在",
       "status": "passed",
-      "detail": "未完成口径正确"
+      "detail": "存在"
     },
     {
-      "name": "手机端 未标记为已完成",
+      "name": "CURRENT_STATUS.md存在",
       "status": "passed",
-      "detail": "未完成口径正确"
+      "detail": "存在"
     },
     {
-      "name": "完整多 Agent 调度 未标记为已完成",
+      "name": "NEXT_STEP.md存在",
       "status": "passed",
-      "detail": "未完成口径正确"
+      "detail": "存在"
     },
     {
-      "name": "情报流水线 未标记为已完成",
+      "name": "CONTEXT.md存在",
       "status": "passed",
-      "detail": "未完成口径正确"
+      "detail": "存在"
     },
     {
-      "name": "跨网站复杂执行 未标记为已完成",
+      "name": "CURRENT_PROGRESS_AUDIT.md存在",
       "status": "passed",
-      "detail": "未完成口径正确"
+      "detail": "存在"
     },
     {
-      "name": "国际化和区域合规 未标记为已完成",
+      "name": "CURRENT_TASK.md存在",
       "status": "passed",
-      "detail": "未完成口径正确"
+      "detail": "存在"
+    },
+    {
+      "name": "AI-Workbench-Handoff.md存在",
+      "status": "passed",
+      "detail": "存在"
+    },
+    {
+      "name": "CURRENT_STATUS唯一权威",
+      "status": "passed",
+      "detail": "CONTEXT.md必须明确CURRENT_STATUS.md是当前真实状态唯一权威"
+    },
+    {
+      "name": "NEXT_STEP唯一权威",
+      "status": "passed",
+      "detail": "CONTEXT.md必须明确NEXT_STEP.md是当前唯一下一步唯一权威"
+    },
+    {
+      "name": "NEXT_STEP仅含RUN-FENCING-001",
+      "status": "passed",
+      "detail": "标记区实际为：RUN-FENCING-001重新实现"
+    },
+    {
+      "name": "NEXT_STEP无旧A/E/G主线",
+      "status": "passed",
+      "detail": "NEXT_STEP.md不得把旧A/E/G写成当前主线"
+    },
+    {
+      "name": "Handoff轻量结构",
+      "status": "passed",
+      "detail": "Handoff必须只由生成器输出轻量索引"
+    },
+    {
+      "name": "Handoff四个权威链接",
+      "status": "passed",
+      "detail": "Handoff必须引用PRODUCT、CURRENT_STATUS、NEXT_STEP、EXECUTION_PROTOCOL"
+    },
+    {
+      "name": "Handoff不复制状态正文",
+      "status": "passed",
+      "detail": "Handoff过长或复制了状态正文"
+    },
+    {
+      "name": "CURRENT_PROGRESS历史标记",
+      "status": "passed",
+      "detail": "CURRENT_PROGRESS_AUDIT.md顶部缺少统一历史快照标记"
+    },
+    {
+      "name": "CURRENT_TASK历史标记",
+      "status": "passed",
+      "detail": "CURRENT_TASK.md顶部缺少统一历史快照标记"
+    },
+    {
+      "name": "PRODUCT一页看懂置顶",
+      "status": "passed",
+      "detail": "PRODUCT.md最前面必须是一页看懂"
+    },
+    {
+      "name": "PRODUCT一句话定义",
+      "status": "passed",
+      "detail": "缺少批准的一句话定义"
+    },
+    {
+      "name": "PRODUCT三条铁律",
+      "status": "passed",
+      "detail": "缺少三条产品铁律"
+    },
+    {
+      "name": "CURRENT_STATUS不宣称RUN-FENCING完成",
+      "status": "passed",
+      "detail": "不得把RUN-FENCING正式实现写成已完成"
+    },
+    {
+      "name": "CURRENT_STATUS不放行部署真人使用",
+      "status": "passed",
+      "detail": "必须明确不可部署、不可宣称真人稳定使用"
+    },
+    {
+      "name": "不存在第二个CURRENT_STATUS类权威",
+      "status": "passed",
+      "detail": "无第二权威声明"
+    },
+    {
+      "name": "变更限定在批准范围",
+      "status": "passed",
+      "detail": "所有变更均在批准范围"
+    },
+    {
+      "name": "不删除不移动原文件",
+      "status": "passed",
+      "detail": "M\tAI-Workbench-Handoff.md\nM\tCONTEXT.md\nM\tCURRENT_PROGRESS_AUDIT.md\nM\tCURRENT_TASK.md\nM\tNEXT_STEP.md\nM\tPRODUCT.md\nM\tTASKLOG.md\nM\tscripts/generate-handoff.mjs\nM\tscripts/verify-docs-consistency.mjs\nM\tverification/docs-consistency/report.md\nM\tverification/docs-consistency/run.log\nM\tverification/docs-consistency/summary.json"
     }
   ],
-  "handoffGeneratedCheck": {
-    "status": "passed",
-    "detail": "自动生成区与权威文件一致"
-  },
-  "handoffIdempotentCheck": {
-    "status": "passed",
-    "detail": "生成结果幂等稳定"
-  },
-  "scannedFiles": [
-    "CONTEXT.md",
-    "CURRENT_TASK.md",
-    "CURRENT_PROGRESS_AUDIT.md",
-    "NEXT_STEP.md",
+  "changedPaths": [
     "AI-Workbench-Handoff.md",
-    "DECISIONS.md",
-    "PRINCIPLES.md",
-    "GROWTH_LOG.md",
-    "LAUNCH.md",
-    "ENVIRONMENT_OPS_ISSUES.md"
-  ],
-  "ignoredHistoricalPaths": [
-    "CHANGELOG.md",
+    "CONTEXT.md",
+    "CURRENT_PROGRESS_AUDIT.md",
+    "CURRENT_STATUS.md",
+    "CURRENT_TASK.md",
+    "NEXT_STEP.md",
+    "PRODUCT.md",
     "TASKLOG.md",
-    "tasks/**",
-    "verification/**",
-    "research/**"
+    "scripts/generate-handoff.mjs",
+    "scripts/verify-docs-consistency.mjs",
+    "verification/docs-consistency/report.md",
+    "verification/docs-consistency/run.log",
+    "verification/docs-consistency/summary.json"
   ],
   "errors": [],
-  "warnings": [],
-  "verifiedAt": "2026-07-28T17:13:11.453Z"
+  "verifiedAt": "2026-08-03T08:26:41.797Z"
 }

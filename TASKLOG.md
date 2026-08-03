@@ -1,5 +1,23 @@
 # TASKLOG.md - 任务总账本
 
+> 本文件是历史任务索引，不代表当前状态或当前下一步。当前真实状态看`CURRENT_STATUS.md`；当前唯一下一步看`NEXT_STEP.md`。
+
+## 2026-08-03事件索引
+
+| Task ID | 日期 | 状态 | Commit或证据路径 | 一句话结论 |
+| --- | --- | --- | --- | --- |
+| `PRODUCTION-SMOKE-001` | 2026-08-03 | failed_and_rolled_back | known-good Runtime `75ef8ca8838790fc32cb95ddeb9d56fcfd969a92` | 真实飞书Production Smoke在Interpreter严格Schema阶段失败，候选Runtime已回滚。 |
+| `RUN-ID-CONTRACT-001` | 2026-08-03 | audited_blocked | `C:/Users/qingy/AppData/Roaming/ai-workbench/run-id-contract-001-evidence.json` | 确认生产缺少持久业务runId、active-run fence、attempt历史及贯穿Provider/Progress/Verifier/Result的身份链。 |
+| `RUN-FENCING-001` | 2026-08-03 | temporary_pass_lost | `C:/Users/qingy/AppData/Roaming/ai-workbench/run-fencing-001-first-failure.json` | 临时实现曾通过专项15/15及D0-1A，但未commit，后被reset/clean清除且无法完整恢复。 |
+| `D0-1-CRITICAL-HIGH-IPC-ISOLATION` | 2026-08-03 | passed_saved | `e4af9f912f82bf25f31bb3ad7bcaa0645cec2265` | Critical/High测试改用隔离IPC目录，专项及既有完整回归通过。 |
+| `CHECKPOINT-PROTECTION-001` | 2026-08-03 | passed_pushed | `bc43431e954f708d74d82b49ce367a73e07d0174` | 阶段PASS后自动commit、外部patch和SHA-256校验已建立，未保存成果阻止破坏性Git操作。 |
+| `DOCUMENT-AUTHORITY-CONSOLIDATION-001` | 2026-08-03 | in_progress | `verification/docs-consistency/` | 收敛产品定义、当前真实状态、唯一下一步及新对话读取入口。 |
+
+## 历史记录
+
+> 以下内容保留原账本。其“当前”和“下一步”只代表当时记录时点。
+
+
 > 仓库文件是唯一事实来源。每个任务下达、完成、验收和交接都必须写回本仓库，不能只留在对话里。
 
 最新更新：2026-07-28
