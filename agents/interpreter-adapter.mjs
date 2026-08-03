@@ -2,7 +2,7 @@ import { validateGroundTruth } from './original-ground-truth-extractor.mjs';
 import { makeAdapterResult, sanitizeSemanticCandidate, validateAdapterInput } from './interpreter-adapter-contract.mjs';
 
 const greeting=/^(?:你好|您好|在吗|早上好|上午好|下午好|晚上好|hello|hi|hey|嗨)[！!。.，,\s]*$/iu;
-const runtimeStatus=/(?:runtime|运行时|系统运行状态).*(?:状态|怎么样|正常|检查|查看)|(?:状态|检查|查看).*(?:runtime|运行时)/iu;
+const runtimeStatus=/(?:runtime|运行时|系统).*(?:状态|怎么样|正常|检查|查看|运行状态)|(?:状态|检查|查看|运行状态).*(?:runtime|运行时|系统)/iu;
 const readIntent=/(?:读取|打开并读取|只读|查看|看一下|看下|看看|read|open)/iu;
 const compoundConnector=/(?:然后|并且|同时|再|以及|,\s*then|\band\b)/iu;
 const unsupportedRules=[

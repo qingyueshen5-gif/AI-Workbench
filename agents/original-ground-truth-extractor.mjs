@@ -1,5 +1,5 @@
 const trimEndPunctuation=/[，。；、！？!?）)】\]》〉]+$/u;
-const windowsPathPattern=/[A-Za-z]:\\(?:[^\s<>:"|?*，。；、！？!?（）()【】\[\]《》]+(?:[ ]+[^\s<>:"|?*，。；、！？!?（）()【】\[\]《》]+)*)/gu;
+const windowsPathPattern=/[A-Za-z]:\\(?:[^\s<>:"|?*`，。；、！？!?（）()【】\[\]《》]+(?:[ ]+[^\s<>:"|?*`，。；、！？!?（）()【】\[\]《》]+)*)/gu;
 const uncPathPattern=/\\\\[^\\\s，。；、！？!?]+\\[^\s，。；、！？!?]+(?:\\[^\s，。；、！？!?]+)*/gu;
 const urlPattern=/https?:\/\/[^\s<>"'，。；、！？）)】\]]+/giu;
 const filenamePattern=/(?<![\\/\w.-])[\p{L}\p{N}_-]+\.[A-Za-z0-9]{1,12}(?![\w])/gu;
