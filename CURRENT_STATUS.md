@@ -10,6 +10,8 @@
 - 产品尚未达到可部署和真人稳定使用状态。
 - 当前不能宣布P0清零。
 - 当前不能进入正式发布。
+- RUN-FENCING候选`c2ed8c13e42b5c006a6c30a943b08975cff6c3a5`已通过验收，但未部署。
+- D0-1B原始事实提取器候选已完成专项验证；它尚未接入生产Interpreter路径。
 
 ## 二、版本与运行状态
 
@@ -26,14 +28,10 @@
 2. “你好”和Runtime状态请求均在Interpreter阶段失败。
 3. 失败根因是实际模型输出不符合严格内部Schema。
 4. 候选已回滚到known-good Runtime。
-5. D0-1A核查发现业务Run身份契约缺失。
-6. 临时RUN-FENCING实现曾通过专项15/15及D0-1A。
-7. 该实现当时没有commit。
-8. 后续被reset/clean清除，无法完整恢复。
-9. 根因是“测试PASS”和“Git保存”没有自动关联。
-10. 已建立并推送Checkpoint防丢机制。
-11. 保护机制现在要求阶段PASS后自动commit、导出patch并校验SHA-256。
-12. 未提交成果会阻止reset/clean。
+5. RUN-FENCING已重新实现、分阶段Checkpoint并通过15/15及完整回归。
+6. D0-1A `runtime.status`与指定真实文件`file.read`已通过。
+7. D0-1B已建立确定性原始事实提取器，模型调用和网络调用均为0。
+8. 所有成果仍是候选状态，Production Smoke未重新执行或通过。
 
 ## 四、当前已完成
 
@@ -43,14 +41,12 @@
 - 既有Mandatory Gates。
 - Critical/High IPC隔离修复。
 - Checkpoint保护机制及远端存档。
-
-> 临时通过但已丢失的RUN-FENCING不属于当前已完成成果。
+- RUN-FENCING候选通过并保存，未部署。
+- D0-1A候选验证通过。
+- D0-1B候选专项通过，未接入Interpreter。
 
 ## 五、当前阻断
 
-- RUN-FENCING正式实现当前不存在。
-- D0-1A尚未在当前正式候选代码上通过。
-- D0-1B未开始。
 - Interpreter Adapter未完成。
 - 安全闸门和抗变体矩阵未完成。
 - Production Smoke未通过。
@@ -58,10 +54,10 @@
 
 ## 六、当前技术主线
 
-RUN-FENCING重写
-→ D0-1A
-→ D0-1B原始事实提取
-→ Interpreter Adapter
+RUN-FENCING候选（已通过、未部署）
+→ D0-1A（已通过）
+→ D0-1B原始事实提取（候选完成）
+→ 等待用户批准Interpreter Adapter
 → 安全闸门与抗变体
 → Production Smoke
 → 真人验收

@@ -1,44 +1,33 @@
 # NEXT_STEP.md — 当前唯一下一步
 
 <!-- AIW_NEXT_STEP_START -->
-RUN-FENCING-001重新实现
+等待用户批准Interpreter Adapter
 <!-- AIW_NEXT_STEP_END -->
 
 ## 目标
 
-为每一次业务Provider执行建立唯一、可持久化、可验证的runId身份链。
+基于已完成的D0-1B确定性原始事实提取器，等待用户明确批准后再设计和施工Interpreter Adapter。
 
 ## 基线
 
-- 实际开发基线：`579ae3c4592bec3de2c1c0c223db557641c1cc68`
-- Checkpoint保护机制祖先：`bc43431e954f708d74d82b49ce367a73e07d0174`
+- RUN-FENCING验收候选：`c2ed8c13e42b5c006a6c30a943b08975cff6c3a5`
+- D0-1B候选：以当前分支最终标签为准。
 
 ## 执行顺序
 
-1. TaskStore Run契约；
-2. Provider绑定；
-3. Progress、Verifier、Final绑定；
-4. 取消、Lease接管和恢复；
-5. D0-1A；
-6. 完整回归；
-7. 等待用户批准。
+1. 停止自动施工；
+2. 等待用户验收D0-1B；
+3. 仅在用户明确批准后开始Interpreter Adapter。
 
 ## 完成标准
 
-- RUN-FENCING专项15/15；
-- D0-1A `runtime.status`通过；
-- D0-1A `file.read`通过；
-- Critical/High通过；
-- Mandatory Gates通过；
-- `npm run verify`通过；
-- 每阶段Checkpoint已提交、备份并推送；
-- 不部署。
+- 用户明确批准Interpreter Adapter的施工范围、输入输出契约和验收门禁。
 
 ## 明确禁止
 
-- D0-1B提前施工；
 - Interpreter Adapter提前施工；
 - 自动部署；
+- 切换生产Runtime或触碰生产IPC；
 - 未保存成果时reset/clean。
 
-本任务仅在用户再次明确确认后开始；本轮文档治理完成后必须停止。
+Interpreter Adapter仅在用户再次明确确认后开始；本轮D0-1B完成后必须停止。

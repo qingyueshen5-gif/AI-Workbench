@@ -73,10 +73,10 @@ try {
 
   assertCheck('CURRENT_STATUS唯一权威', context.includes('| 当前真实状态 | `CURRENT_STATUS.md` |'), 'CONTEXT.md必须明确CURRENT_STATUS.md是当前真实状态唯一权威');
   assertCheck('NEXT_STEP唯一权威', context.includes('| 当前唯一下一步 | `NEXT_STEP.md` |'), 'CONTEXT.md必须明确NEXT_STEP.md是当前唯一下一步唯一权威');
-  assertCheck('NEXT_STEP仅含RUN-FENCING-001', nextMarked === 'RUN-FENCING-001重新实现', `标记区实际为：${nextMarked}`);
+  assertCheck('NEXT_STEP等待Interpreter Adapter批准', nextMarked === '等待用户批准Interpreter Adapter', `标记区实际为：${nextMarked}`);
   assertCheck('NEXT_STEP无旧A/E/G主线', !/(A\/E\/G|A、E、G|工作包 A|工作包 E|工作包 G|v0\.4\.7首批)/i.test(next), 'NEXT_STEP.md不得把旧A/E/G写成当前主线');
-  assertCheck('RUN-FENCING实际开发基线', next.includes('实际开发基线：`579ae3c4592bec3de2c1c0c223db557641c1cc68`'), 'NEXT_STEP.md必须以579ae3作为实际开发基线');
-  assertCheck('Checkpoint保护祖先口径', next.includes('Checkpoint保护机制祖先：`bc43431e954f708d74d82b49ce367a73e07d0174`'), 'bc43431只能作为Checkpoint保护机制祖先');
+  assertCheck('RUN-FENCING验收候选口径', next.includes('RUN-FENCING验收候选：`c2ed8c13e42b5c006a6c30a943b08975cff6c3a5`'), 'NEXT_STEP.md必须记录已验收RUN-FENCING候选');
+  assertCheck('Interpreter Adapter不得自动开始', next.includes('仅在用户明确批准后开始Interpreter Adapter') && next.includes('本轮D0-1B完成后必须停止'), '必须等待用户批准Interpreter Adapter');
 
   const handoffBranch = handoffMarked.match(/- Branch: `([^`]+)`/)?.[1];
   const handoffHead = handoffMarked.match(/- HEAD: `([0-9a-f]{40})`/)?.[1];
@@ -93,7 +93,7 @@ try {
   assertCheck('PRODUCT一句话定义', product.includes('AI Workbench是一个以人的目标为中心，能够调度多个AI、Agent和电脑工具，把任务真正执行完成并交付经过验证结果的智能工作台。'), '缺少批准的一句话定义');
   assertCheck('PRODUCT三条铁律', ['极低门槛', '真正完成任务', '稳定、安全、可验证'].every((text) => product.includes(text)), '缺少三条产品铁律');
 
-  assertCheck('CURRENT_STATUS不宣称RUN-FENCING完成', status.includes('RUN-FENCING正式实现当前不存在') && status.includes('临时通过但已丢失的RUN-FENCING不属于当前已完成成果。') && !/RUN-FENCING正式实现[^\n。]*(已完成|completed|passed)/i.test(status), '不得把RUN-FENCING正式实现写成已完成');
+  assertCheck('CURRENT_STATUS候选未部署口径', status.includes('RUN-FENCING候选') && status.includes('D0-1B原始事实提取器候选') && status.includes('Production Smoke未重新执行或通过'), '必须区分候选通过、未部署和Production Smoke未通过');
   assertCheck('CURRENT_STATUS不放行部署真人使用', status.includes('产品尚未达到可部署和真人稳定使用状态') && status.includes('当前不能进入正式发布'), '必须明确不可部署、不可宣称真人稳定使用');
 
   const currentAuthorityClaims = changedPaths().filter((file) => file.endsWith('.md') && file !== 'CURRENT_STATUS.md' && exists(file)).filter((file) => {

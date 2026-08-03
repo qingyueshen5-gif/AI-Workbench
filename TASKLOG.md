@@ -12,6 +12,8 @@
 | `D0-1-CRITICAL-HIGH-IPC-ISOLATION` | 2026-08-03 | passed_saved | `e4af9f912f82bf25f31bb3ad7bcaa0645cec2265` | Critical/High测试改用隔离IPC目录，专项及既有完整回归通过。 |
 | `CHECKPOINT-PROTECTION-001` | 2026-08-03 | passed_pushed | `bc43431e954f708d74d82b49ce367a73e07d0174` | 阶段PASS后自动commit、外部patch和SHA-256校验已建立，未保存成果阻止破坏性Git操作。 |
 | `DOCUMENT-AUTHORITY-CONSOLIDATION-001` | 2026-08-03 | in_progress | `verification/docs-consistency/` | 收敛产品定义、当前真实状态、唯一下一步及新对话读取入口。 |
+| `RUN-FENCING-001` | 2026-08-03 | passed_saved_not_deployed | `c2ed8c13e42b5c006a6c30a943b08975cff6c3a5` | Run身份链候选通过15/15、D0-1A和完整回归，已保存推送但未部署。 |
+| `ORIGINAL-GROUND-TRUTH-EXTRACTOR-001` | 2026-08-03 | candidate_passed_not_integrated | `scripts/verify-original-ground-truth-001.mjs` | D0-1B确定性原始事实提取器完成专项验证，未接入Interpreter且未部署。 |
 
 ## 历史记录
 
