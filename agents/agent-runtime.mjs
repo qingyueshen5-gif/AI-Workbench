@@ -11,6 +11,9 @@ import { TaskInterpreter } from './task-interpreter.mjs';
 import { CapabilityRegistry } from '../capabilities/capability-registry.mjs';
 import { CapabilityScheduler } from '../capabilities/capability-scheduler.mjs';
 import { LocalProcessProvider } from '../execution/local-process-provider.mjs';
+import { extractGroundTruth } from './original-ground-truth-extractor.mjs';
+import { InterpreterAdapter } from './interpreter-adapter.mjs';
+import { toNonExecutionRuntimeResult } from './interpreter-adapter-contract.mjs';
 
 function historyPrompt(history) {
   return history.slice(-20).map((item) => `${item.role === 'assistant' ? 'assistant' : item.role === 'tool' ? 'tool' : 'user'}: ${item.text}`).join('\n');
@@ -111,6 +114,8 @@ export class AgentRuntime {
     this.progressOptions = options.progressOptions || {};
     this.capabilityRegistry = options.capabilityRegistry || new CapabilityRegistry();
     this.taskInterpreter = options.taskInterpreter || new TaskInterpreter({ model: this.models });
+    this.interpreterAdapter = options.interpreterAdapter || new InterpreterAdapter();
+    this.groundTruthExtractor = options.groundTruthExtractor || extractGroundTruth;
     this.scheduler = options.scheduler || new CapabilityScheduler({ registry: this.capabilityRegistry });
     this.providers = new Map(Object.entries(options.providers || { 'local-process-provider': options.processProvider || new LocalProcessProvider() }));
     this.statePaths = options.statePaths || {
@@ -251,17 +256,23 @@ export class AgentRuntime {
       }
 
       const classification = normalizeClassification(control.classification, job.text);
+      const groundTruth = this.groundTruthExtractor(String(job.text || ''));
+      const adapterResult = this.interpreterAdapter.adapt({ originalText: String(job.text || ''), groundTruth, semanticCandidate: job.semanticCandidate || null });
+      if (adapterResult.decision !== 'execute') {
+        const state = await this.sessions.load(conversationId, job.openId);
+        await this.sessions.appendMessage(state, { role: 'user', text: job.text, messageId: job.messageId });
+        const result = toNonExecutionRuntimeResult(adapterResult, { originalMessageId: job.originalMessageId || job.messageId });
+        await this.sessions.appendMessage(state, { role: 'assistant', text: result.text, messageId: job.messageId, provider: result.provider });
+        return { ...result, adapterResult };
+      }
+
       const state = await this.sessions.load(conversationId, job.openId);
       task = existing || await this.tasks.create({ ...job, taskId });
       await this.sessions.appendMessage(state, { role: 'user', text: job.text, messageId: job.messageId, taskId });
       task = await this.transition(task, 'interpreting', 'interpreter_started', 'agent-runtime', { messageId: job.messageId }, progress);
 
-      const interpretation = await this.taskInterpreter.interpret({
-        text: job.text,
-        conversationContext: (state.originalMessages || []).slice(-12),
-        environmentContext: { platform: process.platform }
-      });
-      task = await this.tasks.patch(task.taskId, { interpretation });
+      const interpretation = adapterResult.taskDraft;
+      task = await this.tasks.patch(task.taskId, { interpretation, groundTruth, adapterResult });
 
       if (interpretation.taskType === 'clarification') {
         const text = clarificationText(interpretation);

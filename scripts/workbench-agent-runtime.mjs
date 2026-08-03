@@ -70,7 +70,7 @@ async function executeClaimedJob(job,workerId) {
     const finishedAt=Date.now();
     await completeJob(job, stale
       ? {messageId:job.messageId,originalMessageId:job.originalMessageId||job.messageId,conversationId:job.conversationId||job.chatId,chatId:job.chatId,ok:false,text:'',suppressed:true,errorClass:'Superseded',finishedAt}
-      : { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: true, text: result.text, provider: result.provider, providerSessionId: result.providerSessionId, toolUsed: result.toolUsed, verified: result.verified, controlKind: result.controlKind || '', activeTaskId: result.activeTaskId || job.messageId, classification: result.classification || null, finishedAt });
+      : { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: true, text: result.text, provider: result.provider, providerSessionId: result.providerSessionId, toolUsed: result.toolUsed, verified: result.verified, controlKind: result.controlKind || '', ...(result.activeTaskId ? { activeTaskId: result.activeTaskId } : {}), classification: result.classification || null, finishedAt });
     await runtimeEvent(stale?'result_suppressed':'result_generated',{messageId:job.messageId,finishedAt,provider:result.provider,toolUsed:result.toolUsed,verified:result.verified});
     if(!stale)await patchStatus({ latestError: '', deepseek: 'online', codex: 'online', localTools: 'online' });
   } catch(error) {
