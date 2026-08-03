@@ -60,17 +60,29 @@
   },
   "preB5Behavior": "The lifecycle fixture 'hello' entered the chat business Task path, created and completed dup-task, and the second call reached terminalResult with replayed=true.",
   "postB5Behavior": "B2 deterministic Adapter classifies 'hello' as respond. No Task/Run/Scheduler/Provider/model operation occurs. Repeating it emits a second deterministic response object and appends a second assistant session entry, but it is not a business Task replay.",
-  "classification": "REGRESSION_INTRODUCED_BY_B5",
-  "classificationCode": "A",
+  "classification": "TEST_CONTRACT_DRIFT",
+  "classificationCode": "C",
   "affectedFiles": [
     "agents/agent-runtime.mjs",
     "agents/interpreter-adapter.mjs",
     "scripts/verify-task-lifecycle-001.mjs"
   ],
-  "recommendedFixBoundary": "AgentRuntime.handle non-execution path: preserve zero business Task/Run semantics, but add message-level non-execution replay recognition and return the previously persisted deterministic result with replayed=true without appending duplicate session messages. Do not modify the lifecycle assertion or manufacture a business Task.",
-  "testContractChangeRequired": false,
+  "recommendedFixBoundary": "No production fix is authorized from the available contract evidence. AgentRuntime.terminalResult already returns replayed=true for completed, failed, and cancelled business Tasks. The failing legacy case sends a greeting that B2 intentionally moved to the zero-Task deterministic non-execution path; forcing it back through Task/model execution would violate the approved B2 contract, while adding replayed to a non-execution response would conflate message idempotency with business Task replay. Product-owner adjudication is required before any test-contract change.",
+  "testContractChangeRequired": true,
   "confidence": "HIGH",
   "unresolvedEvidence": [
-    "No durable historical stdout log for every pre-B5 Mandatory suite run was found; direct execution against archived pre-B2 source provides congruent machine evidence."
-  ]
+    "No durable historical stdout log for every pre-B5 Mandatory suite run was found; direct execution against archived pre-B2 source provides congruent machine evidence.",
+    "The existing assertion couples a greeting/non-execution input to the pre-B2 chat-model Task path. The approved B2 contract explicitly requires respond to create zero Task/Run and make zero model calls."
+  ],
+  "adjudicationEvidence": {
+    "terminalBusinessTaskFixture": "scripts/verify-interpreter-adapter-b5-s6-task-replay-001.mjs",
+    "terminalStatesVerified": ["completed", "failed", "cancelled"],
+    "allReturnReplayedTrue": true,
+    "newProviderStarts": 0,
+    "newRuns": 0,
+    "newFinals": 0,
+    "newProgress": 0,
+    "newAssistantReplies": 0,
+    "productionModificationRequired": false
+  }
 }

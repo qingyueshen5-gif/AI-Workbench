@@ -3,10 +3,10 @@
 ## 结论
 
 ```text
-classification=A
-classificationName=REGRESSION_INTRODUCED_BY_B5
+classification=C
+classificationName=TEST_CONTRACT_DRIFT
 confidence=HIGH
-testContractChangeRequired=false
+testContractChangeRequired=true
 ```
 
 ## 正式契约
@@ -75,14 +75,17 @@ messageId=taskId=originalMessageId=dup-task
 
 因此不是ID不一致造成。根因是Job重放从“终态业务Task重放”变成了“无Task的非执行结果重复处理”。它也不是Final交付重放或completed Run问题；失败路径没有创建Run。
 
-## 推荐最小边界
+## 深入复核与裁定边界
 
-只在`AgentRuntime.handle()`非执行旁路处理消息级幂等：
+新增只读终态Fixture验证了正式业务Task范围：
 
-- 首次仍保持Task=0、Run=0、Scheduler=0、Provider=0、Model=0；
-- 持久化或复用现有Session中的确定性非执行结果；
-- 第二次同messageId返回已有结果并增加`replayed=true`；
-- 不重复追加user/assistant Session消息；
-- 不制造业务Task，不修改Task Lifecycle断言。
+- completed第二次处理：`replayed=true`；
+- failed第二次处理：`replayed=true`；
+- cancelled第二次处理：`replayed=true`；
+- 三者Provider、Run、Final、Progress和assistant新增数量均为0。
+
+因此生产`terminalResult()`契约当前有效。失败的旧门禁把问候语`hello`同时当作B2前chat模型业务Task和B2后确定性`respond`。强制它重新创建Task并调用模型会破坏已批准的B2非执行旁路；给无业务Task的respond结果增加Task replay语义又会混淆消息幂等与业务Task重放。
+
+按任务决策树，分类为`TEST_CONTRACT_DRIFT`。本轮不得修改生产代码或`verify-task-lifecycle-001.mjs`，等待产品负责人裁定如何拆分“非执行消息幂等”和“终态业务Task重放”两个契约。
 
 详细机器证据见`s6-task-replay-root-cause.json`。
