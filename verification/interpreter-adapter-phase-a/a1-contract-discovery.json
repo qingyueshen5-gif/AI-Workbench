@@ -1,0 +1,31 @@
+{
+  "schema": "ai-workbench.interpreter-adapter-phase-a-contract-discovery/v1",
+  "baselineCommit": "0a14e07952de49a97070ed3cd89caffd6ef5059e",
+  "implementationChanged": false,
+  "phaseBEntered": false,
+  "taskSchema": {
+    "required": ["taskType", "goal", "actions", "targets", "context", "constraints", "riskLevel", "requiredCapabilities", "successCriteria", "requiresConfirmation", "confidence"]
+  },
+  "taskTypes": ["chat", "computer_operation", "file_operation", "information_research", "code_task", "media_creation", "commerce", "system_diagnosis", "clarification"],
+  "nonExecutionReplyBranches": ["chat_or_empty_capabilities", "clarification", "needs_confirmation", "capability_unavailable", "active_task_control"],
+  "capabilityIds": ["conversation", "file.read", "runtime.status", "code.read", "code.execute", "code.modify", "process.list", "process.stop"],
+  "uniqueCapabilityCount": 8,
+  "providerRegistrationCount": 10,
+  "schedulerStatuses": ["ready", "needs_confirmation", "capability_unavailable"],
+  "riskPolicyModuleExists": false,
+  "riskPolicyLocations": ["agents/task-interpreter.mjs", "capabilities/capability-registry.mjs", "capabilities/capability-scheduler.mjs", "agents/agent-runtime.mjs"],
+  "authorizationSource": "job.authorizationContexts",
+  "modelAuthorizationPower": false,
+  "respondMapping": "chat_or_empty_capabilities -> models.express -> verifier -> final result",
+  "unsupportedMapping": "abstract required capability -> scheduler capability_unavailable",
+  "clarifyMapping": "taskType=clarification -> context.missingFields/questions -> waiting_for_clarification",
+  "plannedPhaseBFiles": [
+    "agents/interpreter-adapter.mjs",
+    "agents/agent-runtime.mjs",
+    "agents/task-interpreter.mjs (only if candidate-output contract needs explicit refinement)",
+    "agents/interpreter-adapter-contract.mjs (optional)",
+    "scripts/verify-interpreter-adapter-*.mjs",
+    "scripts/verify-mandatory-gates-001.mjs"
+  ],
+  "hardStopAfterCheckpoint": true
+}
