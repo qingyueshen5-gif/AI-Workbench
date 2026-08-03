@@ -24,6 +24,9 @@ export class ContractTaskStore {
       originalMessageId: task.originalMessageId || task.messageId || taskId,
       conversationId: task.conversationId || task.chatId || 'conversation',
       parentTaskId: task.parentTaskId || '',
+      taskRevision: Number.isInteger(task.taskRevision) ? task.taskRevision : 0,
+      activeRunId: task.activeRunId || null,
+      runs: Array.isArray(task.runs) ? task.runs : [],
       interpretation: task.interpretation || null,
       schedulerAssignment: task.schedulerAssignment || null,
       providerExecution: task.providerExecution || null,
@@ -55,6 +58,14 @@ export class ContractTaskStore {
     assert.ok(actor);
     assert.notEqual(evidence, undefined);
     return this.save({ ...task, currentState: to, stateReason: reason, terminalAt: terminalStates.has(to) ? Date.now() : null, stateHistory: [...(task.stateHistory || []), { from, to, reason, actor, evidence, timestamp: Date.now() }] });
+  }
+  async cancelTaskWithRun(taskId, { reason = 'user_cancelled', actor = 'user', evidence = {} } = {}) {
+    const task = await this.load(taskId);
+    assert.ok(task, `task missing: ${taskId}`);
+    if (terminalStates.has(task.currentState)) return task;
+    const at = Date.now();
+    const runs = (task.runs || []).map((run) => run.runId === task.activeRunId ? { ...run, status: 'cancelled', finishedAt: at, heartbeatAt: at, failureReason: reason } : run);
+    return this.save({ ...task, activeRunId: null, runs, cancelledByUser: true, currentState: 'cancelled', stateReason: reason, terminalAt: at, stateHistory: [...(task.stateHistory || []), { from: task.currentState, to: 'cancelled', reason, actor, evidence, timestamp: at }] });
   }
   async list() { return [...this.tasks.values()]; }
   async listConversation(conversationId) { return (await this.list()).filter((task) => task.conversationId === conversationId).sort((a, b) => a.createdAt - b.createdAt); }
