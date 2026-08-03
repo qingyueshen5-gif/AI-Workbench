@@ -64,6 +64,11 @@ RUN-FENCING候选（已通过、未部署）
 
 当前唯一获准的下一任务和施工边界以`NEXT_STEP.md`为准；不得因为本节列出后续技术主线而提前施工。
 
-## 七、未裁定资产
+## 七、环境兼容风险
+
+- **HIGH · ENVIRONMENT_COMPATIBILITY_RISK（未修复）**：固定路径`D:\\Anaconda\\Scripts\\hermes.exe`必须在真人陌生Windows机器验收前处理。本轮不批量修改生产路径。
+- 盘符清单中其余31项`PRODUCTION_PATH`登记为`PENDING_ENVIRONMENT_COMPATIBILITY_REVIEW`，需逐项确认配置化、自动发现或保留理由后再修改。
+
+## 八、未裁定资产
 
 `E:\AI-Workbench`主仓库仍存在原有modified和untracked资产。它们尚未全部确定来源和权威性，不得清除，也不得自动视为正式成果。本次施工只将其作为只读参考，并在仓库外保存资产清单。

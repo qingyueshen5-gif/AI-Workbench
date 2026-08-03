@@ -61,6 +61,9 @@ try {
     const result = checkpoint(repo, manifest, archive, ['tracked.txt', 'new.txt'], [process.execPath, '-e', "process.exit(0)"]);
     const saved = JSON.parse(await readFile(manifest, 'utf8'));
     assert.equal(saved.result, 'PASS');
+    assert.equal(saved.saveStatus, 'SAVED');
+    assert.equal(saved.gateStatus, 'GATE_PASSED');
+    assert.equal(saved.finalAcceptance, true);
     assert.equal(saved.testResult, 'PASS');
     assert.equal(saved.saved, true);
     assert.equal(saved.taskId, 'TEST-CHECKPOINT');
@@ -91,6 +94,9 @@ try {
     assert.equal(result.status, 7);
     const failed = JSON.parse(await readFile(manifest, 'utf8'));
     assert.equal(failed.result, 'FIRST_FAILURE');
+    assert.equal(failed.saveStatus, 'UNSAVED');
+    assert.equal(failed.gateStatus, 'BLOCKED');
+    assert.equal(failed.finalAcceptance, false);
     assert.equal(failed.saved, false);
     assert.equal(git(repo, ['rev-parse', 'HEAD']).stdout.trim(), baseline);
     assert.equal(await readFile(join(repo, 'tracked.txt'), 'utf8'), 'candidate remains\n');
@@ -185,6 +191,9 @@ try {
     assert.notEqual(result.status, 0);
     const failed = JSON.parse(await readFile(manifest, 'utf8'));
     assert.equal(failed.testResult, 'PASS');
+    assert.equal(failed.saveStatus, 'UNSAVED');
+    assert.equal(failed.gateStatus, 'GATE_PASSED');
+    assert.equal(failed.finalAcceptance, false);
     assert.equal(failed.saved, false);
     assert.ok(failed.diffHash);
     assert.match(failed.commitError, /failed/);

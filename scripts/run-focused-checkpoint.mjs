@@ -58,6 +58,10 @@ const baseManifest = {
   taskId: options.ticket,
   ticket: options.ticket,
   result: gate.exitCode === 0 ? 'PASS_PENDING_SAVE' : 'FIRST_FAILURE',
+  saveStatus: 'UNSAVED',
+  gateStatus: gate.exitCode === 0 ? 'GATE_PASSED' : 'BLOCKED',
+  finalAcceptance: false,
+  failureClassification: gate.exitCode === 0 ? null : 'UNKNOWN_FAILURE',
   testResult: gate.exitCode === 0 ? 'PASS' : 'FAIL',
   repository: { root: baseline.repoRoot, branch: baseline.branch, baselineHead: baseline.head },
   repoPath: baseline.repoRoot,
@@ -109,6 +113,8 @@ try {
   await writeJsonAtomic(manifestPath, {
     ...pendingManifest,
     commitError: error.message,
+    saveStatus: 'UNSAVED',
+    finalAcceptance: false,
     saved: false,
     updatedAt: new Date().toISOString()
   });
@@ -131,6 +137,10 @@ if (commitProbe.status !== 0) throw new Error(`checkpoint commit does not exist:
 const passed = {
   ...pendingManifest,
   result: 'PASS',
+  saveStatus: 'SAVED',
+  gateStatus: 'GATE_PASSED',
+  finalAcceptance: true,
+  failureClassification: null,
   checkpointCommit,
   archive: { path: resolve(patchPath), file: basename(patchPath), sha256, format: 'git-format-patch' },
   patchPath: resolve(patchPath),

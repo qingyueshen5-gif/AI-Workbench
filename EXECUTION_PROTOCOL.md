@@ -114,6 +114,14 @@ npm.cmd run verify:docs-consistency
 - 每个任务期间启动或观察到的后台进程必须进入机器可读台账，至少记录processId/processRef、command、workingDirectory、startedAt、finishedAt、exitCode、owningTask、owningGate、gating、classification、supersededBy和evidencePath。
 - 进程分类限定为`PASS`、`EXPECTED_TERMINATION`、`NON_GATING_FAILURE`、`FORMAL_GATE_FAILURE`、`UNKNOWN_FAILURE`。任何`UNKNOWN_FAILURE`使任务BLOCKED；任何正式门禁非零退出必须保留失败记录，只有同一门禁后续真实重跑、明确PASS并绑定具体运行和证据时才可解除当前阻断，禁止宣称失败从未发生。
 
+### SAVE-DECOUPLED-FROM-GATE
+
+- 保存状态与门禁状态是独立轴：`saveStatus`仅允许`UNSAVED|SAVED`；`gateStatus`仅允许`NOT_RUN|WIP_NOT_GATED|GATE_PASSED|BLOCKED`。`finalAcceptance=true`仅允许与`saveStatus=SAVED`及`gateStatus=GATE_PASSED`同时出现。
+- 阶段专项成果通过后可以先保存为明确标注的WIP；完整门禁失败不得撤销、删除或阻止已经验证的阶段成果保存。WIP必须保持`finalAcceptance=false`，不得冒充最终PASS。
+- WIP保存只覆盖明确allowlist内的当前成果；保存后新产生的未提交改动仍受Checkpoint保护，不得因为存在较早WIP而执行reset/clean或覆盖。
+- 正式门禁全部通过后必须另建正式Checkpoint，不能原地把未经完整门禁的WIP改名为最终验收。
+- 失败原因必须分类：`ENVIRONMENT_OR_DEPENDENCY_FAILURE`允许在成果保存后实施最小环境修复并重跑同一门禁；`PRODUCT_OR_SECURITY_FAILURE`保存证据后硬停止且不得降低断言；`UNKNOWN_FAILURE`保存证据后置`gateStatus=BLOCKED`并硬停止。
+
 ### EXTERNAL-SKILL-CHANGE-CONTROL
 
 - Agent可以提出Skill修改，但不得自行批准。所有`create`、`edit`、`patch`、`delete`、`write_file`和`remove_file`必须经过Hermes原生`skills.write_approval`，先进入Pending并提供完整Diff，只有产品负责人明确批准后才可落盘。

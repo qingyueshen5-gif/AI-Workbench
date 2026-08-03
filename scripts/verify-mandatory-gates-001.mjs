@@ -4,6 +4,8 @@ export const mandatoryGates = [
   ['Checkpoint Protection', 'scripts/verify-checkpoint-protection-001.mjs'],
   ['Git Destructive Bypass Scan', 'scripts/scan-git-destructive-bypasses.mjs'],
   ['Execution Protocol Checkpoint Rules', 'scripts/verify-execution-protocol-checkpoint.mjs'],
+  ['External Skill Drift', 'scripts/verify-external-skill-drift-001.mjs'],
+  ['Save Decoupled From Gate', 'scripts/verify-save-decoupled-from-gate-001.mjs'],
   ['Authorization Boundary', 'scripts/verify-authorization-boundary-001.mjs'],
   ['Feishu Delivery Idempotency', 'scripts/verify-feishu-delivery-idempotency-001.mjs'],
   ['IPC Acceptance Recovery', 'scripts/verify-ipc-acceptance-recovery-001.mjs'],
