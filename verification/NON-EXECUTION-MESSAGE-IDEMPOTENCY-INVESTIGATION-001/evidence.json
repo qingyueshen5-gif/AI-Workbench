@@ -1,0 +1,18 @@
+{
+  "schema": "ai-workbench.non-execution-message-idempotency-investigation/v1",
+  "taskId": "NON-EXECUTION-MESSAGE-IDEMPOTENCY-INVESTIGATION-001",
+  "baseline": "ea7e1d56e354933a1efebacdd90c2e8f97004dd2",
+  "command": "node scripts/inspect-non-execution-message-idempotency-001.mjs",
+  "exitCode": 0,
+  "classification": "NON_EXECUTION_MESSAGE_IDEMPOTENCY_DEFECT",
+  "case": 2,
+  "productionModified": false,
+  "observations": [
+    {"decision":"respond","assistantRepliesAfterTwoHandles":2,"duplicateAssistantReplies":1,"taskCreates":0,"runCreates":0,"providerCalls":0,"modelCalls":0},
+    {"decision":"clarify","assistantRepliesAfterTwoHandles":2,"duplicateAssistantReplies":1,"taskCreates":0,"runCreates":0,"providerCalls":0,"modelCalls":0},
+    {"decision":"unsupported","assistantRepliesAfterTwoHandles":2,"duplicateAssistantReplies":1,"taskCreates":0,"runCreates":0,"providerCalls":0,"modelCalls":0}
+  ],
+  "rootCause": "AgentRuntime.handle checks terminal business Tasks first, but non-execution results create no Task. The non-execution branch appends a user and assistant session message on every handle without checking originalMessageId/messageId for a previously persisted result.",
+  "requiredDisposition": "Establish a failing independent gate and register the defect. Do not modify production code in this task; await separately approved repair scope.",
+  "deployment": "NOT_DEPLOYED"
+}
