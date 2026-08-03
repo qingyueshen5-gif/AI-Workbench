@@ -1,0 +1,31 @@
+{
+  "schema": "ai-workbench.interpreter-adapter-b5-integration/v1",
+  "taskId": "INTERPRETER-ADAPTER-PHASE-B5-INTEGRATION-001",
+  "saveStatus": "SAVED",
+  "gateStatus": "GATE_PASSED",
+  "finalAcceptance": false,
+  "b5Complete": true,
+  "deployment": "NOT_DEPLOYED",
+  "productionSmokeStarted": false,
+  "metrics": {
+    "runtimeStatusCompleteChain": "PASS",
+    "fileReadCompleteChain": "PASS",
+    "respondBypass": "PASS",
+    "clarifyBypass": "PASS",
+    "unsupportedBypass": "PASS",
+    "nonExecuteTaskCreates": 0,
+    "nonExecuteRunCreates": 0,
+    "nonExecuteSchedulerCalls": 0,
+    "respondModelCalls": 0,
+    "unsupportedSchedulerCalls": 0,
+    "unauthorizedHighRiskProviderCalls": 0,
+    "duplicateFinals": 0,
+    "staleRunResultsAccepted": 0,
+    "windowsPathsDamaged": 0
+  },
+  "commands": [
+    "node scripts/verify-interpreter-adapter-b5-integration-001.mjs",
+    "node scripts/verify-interpreter-adapter-bypass-001.mjs",
+    "node scripts/verify-interpreter-adapter-authorization-001.mjs"
+  ]
+}
