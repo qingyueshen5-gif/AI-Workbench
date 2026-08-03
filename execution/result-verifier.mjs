@@ -21,6 +21,11 @@ export class ResultVerifier {
   }
   verifyCapabilityResult(capabilityId, result) {
     if (!result?.ok) throw new Error(`能力${capabilityId}未执行成功：${result?.reason || 'unknown'}`);
+    if (capabilityId === 'runtime.status' && (!String(result.text || '').trim() || !result.evidence?.readAt)) throw new Error('runtime.status缺少实时状态证据');
+    if (capabilityId === 'file.read') {
+      if (!String(result.content || '') || !result.evidence?.sha256) throw new Error('file.read缺少内容或SHA-256证据');
+      if (result.evidence.before?.size !== result.evidence.after?.size || result.evidence.before?.mtimeMs !== result.evidence.after?.mtimeMs || result.evidence.before?.sha256 !== result.evidence.after?.sha256) throw new Error('file.read前后文件证据不一致');
+    }
     if (capabilityId === 'process.list' && !Array.isArray(result.processes)) throw new Error('process.list缺少进程快照');
     if (capabilityId === 'process.stop') {
       if (!result.target?.pid) throw new Error('process.stop缺少精确PID证据');

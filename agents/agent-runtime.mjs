@@ -172,7 +172,7 @@ export class AgentRuntime {
     await this.transition(latest, 'failed', 'runtime_error', 'agent-runtime', { error: error.message || String(error), name: error.name || 'Error' }, progress).catch(() => {});
   }
 
-  async executeCapabilityPlan(plan, interpretation) {
+  async executeCapabilityPlan(plan, interpretation, runIdentity = null) {
     const results = [];
     for (const assignment of plan.assignments) {
       let completed = null;
@@ -188,6 +188,11 @@ export class AgentRuntime {
           else if (assignment.capabilityId === 'process.stop') {
             const target = interpretation.targets.find((item) => item.type === 'process' || item.type === 'application_process') || {};
             completed = { providerId: providerSpec.providerId, result: await provider.stop({ pid: target.pid, exactName: target.exactName }) };
+          } else if (assignment.capabilityId === 'runtime.status') {
+            completed = { providerId: providerSpec.providerId, result: await provider.status({ text: interpretation.goal, taskId: runIdentity?.taskId, conversationId: interpretation.context?.conversationId, ...runIdentity }) };
+          } else if (assignment.capabilityId === 'file.read') {
+            const target = interpretation.targets.find((item) => item.path) || {};
+            completed = { providerId: providerSpec.providerId, result: await provider.read({ path: target.path, ...runIdentity }) };
           } else throw new Error(`Runtime capability not connected: ${assignment.capabilityId}`);
           this.verifier.verifyCapabilityResult(assignment.capabilityId, completed.result);
           break;
@@ -197,7 +202,7 @@ export class AgentRuntime {
         }
       }
       if (!completed) throw lastError || new Error(`Capability failed: ${assignment.capabilityId}`);
-      results.push({ capabilityId: assignment.capabilityId, ...completed });
+      results.push({ capabilityId: assignment.capabilityId, ...completed, ...(runIdentity || {}) });
     }
     return results;
   }
