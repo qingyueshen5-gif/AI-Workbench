@@ -1,0 +1,26 @@
+{
+  "schema": "ai-workbench.interpreter-adapter-b5-non-execution-regression/v1",
+  "taskId": "INTERPRETER-ADAPTER-PHASE-B5-NON-EXECUTION-REGRESSION-001",
+  "saveStatus": "SAVED",
+  "gateStatus": "GATE_PASSED",
+  "finalAcceptance": false,
+  "deployment": "NOT_DEPLOYED",
+  "productionSmokeStarted": false,
+  "metrics": {
+    "respondTaskCreates": 0,
+    "respondRunCreates": 0,
+    "respondSchedulerCalls": 0,
+    "respondProviderCalls": 0,
+    "respondExpressCalls": 0,
+    "respondUnderstandCalls": 0,
+    "clarifyTaskCreates": 0,
+    "clarifyRunCreates": 0,
+    "clarifySchedulerCalls": 0,
+    "clarifyProviderCalls": 0,
+    "unsupportedTaskCreates": 0,
+    "unsupportedRunCreates": 0,
+    "unsupportedSchedulerCalls": 0,
+    "unsupportedProviderCalls": 0
+  },
+  "verificationCommand": "node scripts/verify-interpreter-adapter-bypass-001.mjs"
+}
