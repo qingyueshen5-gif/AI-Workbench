@@ -1,0 +1,59 @@
+{
+  "schema": "ai-workbench.interpreter-adapter-phase-b-b1/v1",
+  "task": "INTERPRETER-ADAPTER-PHASE-B-001",
+  "baselineCommit": "3989dc4c66a54fc0d01db1141d3e8d8209d136a3",
+  "phase": "B1",
+  "result": "NON_EXECUTION_RESPONSE_PATH_CONTRACT_MISMATCH",
+  "continueToB2": false,
+  "conditions": {
+    "nonExecutionFinalWithoutSchedulerAndProvider": false,
+    "clarificationWithoutExecutionProvider": true,
+    "executeOnlyDecisionEnteringSchedulerCurrently": false,
+    "adapterCanBlockUnregisteredCapabilityBeforeScheduler": true,
+    "adapterIndependentFromTaskInterpreter": true
+  },
+  "actualRuntime": {
+    "clarificationBranch": "agents/agent-runtime.mjs:266-275",
+    "schedulerEntry": "agents/agent-runtime.mjs:278-280",
+    "conversationResponse": "agents/agent-runtime.mjs:371-377",
+    "conversationUsesModelsExpress": true,
+    "conversationEntersSchedulerFirst": true,
+    "capabilityUnavailableFallback": "agents/agent-runtime.mjs:290-295"
+  },
+  "mapping": [
+    {"intent": "runtime_status", "decision": "execute", "taskType": "system_diagnosis", "requiredCapabilities": ["runtime.status"], "scheduler": true},
+    {"intent": "file_read_with_single_ground_truth_path", "decision": "execute", "taskType": "file_operation", "requiredCapabilities": ["file.read"], "scheduler": true},
+    {"intent": "file_read_missing_or_ambiguous_path", "decision": "clarify", "taskType": "clarification", "requiredCapabilities": [], "scheduler": false},
+    {"intent": "compound_executable_intent", "decision": "clarify", "taskType": "clarification", "requiredCapabilities": [], "scheduler": false},
+    {"intent": "greeting_or_non_execution_chat", "decision": "respond", "taskType": null, "requiredCapabilities": null, "scheduler": false},
+    {"intent": "unsupported_or_not_in_phase_allowlist", "decision": "unsupported", "taskType": null, "requiredCapabilities": null, "scheduler": false}
+  ],
+  "pendingProposal": {
+    "id": "f01a4d43",
+    "action": "patch",
+    "origin": "background_review",
+    "targetSkill": "system-capability-readonly-audit",
+    "summary": "patch 'system-capability-readonly-audit' SKILL.md (+16/-3 lines)",
+    "modifiedFile": "SKILL.md",
+    "approved": false,
+    "rejected": false,
+    "deleted": false
+  },
+  "securityMetrics": {
+    "nonExecuteEnteredScheduler": 0,
+    "respondProviderCalls": 0,
+    "unsupportedSchedulerCalls": 0,
+    "clarifyExecutionProviderCalls": 0,
+    "naturalLanguageCodeExecuteMappings": 0,
+    "naturalLanguageCodeModifyMappings": 0,
+    "naturalLanguageProcessStopMappings": 0,
+    "unauthorizedHighRiskFixtureProviderCalls": 0,
+    "modelCalls": 0,
+    "networkCalls": 0
+  },
+  "implementationFilesCreated": false,
+  "runtimeModified": false,
+  "deployment": "NOT_DEPLOYED",
+  "productionSmokeStarted": false,
+  "hardStop": true
+}
