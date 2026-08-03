@@ -54,8 +54,7 @@ export class ActiveTaskController {
 
     if (classification.kind === 'cancel') {
       if (!TERMINAL_TASK_STATES.has(active.currentState)) {
-        const patched = await this.store.patch(active.taskId, { cancelledByUser: true });
-        await this.store.transitionTask(patched.taskId, patched.currentState, 'cancelled', 'user_cancelled', 'user', { controlMessageId: job.originalMessageId || job.messageId });
+        await this.store.cancelTaskWithRun(active.taskId, { reason: 'user_cancelled', actor: 'user', evidence: { controlMessageId: job.originalMessageId || job.messageId } });
       }
       return { intercepted: true, kind: 'cancel', text: 'Task cancelled.', activeTaskId: active.taskId, targetTaskId: active.taskId, classification };
     }
