@@ -1,0 +1,35 @@
+{
+  "schema": "ai-workbench.mandatory-runtime-switch-pass-evidence/v1",
+  "classification": "FORMAL_GATE_FAILURE_ENVIRONMENT_FIXTURE_HARDCODED_DRIVE",
+  "originalFailure": {
+    "processRef": "proc_da5bfe0c1e8d",
+    "exitCode": 1,
+    "gate": "Runtime Switch",
+    "logPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\d0-1b-ground-truth-001\\mandatory-gates-closeout.log",
+    "error": "ENOENT mkdir '\\\\?'",
+    "cause": "Fixture used E:\\aiw-gateway-switch-fixed while the E volume was unavailable"
+  },
+  "subsequentPass": {
+    "processRef": "proc_e0a42254cbd4",
+    "exitCode": 0,
+    "mandatoryGatesRun": "mandatory-gates-closeout-2",
+    "logPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\d0-1b-ground-truth-001\\mandatory-gates-closeout-2.log",
+    "logMtime": "2026-08-03T18:41:46.0202367+08:00",
+    "runtimeSwitchLines": [174, 175],
+    "rawLine174": "[MANDATORY GATE] Runtime Switch -> scripts/verify-gateway-runtime-switch.mjs",
+    "rawLine175Result": {
+      "ok": true,
+      "switchWithoutGatewayRestart": true,
+      "failedCandidateRolledBack": true
+    },
+    "skip": false,
+    "mock": false,
+    "bypass": false,
+    "mandatoryGatesFinal": {
+      "ok": true,
+      "deployment": "GATE_PASSED_NOT_DEPLOYED",
+      "runtimeSwitchListedAtLines": [324, 325]
+    }
+  },
+  "finalFinding": "曾因Fixture硬编码E盘发生正式门禁失败；环境恢复后，同一Runtime Switch门禁在后续完整Mandatory Gates运行中明确PASS。原失败记录保留。"
+}

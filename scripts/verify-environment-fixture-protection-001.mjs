@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { assertExternalRecoveryArtifact, assertWorktreeVolumeAvailable, sha256File } from './checkpoint-protection-core.mjs';
+
+const root=dirname(dirname(fileURLToPath(import.meta.url)));
+const runtimeSwitchPath=join(root,'scripts','verify-gateway-runtime-switch.mjs');
+const runtimeSwitchSource=await fs.readFile(runtimeSwitchPath,'utf8');
+assert.match(runtimeSwitchSource,/mkdtemp\(join\(os\.tmpdir\(\),'aiw-gateway-switch-'\)\)/);
+assert.doesNotMatch(runtimeSwitchSource,/[A-Z]:\\\\aiw-gateway-switch-fixed/i);
+const preflight=await assertWorktreeVolumeAvailable(root,{requireWrite:true});
+assert.equal(preflight.readable,true);assert.equal(preflight.writable,true);assert.ok(preflight.head);
+await assert.rejects(assertWorktreeVolumeAvailable(join(os.tmpdir(),'aiw-volume-does-not-exist'),{requireWrite:true}),/WORKTREE_VOLUME_UNAVAILABLE/);
+const artifactRoot=await fs.mkdtemp(join(process.env.APPDATA||os.tmpdir(),'ai-workbench-checkpoint-protection-'));
+const artifact=join(artifactRoot,'sample.patch');await fs.writeFile(artifact,'patch evidence\n');const sha=await sha256File(artifact);const verified=await assertExternalRecoveryArtifact(root,artifact,sha);assert.equal(verified.sha256,sha);
+await assert.rejects(assertExternalRecoveryArtifact(root,artifact,'0'.repeat(64)),/SHA-256 mismatch/);
+await fs.rm(artifactRoot,{recursive:true,force:true});
+console.log(JSON.stringify({ok:true,module:'ENVIRONMENT-FIXTURE-PROTECTION-001',runtimeSwitchUsesOsTmp:true,noFixedDrive:true,worktreePreflight:preflight,missingVolumeFailsClosed:true,externalArtifactOnApprovedDrive:true,sha256Recomputed:true}));

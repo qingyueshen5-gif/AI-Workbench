@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
-import { mkdir, readFile, rename, stat, writeFile } from 'node:fs/promises';
+import { access, mkdir, readFile, rename, stat, writeFile } from 'node:fs/promises';
+import { constants } from 'node:fs';
 import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 
 export const MANIFEST_SCHEMA = 'ai-workbench.checkpoint-pass/v1';
@@ -109,6 +110,25 @@ export async function assertExternalArtifact(repo, artifactPath) {
   if (isInside(repoRoot, artifact)) throw new Error(`checkpoint artifact must be outside repository: ${artifact}`);
   const info = await stat(artifact);
   if (!info.isFile() || info.size === 0) throw new Error(`checkpoint artifact is missing or empty: ${artifact}`);
+}
+
+export async function assertExternalRecoveryArtifact(repo, artifactPath, expectedSha256 = '') {
+  await assertExternalArtifact(repo, artifactPath);
+  const artifact = resolve(artifactPath);
+  if (!/^c:[\\/]/i.test(artifact)) throw new Error(`checkpoint recovery artifact must be on approved C drive: ${artifact}`);
+  if (isInside(repo, artifact)) throw new Error(`checkpoint recovery artifact must be outside worktree: ${artifact}`);
+  const actualSha256 = await sha256File(artifact);
+  if (expectedSha256 && actualSha256 !== expectedSha256) throw new Error(`checkpoint recovery artifact SHA-256 mismatch: ${artifact}`);
+  return { path: artifact, sha256: actualSha256 };
+}
+
+export async function assertWorktreeVolumeAvailable(repo, { requireWrite = false } = {}) {
+  const root = resolve(repo);
+  try { await access(root, constants.R_OK | (requireWrite ? constants.W_OK : 0)); }
+  catch { throw new Error(`WORKTREE_VOLUME_UNAVAILABLE: ${root}`); }
+  const head = git(root, ['rev-parse', 'HEAD']);
+  git(root, ['status', '--porcelain=v1']);
+  return { repoPath: root, worktreePath: root, volume: root.slice(0, 2), readable: true, writable: requireWrite ? true : null, head, gitStatusReadable: true };
 }
 
 export function repoIdentity(repo) {

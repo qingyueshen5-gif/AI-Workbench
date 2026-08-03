@@ -106,6 +106,14 @@ npm.cmd run verify:docs-consistency
 - 专项测试 PASS 后，必须按明确的 repository-relative `scope allowlist` 校验全部 tracked/untracked 改动；allowlist 外任一改动都必须 fail closed，禁止暂存或混入 checkpoint。
 - guarded restore 只接受当前仓库、当前 HEAD 等于 checkpoint commit、工作区干净、patch 位于仓库外且 SHA-256 匹配的机器可读 `PASS` manifest。任一条件不满足时禁止 reset/clean。
 
+### Worktree、外部恢复副本与后台进程硬门禁
+
+- 正式施工开始前必须只读验证 repoPath、worktreePath和所在卷存在且可读；需要写入时还必须可写，并成功读取当前HEAD和Git状态。卷未挂载或目录不可访问时必须返回`WORKTREE_VOLUME_UNAVAILABLE`并停止，禁止在其他目录重建过期副本继续施工。
+- Checkpoint唯一恢复副本不得只存在于Worktree所在卷。批准根目录为`C:\Users\qingy\AppData\Roaming\ai-workbench\`；format-patch、SHA-256、PASS/final manifest、首失败日志、关键证据和后台进程台账必须保存于该根目录或其子目录。
+- `saved=true`只能在外部Patch存在、大小大于0、位于C盘、位于Worktree之外、重算SHA-256匹配且manifest中的commit可由Git解析为真实commit后写入。任一检查失败必须停止，不得进入下一阶段或执行reset/clean。
+- 每个任务期间启动或观察到的后台进程必须进入机器可读台账，至少记录processId/processRef、command、workingDirectory、startedAt、finishedAt、exitCode、owningTask、owningGate、gating、classification、supersededBy和evidencePath。
+- 进程分类限定为`PASS`、`EXPECTED_TERMINATION`、`NON_GATING_FAILURE`、`FORMAL_GATE_FAILURE`、`UNKNOWN_FAILURE`。任何`UNKNOWN_FAILURE`使任务BLOCKED；任何正式门禁非零退出必须保留失败记录，只有同一门禁后续真实重跑、明确PASS并绑定具体运行和证据时才可解除当前阻断，禁止宣称失败从未发生。
+
 ## Environment Ops 事故处理流程
 
 所有电脑、进程、端口、网络、代理、AI Link、通讯渠道、Provider、账号恢复、支付和预算异常统一执行：

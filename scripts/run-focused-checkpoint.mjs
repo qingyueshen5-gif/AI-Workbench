@@ -3,8 +3,9 @@ import { spawnSync } from 'node:child_process';
 import { basename, join, resolve } from 'node:path';
 import {
   MANIFEST_SCHEMA,
-  assertExternalArtifact,
+  assertExternalRecoveryArtifact,
   assertScopedEntries,
+  assertWorktreeVolumeAvailable,
   findRepoRoot,
   git,
   isInside,
@@ -41,6 +42,7 @@ function runGate(repo, command) {
 
 const options = parseArgs(process.argv.slice(2));
 const repo = await findRepoRoot();
+await assertWorktreeVolumeAvailable(repo, { requireWrite: true });
 const allowlist = normalizeAllowlist(options.allow);
 const baseline = repoIdentity(repo);
 const manifestPath = resolve(options.manifest);
@@ -122,8 +124,10 @@ await writeJsonAtomic(manifestPath, { ...pendingManifest, result: 'PASS_PENDING_
 const { mkdir, writeFile } = await import('node:fs/promises');
 await mkdir(archiveDir, { recursive: true });
 await writeFile(patchPath, patch, 'utf8');
-await assertExternalArtifact(repo, patchPath);
 const sha256 = await sha256File(patchPath);
+await assertExternalRecoveryArtifact(repo, patchPath, sha256);
+const commitProbe = git(repo, ['cat-file', '-e', `${checkpointCommit}^{commit}`], { allowFailure: true });
+if (commitProbe.status !== 0) throw new Error(`checkpoint commit does not exist: ${checkpointCommit}`);
 const passed = {
   ...pendingManifest,
   result: 'PASS',
