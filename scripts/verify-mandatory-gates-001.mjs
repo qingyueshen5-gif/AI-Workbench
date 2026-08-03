@@ -1,6 +1,9 @@
 import { spawn } from 'node:child_process';
 
 export const mandatoryGates = [
+  ['Checkpoint Protection', 'scripts/verify-checkpoint-protection-001.mjs'],
+  ['Git Destructive Bypass Scan', 'scripts/scan-git-destructive-bypasses.mjs'],
+  ['Execution Protocol Checkpoint Rules', 'scripts/verify-execution-protocol-checkpoint.mjs'],
   ['Authorization Boundary', 'scripts/verify-authorization-boundary-001.mjs'],
   ['Feishu Delivery Idempotency', 'scripts/verify-feishu-delivery-idempotency-001.mjs'],
   ['IPC Acceptance Recovery', 'scripts/verify-ipc-acceptance-recovery-001.mjs'],

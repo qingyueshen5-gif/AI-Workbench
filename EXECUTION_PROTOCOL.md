@@ -95,6 +95,17 @@ npm.cmd run verify:docs-consistency
 
 外部发布、生产部署和 Release 仍需单独授权；普通 commit/push 只在用户明确要求时执行。
 
+### Checkpoint 与破坏性 Git 硬规则
+
+- 测试 `PASS` 与 Git 保存是两个独立状态；每个节点通过即提交，不得等待整个工作包结束。专项阶段一旦 `PASS`，必须立即自动创建 checkpoint commit，并生成机器可读 `PASS` manifest；测试通过与保存不得依赖执行者记得手动提交。
+- checkpoint 后必须生成仓库外 `git format-patch`（或等价补丁）并校验 SHA-256；只有 checkpoint commit 和外部 patch 均验证成功、manifest 已更新为 `saved: true` 后，才允许继续完整回归或清理。
+- 未提交的 `PASS` 成果存在时禁止 reset/clean；来源或价值无法确认的脏工作区以及任何未跟踪文件同样禁止 reset/clean，不得猜测其无价值或自动删除。“工作区干净”不是允许清理的唯一依据。
+- 测试基础设施失败或无关回归失败不得删除已通过的生产实现；只有 checkpoint 和外部 patch 均验证成功后，才允许由保护器执行清理。
+- 绕过保护器属于 `Deployment BLOCKED`。禁止直接执行 `git reset --hard`、`git clean -fd` 或任何 `resetHard` 等价路径；`scripts/git-guard.mjs` 是唯一 guarded reset/clean 入口，仓库扫描不得存在生产绕过。测试 fixture 只有在同一行显式标记 `CHECKPOINT_PROTECTION_FIXTURE` 时才可包含这些字面量。
+- 专项测试失败时必须保留实现，不得 reset/clean；立即停止后续 Gate，并返回首失败命令、退出码和原始输出。失败证据不得伪装为 PASS。
+- 专项测试 PASS 后，必须按明确的 repository-relative `scope allowlist` 校验全部 tracked/untracked 改动；allowlist 外任一改动都必须 fail closed，禁止暂存或混入 checkpoint。
+- guarded restore 只接受当前仓库、当前 HEAD 等于 checkpoint commit、工作区干净、patch 位于仓库外且 SHA-256 匹配的机器可读 `PASS` manifest。任一条件不满足时禁止 reset/clean。
+
 ## Environment Ops 事故处理流程
 
 所有电脑、进程、端口、网络、代理、AI Link、通讯渠道、Provider、账号恢复、支付和预算异常统一执行：
