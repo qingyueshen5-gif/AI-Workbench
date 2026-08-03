@@ -4,6 +4,7 @@ import os from 'node:os';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { AgentRuntime } from '../agents/agent-runtime.mjs';
+import { ToolExecutor } from '../execution/tool-executor.mjs';
 import { TaskStore } from '../channels/task-store.mjs';
 import { SessionStore } from '../channels/session-store.mjs';
 import { CapabilityRegistry } from '../capabilities/capability-registry.mjs';
@@ -21,7 +22,7 @@ class CountingProvider extends LocalGroundedProvider{
  async status(context){counters.providerStarts++;counters.statusStarts++;return super.status(context);}
  async read(context){counters.providerStarts++;counters.readStarts++;return super.read(context);}
 }
-const toolExecutor={async execute(_id,call){const content=await fs.readFile(call.path);const stat=await fs.stat(call.path);const digest=sha(content);return {results:[{type:'read_file',path:call.path,content:content.toString('utf8'),size:stat.size,mtimeMs:stat.mtimeMs,sha256:digest,currentSize:stat.size,currentMtimeMs:stat.mtimeMs,currentSha256:digest}]};}};
+const toolExecutor=new ToolExecutor({root:process.cwd(),allowedRoots:[root]});
 const provider=new CountingProvider({toolExecutor,readState:async()=>{const readAt=Date.now();return {ok:true,text:'Runtime status: isolated-online.',evidenceSources:[{sourceId:'b5-isolated-worker-state',sourceType:'fixture',read:true,readAt}]};}});
 const tasks=new TaskStore({root:join(root,'tasks'),newRunId:(()=>{let i=0;return()=>`b5-run-${++i}`;})()});
 const sessions=new SessionStore({root:join(root,'sessions')});

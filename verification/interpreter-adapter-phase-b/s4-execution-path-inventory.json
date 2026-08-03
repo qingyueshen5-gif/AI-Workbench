@@ -1,0 +1,62 @@
+{
+  "schema": "ai-workbench.s4-execution-path-inventory/v1",
+  "generatedBy": "INTERPRETER-ADAPTER-B5-S4-RECOVERY-AND-OPTIONAL-S5-001",
+  "paths": [
+    {
+      "file": "agents/agent-runtime.mjs",
+      "function": "AgentRuntime.handle groundedCapabilities branch",
+      "line": 308,
+      "reachable": true,
+      "handlesRuntimeStatus": true,
+      "handlesFileRead": true,
+      "bypassesTask": false,
+      "bypassesRun": false,
+      "bypassesVerifier": false,
+      "disposition": "SOLE_ALLOWED_PATH: Adapter -> Task -> Scheduler -> Provider -> Run -> Verifier -> finalizeRun"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "function": "legacy statusPattern branch",
+      "line": null,
+      "reachable": false,
+      "handlesRuntimeStatus": false,
+      "handlesFileRead": false,
+      "bypassesTask": false,
+      "bypassesRun": false,
+      "bypassesVerifier": false,
+      "disposition": "REMOVED"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "function": "legacy directRead branch",
+      "line": null,
+      "reachable": false,
+      "handlesRuntimeStatus": false,
+      "handlesFileRead": false,
+      "bypassesTask": false,
+      "bypassesRun": false,
+      "bypassesVerifier": false,
+      "disposition": "REMOVED"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "function": "legacy file-read follow-up model branch",
+      "line": null,
+      "reachable": false,
+      "handlesRuntimeStatus": false,
+      "handlesFileRead": false,
+      "bypassesTask": false,
+      "bypassesRun": false,
+      "bypassesVerifier": false,
+      "disposition": "REMOVED"
+    }
+  ],
+  "summary": {
+    "runtimeStatusExecutionPaths": 1,
+    "fileReadExecutionPaths": 1,
+    "taskBypassPaths": 0,
+    "runBypassPaths": 0,
+    "verifierBypassSuccessPaths": 0,
+    "legacyDependencyRetained": false
+  }
+}
