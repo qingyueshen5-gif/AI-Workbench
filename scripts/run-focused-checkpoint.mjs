@@ -4,6 +4,7 @@ import { basename, join, resolve } from 'node:path';
 import {
   MANIFEST_SCHEMA,
   assertExternalRecoveryArtifact,
+  checkpointState,
   assertScopedEntries,
   assertWorktreeVolumeAvailable,
   findRepoRoot,
@@ -20,12 +21,18 @@ import {
 function parseArgs(argv) {
   const separator = argv.indexOf('--');
   if (separator === -1 || separator === argv.length - 1) throw new Error('usage: run-focused-checkpoint --ticket ID --manifest OUTSIDE.json --archive-dir OUTSIDE_DIR --allow PATH [--allow PATH] -- command [args...]');
-  const options = { allow: [], command: argv.slice(separator + 1) };
+  const options = { allow: [], command: argv.slice(separator + 1), gateStatus: 'NOT_RUN', finalAcceptance: false };
   for (let index = 0; index < separator; index += 1) {
     const key = argv[index];
     const value = argv[index + 1];
     if (key === '--allow') options.allow.push(value);
     else if (key === '--ticket' || key === '--manifest' || key === '--archive-dir' || key === '--message') options[key.slice(2)] = value;
+    else if (key === '--save-status') options.saveStatus = value;
+    else if (key === '--gate-status') options.gateStatus = value;
+    else if (key === '--final-acceptance') {
+      if (!['true', 'false'].includes(value)) throw new Error('--final-acceptance must be true or false');
+      options.finalAcceptance = value === 'true';
+    }
     else throw new Error(`unknown option: ${key}`);
     index += 1;
   }
@@ -47,6 +54,8 @@ const allowlist = normalizeAllowlist(options.allow);
 const baseline = repoIdentity(repo);
 const manifestPath = resolve(options.manifest);
 const archiveDir = resolve(options['archive-dir']);
+if (options.saveStatus && options.saveStatus !== 'SAVED') throw new Error('successful checkpoint output requires --save-status SAVED');
+const requestedSavedState = checkpointState({ saveStatus: 'SAVED', saved: true, gateStatus: options.gateStatus, finalAcceptance: options.finalAcceptance });
 if (isInside(repo, manifestPath)) throw new Error('PASS manifest must be outside repository');
 if (isInside(repo, archiveDir)) throw new Error('archive directory must be outside repository');
 
@@ -59,7 +68,7 @@ const baseManifest = {
   ticket: options.ticket,
   result: gate.exitCode === 0 ? 'PASS_PENDING_SAVE' : 'FIRST_FAILURE',
   saveStatus: 'UNSAVED',
-  gateStatus: gate.exitCode === 0 ? 'GATE_PASSED' : 'BLOCKED',
+  gateStatus: gate.exitCode === 0 ? 'NOT_RUN' : 'BLOCKED',
   finalAcceptance: false,
   failureClassification: gate.exitCode === 0 ? null : 'UNKNOWN_FAILURE',
   testResult: gate.exitCode === 0 ? 'PASS' : 'FAIL',
@@ -137,15 +146,13 @@ if (commitProbe.status !== 0) throw new Error(`checkpoint commit does not exist:
 const passed = {
   ...pendingManifest,
   result: 'PASS',
-  saveStatus: 'SAVED',
-  gateStatus: 'GATE_PASSED',
-  finalAcceptance: true,
+  ...requestedSavedState,
   failureClassification: null,
   checkpointCommit,
   archive: { path: resolve(patchPath), file: basename(patchPath), sha256, format: 'git-format-patch' },
   patchPath: resolve(patchPath),
   patchSha256: sha256,
-  saved: true,
+
   savedAt: new Date().toISOString(),
   updatedAt: new Date().toISOString()
 };

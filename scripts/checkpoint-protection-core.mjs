@@ -5,6 +5,27 @@ import { constants } from 'node:fs';
 import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 
 export const MANIFEST_SCHEMA = 'ai-workbench.checkpoint-pass/v1';
+export const SAVE_STATUSES = new Set(['UNSAVED', 'SAVED']);
+export const GATE_STATUSES = new Set(['NOT_RUN', 'WIP_NOT_GATED', 'GATE_PASSED', 'BLOCKED']);
+
+export function checkpointState(input = {}) {
+  const state = {
+    saveStatus: input.saveStatus ?? 'UNSAVED',
+    gateStatus: input.gateStatus ?? 'NOT_RUN',
+    finalAcceptance: input.finalAcceptance ?? false,
+    saved: input.saved ?? false
+  };
+  if (!SAVE_STATUSES.has(state.saveStatus)) throw new Error(`invalid saveStatus: ${state.saveStatus}`);
+  if (!GATE_STATUSES.has(state.gateStatus)) throw new Error(`invalid gateStatus: ${state.gateStatus}`);
+  if (typeof state.finalAcceptance !== 'boolean' || typeof state.saved !== 'boolean') throw new Error('finalAcceptance and saved must be boolean');
+  if (state.saved && state.saveStatus !== 'SAVED') throw new Error('saved=true requires saveStatus=SAVED');
+  if (state.saveStatus === 'SAVED' && !state.saved) throw new Error('saveStatus=SAVED requires saved=true');
+  if (state.finalAcceptance && !(state.saveStatus === 'SAVED' && state.saved && state.gateStatus === 'GATE_PASSED')) {
+    throw new Error('finalAcceptance=true requires SAVED, saved=true, and GATE_PASSED');
+  }
+  if (state.gateStatus !== 'GATE_PASSED' && state.finalAcceptance) throw new Error(`${state.gateStatus} requires finalAcceptance=false`);
+  return state;
+}
 
 function normalizePath(value) {
   return resolve(value).replaceAll('\\', '/').toLowerCase();

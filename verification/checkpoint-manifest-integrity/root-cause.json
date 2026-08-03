@@ -1,0 +1,38 @@
+{
+  "schema": "ai-workbench.checkpoint-manifest-root-cause/v1",
+  "file": "scripts/run-focused-checkpoint.mjs",
+  "function": "top-level checkpoint save flow",
+  "line": 137,
+  "currentDefault": {
+    "saveStatus": "UNSAVED",
+    "gateStatus": "NOT_RUN",
+    "finalAcceptance": false,
+    "saved": false
+  },
+  "previousBehavior": {
+    "baseManifestGateStatusOnSuccessfulGate": "GATE_PASSED",
+    "savedManifestSaveStatus": "SAVED",
+    "savedManifestGateStatus": "GATE_PASSED",
+    "savedManifestFinalAcceptance": true,
+    "savedManifestSaved": true
+  },
+  "mergeOrder": [
+    "baseManifest",
+    "pendingManifest",
+    "hard-coded passed object fields"
+  ],
+  "affectedCallers": [
+    "package.json checkpoint:focused CLI entry",
+    "scripts/verify-checkpoint-protection-001.mjs test helper",
+    "direct CLI invocations from task execution"
+  ],
+  "affectedHistoricalCheckpoints": [
+    "INTERPRETER-ADAPTER-B5-S4-INTERRUPTED-WIP-001 / c3b39c92c382040c1407cc0eeec5801335329127"
+  ],
+  "rootCause": "The runner accepted no explicit checkpoint state options and its final save object unconditionally replaced caller intent with GATE_PASSED and finalAcceptance=true. WIP and formal PASS checkpoints shared the same write path.",
+  "fixedMergeOrder": [
+    "safe default state",
+    "explicit validated caller state",
+    "persistence metadata without state overwrite"
+  ]
+}

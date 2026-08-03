@@ -1,0 +1,43 @@
+{
+  "schema": "ai-workbench.checkpoint-caller-inventory/v1",
+  "callers": [
+    {
+      "file": "package.json",
+      "function": "scripts.checkpoint:focused",
+      "taskId": "provided by CLI caller",
+      "explicitSaveStatus": false,
+      "explicitGateStatus": false,
+      "explicitFinalAcceptance": false,
+      "expectedCheckpointType": "UNKNOWN_CALLER_SEMANTICS",
+      "migrationRequired": "Caller must explicitly pass --save-status, --gate-status, and --final-acceptance. Defaults remain UNSAVED/NOT_RUN/false."
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "function": "checkpoint test helper and formal PASS scenario",
+      "taskId": "TEST-CHECKPOINT",
+      "explicitSaveStatus": true,
+      "explicitGateStatus": true,
+      "explicitFinalAcceptance": true,
+      "expectedCheckpointType": "FORMAL_FOCUSED_PASS",
+      "migrationRequired": false
+    },
+    {
+      "file": "external direct CLI invocations",
+      "function": "run-focused-checkpoint.mjs",
+      "taskId": "caller supplied",
+      "explicitSaveStatus": "required for intended saved state",
+      "explicitGateStatus": "required",
+      "explicitFinalAcceptance": "required",
+      "expectedCheckpointType": "WIP_OR_FORMAL_PASS_OR_FAILURE_EVIDENCE",
+      "migrationRequired": "Explicit state flags required; no semantic inference from a zero exit code."
+    }
+  ],
+  "summary": {
+    "repositoryStaticCallSites": 2,
+    "formalPassMigrated": 1,
+    "unknownCallerSemantics": 1,
+    "wipStaticCallSites": 0,
+    "finalCandidateStaticCallSites": 0,
+    "failureEvidenceStaticCallSites": 0
+  }
+}

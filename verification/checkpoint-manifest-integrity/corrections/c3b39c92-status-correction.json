@@ -1,0 +1,18 @@
+{
+  "schema": "ai-workbench.checkpoint-status-correction/v1",
+  "historicalCommit": "c3b39c92c382040c1407cc0eeec5801335329127",
+  "incorrectOuterGateStatus": "GATE_PASSED",
+  "incorrectOuterFinalAcceptance": true,
+  "authoritativeSaveStatus": "SAVED",
+  "authoritativeGateStatus": "WIP_NOT_GATED",
+  "authoritativeFinalAcceptance": false,
+  "authoritativeEvidencePaths": [
+    "C:/Users/qingy/AppData/Roaming/ai-workbench/interpreter-adapter-b5-s4-recovery/before-repair/recovery-manifest.json",
+    "C:/Users/qingy/AppData/Roaming/ai-workbench/checkpoints/INTERPRETER-ADAPTER-B5-S4-INTERRUPTED-WIP-001/manifest.json",
+    "C:/Users/qingy/AppData/Roaming/ai-workbench/checkpoints/INTERPRETER-ADAPTER-B5-S4-INTERRUPTED-WIP-001/INTERPRETER-ADAPTER-B5-S4-INTERRUPTED-WIP-001-c3b39c92c382.patch"
+  ],
+  "correctionReason": "The checkpoint runner unconditionally overwrote the caller's WIP semantics after persistence. This commit is a saved WIP, not the formal S4 acceptance checkpoint.",
+  "formalSubsequentPassCommit": "738b6dbbfc0c25e01299f09b62a7f83336ffc9cb",
+  "statement": "c3b39c92 is a saved WIP and is not formal S4 PASS; formal S4 PASS is proven by 738b6dbbfc0c25e01299f09b62a7f83336ffc9cb.",
+  "correctedAt": "2026-08-04T00:00:00+08:00"
+}

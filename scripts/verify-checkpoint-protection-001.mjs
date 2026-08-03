@@ -41,6 +41,9 @@ async function makeRepo(name) {
 
 function checkpoint(repo, manifest, archive, allow, command, options = {}) {
   const args = [scripts.checkpoint, '--ticket', options.ticket || 'TEST-CHECKPOINT', '--manifest', manifest, '--archive-dir', archive];
+  if (options.saveStatus) args.push('--save-status', options.saveStatus);
+  if (options.gateStatus) args.push('--gate-status', options.gateStatus);
+  if (options.finalAcceptance !== undefined) args.push('--final-acceptance', String(options.finalAcceptance));
   for (const item of allow) args.push('--allow', item);
   args.push('--', ...command);
   return run(process.execPath, args, repo, { expectSuccess: options.expectSuccess, env: options.env });
@@ -58,7 +61,7 @@ try {
     await writeFile(join(repo, 'new.txt'), 'new\n');
     const manifest = join(sandboxRoot, 'pass-evidence', 'pass.json');
     const archive = join(sandboxRoot, 'pass-evidence', 'archive');
-    const result = checkpoint(repo, manifest, archive, ['tracked.txt', 'new.txt'], [process.execPath, '-e', "process.exit(0)"]);
+    const result = checkpoint(repo, manifest, archive, ['tracked.txt', 'new.txt'], [process.execPath, '-e', "process.exit(0)"], { saveStatus: 'SAVED', gateStatus: 'GATE_PASSED', finalAcceptance: true });
     const saved = JSON.parse(await readFile(manifest, 'utf8'));
     assert.equal(saved.result, 'PASS');
     assert.equal(saved.saveStatus, 'SAVED');
@@ -192,7 +195,7 @@ try {
     const failed = JSON.parse(await readFile(manifest, 'utf8'));
     assert.equal(failed.testResult, 'PASS');
     assert.equal(failed.saveStatus, 'UNSAVED');
-    assert.equal(failed.gateStatus, 'GATE_PASSED');
+    assert.equal(failed.gateStatus, 'NOT_RUN');
     assert.equal(failed.finalAcceptance, false);
     assert.equal(failed.saved, false);
     assert.ok(failed.diffHash);
