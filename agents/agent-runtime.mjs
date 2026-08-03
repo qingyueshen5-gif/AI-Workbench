@@ -122,7 +122,7 @@ export class AgentRuntime {
       gateway: resolve(runtimeRoot, 'feishu-workbench-bridge', 'gateway-health.json'),
       runtime: resolve(runtimeRoot, 'feishu-workbench-bridge', 'ipc', 'worker-state.json')
     };
-    const groundedProvider = options.groundedProvider || new LocalGroundedProvider({ readState: options.readRuntimeState || ((context) => this.groundedStatus(context?.text || 'Runtime status', context?.taskId, context?.conversationId)) });
+    const groundedProvider = options.groundedProvider || new LocalGroundedProvider({ readState: options.readRuntimeState || ((context) => this.groundedStatus(context?.text || 'Runtime status', context?.taskId, context?.conversationId)), toolExecutor:this.tools });
     this.providers = new Map(Object.entries(options.providers || { 'local-process-provider': options.processProvider || new LocalProcessProvider(), 'local-runtime-state': groundedProvider, 'local-tool-executor': groundedProvider }));
   }
 
@@ -137,9 +137,14 @@ export class AgentRuntime {
     const activated=await this.tasks.startRun(task.taskId,{expectedTaskRevision:task.taskRevision,leaseOwner,providerId});
     const identity={taskId:activated.taskId,runId:activated.activeRunId,taskRevision:activated.taskRevision};
     await this.tasks.transitionRun(activated.taskId,{...identity,from:'created',to:'starting'});
-    const result=await providerStart(identity);
-    await this.tasks.transitionRun(activated.taskId,{...identity,from:'starting',to:'running',evidence:{providerId}});
-    return {identity,result};
+    try {
+      const result=await providerStart(identity);
+      await this.tasks.transitionRun(activated.taskId,{...identity,from:'starting',to:'running',evidence:{providerId}});
+      return {identity,result};
+    } catch (error) {
+      await this.tasks.failRunVerification(activated.taskId,identity,{passed:false,verifierId:'ResultVerifier',verificationMethod:'capability-result-verification',evidenceReferences:[],failureReason:error.message||String(error),verifiedAt:Date.now()});
+      throw error;
+    }
   }
 
   async terminalResult(task) {
@@ -220,15 +225,18 @@ export class AgentRuntime {
 
   async groundedStatus(text, taskId, conversationId) {
     const read = async (path) => {
-      try { return JSON.parse(await fs.readFile(path, 'utf8')); } catch { return null; }
+      const readAt=Date.now();
+      try { return {ok:true,value:JSON.parse(await fs.readFile(path, 'utf8')),readAt}; } catch (error) { return {ok:false,value:null,readAt,errorCode:error?.code||'READ_FAILED'}; }
     };
     const [gateway, runtime] = await Promise.all([read(this.statePaths.gateway), read(this.statePaths.runtime)]);
     const task = taskId ? await this.tasks.load(taskId) : await this.tasks.latestNonTerminal(conversationId);
     const parts = [];
-    if (/Gateway/i.test(text)) parts.push(gateway ? `Gateway PID ${gateway.pid}, commit ${gateway.gitCommit || 'unknown'}, connection ${gateway.connectionState || gateway.status || 'unknown'}.` : 'No Gateway health evidence is available.');
-    if (/Runtime/i.test(text)) parts.push(runtime ? `Runtime PID ${runtime.pid}, commit ${runtime.gitCommit || 'unknown'}, status ${runtime.status || 'unknown'}.` : 'No Runtime health evidence is available.');
+    const evidenceSources=[];
+    if (/Gateway/i.test(text)&&gateway.ok){parts.push(`Gateway PID ${gateway.value.pid}, commit ${gateway.value.gitCommit || 'unknown'}, connection ${gateway.value.connectionState || gateway.value.status || 'unknown'}.`);evidenceSources.push({sourceId:'gateway-health',sourceType:'file',path:this.statePaths.gateway,read:true,readAt:gateway.readAt});}
+    if (/Runtime/i.test(text)&&runtime.ok){parts.push(`Runtime PID ${runtime.value.pid}, commit ${runtime.value.gitCommit || 'unknown'}, status ${runtime.value.status || 'unknown'}.`);evidenceSources.push({sourceId:'runtime-worker-state',sourceType:'file',path:this.statePaths.runtime,read:true,readAt:runtime.readAt});}
     if (/任务|进度|task/i.test(text)) parts.push(task ? `Task ${task.taskId} state: ${task.currentState}. Reason: ${task.stateReason || 'unknown'}.` : 'No active task state evidence is available.');
-    return parts.join('\n') || 'No live status evidence is available.';
+    if(task&&/任务|进度|task/i.test(text))evidenceSources.push({sourceId:`task:${task.taskId}`,sourceType:'task-store',read:true,readAt:Date.now()});
+    return {ok:parts.length>0&&evidenceSources.length>0,text:parts.join('\n'),evidenceSources,failures:[gateway.ok?null:{sourceId:'gateway-health',sourceType:'file',failure:gateway.errorCode},runtime.ok?null:{sourceId:'runtime-worker-state',sourceType:'file',failure:runtime.errorCode}].filter(Boolean)};
   }
 
   async handle(job) {
