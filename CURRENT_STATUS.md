@@ -69,6 +69,7 @@ RUN-FENCING候选（已通过、未部署）
 - **HIGH · RISK_POLICY_NOT_CENTRALIZED**：风险规则目前分散于`task-interpreter.mjs`、`capability-registry.mjs`、`capability-scheduler.mjs`和`agent-runtime.mjs`；`code.execute`与`code.modify`已经注册。在开放飞书或其他远程执行入口之前，必须完成集中审查或建立独立可信Risk Policy。本轮只登记，不实施。
 - **MEDIUM · CAPABILITY_ADVERTISED_NOT_REGISTERED**：Interpreter中提及但Registry未注册`file.write`、`file.manage`、`computer.control`、`commerce.*`、`media.video.create`、`web.research`和`system.diagnose`。阶段B必须把这些稳定收敛到unsupported，不得暗示已经可以执行。
 - **LOW · HERMES_CONFIG_VERSION_LAG**：当前Hermes配置版本提示`0 → 33`。本轮不迁移，留到独立维护窗口。
+- **PLANNED · CHECKPOINT-REPORT-CONSISTENCY-001**：S6完成后、阶段B最终收口之前实施。Checkpoint创建时若缺少对应任务报告，应拒绝`saved=true`。本轮只登记，不修改Checkpoint Runner、不新增门禁。
 - **HIGH · ENVIRONMENT_COMPATIBILITY_RISK（未修复）**：固定路径`D:\\Anaconda\\Scripts\\hermes.exe`必须在真人陌生Windows机器验收前处理。本轮不批量修改生产路径。
 - 盘符清单中其余31项`PRODUCTION_PATH`登记为`PENDING_ENVIRONMENT_COMPATIBILITY_REVIEW`，需逐项确认配置化、自动发现或保留理由后再修改。
 

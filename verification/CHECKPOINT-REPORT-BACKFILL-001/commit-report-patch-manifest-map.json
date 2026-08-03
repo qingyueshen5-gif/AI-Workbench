@@ -1,0 +1,21 @@
+{
+  "schema": "ai-workbench.checkpoint-report-map/v1",
+  "entries": [
+    {
+      "taskId": "INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-001",
+      "commit": "242eea6f4883ece882816bd3f273115b87f7115c",
+      "report": "verification/INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-001/report.md",
+      "patch": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-001\\INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-001-242eea6f4883.patch",
+      "patchSha256": "0412aa9f0ff61b2fd3aae39f7703ded3c151644aa6b54b2d91298b3210caab3a",
+      "manifest": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-001\\manifest.json"
+    },
+    {
+      "taskId": "INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-CORRECTION-001",
+      "commit": "64f15bff99aaf561e0d3343c9429488c3cf24b6e",
+      "report": "verification/INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-CORRECTION-001/report.md",
+      "patch": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-CORRECTION-001\\INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-CORRECTION-001-64f15bff99aa.patch",
+      "patchSha256": "a100d250bb62fb8e732f93411009b443cde7ec139c011d942d1c7778c18cc9e4",
+      "manifest": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-CORRECTION-001\\manifest.json"
+    }
+  ]
+}
