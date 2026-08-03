@@ -23,6 +23,7 @@ const confirmation = () => ({ taskType: 'commerce', goal: 'place order', actions
 const unavailable = () => ({ taskType: 'media_creation', goal: 'create video', actions: ['create'], targets: [{ type: 'video' }], context: {}, constraints: [], riskLevel: 'low', requiredCapabilities: ['media.video.create'], successCriteria: ['video exists'], requiresConfirmation: false, confidence: 0.95 });
 const code = () => ({ taskType: 'code_task', goal: 'modify code', actions: ['modify', 'test'], targets: [{ type: 'project', path: root }], context: {}, constraints: [], riskLevel: 'medium', requiredCapabilities: ['code.read', 'code.modify', 'code.execute'], successCriteria: ['tests pass'], requiresConfirmation: false, confidence: 0.96 });
 const processStop = () => ({ taskType: 'computer_operation', goal: 'stop controlled process', actions: ['stop'], targets: [{ type: 'process', pid: 12345, name: 'controlled' }], context: {}, constraints: ['exact pid only'], riskLevel: 'medium', requiredCapabilities: ['process.list', 'process.stop'], successCriteria: ['pid absent'], requiresConfirmation: false, confidence: 0.98 });
+let runtimeFixtureId = 0;
 
 function makeModels(extra = {}) {
   return new ContractModelRouter({
@@ -43,7 +44,7 @@ function makeTools() {
 function makeRuntime({ tasks = new TaskStore({ root: taskRoot }), sessions = new ContractSessionStore(), interpretation = chat(), models = makeModels(), statePaths = {}, processProvider = null } = {}) {
   const registry = new CapabilityRegistry();
   const providers = processProvider ? { 'local-process-provider': processProvider } : undefined;
-  return { runtime: new AgentRuntime({ root, allowedRoots: [root], tasks, sessions, models, tools: makeTools(), verifier: new ResultVerifier(), taskInterpreter: new ContractTaskInterpreter(async () => interpretation), capabilityRegistry: registry, scheduler: new CapabilityScheduler({ registry }), providers, statePaths }), tasks, sessions, models };
+  return { runtime: new AgentRuntime({ root, allowedRoots: [root], tasks, sessions, models, tools: makeTools(), verifier: new ResultVerifier(), taskInterpreter: new ContractTaskInterpreter(async () => interpretation), capabilityRegistry: registry, scheduler: new CapabilityScheduler({ registry }), providers, statePaths, nonExecutionMessageOptions: { root: join(root, 'non-execution', String(++runtimeFixtureId)) } }), tasks, sessions, models };
 }
 
 const cases = [];
@@ -57,22 +58,37 @@ const record = (name, details = {}) => cases.push({ name, ...details });
 }
 
 {
-  const { runtime, tasks, sessions, models } = makeRuntime({ interpretation: chat('dup') });
-  const job = { taskId: 'dup-task', messageId: 'dup-task', originalMessageId: 'dup-task', conversationId: 'dup', chatId: 'dup', text: 'hello' };
+  const gateway = join(root, 'replay-gateway-health.json');
+  const worker = join(root, 'replay-worker-state.json');
+  await fs.writeFile(gateway, JSON.stringify({ pid: 11, gitCommit: 'g', connectionState: 'healthy' }));
+  await fs.writeFile(worker, JSON.stringify({ pid: 12, gitCommit: 'r', status: 'online' }));
+  const runtimeStatus = { ...chat('dup'), taskType: 'system_diagnosis', requiredCapabilities: ['runtime.status'], actions: ['status'], targets: [], context: {}, successCriteria: ['live status'] };
+  const { runtime, tasks, sessions, models } = makeRuntime({ interpretation: runtimeStatus, statePaths: { gateway, runtime: worker } });
+  const job = { taskId: 'dup-task', messageId: 'dup-task', originalMessageId: 'dup-task', conversationId: 'dup', chatId: 'dup', text: '当前Gateway、Runtime和任务状态是什么' };
+  const before=await tasks.list();
   const first = await runtime.handle(job);
+  const afterFirst=await tasks.list();const firstTask=await tasks.load('dup-task');const firstRuns=firstTask.runs.length;const firstHistory=firstTask.stateHistory.length;
   const second = await runtime.handle(job);
+  const afterSecond=await tasks.list();const secondTask=await tasks.load('dup-task');
   assert.equal(first.text, second.text);
   assert.equal(second.replayed, true);
   assert.equal((await sessions.history('dup')).filter((item) => item.role === 'assistant').length, 1);
-  assert.equal(models.calls.express, 1);
-  assert.equal((await tasks.load('dup-task')).currentState, 'completed');
+  assert.equal(afterFirst.length-before.length,1);
+  assert.equal(afterSecond.length-afterFirst.length,0);
+  assert.equal(firstRuns,1);
+  assert.equal(secondTask.runs.length,firstRuns);
+  assert.equal(secondTask.stateHistory.length,firstHistory);
+  assert.equal(secondTask.activeRunId,null);
+  assert.equal(firstTask.currentState, 'completed');
+  assert.equal(firstTask.finalResult.text,second.text);
+  assert.equal(models.calls.express, 0);
   record('exactly-once-final-result');
 }
 
 {
   const { runtime } = makeRuntime({ interpretation: fileRead() });
-  const result = await runtime.handle({ messageId: 'read', originalMessageId: 'read', conversationId: 'read-c', chatId: 'read-c', text: `读取 ${file}，不要修改文件` });
-  assert.equal(result.provider, 'local-read');
+  const result = await runtime.handle({ messageId: 'read', originalMessageId: 'read', conversationId: 'read-c', chatId: 'read-c', text: `只读查看 ${file}` });
+  assert.equal(result.provider, 'local-tool-executor');
   assert.equal(result.metrics.readFileCalls, 1);
   record('direct-read-terminal-binding');
 }
@@ -84,8 +100,8 @@ const record = (name, details = {}) => cases.push({ name, ...details });
   await fs.writeFile(worker, JSON.stringify({ pid: 2, gitCommit: 'r', status: 'online' }));
   const { runtime } = makeRuntime({ interpretation: { ...chat('status'), taskType: 'system_diagnosis', requiredCapabilities: ['runtime.status'], actions: ['status'], targets: [], context: {}, successCriteria: ['live status'] }, statePaths: { gateway, runtime: worker } });
   const result = await runtime.handle({ messageId: 'status', originalMessageId: 'status', conversationId: 'status-c', chatId: 'status-c', text: '当前Gateway、Runtime和任务状态是什么' });
-  assert.equal(result.provider, 'local-status');
-  assert.match(result.text, /Gateway PID 1/);
+  assert.equal(result.provider, 'local-runtime-state');
+  assert.match(result.text, /Runtime PID 2/);
   record('status-query-uses-health-plus-task-store');
 }
 
