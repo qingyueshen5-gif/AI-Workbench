@@ -126,6 +126,15 @@ export class AgentRuntime {
     return next;
   }
 
+  async executeWithRun(task,{leaseOwner,providerId},providerStart){
+    const activated=await this.tasks.startRun(task.taskId,{expectedTaskRevision:task.taskRevision,leaseOwner,providerId});
+    const identity={taskId:activated.taskId,runId:activated.activeRunId,taskRevision:activated.taskRevision};
+    await this.tasks.transitionRun(activated.taskId,{...identity,from:'created',to:'starting'});
+    const result=await providerStart(identity);
+    await this.tasks.transitionRun(activated.taskId,{...identity,from:'starting',to:'running',evidence:{providerId}});
+    return {identity,result};
+  }
+
   async terminalResult(task) {
     return {
       ...(task.finalResult || {}),
