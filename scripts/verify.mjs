@@ -1,5 +1,6 @@
 import { spawn } from 'node:child_process';
-import { readFile, rm } from 'node:fs/promises';
+import { request as httpRequest } from 'node:http';
+import { readFile, rm, stat } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
@@ -14,16 +15,48 @@ const modelProxyPort = 18880;
 const modelProxyBaseUrl = `http://127.0.0.1:${modelProxyPort}/v1`;
 const baseUrl = `http://127.0.0.1:${port}`;
 const api = `${baseUrl}/api/data`;
+const directEnv = { ...process.env, NO_PROXY: '127.0.0.1,localhost', no_proxy: '127.0.0.1,localhost' };
+
+function run(command, args) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(command, args, { cwd: root, env: directEnv, stdio: ['ignore', 'pipe', 'pipe'] });
+    let text = '';
+    child.stdout.on('data', (chunk) => { text += chunk; });
+    child.stderr.on('data', (chunk) => { text += chunk; });
+    child.once('error', reject);
+    child.once('exit', (code) => code === 0 ? resolve(text) : reject(new Error(`${command} ${args.join(' ')} failed (${code})\n${text}`)));
+  });
+}
+
+function directRequest(url, { method = 'GET', headers = {}, body = '' } = {}) {
+  const target = new URL(url);
+  if (target.hostname !== '127.0.0.1') throw new Error(`Fixture direct request rejected non-loopback host: ${target.hostname}`);
+  return new Promise((resolve, reject) => {
+    const request = httpRequest({ hostname: '127.0.0.1', port: Number(target.port), path: `${target.pathname}${target.search}`, method, headers }, (response) => {
+      const chunks = [];
+      response.on('data', (chunk) => chunks.push(chunk));
+      response.on('end', () => resolve({ status: response.statusCode || 0, headers: response.headers, text: Buffer.concat(chunks).toString('utf8') }));
+    });
+    request.once('error', reject);
+    if (body) request.write(body);
+    request.end();
+  });
+}
+
+await run(process.execPath, [join(root, 'node_modules', 'vite', 'bin', 'vite.js'), 'build']);
+const indexPath = join(root, 'dist', 'index.html');
+const indexStat = await stat(indexPath);
+if (!indexStat.isFile() || indexStat.size === 0) throw new Error('Build did not create a valid dist/index.html');
 
 const modelProxy = spawn(process.execPath, ['model-proxy.mjs'], {
   cwd: root,
-  env: { ...process.env, MODEL_PROXY_PORT: String(modelProxyPort), AI_WORKBENCH_RUNTIME_DIR: runtimeRoot },
+  env: { ...directEnv, MODEL_PROXY_PORT: String(modelProxyPort), AI_WORKBENCH_RUNTIME_DIR: runtimeRoot },
   stdio: ['ignore', 'pipe', 'pipe']
 });
 
 const server = spawn(process.execPath, ['server.mjs'], {
   cwd: root,
-  env: { ...process.env, PORT: String(port), MODEL_PROXY_BASE_URL: modelProxyBaseUrl, AI_WORKBENCH_RUNTIME_DIR: runtimeRoot },
+  env: { ...directEnv, PORT: String(port), MODEL_PROXY_BASE_URL: modelProxyBaseUrl, AI_WORKBENCH_RUNTIME_DIR: runtimeRoot },
   stdio: ['ignore', 'pipe', 'pipe']
 });
 
@@ -49,33 +82,27 @@ function wait(ms) {
 async function waitForServer() {
   for (let attempt = 0; attempt < 40; attempt += 1) {
     try {
-      const response = await fetch(baseUrl);
-      if (response.ok) { sessionCookie=String(response.headers.get('set-cookie')||'').split(';',1)[0]; return; }
+      const response = await directRequest(baseUrl);
+      const setCookie = Array.isArray(response.headers['set-cookie']) ? response.headers['set-cookie'][0] : response.headers['set-cookie'];
+      const cookie = String(setCookie || '').split(';', 1)[0];
+      if (response.status === 200 && /<!doctype html|<html/i.test(response.text) && /^aiw_session=/.test(cookie)) { sessionCookie = cookie; return; }
     } catch {
       await wait(100);
     }
   }
-  throw new Error(`API server did not start.\n${output}`);
+  throw new Error(`API server did not start with HTTP 200, static HTML, and aiw_session cookie.\n${output}`);
 }
 
-async function request(method, payload) {
-  const response = await fetch(api, {
-    method,
-    headers: { 'Content-Type': 'application/json', 'Cookie': sessionCookie, 'Origin': baseUrl },
-    body: payload ? JSON.stringify(payload) : undefined
-  });
-  const body = await response.json();
-  return { response, body };
+async function request(method, payload, { authenticated = true } = {}) {
+  const bodyText = payload ? JSON.stringify(payload) : '';
+  const response = await directRequest(api, { method, headers: { 'Content-Type': 'application/json', ...(authenticated ? { Cookie: sessionCookie } : {}), Origin: baseUrl, ...(bodyText ? { 'Content-Length': Buffer.byteLength(bodyText) } : {}) }, body: bodyText });
+  return { response: { ok: response.status >= 200 && response.status < 300, status: response.status }, body: JSON.parse(response.text || '{}') };
 }
 
 async function requestUrl(url, method, payload) {
-  const response = await fetch(url, {
-    method,
-    headers: { 'Content-Type': 'application/json', 'Cookie': sessionCookie, 'Origin': baseUrl },
-    body: payload ? JSON.stringify(payload) : undefined
-  });
-  const body = await response.json();
-  return { response, body };
+  const bodyText = payload ? JSON.stringify(payload) : '';
+  const response = await directRequest(url, { method, headers: { 'Content-Type': 'application/json', Cookie: sessionCookie, Origin: baseUrl, ...(bodyText ? { 'Content-Length': Buffer.byteLength(bodyText) } : {}) }, body: bodyText });
+  return { response: { ok: response.status >= 200 && response.status < 300, status: response.status }, body: JSON.parse(response.text || '{}') };
 }
 
 async function hasDeepSeekApiKey() {
@@ -227,6 +254,9 @@ async function main() {
       }
     ]
   };
+
+  const unauthorized = await request('PUT', validData, { authenticated: false });
+  if (unauthorized.response.status !== 403) throw new Error(`Unauthenticated protected write must remain 403, got ${unauthorized.response.status}`);
 
   const saved = await request('PUT', validData);
   if (!saved.response.ok) {
