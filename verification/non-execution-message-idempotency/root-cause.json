@@ -1,0 +1,15 @@
+{
+  "schema": "ai-workbench.non-execution-idempotency-root-cause/v1",
+  "baseline": "da99d031173c0f99528580199c84b91959d2ea8b",
+  "generation": "AgentRuntime.handle -> InterpreterAdapter.adapt -> toNonExecutionRuntimeResult",
+  "userAppend": "agents/agent-runtime.mjs non-execution branch",
+  "assistantAppend": "agents/agent-runtime.mjs non-execution branch",
+  "deliveryKey": "result:<channel>:<stableMessageId>",
+  "reusedMechanisms": ["exclusive create with wx", "atomic temp-file rename", "lease expiry and single stale takeover", "stable purpose-scoped delivery key", "existing Feishu delivered fence remains transport authority"],
+  "identity": "sha256(channel + NUL + userId + NUL + (originalMessageId || messageId))",
+  "defect": "The old branch appended user and assistant messages on every handle and had no atomic Claim/result store.",
+  "fixedBoundary": ["respond", "clarify", "unsupported"],
+  "executePathModified": false,
+  "gatewayModified": false,
+  "ipcProtocolModified": false
+}

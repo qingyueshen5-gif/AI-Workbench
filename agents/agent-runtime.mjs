@@ -15,6 +15,7 @@ import { LocalGroundedProvider } from '../execution/local-grounded-provider.mjs'
 import { extractGroundTruth } from './original-ground-truth-extractor.mjs';
 import { InterpreterAdapter } from './interpreter-adapter.mjs';
 import { toNonExecutionRuntimeResult } from './interpreter-adapter-contract.mjs';
+import { NonExecutionMessageStore, nonExecutionIdentity } from '../channels/non-execution-message-store.mjs';
 
 function historyPrompt(history) {
   return history.slice(-20).map((item) => `${item.role === 'assistant' ? 'assistant' : item.role === 'tool' ? 'tool' : 'user'}: ${item.text}`).join('\n');
@@ -106,6 +107,8 @@ export class AgentRuntime {
     this.taskInterpreter = options.taskInterpreter || new TaskInterpreter({ model: this.models });
     this.interpreterAdapter = options.interpreterAdapter || new InterpreterAdapter();
     this.groundTruthExtractor = options.groundTruthExtractor || extractGroundTruth;
+    this.nonExecutionMessages = options.nonExecutionMessages || new NonExecutionMessageStore(options.nonExecutionMessageOptions);
+    this.deliveryKeyFor = options.deliveryKeyFor || ((identity) => `result:${identity.channel}:${identity.stableMessageId}`);
     this.scheduler = options.scheduler || new CapabilityScheduler({ registry: this.capabilityRegistry });
     this.statePaths = options.statePaths || {
       gateway: resolve(runtimeRoot, 'feishu-workbench-bridge', 'gateway-health.json'),
@@ -262,11 +265,24 @@ export class AgentRuntime {
       const groundTruth = this.groundTruthExtractor(String(job.text || ''));
       const adapterResult = this.interpreterAdapter.adapt({ originalText: String(job.text || ''), groundTruth, semanticCandidate: job.semanticCandidate || null });
       if (adapterResult.decision !== 'execute') {
-        const state = await this.sessions.load(conversationId, job.openId);
-        await this.sessions.appendMessage(state, { role: 'user', text: job.text, messageId: job.messageId });
-        const result = toNonExecutionRuntimeResult(adapterResult, { originalMessageId: job.originalMessageId || job.messageId });
-        await this.sessions.appendMessage(state, { role: 'assistant', text: result.text, messageId: job.messageId, provider: result.provider });
-        return { ...result, adapterResult };
+        const identity=nonExecutionIdentity(job);const claimed=await this.nonExecutionMessages.claim(identity,adapterResult.decision,{ownerId:job.nonExecutionOwnerId});
+        const replay=(completed)=>({...completed.result,messageReplayed:true,taskReplayed:false,executionStarted:false,deliveryKey:completed.deliveryKey,adapterResult});
+        if(!claimed.acquired){
+          if(claimed.status==='COMPLETED')return replay(claimed.result);
+          if(claimed.status==='FAILED')return {decision:adapterResult.decision,messageReplayed:true,taskReplayed:false,executionStarted:false,failed:true,failureReason:claimed.failure.failureReason,adapterResult};
+          const settled=await this.nonExecutionMessages.waitForResult(identity.key);
+          if(settled.status==='COMPLETED')return replay(settled.result);
+          return {decision:adapterResult.decision,messageReplayed:true,taskReplayed:false,executionStarted:false,inProgress:settled.status==='CLAIMED',failed:settled.status==='FAILED',failureReason:settled.failure?.failureReason||'',adapterResult};
+        }
+        try{
+          const state = await this.sessions.load(conversationId, job.openId);
+          const result = toNonExecutionRuntimeResult(adapterResult, { originalMessageId: identity.stableMessageId });
+          const deliveryKey=this.deliveryKeyFor(identity,adapterResult.decision);
+          const completed=await this.nonExecutionMessages.complete(identity,claimed.claim.ownerId,result,{deliveryKey});
+          await this.sessions.appendMessage(state, { role: 'user', text: job.text, messageId: job.messageId,originalMessageId:identity.stableMessageId });
+          await this.sessions.appendMessage(state, { role: 'assistant', text: result.text, messageId: job.messageId,originalMessageId:identity.stableMessageId, provider: result.provider,deliveryKey });
+          return { ...result,messageReplayed:false,taskReplayed:false,executionStarted:false,deliveryKey,adapterResult };
+        }catch(error){await this.nonExecutionMessages.fail(identity,claimed.claim.ownerId,error);throw error;}
       }
 
       const state = await this.sessions.load(conversationId, job.openId);
