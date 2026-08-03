@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import { extractGroundTruth,validateGroundTruth } from '../agents/original-ground-truth-extractor.mjs';
+
+const text='读取 E:\\AI-Workbench\\项目 中文\\NEXT_STEP.md、\\\\server\\share\\file.txt 和 https://example.com/a?q=1，检查 report.pdf；端口 8080，版本 v1.2.3，完成率 95%，原文 `保持\\反斜杠`。';
+const first=validateGroundTruth(extractGroundTruth(text));
+const second=validateGroundTruth(extractGroundTruth(text));
+assert.deepEqual(first,second);
+for(const entry of first.facts)assert.equal(text.slice(entry.start,entry.end),entry.raw);
+const byType=(type)=>first.facts.filter((x)=>x.type===type).map((x)=>x.raw);
+assert.deepEqual(byType('windows_path'),['E:\\AI-Workbench\\项目 中文\\NEXT_STEP.md']);
+assert.deepEqual(byType('unc_path'),['\\\\server\\share\\file.txt']);
+assert.deepEqual(byType('url'),['https://example.com/a?q=1']);
+assert.ok(byType('filename').includes('report.pdf'));
+assert.ok(byType('number').includes('端口 8080'));
+assert.ok(byType('number').includes('v1.2.3'));
+assert.ok(byType('number').includes('95%'));
+assert.ok(byType('quoted_literal').includes('`保持\\反斜杠`'));
+assert.deepEqual(extractGroundTruth(''),{version:'d0-1b-v1',originalText:'',facts:[],actions:[],constraints:[],successCriteria:[],authorizationClaims:[],unresolved:[]});
+assert.throws(()=>extractGroundTruth(null),/originalText must be a string/);
+console.log(JSON.stringify({ok:true,module:'ORIGINAL-GROUND-TRUTH-EXTRACTOR-001-PHASE-A',schema:'d0-1b-v1',sourceSpanRoundTrip:true,windowsPathFidelity:true,deterministic:true,abnormalInput:true,factTypes:[...new Set(first.facts.map((x)=>x.type))]}));
