@@ -7,9 +7,11 @@ import { ResultVerifier } from '../execution/result-verifier.mjs';
 import { LocalGroundedProvider } from '../execution/local-grounded-provider.mjs';
 
 const root=await fs.mkdtemp(join(os.tmpdir(),'aiw-d0-1a-'));
+const requestedPath=process.env.AIW_D0_FILE_PATH||join(root,'NEXT_STEP.md');
+const ownsFixture=!process.env.AIW_D0_FILE_PATH;
 try{
-  const file=join(root,'NEXT_STEP.md');
-  await fs.writeFile(file,'RUN-FENCING-001重新实现\n','utf8');
+  const file=requestedPath;
+  if(ownsFixture)await fs.writeFile(file,'RUN-FENCING-001重新实现\n','utf8');
   const provider=new LocalGroundedProvider({readState:async()=>({text:'Runtime status: isolated-online.',source:'isolated-worker-state'})});
   const runtime=new AgentRuntime({providers:{'local-runtime-state':provider,'local-tool-executor':provider},verifier:new ResultVerifier(),models:{},taskInterpreter:{},scheduler:{},activeController:{},sessions:{},tools:{}});
   const identity={taskId:'task-d0',runId:'run-d0',taskRevision:7};
@@ -27,6 +29,6 @@ try{
   assert.equal(read[0].result.evidence.before.sha256,read[0].result.evidence.after.sha256);
   assert.equal(read[0].result.evidence.before.mtimeMs,read[0].result.evidence.after.mtimeMs);
   assert.equal(read[0].result.evidence.before.size,read[0].result.evidence.after.size);
-  assert.match(read[0].result.content,/RUN-FENCING-001/);
-  console.log(JSON.stringify({ok:true,module:'RUN-FENCING-PHASE-E-D0-1A',scenarios:{runtimeStatusRegistrySchedulerProviderVerifier:true,fileReadRegistrySchedulerProviderVerifier:true,identityBound:true,fileUnchanged:true},results:{runtimeStatus:{toolUsed:'runtime.status',provider:status[0].providerId},fileRead:{toolUsed:'file.read',provider:read[0].providerId,sha256:read[0].result.evidence.sha256,size:read[0].result.evidence.size,mtimeMs:read[0].result.evidence.mtimeMs}}}));
+  if(ownsFixture)assert.match(read[0].result.content,/RUN-FENCING-001/);else assert.ok(read[0].result.content.length>0);
+  console.log(JSON.stringify({ok:true,module:'RUN-FENCING-PHASE-E-D0-1A',scenarios:{runtimeStatusRegistrySchedulerProviderVerifier:true,fileReadRegistrySchedulerProviderVerifier:true,identityBound:true,fileUnchanged:true},results:{runtimeStatus:{toolUsed:'runtime.status',provider:status[0].providerId},fileRead:{path:file,toolUsed:'file.read',provider:read[0].providerId,sha256:read[0].result.evidence.sha256,size:read[0].result.evidence.size,mtimeMs:read[0].result.evidence.mtimeMs}}}));
 }finally{await fs.rm(root,{recursive:true,force:true});}
