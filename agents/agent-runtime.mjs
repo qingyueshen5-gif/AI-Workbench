@@ -11,6 +11,7 @@ import { TaskInterpreter } from './task-interpreter.mjs';
 import { CapabilityRegistry } from '../capabilities/capability-registry.mjs';
 import { CapabilityScheduler } from '../capabilities/capability-scheduler.mjs';
 import { LocalProcessProvider } from '../execution/local-process-provider.mjs';
+import { LocalGroundedProvider } from '../execution/local-grounded-provider.mjs';
 import { extractGroundTruth } from './original-ground-truth-extractor.mjs';
 import { InterpreterAdapter } from './interpreter-adapter.mjs';
 import { toNonExecutionRuntimeResult } from './interpreter-adapter-contract.mjs';
@@ -117,7 +118,8 @@ export class AgentRuntime {
     this.interpreterAdapter = options.interpreterAdapter || new InterpreterAdapter();
     this.groundTruthExtractor = options.groundTruthExtractor || extractGroundTruth;
     this.scheduler = options.scheduler || new CapabilityScheduler({ registry: this.capabilityRegistry });
-    this.providers = new Map(Object.entries(options.providers || { 'local-process-provider': options.processProvider || new LocalProcessProvider() }));
+    const groundedProvider = options.groundedProvider || new LocalGroundedProvider({ readState: options.readRuntimeState });
+    this.providers = new Map(Object.entries(options.providers || { 'local-process-provider': options.processProvider || new LocalProcessProvider(), 'local-runtime-state': groundedProvider, 'local-tool-executor': groundedProvider }));
     this.statePaths = options.statePaths || {
       gateway: resolve(runtimeRoot, 'feishu-workbench-bridge', 'gateway-health.json'),
       runtime: resolve(runtimeRoot, 'feishu-workbench-bridge', 'ipc', 'worker-state.json')
@@ -308,6 +310,26 @@ export class AgentRuntime {
 
       task = await this.transition(task, 'ready', 'schedule_ready', 'capability-scheduler', { assignments: capabilityPlan.assignments.map((item) => item.capabilityId) }, progress);
 
+      const groundedCapabilities = interpretation.requiredCapabilities.filter((item) => item === 'runtime.status' || item === 'file.read');
+      if (groundedCapabilities.length) {
+        const assignments = capabilityPlan.assignments.filter((item) => groundedCapabilities.includes(item.capabilityId));
+        task = await this.transition(task, 'executing', 'grounded_capability_execution_started', 'agent-runtime', { capabilities: groundedCapabilities }, progress);
+        const started = await this.executeWithRun(task, { leaseOwner: String(job.leaseOwner || job.workerId || 'agent-runtime'), providerId: assignments[0]?.primaryProvider?.providerId || 'grounded-provider' }, (identity) => this.executeCapabilityPlan({ ...capabilityPlan, assignments }, interpretation, identity));
+        const results = started.result;
+        task = await this.tasks.patch(task.taskId, { providerExecution: { provider: assignments[0]?.primaryProvider?.providerId || 'grounded-provider', results } });
+        task = await this.transition(task, 'verifying', 'grounded_capability_verifying', 'agent-runtime', { capabilities: groundedCapabilities, runId: started.identity.runId }, progress);
+        await this.tasks.bindRunVerification(task.taskId, started.identity, { verified: true, capabilities: groundedCapabilities, ...started.identity });
+        const status = results.find((item) => item.capabilityId === 'runtime.status');
+        const read = results.find((item) => item.capabilityId === 'file.read');
+        const text = status ? status.result.text : `Read \`${read.result.evidence.path}\`. Evidence: size ${read.result.evidence.size} bytes, SHA-256 \`${read.result.evidence.sha256}\`; file was not modified.`;
+        const toolUsed = status ? 'runtime.status' : 'file.read';
+        const provider = status?.providerId || read?.providerId || 'grounded-provider';
+        await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider, taskId });
+        const finalResult = { messageId: job.messageId, text, provider, providerSessionId: '', toolUsed, verified: true, interpretation, schedulerStatus: capabilityPlan.status, capabilityResults: results, classification, runId: started.identity.runId, taskRevision: started.identity.taskRevision, metrics: { readFileCalls: read ? 1 : 0, codexCalls: 0 } };
+        const completed = await this.tasks.finalizeRun(task.taskId, started.identity, { finalResult, finalEvidence: { verified: true, provider, toolUsed, ...started.identity } });
+        return { ...finalResult, activeTaskId: completed.taskId, taskId: completed.taskId };
+      }
+
       const processCapabilities = interpretation.requiredCapabilities.filter((item) => item === 'process.list' || item === 'process.stop');
       if (processCapabilities.length) {
         for (const assignment of capabilityPlan.assignments.filter((item) => processCapabilities.includes(item.capabilityId))) this.assertProviderAuthorized(assignment);
@@ -327,7 +349,7 @@ export class AgentRuntime {
         task = await this.transition(task, 'verifying', 'status_grounding_started', 'agent-runtime', { statePaths: this.statePaths }, progress);
         const text = await this.groundedStatus(job.text, job.parentTaskId, conversationId);
         await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: 'local-status', taskId });
-        return this.finalize(task, { messageId: job.messageId, text, provider: 'local-status', providerSessionId: '', toolUsed: 'status_grounding', verified: true, classification, metrics: { readFileCalls: 0, codexCalls: 0 } }, progress);
+
       }
 
       const directRead = classification.action === 'read' && isAbsolute(classification.target || '') && singleFileExt.test(classification.target) && (readOnlyConstraint.test(job.text) || !complexPattern.test(job.text));
