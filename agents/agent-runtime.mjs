@@ -118,12 +118,12 @@ export class AgentRuntime {
     this.interpreterAdapter = options.interpreterAdapter || new InterpreterAdapter();
     this.groundTruthExtractor = options.groundTruthExtractor || extractGroundTruth;
     this.scheduler = options.scheduler || new CapabilityScheduler({ registry: this.capabilityRegistry });
-    const groundedProvider = options.groundedProvider || new LocalGroundedProvider({ readState: options.readRuntimeState });
-    this.providers = new Map(Object.entries(options.providers || { 'local-process-provider': options.processProvider || new LocalProcessProvider(), 'local-runtime-state': groundedProvider, 'local-tool-executor': groundedProvider }));
     this.statePaths = options.statePaths || {
       gateway: resolve(runtimeRoot, 'feishu-workbench-bridge', 'gateway-health.json'),
       runtime: resolve(runtimeRoot, 'feishu-workbench-bridge', 'ipc', 'worker-state.json')
     };
+    const groundedProvider = options.groundedProvider || new LocalGroundedProvider({ readState: options.readRuntimeState || ((context) => this.groundedStatus(context?.text || 'Runtime status', context?.taskId, context?.conversationId)) });
+    this.providers = new Map(Object.entries(options.providers || { 'local-process-provider': options.processProvider || new LocalProcessProvider(), 'local-runtime-state': groundedProvider, 'local-tool-executor': groundedProvider }));
   }
 
   async transition(task, to, reason, actor, evidence, progress) {
@@ -137,8 +137,8 @@ export class AgentRuntime {
     const activated=await this.tasks.startRun(task.taskId,{expectedTaskRevision:task.taskRevision,leaseOwner,providerId});
     const identity={taskId:activated.taskId,runId:activated.activeRunId,taskRevision:activated.taskRevision};
     await this.tasks.transitionRun(activated.taskId,{...identity,from:'created',to:'starting'});
-    const result=await providerStart(identity);
     await this.tasks.transitionRun(activated.taskId,{...identity,from:'starting',to:'running',evidence:{providerId}});
+    const result=await providerStart(identity);
     return {identity,result};
   }
 
@@ -313,6 +313,8 @@ export class AgentRuntime {
       const groundedCapabilities = interpretation.requiredCapabilities.filter((item) => item === 'runtime.status' || item === 'file.read');
       if (groundedCapabilities.length) {
         const assignments = capabilityPlan.assignments.filter((item) => groundedCapabilities.includes(item.capabilityId));
+        if (assignments.length !== groundedCapabilities.length) throw new Error('Grounded capability assignment mismatch');
+        for (const assignment of assignments) this.assertProviderAuthorized(assignment);
         task = await this.transition(task, 'executing', 'grounded_capability_execution_started', 'agent-runtime', { capabilities: groundedCapabilities }, progress);
         const started = await this.executeWithRun(task, { leaseOwner: String(job.leaseOwner || job.workerId || 'agent-runtime'), providerId: assignments[0]?.primaryProvider?.providerId || 'grounded-provider' }, (identity) => this.executeCapabilityPlan({ ...capabilityPlan, assignments }, interpretation, identity));
         const results = started.result;

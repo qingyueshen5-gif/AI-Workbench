@@ -1,0 +1,22 @@
+{
+  "schema": "ai-workbench.interpreter-adapter-b5-wiring/v1",
+  "taskId": "INTERPRETER-ADAPTER-PHASE-B5-WIRING-001",
+  "saveStatus": "SAVED",
+  "gateStatus": "GATE_PASSED",
+  "finalAcceptance": false,
+  "deployment": "NOT_DEPLOYED",
+  "productionSmokeStarted": false,
+  "checks": {
+    "syntax": "PASS",
+    "adapterExecuteCreatesTask": true,
+    "schedulerAssignmentsConsumed": true,
+    "authorizationCheckedBeforeProvider": true,
+    "runPersistedBeforeProvider": true,
+    "existingProviderReused": true,
+    "existingVerifierReused": true,
+    "existingFinalizeRunReused": true,
+    "gatewayModified": false,
+    "ipcModified": false,
+    "newCapabilityAdded": false
+  }
+}
