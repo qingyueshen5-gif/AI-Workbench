@@ -30,9 +30,7 @@
 - PASS｜不存在第二个CURRENT_STATUS类权威｜无第二权威声明
 - PASS｜变更限定在批准范围｜所有变更均在批准范围
 - PASS｜不删除不移动原文件｜M	CURRENT_STATUS.md
-M	NEXT_STEP.md
 M	TASKLOG.md
-M	scripts/verify-docs-consistency.mjs
 M	verification/docs-consistency/report.md
 M	verification/docs-consistency/summary.json
 

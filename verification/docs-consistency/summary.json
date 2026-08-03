@@ -130,17 +130,15 @@
     {
       "name": "不删除不移动原文件",
       "status": "passed",
-      "detail": "M\tCURRENT_STATUS.md\nM\tNEXT_STEP.md\nM\tTASKLOG.md\nM\tscripts/verify-docs-consistency.mjs\nM\tverification/docs-consistency/report.md\nM\tverification/docs-consistency/summary.json"
+      "detail": "M\tCURRENT_STATUS.md\nM\tTASKLOG.md\nM\tverification/docs-consistency/report.md\nM\tverification/docs-consistency/summary.json"
     }
   ],
   "changedPaths": [
     "CURRENT_STATUS.md",
-    "NEXT_STEP.md",
     "TASKLOG.md",
-    "scripts/verify-docs-consistency.mjs",
     "verification/docs-consistency/report.md",
     "verification/docs-consistency/summary.json"
   ],
   "errors": [],
-  "verifiedAt": "2026-08-03T09:30:34.888Z"
+  "verifiedAt": "2026-08-03T10:43:48.003Z"
 }

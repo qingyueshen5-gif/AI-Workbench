@@ -14,6 +14,8 @@
 | `DOCUMENT-AUTHORITY-CONSOLIDATION-001` | 2026-08-03 | in_progress | `verification/docs-consistency/` | 收敛产品定义、当前真实状态、唯一下一步及新对话读取入口。 |
 | `RUN-FENCING-001` | 2026-08-03 | passed_saved_not_deployed | `c2ed8c13e42b5c006a6c30a943b08975cff6c3a5` | Run身份链候选通过15/15、D0-1A和完整回归，已保存推送但未部署。 |
 | `ORIGINAL-GROUND-TRUTH-EXTRACTOR-001` | 2026-08-03 | candidate_passed_not_integrated | `scripts/verify-original-ground-truth-001.mjs` | D0-1B确定性原始事实提取器完成专项验证，未接入Interpreter且未部署。 |
+| `D0-1B-FIXTURE-FIX-001` | 2026-08-03 | passed_saved_pushed | `d8b5451779e09f39c94a1f615990a253efd875fd` | Existing Product Regression Fixture改为构建静态页、127.0.0.1原生直连、真实Cookie会话，并保留未认证写入403。 |
+| `D0-1B-FINAL-CANDIDATE` | 2026-08-03 | regression_passed_not_deployed | `candidate/d0-1b-ground-truth-v1` | D0-1B专项、RUN-FENCING、D0-1A、Critical/High、Mandatory Gates、npm verify和build全部通过；未部署、未接入Interpreter。 |
 
 ## 历史记录
 
