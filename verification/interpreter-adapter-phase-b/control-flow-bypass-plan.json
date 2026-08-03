@@ -1,0 +1,53 @@
+{
+  "schema": "ai-workbench.interpreter-adapter-control-flow-bypass-plan/v1",
+  "task": "INTERPRETER-ADAPTER-PHASE-B-CONTROL-FLOW-BYPASS-001",
+  "baseline": "3d6daf8f64f820592c961dfc0a4678eaaafb8cb0",
+  "entry": "scripts/workbench-agent-runtime.mjs::executeClaimedJob -> agents/agent-runtime.mjs::AgentRuntime.handle",
+  "current": {
+    "taskCreation": "agents/agent-runtime.mjs::AgentRuntime.handle this.tasks.create",
+    "runCreation": "agents/agent-runtime.mjs::executeWithRun -> TaskStore.startRun",
+    "scheduler": "agents/agent-runtime.mjs::AgentRuntime.handle this.scheduler.plan",
+    "modelsExpress": ["file evidence follow-up", "code result expression", "chat or empty-capability expression"],
+    "final": "AgentRuntime.finalize for execution tasks; executeClaimedJob -> completeJob for IPC Result"
+  },
+  "insertionPoint": "after ActiveTaskController interception and before Session/Task creation",
+  "flow": {
+    "respond": {"task": false, "run": false, "scheduler": false, "provider": false, "model": false},
+    "clarify": {"task": false, "run": false, "scheduler": false, "provider": false, "model": false},
+    "unsupported": {"task": false, "run": false, "scheduler": false, "provider": false, "model": false},
+    "execute": {"task": true, "run": "provider-start only", "scheduler": true, "existingExecutionChain": true}
+  },
+  "allowlist": ["runtime.status", "file.read"],
+  "mapping": [
+    {"intent": "runtime_status", "decision": "execute", "taskType": "system_diagnosis", "requiredCapabilities": ["runtime.status"]},
+    {"intent": "single_path_file_read", "decision": "execute", "taskType": "file_operation", "requiredCapabilities": ["file.read"]},
+    {"intent": "file_read_missing_or_ambiguous_path", "decision": "clarify", "taskDraft": null},
+    {"intent": "compound_execution", "decision": "clarify", "taskDraft": null},
+    {"intent": "greeting_or_non_execution", "decision": "respond", "taskDraft": null},
+    {"intent": "unregistered_or_not_allowlisted", "decision": "unsupported", "taskDraft": null}
+  ],
+  "files": [
+    "agents/interpreter-adapter-contract.mjs",
+    "agents/interpreter-adapter.mjs",
+    "agents/agent-runtime.mjs",
+    "scripts/workbench-agent-runtime.mjs",
+    "scripts/verify-interpreter-adapter-*.mjs",
+    "scripts/verify.mjs",
+    "CURRENT_STATUS.md",
+    "NEXT_STEP.md",
+    "TASKLOG.md"
+  ],
+  "forbiddenChanges": ["Gateway business logic", "IPC directory or lease protocol", "Capability Registry enum", "Scheduler selection logic", "Provider boundary", "AuthorizationContext source", "Verifier contract", "TaskStore Run contract"],
+  "nonExecutionIdempotency": {
+    "keys": ["messageId", "originalMessageId", "existing Job/Claim/Result exactly-once path"],
+    "auditCarrier": "existing classification Result field",
+    "fakeTaskId": false,
+    "fakeRunId": false
+  },
+  "newProtocolTypeRequired": false,
+  "productionIpcChangeRequired": false,
+  "gatewayBusinessAdaptationRequired": false,
+  "canProceed": true,
+  "deployment": "NOT_DEPLOYED",
+  "productionSmokeStarted": false
+}
