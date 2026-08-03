@@ -1,0 +1,76 @@
+{
+  "schema": "ai-workbench.s6-task-replay-root-cause/v1",
+  "contractDefinition": [
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "lines": "59-69,197-208",
+      "contract": "A second handle of the same terminal Task returns replayed=true and does not append a second assistant result."
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "lines": "139-153,240-243",
+      "contract": "terminalResult produces replayed=true when an existing terminal Task is found before control, Adapter, Scheduler, Provider, or Run execution."
+    }
+  ],
+  "replayedProducer": "AgentRuntime.terminalResult(task)",
+  "firstHandlePath": {
+    "preB5": "Task lookup miss -> Task create -> interpretation -> execution/chat -> finalResult -> terminal completed",
+    "postB2ForInputHello": "Task lookup miss -> Adapter decision=respond -> deterministic non-execution return; no Task is created"
+  },
+  "secondHandlePath": {
+    "preB5": "Task lookup hit for completed task -> terminalResult -> replayed=true",
+    "postB2ForInputHello": "Task lookup miss because first call created no Task -> Adapter decision=respond again -> new non-execution result without replayed"
+  },
+  "terminalTaskLookup": {
+    "performed": true,
+    "lookupKey": "job.taskId || job.messageId",
+    "postB2ResultForLifecycleFixture": null,
+    "terminalBranchHit": false
+  },
+  "returnedObject": {
+    "postB2SecondHandleFields": ["version", "text", "provider", "providerSessionId", "toolUsed", "verified", "classification", "metrics", "adapterResult"],
+    "replayed": null,
+    "executionStarted": false,
+    "businessTaskCreated": false
+  },
+  "missingFieldReason": "B2 inserted the non-execution Adapter path after terminal lookup and before Task creation. The unchanged lifecycle fixture uses 'hello', which Adapter classifies as respond. Both calls therefore bypass business Task creation; the second call cannot find a terminal Task and never reaches terminalResult, the only replayed producer.",
+  "identityAnalysis": {
+    "messageIdVsTaskId": "The fixture binds both to dup-task; no mismatch in this failure.",
+    "originalMessageIdVsTaskId": "Both are dup-task; no mismatch in this failure.",
+    "jobReplayVsTaskReplay": "The repeated Job is real, but after B2 it is a non-execution response replay, not a terminal business Task replay.",
+    "deliveryReplayVsExecutionReplay": "No remote delivery is exercised by this local fixture.",
+    "completedTaskVsCompletedRun": "The failing case creates neither Task nor Run after B2. Grounded terminal replay remains a separate business path."
+  },
+  "historicalGateEvidence": {
+    "contractIntroducedCommit": "7f320ca20355faa9464a78bf152e9fa218dd0ddd",
+    "mandatoryGateWiringCommit": "6006013",
+    "preB5DirectExecution": {
+      "commit": "96718beed704d466b0bd58ff48d03fefa2162859^",
+      "command": "node scripts/verify-task-lifecycle-001.mjs",
+      "exitCode": 0,
+      "matrixCases": 16
+    },
+    "currentExecution": {
+      "commit": "2deb835a9cb0e1651ce653f119e531b624a75ac5",
+      "command": "node scripts/verify-task-lifecycle-001.mjs",
+      "exitCode": 1,
+      "firstFailure": "second.replayed expected true, actual undefined"
+    },
+    "mandatoryHistory": "The task lifecycle script was a real Mandatory Gate entry. The current historical phase-B mandatory run failed at this same Task Lifecycle assertion."
+  },
+  "preB5Behavior": "The lifecycle fixture 'hello' entered the chat business Task path, created and completed dup-task, and the second call reached terminalResult with replayed=true.",
+  "postB5Behavior": "B2 deterministic Adapter classifies 'hello' as respond. No Task/Run/Scheduler/Provider/model operation occurs. Repeating it emits a second deterministic response object and appends a second assistant session entry, but it is not a business Task replay.",
+  "classification": "REGRESSION_INTRODUCED_BY_B5",
+  "classificationCode": "A",
+  "affectedFiles": [
+    "agents/agent-runtime.mjs",
+    "agents/interpreter-adapter.mjs",
+    "scripts/verify-task-lifecycle-001.mjs"
+  ],
+  "recommendedFixBoundary": "AgentRuntime.handle non-execution path: preserve zero business Task/Run semantics, but add message-level non-execution replay recognition and return the previously persisted deterministic result with replayed=true without appending duplicate session messages. Do not modify the lifecycle assertion or manufacture a business Task.",
+  "testContractChangeRequired": false,
+  "confidence": "HIGH",
+  "unresolvedEvidence": [
+    "No durable historical stdout log for every pre-B5 Mandatory suite run was found; direct execution against archived pre-B2 source provides congruent machine evidence."
+  ]
+}
