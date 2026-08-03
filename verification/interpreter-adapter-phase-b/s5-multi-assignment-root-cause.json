@@ -1,0 +1,25 @@
+{
+  "schema": "ai-workbench.s5-multi-assignment-root-cause/v1",
+  "baselineCommit": "4c816859716d29f0541327d06b2b3697143ea047",
+  "currentBehavior": {
+    "assignmentTotal": 2,
+    "groundedAssignmentCount": 2,
+    "selectsFirstForRunProviderIdentity": true,
+    "loopsAllAssignments": true,
+    "taskCreated": true,
+    "runCreatedAt": "AgentRuntime.executeWithRun after transition to executing",
+    "providerStarts": 2,
+    "finalCount": 1,
+    "userVisibleResult": "runtime.status text wins because status result is selected before file.read"
+  },
+  "rootCause": "AgentRuntime checks only assignment count equality against required grounded capabilities, then passes the full assignment array to executeCapabilityPlan. executeCapabilityPlan iterates every assignment while executeWithRun creates one Run using the first provider identity.",
+  "insertionPoint": {
+    "file": "agents/agent-runtime.mjs",
+    "function": "AgentRuntime.handle groundedCapabilities branch",
+    "afterTaskCreation": true,
+    "afterScheduler": true,
+    "beforeExecutingTransition": true,
+    "beforeRunCreation": true,
+    "canKeepNewRunCountZero": true
+  }
+}

@@ -312,8 +312,18 @@ export class AgentRuntime {
       task = await this.transition(task, 'ready', 'schedule_ready', 'capability-scheduler', { assignments: capabilityPlan.assignments.map((item) => item.capabilityId) }, progress);
 
       const groundedCapabilities = interpretation.requiredCapabilities.filter((item) => item === 'runtime.status' || item === 'file.read');
+      const groundedAssignments = capabilityPlan.assignments.filter((item) => item.capabilityId === 'runtime.status' || item.capabilityId === 'file.read');
+      if (groundedCapabilities.length && groundedAssignments.length === 0) throw new Error('Grounded capability assignment missing');
+      if (groundedAssignments.length > 1) {
+        const text = '我识别到多个可执行任务：检查Runtime状态、读取文件。当前版本一次只执行一个任务，因此没有启动任何操作。请告诉我先执行哪一个。';
+        const rejection = { code: 'MULTIPLE_GROUNDED_ASSIGNMENTS', assignmentCount: groundedAssignments.length, capabilities: groundedAssignments.map((item) => item.capabilityId), providerStarts: 0, effectiveExecutionRunStarted: 0 };
+        await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: 'capability-scheduler', taskId });
+        task = await this.tasks.patch(task.taskId, { failure: rejection, protocolRejection: rejection });
+        await this.transition(task, 'failed', 'multiple_grounded_assignments_rejected', 'agent-runtime', rejection, progress);
+        return { messageId: job.messageId, text, provider: 'capability-scheduler', providerSessionId: '', toolUsed: '', verified: false, interpretation, schedulerStatus: 'protocol_rejected', classification, activeTaskId: task.taskId, taskId: task.taskId, rejection, metrics: { readFileCalls: 0, codexCalls: 0, providerStarts: 0, effectiveExecutionRunStarted: 0 } };
+      }
       if (groundedCapabilities.length) {
-        const assignments = capabilityPlan.assignments.filter((item) => groundedCapabilities.includes(item.capabilityId));
+        const assignments = groundedAssignments;
         if (assignments.length !== groundedCapabilities.length) throw new Error('Grounded capability assignment mismatch');
         for (const assignment of assignments) this.assertProviderAuthorized(assignment);
         task = await this.transition(task, 'executing', 'grounded_capability_execution_started', 'agent-runtime', { capabilities: groundedCapabilities }, progress);
