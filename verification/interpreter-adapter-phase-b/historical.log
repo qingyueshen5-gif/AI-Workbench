@@ -1,0 +1,167 @@
+{
+  "ok": true,
+  "module": "INTERPRETER-ADAPTER-B4-VARIANTS-001",
+  "convergence": {
+    "runtime": {
+      "count": 5,
+      "signature": {
+        "decision": "execute",
+        "taskType": "system_diagnosis",
+        "requiredCapabilities": [
+          "runtime.status"
+        ],
+        "path": null
+      },
+      "rate": 1
+    },
+    "file": {
+      "count": 5,
+      "signature": {
+        "decision": "execute",
+        "taskType": "file_operation",
+        "requiredCapabilities": [
+          "file.read"
+        ],
+        "path": "E:\\AI-Workbench\\NEXT_STEP.md"
+      },
+      "rate": 1
+    },
+    "greeting": {
+      "count": 5,
+      "signature": {
+        "decision": "respond",
+        "taskType": null,
+        "requiredCapabilities": null,
+        "path": null
+      },
+      "rate": 1
+    }
+  },
+  "historicalFixtureCount": 10,
+  "historicalResults": [
+    {
+      "decision": "respond",
+      "taskType": null,
+      "requiredCapabilities": null,
+      "path": null
+    },
+    {
+      "decision": "respond",
+      "taskType": null,
+      "requiredCapabilities": null,
+      "path": null
+    },
+    {
+      "decision": "respond",
+      "taskType": null,
+      "requiredCapabilities": null,
+      "path": null
+    },
+    {
+      "decision": "respond",
+      "taskType": null,
+      "requiredCapabilities": null,
+      "path": null
+    },
+    {
+      "decision": "respond",
+      "taskType": null,
+      "requiredCapabilities": null,
+      "path": null
+    },
+    {
+      "decision": "respond",
+      "taskType": null,
+      "requiredCapabilities": null,
+      "path": null
+    },
+    {
+      "decision": "execute",
+      "taskType": "file_operation",
+      "requiredCapabilities": [
+        "file.read"
+      ],
+      "path": "E:\\AI-Workbench\\NEXT_STEP.md"
+    },
+    {
+      "decision": "respond",
+      "taskType": null,
+      "requiredCapabilities": null,
+      "path": null
+    },
+    {
+      "decision": "respond",
+      "taskType": null,
+      "requiredCapabilities": null,
+      "path": null
+    },
+    {
+      "decision": "respond",
+      "taskType": null,
+      "requiredCapabilities": null,
+      "path": null
+    }
+  ],
+  "noPath": {
+    "decision": "clarify",
+    "taskType": null,
+    "requiredCapabilities": null,
+    "path": null
+  },
+  "compound": {
+    "decision": "clarify",
+    "taskType": null,
+    "requiredCapabilities": null,
+    "path": null
+  },
+  "typo": {
+    "decision": "respond",
+    "taskType": null,
+    "requiredCapabilities": null,
+    "path": null
+  },
+  "mixed": {
+    "decision": "execute",
+    "taskType": "file_operation",
+    "requiredCapabilities": [
+      "file.read"
+    ],
+    "path": "E:\\AI-Workbench\\NEXT_STEP.md"
+  },
+  "highRiskSignals": [
+    [
+      "financial_operation"
+    ],
+    [
+      "destructive_file_operation"
+    ],
+    [
+      "external_communication"
+    ],
+    [
+      "credential_or_permission"
+    ],
+    [
+      "code_execution_or_modification"
+    ],
+    [
+      "process_stop"
+    ],
+    [
+      "device_control"
+    ],
+    [
+      "irreversible_operation"
+    ]
+  ],
+  "metrics": {
+    "convergenceRate": 1,
+    "illegalTaskTypesPassed": 0,
+    "unregisteredCapabilitiesPassed": 0,
+    "providerIdControlledByModel": 0,
+    "modelAuthorizationEffective": 0,
+    "windowsPathsDamaged": 0,
+    "groundTruthOverwritten": 0,
+    "friendlyFallbackCoverage": 1
+  }
+}

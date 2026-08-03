@@ -1,0 +1,37 @@
+{
+  "ok": false,
+  "module": "RUN-FENCING-001",
+  "scenarios": [
+    {
+      "name": "concurrent_startRun",
+      "status": "PASS",
+      "script": "scripts/verify-run-fencing-phase-a.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "unique_active_run",
+      "status": "PASS",
+      "script": "scripts/verify-run-fencing-phase-a.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "revision_CAS",
+      "status": "PASS",
+      "script": "scripts/verify-run-fencing-phase-a.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "provider_persisted_before_start",
+      "status": "FAIL",
+      "script": "scripts/verify-run-fencing-phase-b.mjs",
+      "exitCode": 1
+    }
+  ],
+  "firstFailure": {
+    "script": "scripts/verify-run-fencing-phase-b.mjs",
+    "ok": false,
+    "exitCode": 1,
+    "stdout": "",
+    "stderr": "node:internal/modules/run_main:107\r\n    triggerUncaughtException(\r\n    ^\r\n\r\nAssertionError [ERR_ASSERTION]: Provider started before Run was persisted\r\n\r\nfalse !== true\r\n\r\n    at file:///E:/AI-Workbench-candidates/interpreter-adapter-001/scripts/verify-run-fencing-phase-b.mjs:22:10 {\r\n  generatedMessage: false,\r\n  code: 'ERR_ASSERTION',\r\n  actual: false,\r\n  expected: true,\r\n  operator: 'strictEqual',\r\n  diff: 'simple'\r\n}\r\n\r\nNode.js v24.18.0"
+  }
+}
