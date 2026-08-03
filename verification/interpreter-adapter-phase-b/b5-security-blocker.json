@@ -1,0 +1,34 @@
+{
+  "schema": "ai-workbench.interpreter-adapter-b5-security-blocker/v1",
+  "taskId": "INTERPRETER-ADAPTER-PHASE-B5-RECOVERY-AND-CLOSEOUT-001",
+  "saveStatus": "SAVED",
+  "gateStatus": "BLOCKED",
+  "finalAcceptance": false,
+  "failureClassification": "PRODUCT_OR_SECURITY_FAILURE",
+  "deployment": "NOT_DEPLOYED",
+  "productionSmokeStarted": false,
+  "lastVerifiedCheckpointCommit": "47224b3e88e1102432524c0b9285c94e6bd1bdcb",
+  "formalGateFailure": {
+    "gate": "Mandatory Gates / Task Lifecycle",
+    "command": "node scripts/verify-mandatory-gates-001.mjs",
+    "exitCode": 1,
+    "reason": "terminal task replay result missing replayed=true"
+  },
+  "securityBlockers": [
+    "RUNTIME_STATUS_UNGROUNDED_FALLBACK_ACCEPTED",
+    "VERIFIER_OUTPUT_NOT_BOUND_TO_RUN_OR_FINAL",
+    "FILE_READ_ALLOWED_ROOTS_BOUNDARY_BYPASSED",
+    "LEGACY_STATUS_AND_DIRECT_READ_SHORTCUTS_REMAIN",
+    "MULTI_GROUNDED_ASSIGNMENT_NOT_FAIL_CLOSED"
+  ],
+  "validatedEvidence": {
+    "falseAuthorizationGrants": 0,
+    "d0_1b": "20/20 PASS",
+    "runFencing": "15/15 PASS after historical first failure",
+    "d0_1a": "PASS",
+    "critical": 0,
+    "high": 0
+  },
+  "finalTagCreated": false,
+  "productionPathSmokeEligible": false
+}

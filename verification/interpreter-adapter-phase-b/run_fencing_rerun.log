@@ -1,0 +1,98 @@
+{
+  "ok": true,
+  "module": "RUN-FENCING-001",
+  "passed": 15,
+  "total": 15,
+  "scenarios": [
+    {
+      "name": "concurrent_startRun",
+      "status": "PASS",
+      "script": "scripts/verify-run-fencing-phase-a.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "unique_active_run",
+      "status": "PASS",
+      "script": "scripts/verify-run-fencing-phase-a.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "revision_CAS",
+      "status": "PASS",
+      "script": "scripts/verify-run-fencing-phase-a.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "provider_persisted_before_start",
+      "status": "PASS",
+      "script": "scripts/verify-run-fencing-phase-b.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "same_attempt_single_run",
+      "status": "PASS",
+      "script": "scripts/verify-run-fencing-phase-b.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "stale_progress",
+      "status": "PASS",
+      "script": "scripts/verify-run-fencing-phase-c.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "stale_verification",
+      "status": "PASS",
+      "script": "scripts/verify-run-fencing-phase-c.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "stale_final",
+      "status": "PASS",
+      "script": "scripts/verify-run-fencing-phase-c.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "single_final",
+      "status": "PASS",
+      "script": "scripts/verify-run-fencing-phase-c.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "cross_task_isolation",
+      "status": "PASS",
+      "script": "scripts/verify-run-fencing-phase-c.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "lease_takeover",
+      "status": "PASS",
+      "script": "scripts/verify-run-fencing-phase-d.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "cancel_finish_race",
+      "status": "PASS",
+      "script": "scripts/verify-run-fencing-phase-d.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "restart_recovery",
+      "status": "PASS",
+      "script": "scripts/verify-run-fencing-phase-d.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "old_run_superseded",
+      "status": "PASS",
+      "script": "scripts/verify-run-fencing-phase-d.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "d0_1a_runtime_status_and_file_read",
+      "status": "PASS",
+      "script": "scripts/verify-run-fencing-phase-e-d0-1a.mjs",
+      "exitCode": 0
+    }
+  ]
+}

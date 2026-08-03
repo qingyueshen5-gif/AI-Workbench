@@ -1,0 +1,208 @@
+
+[MANDATORY GATE] Checkpoint Protection -> scripts/verify-checkpoint-protection-001.mjs
+{
+  "ok": true,
+  "module": "CHECKPOINT-PROTECTION-001",
+  "isolatedTemporaryRepositories": true,
+  "destructiveTestsInConstructionRepo": false,
+  "scenarios": [
+    {
+      "name": "01_pass_auto_checkpoint_manifest_patch_sha256_saved",
+      "ok": true
+    },
+    {
+      "name": "02_failed_gate_preserves_candidate_and_no_commit",
+      "ok": true
+    },
+    {
+      "name": "03_scope_allowlist_blocks_unrelated_changes",
+      "ok": true
+    },
+    {
+      "name": "04_restore_rejects_missing_or_tampered_pass_evidence",
+      "ok": true
+    },
+    {
+      "name": "05_restore_rejects_dirty_checkpoint_worktree",
+      "ok": true
+    },
+    {
+      "name": "06_guarded_restore_resets_and_cleans_only_after_saved_pass",
+      "ok": true
+    },
+    {
+      "name": "07_scanner_blocks_production_bypass_and_allows_marked_fixture",
+      "ok": true
+    },
+    {
+      "name": "08_commit_failure_blocks_cleanup_and_preserves_candidate",
+      "ok": true
+    }
+  ]
+}
+
+[MANDATORY GATE] Git Destructive Bypass Scan -> scripts/scan-git-destructive-bypasses.mjs
+{
+  "ok": true,
+  "module": "CHECKPOINT-PROTECTION-001",
+  "scanner": "destructive-git-bypass",
+  "guardedEntry": "scripts/git-guard.mjs",
+  "fixtureMarker": "CHECKPOINT_PROTECTION_FIXTURE",
+  "findings": []
+}
+
+[MANDATORY GATE] Execution Protocol Checkpoint Rules -> scripts/verify-execution-protocol-checkpoint.mjs
+{"ok":true,"module":"CHECKPOINT-PROTECTION-001","protocolRules":14}
+
+[MANDATORY GATE] External Skill Drift -> scripts/verify-external-skill-drift-001.mjs
+{
+  "ok": true,
+  "writeApprovalEnabled": true,
+  "curatorEnabled": false,
+  "observations": [
+    {
+      "filePath": "C:\\Users\\qingy\\ai-workers\\employees\\worker-3rm0\\config\\skills\\operations\\system-capability-readonly-audit\\SKILL.md",
+      "expected": "b071581bcb990e46f1ddfb1490ece86e4ca74c4f3a7b1df2b27ed9fdbb3dbf93",
+      "actual": "b071581bcb990e46f1ddfb1490ece86e4ca74c4f3a7b1df2b27ed9fdbb3dbf93",
+      "status": "IN_SYNC"
+    },
+    {
+      "filePath": "C:\\Users\\qingy\\ai-workers\\employees\\worker-3rm0\\config\\skills\\operations\\system-capability-readonly-audit\\references\\background-gate-failure-provenance.md",
+      "expected": "a762904e36af6ec3d994a8292d8169adfb5c49775bd99d403c3d298e214b0fb1",
+      "actual": "a762904e36af6ec3d994a8292d8169adfb5c49775bd99d403c3d298e214b0fb1",
+      "status": "IN_SYNC"
+    },
+    {
+      "filePath": "C:\\Users\\qingy\\ai-workers\\employees\\worker-3rm0\\config\\skills\\operations\\repository-documentation-governance\\SKILL.md",
+      "expected": "0d23335f4b6bbab78246a8c268fbc8d44eb8680ca8158b372e2f8f7e976d2a68",
+      "actual": "0d23335f4b6bbab78246a8c268fbc8d44eb8680ca8158b372e2f8f7e976d2a68",
+      "status": "IN_SYNC"
+    },
+    {
+      "filePath": "C:\\Users\\qingy\\ai-workers\\employees\\worker-3rm0\\config\\skills\\operations\\repository-documentation-governance\\references\\deterministic-source-span-extraction-and-regression-closure.md",
+      "expected": "fc23470148cf65c4a85bf57d85caf6a4dadaef19fcf787273d77cbcd03dbdf46",
+      "actual": "fc23470148cf65c4a85bf57d85caf6a4dadaef19fcf787273d77cbcd03dbdf46",
+      "status": "IN_SYNC"
+    }
+  ]
+}
+
+[MANDATORY GATE] Save Decoupled From Gate -> scripts/verify-save-decoupled-from-gate-001.mjs
+{
+  "ok": true,
+  "module": "SAVE-DECOUPLED-FROM-GATE-001",
+  "scenarios": [
+    {
+      "name": "01_unsaved_not_run",
+      "ok": true
+    },
+    {
+      "name": "02_saved_wip_not_gated",
+      "ok": true
+    },
+    {
+      "name": "03_saved_blocked_preserves_save",
+      "ok": true
+    },
+    {
+      "name": "04_formal_final_acceptance",
+      "ok": true
+    },
+    {
+      "name": "05_wip_cannot_claim_final",
+      "ok": true
+    },
+    {
+      "name": "06_saved_boolean_must_match",
+      "ok": true
+    },
+    {
+      "name": "07_environment_classification",
+      "ok": true
+    },
+    {
+      "name": "08_dependency_classification",
+      "ok": true
+    },
+    {
+      "name": "09_product_classification",
+      "ok": true
+    },
+    {
+      "name": "10_security_classification",
+      "ok": true
+    },
+    {
+      "name": "11_unknown_classification",
+      "ok": true
+    }
+  ]
+}
+
+[MANDATORY GATE] Authorization Boundary -> scripts/verify-authorization-boundary-001.mjs
+{"ok":true,"modelAuthorizationPower":false,"trustedControlPlaneAuthorization":true,"capabilities":["process.stop","code.modify","code.execute"],"crossTaskRejected":true,"crossCapabilityRejected":true,"crossUserRejected":true,"expiredRejected":true,"lowRiskUnaffected":true}
+
+[MANDATORY GATE] Feishu Delivery Idempotency -> scripts/verify-feishu-delivery-idempotency-001.mjs
+{"ok":true,"module":"FEISHU-DELIVERY-IDEMPOTENCY-001","stableDeliveryKey":true,"staleClaimRecovery":true,"deliveredFence":true}
+
+[MANDATORY GATE] IPC Acceptance Recovery -> scripts/verify-ipc-acceptance-recovery-001.mjs
+{"ok":true,"module":"IPC-ACCEPTANCE-RECOVERY-001","acceptBeforeCrashDurable":true,"replayRecovery":true,"durablePayloadPreserved":true,"staleAcceptanceNotRecovered":true}
+
+[MANDATORY GATE] Run Lease -> scripts/verify-run-lease-001.mjs
+{"ok":true,"module":"RUN-LEASE-001","exclusiveClaim":true,"ownerRenewal":true,"foreignRenewalRejected":true,"heartbeatPreventsTheft":true,"expiredLeaseRecovered":true}
+
+[MANDATORY GATE] Task Atomicity -> scripts/verify-task-atomicity-001.mjs
+{"ok":true,"module":"TASK-ATOMICITY-001","competingTransitionSingleWinner":true,"noLostPatchUpdate":true,"historyConsistent":true}
+
+[MANDATORY GATE] Provider Control -> scripts/verify-provider-control-001.mjs
+{"ok":true,"module":"PROVIDER-CONTROL-001","providerBoundaryRechecksAuthorization":true,"processProviderGuarded":true,"codeProviderGuarded":true,"lowRiskUnaffected":true}
+
+[MANDATORY GATE] Run Recovery -> scripts/verify-run-recovery-001.mjs
+{"ok":true,"module":"RUN-RECOVERY-001","freshRunPreserved":true,"expiredRunReleased":true,"jobRetained":true,"replacementWorkerCanResume":true}
+
+[MANDATORY GATE] Task Lifecycle -> scripts/verify-task-lifecycle-001.mjs
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ undefined
+- true
+
+    at file:///E:/AI-Workbench-candidates/interpreter-adapter-001/scripts/verify-task-lifecycle-001.mjs:65:10 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: undefined,
+  expected: true,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.18.0
+{
+  "ok": false,
+  "deployment": "BLOCKED",
+  "firstFailure": {
+    "name": "Task Lifecycle",
+    "script": "scripts/verify-task-lifecycle-001.mjs",
+    "ok": false,
+    "code": 1,
+    "signal": null
+  },
+  "completed": [
+    "Checkpoint Protection",
+    "Git Destructive Bypass Scan",
+    "Execution Protocol Checkpoint Rules",
+    "External Skill Drift",
+    "Save Decoupled From Gate",
+    "Authorization Boundary",
+    "Feishu Delivery Idempotency",
+    "IPC Acceptance Recovery",
+    "Run Lease",
+    "Task Atomicity",
+    "Provider Control",
+    "Run Recovery"
+  ]
+}

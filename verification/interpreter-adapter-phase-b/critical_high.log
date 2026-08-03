@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "critical": 0,
+  "high": 0,
+  "httpControlPlane": true,
+  "feishuAuthorization": true,
+  "deepseekSecretProvider": true,
+  "capabilityIsolation": true,
+  "resultVerification": true,
+  "operationalEnvPolicy": true,
+  "strictSchema": true,
+  "gatewayPureTransport": true,
+  "codexSessionIsolation": true,
+  "ipcIsolation": true
+}
