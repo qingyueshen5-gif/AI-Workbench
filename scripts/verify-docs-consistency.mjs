@@ -75,9 +75,15 @@ try {
   assertCheck('NEXT_STEP唯一权威', context.includes('| 当前唯一下一步 | `NEXT_STEP.md` |'), 'CONTEXT.md必须明确NEXT_STEP.md是当前唯一下一步唯一权威');
   assertCheck('NEXT_STEP仅含RUN-FENCING-001', nextMarked === 'RUN-FENCING-001重新实现', `标记区实际为：${nextMarked}`);
   assertCheck('NEXT_STEP无旧A/E/G主线', !/(A\/E\/G|A、E、G|工作包 A|工作包 E|工作包 G|v0\.4\.7首批)/i.test(next), 'NEXT_STEP.md不得把旧A/E/G写成当前主线');
+  assertCheck('RUN-FENCING实际开发基线', next.includes('实际开发基线：`579ae3c4592bec3de2c1c0c223db557641c1cc68`'), 'NEXT_STEP.md必须以579ae3作为实际开发基线');
+  assertCheck('Checkpoint保护祖先口径', next.includes('Checkpoint保护机制祖先：`bc43431e954f708d74d82b49ce367a73e07d0174`'), 'bc43431只能作为Checkpoint保护机制祖先');
 
-  const expectedHandoff = renderHandoffFile(buildHandoffSnapshot(collectHandoffMetadata(new Date(handoffMarked.match(/生成时间：([^\n]+)/)?.[1] || Date.now()))));
-  assertCheck('Handoff轻量结构', handoff === expectedHandoff, 'Handoff必须只由生成器输出轻量索引');
+  const handoffBranch = handoffMarked.match(/- Branch: `([^`]+)`/)?.[1];
+  const handoffHead = handoffMarked.match(/- HEAD: `([0-9a-f]{40})`/)?.[1];
+  const handoffGeneratedAt = handoffMarked.match(/生成时间：([^\n]+)/)?.[1];
+  const expectedHandoff = renderHandoffFile(buildHandoffSnapshot({ branch: handoffBranch, head: handoffHead, generatedAt: handoffGeneratedAt }));
+  const normalizeNewlines = (value) => value.replaceAll('\r\n', '\n');
+  assertCheck('Handoff轻量结构', Boolean(handoffBranch && handoffHead && handoffGeneratedAt) && normalizeNewlines(handoff) === normalizeNewlines(expectedHandoff), 'Handoff必须保持生成器定义的轻量索引结构；分支切换本身不要求改写Handoff');
   assertCheck('Handoff四个权威链接', HANDOFF_LINKS.length === 4 && HANDOFF_LINKS.every(([label]) => handoff.includes(`[${label}]`)), 'Handoff必须引用PRODUCT、CURRENT_STATUS、NEXT_STEP、EXECUTION_PROTOCOL');
   assertCheck('Handoff不复制状态正文', handoff.split(/\r?\n/).length <= 22 && !/当前阻断|最近关键事件|已完成能力|Production Smoke失败/.test(handoff), 'Handoff过长或复制了状态正文');
 

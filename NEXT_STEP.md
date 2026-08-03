@@ -10,7 +10,8 @@ RUN-FENCING-001重新实现
 
 ## 基线
 
-`bc43431e954f708d74d82b49ce367a73e07d0174`
+- 实际开发基线：`579ae3c4592bec3de2c1c0c223db557641c1cc68`
+- Checkpoint保护机制祖先：`bc43431e954f708d74d82b49ce367a73e07d0174`
 
 ## 执行顺序
 
