@@ -1,0 +1,54 @@
+{
+  "schema": "ai-workbench.external-skill-registry/v1",
+  "worker": "worker-3rm0",
+  "approvedAt": "2026-08-03T20:19:25+08:00",
+  "approvedBy": "product_owner",
+  "writeApprovalEnabled": true,
+  "curatorEnabled": false,
+  "files": [
+    {
+      "filePath": "C:\\Users\\qingy\\ai-workers\\employees\\worker-3rm0\\config\\skills\\operations\\system-capability-readonly-audit\\SKILL.md",
+      "owningComponent": "Hermes worker-3rm0 external skill",
+      "approvedBaselineSha256": "b071581bcb990e46f1ddfb1490ece86e4ca74c4f3a7b1df2b27ed9fdbb3dbf93",
+      "approvedBaselineSnapshotPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\external-skill-baseline\\worker-3rm0\\native-write-gate-enabled\\1-SKILL.md",
+      "baselineStatus": "PROVISIONAL_FROZEN_BASELINE",
+      "lastObservedSha256": "b071581bcb990e46f1ddfb1490ece86e4ca74c4f3a7b1df2b27ed9fdbb3dbf93",
+      "writeApprovalEnabled": true,
+      "status": "IN_SYNC",
+      "affectsAgentBehavior": true
+    },
+    {
+      "filePath": "C:\\Users\\qingy\\ai-workers\\employees\\worker-3rm0\\config\\skills\\operations\\system-capability-readonly-audit\\references\\background-gate-failure-provenance.md",
+      "owningComponent": "Hermes worker-3rm0 external skill",
+      "approvedBaselineSha256": "a762904e36af6ec3d994a8292d8169adfb5c49775bd99d403c3d298e214b0fb1",
+      "approvedBaselineSnapshotPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\external-skill-baseline\\worker-3rm0\\native-write-gate-enabled\\2-background-gate-failure-provenance.md",
+      "baselineStatus": "PROVISIONAL_FROZEN_BASELINE",
+      "lastObservedSha256": "a762904e36af6ec3d994a8292d8169adfb5c49775bd99d403c3d298e214b0fb1",
+      "writeApprovalEnabled": true,
+      "status": "IN_SYNC",
+      "affectsAgentBehavior": true
+    },
+    {
+      "filePath": "C:\\Users\\qingy\\ai-workers\\employees\\worker-3rm0\\config\\skills\\operations\\repository-documentation-governance\\SKILL.md",
+      "owningComponent": "Hermes worker-3rm0 external skill",
+      "approvedBaselineSha256": "0d23335f4b6bbab78246a8c268fbc8d44eb8680ca8158b372e2f8f7e976d2a68",
+      "approvedBaselineSnapshotPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\external-skill-baseline\\worker-3rm0\\native-write-gate-enabled\\3-SKILL.md",
+      "baselineStatus": "PROVISIONAL_FROZEN_BASELINE",
+      "lastObservedSha256": "0d23335f4b6bbab78246a8c268fbc8d44eb8680ca8158b372e2f8f7e976d2a68",
+      "writeApprovalEnabled": true,
+      "status": "IN_SYNC",
+      "affectsAgentBehavior": true
+    },
+    {
+      "filePath": "C:\\Users\\qingy\\ai-workers\\employees\\worker-3rm0\\config\\skills\\operations\\repository-documentation-governance\\references\\deterministic-source-span-extraction-and-regression-closure.md",
+      "owningComponent": "Hermes worker-3rm0 external skill",
+      "approvedBaselineSha256": "fc23470148cf65c4a85bf57d85caf6a4dadaef19fcf787273d77cbcd03dbdf46",
+      "approvedBaselineSnapshotPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\external-skill-baseline\\worker-3rm0\\native-write-gate-enabled\\4-deterministic-source-span-extraction-and-regression-closure.md",
+      "baselineStatus": "PROVISIONAL_FROZEN_BASELINE",
+      "lastObservedSha256": "fc23470148cf65c4a85bf57d85caf6a4dadaef19fcf787273d77cbcd03dbdf46",
+      "writeApprovalEnabled": true,
+      "status": "IN_SYNC",
+      "affectsAgentBehavior": true
+    }
+  ]
+}

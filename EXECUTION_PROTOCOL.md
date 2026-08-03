@@ -114,6 +114,14 @@ npm.cmd run verify:docs-consistency
 - 每个任务期间启动或观察到的后台进程必须进入机器可读台账，至少记录processId/processRef、command、workingDirectory、startedAt、finishedAt、exitCode、owningTask、owningGate、gating、classification、supersededBy和evidencePath。
 - 进程分类限定为`PASS`、`EXPECTED_TERMINATION`、`NON_GATING_FAILURE`、`FORMAL_GATE_FAILURE`、`UNKNOWN_FAILURE`。任何`UNKNOWN_FAILURE`使任务BLOCKED；任何正式门禁非零退出必须保留失败记录，只有同一门禁后续真实重跑、明确PASS并绑定具体运行和证据时才可解除当前阻断，禁止宣称失败从未发生。
 
+### EXTERNAL-SKILL-CHANGE-CONTROL
+
+- Agent可以提出Skill修改，但不得自行批准。所有`create`、`edit`、`patch`、`delete`、`write_file`和`remove_file`必须经过Hermes原生`skills.write_approval`，先进入Pending并提供完整Diff，只有产品负责人明确批准后才可落盘。
+- `curator.enabled`在治理期间必须为`false`。后台Review、Self-improvement、Curator或任何其他名称不得绕过原生审批；审批开关关闭、Curator重启或批准基线字节漂移均属于安全边界漂移。
+- 每次外部Skill写入批准必须记录taskId、原因、修改前后SHA-256、文件、执行组件和时间。未批准项目保持Pending或被产品负责人明确拒绝，Agent不得自行approve/reject。
+- 外部Skill本体不强行提交到AI Workbench仓库。批准的C盘快照与`verification/external-skill-registry.json`共同构成治理证据；任务开始和结束均须检查配置与哈希。
+- 发现未批准变化时，先保存仓库内有效成果，再硬停止。不得使用只读属性或NTFS ACL掩盖Hermes原生治理失败。
+
 ## Environment Ops 事故处理流程
 
 所有电脑、进程、端口、网络、代理、AI Link、通讯渠道、Provider、账号恢复、支付和预算异常统一执行：
