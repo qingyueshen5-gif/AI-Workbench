@@ -29,9 +29,7 @@
 - PASS｜CURRENT_STATUS不放行部署真人使用｜必须明确不可部署、不可宣称真人稳定使用
 - PASS｜不存在第二个CURRENT_STATUS类权威｜无第二权威声明
 - PASS｜变更限定在批准范围｜所有变更均在批准范围
-- PASS｜不删除不移动原文件｜M	CURRENT_STATUS.md
-M	TASKLOG.md
-M	verification/docs-consistency/report.md
+- PASS｜不删除不移动原文件｜M	verification/docs-consistency/report.md
 M	verification/docs-consistency/summary.json
 
 ## 错误
