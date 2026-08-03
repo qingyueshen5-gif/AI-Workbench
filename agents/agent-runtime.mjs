@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises';
-import { resolve, isAbsolute } from 'node:path';
+import { resolve } from 'node:path';
 import { ModelRouter } from './model-router.mjs';
 import { ToolExecutor } from '../execution/tool-executor.mjs';
 import { ResultVerifier } from '../execution/result-verifier.mjs';
@@ -21,18 +21,7 @@ function historyPrompt(history) {
 }
 
 const readOnlyConstraint = /不要修改|只读|仅查看|不要写入|不要删除|read-?only/i;
-const singleFileExt = /\.(?:md|txt|json|ya?ml|toml|csv|log|pdf|docx|xlsx)$/i;
-const followupPattern = /^(?:这个|该|上述|刚才|文件中|文件里|为什么|再|那么|其中|下一步|还有|具体|它)/;
-const statusPattern = /(?:当前|现在|实际).*(?:Runtime|Gateway|任务|状态)|(?:Runtime|Gateway|任务).*(?:状态|版本|进度|提交|PID)|status/i;
-const complexPattern = /(?:编写|修改|修复|调试|构建|测试|运行|执行.*命令|终端|部署|跨文件|多个文件|多步|电脑操作|代码)/i;
 const absolutePathPattern = /[A-Za-z]:[\\/][^\s，。；,;'"`]+|\/[^\s，。；,;'"`]+/;
-
-function extractImportantGoal(content) {
-  const marked = content.match(/<!--\s*AIW_NEXT_STEP_START\s*-->([\s\S]*?)<!--\s*AIW_NEXT_STEP_END\s*-->/i)?.[1]?.trim();
-  if (marked) return marked;
-  const section = content.match(/(?:当前最重要的目标|当前唯一下一步)[：:\s]*([\s\S]{1,1200}?)(?=\n#{1,3}\s|$)/)?.[1]?.trim();
-  return section || content.trim().slice(0, 1200);
-}
 
 function progressMessage(state) {
   return ({
@@ -368,42 +357,6 @@ export class AgentRuntime {
         await this.sessions.appendMessage(state, { role: 'tool', text: JSON.stringify({ capability: 'process.stop', provider: stopped.providerId, pid: stopped.result.target.pid, verified: true }), messageId: job.messageId, provider: stopped.providerId, taskId });
         await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: stopped.providerId, taskId });
         return this.finalize(task, { messageId: job.messageId, text, provider: stopped.providerId, toolUsed: 'process.stop', verified: true, interpretation, schedulerStatus: capabilityPlan.status, capabilityResults: results, metrics: { readFileCalls: 0, codexCalls: 0, processStopCalls: 1 } }, progress);
-      }
-
-      if (statusPattern.test(job.text)) {
-        task = await this.transition(task, 'verifying', 'status_grounding_started', 'agent-runtime', { statePaths: this.statePaths }, progress);
-        const text = await this.groundedStatus(job.text, job.parentTaskId, conversationId);
-        await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: 'local-status', taskId });
-
-      }
-
-      const directRead = classification.action === 'read' && isAbsolute(classification.target || '') && singleFileExt.test(classification.target) && (readOnlyConstraint.test(job.text) || !complexPattern.test(job.text));
-      if (directRead) {
-        task = await this.transition(task, 'executing', 'read_file_started', 'agent-runtime', { path: classification.target }, progress);
-        const before = await fs.stat(classification.target);
-        const verification = await this.tools.execute(job.messageId, { type: 'read_file', path: classification.target });
-        const after = await fs.stat(classification.target);
-        const item = verification.results?.[0];
-        if (!item?.content) throw new Error('File read returned no content');
-        if (before.mtimeMs !== after.mtimeMs || before.size !== after.size || item.sha256 !== item.currentSha256) throw new Error('Read-only task detected file mutation');
-        const evidence = { path: item.path, mtimeMs: after.mtimeMs, size: after.size, sha256: item.sha256, content: item.content, readAt: Date.now(), sourceMessageId: job.messageId };
-        state.lastFileEvidence = evidence;
-        await this.sessions.save(state);
-        task = await this.tasks.patch(task.taskId, { providerExecution: { provider: 'read_file', evidence: { ...evidence, content: undefined } } });
-        task = await this.transition(task, 'verifying', 'read_file_verified', 'agent-runtime', { path: evidence.path, sha256: evidence.sha256 }, progress);
-        const goal = extractImportantGoal(item.content);
-        const text = `Read \`${evidence.path}\`. Current most important goal: ${goal}\n\nEvidence: size ${evidence.size} bytes, SHA-256 \`${evidence.sha256}\`; file was not modified.`;
-        await this.sessions.appendMessage(state, { role: 'tool', text: goal, messageId: job.messageId, provider: 'read_file', evidence: { ...evidence, content: undefined }, taskId });
-        await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: 'local-read', taskId });
-        return this.finalize(task, { messageId: job.messageId, text, provider: 'local-read', providerSessionId: '', toolUsed: 'read_file', verified: true, classification, evidence: { ...evidence, content: undefined }, metrics: { readFileCalls: 1, codexCalls: 0 } }, progress);
-      }
-
-      if (state.lastFileEvidence && followupPattern.test(String(job.text || '').trim())) {
-        const finalModel = await this.models.express({ messages: [{ role: 'system', content: 'Answer only from the provided file-read evidence. Do not claim a new file read.' }, { role: 'user', content: `Follow-up: ${job.text}\nPath: ${state.lastFileEvidence.path}\nContent: ${state.lastFileEvidence.content}` }] });
-        task = await this.transition(task, 'verifying', 'followup_answer_verified', 'agent-runtime', { reusedFileEvidence: true }, progress);
-        const text = this.verifier.verifyModelResult(finalModel).text;
-        await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: 'deepseek', taskId });
-        return this.finalize(task, { messageId: job.messageId, text, provider: 'deepseek', providerSessionId: '', toolUsed: '', verified: true, classification, metrics: { readFileCalls: 0, codexCalls: 0, reusedFileEvidence: true } }, progress);
       }
 
       const codeTask = interpretation.taskType === 'code_task' && interpretation.requiredCapabilities.some((item) => item.startsWith('code.'));
