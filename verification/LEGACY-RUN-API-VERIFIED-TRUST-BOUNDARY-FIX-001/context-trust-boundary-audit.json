@@ -1,0 +1,26 @@
+{
+  "schema":"ai-workbench.context-trust-boundary-audit/v1",
+  "function":"server.mjs:buildTaskContextPackage:415",
+  "callSites":[
+    {"line":1418,"consumer":"agentRegistry.invoke for workbench tool execution"},
+    {"line":1930,"consumer":"Hermes invoke fallback unless caller supplies payload.context"},
+    {"line":2128,"consumer":"GET /api/tasks/:id/context"}
+  ],
+  "inputSources":["normalized persisted data","selected Task record","optional external payload.context bypass at Hermes invoke"],
+  "contextFields":["id","taskId","generatedAt","policy","task","memories","recentRuns"],
+  "rootLevelFields":[],
+  "verificationFields":["recentRuns[].verified","recentRuns[].verificationResult"],
+  "executionFactFields":["recentRuns[].status","handled","rendered","executionCompleted","postconditionObserved","errorUserMessage"],
+  "auditFields":[],
+  "opaqueBusinessFields":[],
+  "verifiedSource":"run.verified === true",
+  "verifiedDerivationFunction":"not used by buildTaskContextPackage; shared authority exists at agents/verified-semantics.mjs:deriveBoundVerifierResult",
+  "failOpenPatterns":[],
+  "agentConsumers":[{"file":"agents/adapters/hermes.mjs","function":"compactContextForPrompt","meaning":"passes recentRuns structurally into compact context; current prompt only emits context id and memory keys"}],
+  "consumerMeanings":{"verified":"implicitly business acceptance","executionCompleted":"execution fact","verificationResult":"isolated evidence check result"},
+  "removalImpact":"Removing execution facts would reduce task progress/failure context; replacing verified source is compatible; opaque input/output/evidence are currently absent and need explicit isolated fields if retained",
+  "fieldPolicyUsage":"shared/run-trust-field-policy.mjs may classify server-owned and opaque fields only; it cannot derive verified",
+  "thirdRuleFound":true,
+  "thirdRule":"buildTaskContextPackage directly trusts run.verified instead of calling deriveBoundVerifierResult",
+  "recommendedProjection":{"verificationStatus":["verified","source","trusted","taskId","runId","taskRevision"],"executionFacts":["status","executionStarted","executionCompleted","postconditionObserved","runEvidenceValidated","failure","handled","rendered","policyApplied"],"opaqueBusinessData":["input","output","evidence","errorRaw","errorUserMessage","memorySuggestions"],"auditFacts":"omit legacyVerifiedClaimObserved"}
+}
