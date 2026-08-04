@@ -1,0 +1,196 @@
+{
+  "schema": "ai-workbench.terminal-replay-impact-regression/v1",
+  "originalCQ002ListInterpretation": "15 historical commands including D0-1B as actually exercised in the prior CQ-002 expanded set; plus CQ-003-B and terminal replay matrix",
+  "total": 17,
+  "allPass": true,
+  "s2ActuallyRerun": true,
+  "results": [
+    {
+      "name": "CQ-001 Clarify",
+      "command": "node scripts/verify-non-execution-clarify-contract-001.mjs",
+      "exitCode": 0,
+      "status": "PASS",
+      "module": "NON-EXECUTION-CLARIFY-CONTRACT-001"
+    },
+    {
+      "name": "CQ-002 bounded correction success",
+      "command": "node scripts/verify-task-interpreter-bounded-correction-success-001.mjs",
+      "exitCode": 0,
+      "status": "PASS",
+      "module": "TASK-INTERPRETER-BOUNDED-CORRECTION-SUCCESS-001"
+    },
+    {
+      "name": "CQ-003-A bounded correction failure",
+      "command": "node scripts/verify-task-interpreter-bounded-correction-failure-001.mjs",
+      "exitCode": 0,
+      "status": "PASS",
+      "module": "TASK-INTERPRETER-BOUNDED-CORRECTION-FAILURE-001"
+    },
+    {
+      "name": "TaskInterpreter original contract",
+      "command": "node scripts/verify-task-interpreter.mjs",
+      "exitCode": 0,
+      "status": "PASS",
+      "module": null
+    },
+    {
+      "name": "Interpreter Adapter variants",
+      "command": "node scripts/verify-interpreter-adapter-variants-001.mjs",
+      "exitCode": 0,
+      "status": "PASS",
+      "module": "INTERPRETER-ADAPTER-B4-VARIANTS-001"
+    },
+    {
+      "name": "Non-execution bypass",
+      "command": "node scripts/verify-interpreter-adapter-bypass-001.mjs",
+      "exitCode": 0,
+      "status": "PASS",
+      "module": "INTERPRETER-ADAPTER-B2-BYPASS-001"
+    },
+    {
+      "name": "Non-execution message idempotency",
+      "command": "node scripts/verify-non-execution-message-idempotency-001.mjs",
+      "exitCode": 0,
+      "status": "PASS",
+      "module": "NON-EXECUTION-MESSAGE-IDEMPOTENCY-001"
+    },
+    {
+      "name": "S6 terminal Task replay",
+      "command": "node scripts/verify-interpreter-adapter-b5-s6-task-replay-001.mjs",
+      "exitCode": 0,
+      "status": "PASS",
+      "module": "INTERPRETER-ADAPTER-B5-S6-TASK-REPLAY"
+    },
+    {
+      "name": "S1 grounded evidence",
+      "command": "node scripts/verify-interpreter-adapter-b5-s1-grounded-evidence-001.mjs",
+      "exitCode": 0,
+      "status": "PASS",
+      "module": "INTERPRETER-ADAPTER-B5-S1-GROUNDED-EVIDENCE"
+    },
+    {
+      "name": "S2 verifier binding",
+      "command": "node scripts/verify-interpreter-adapter-b5-s2-verifier-binding-001.mjs",
+      "exitCode": 0,
+      "status": "PASS",
+      "module": "INTERPRETER-ADAPTER-B5-S2-VERIFIER-BINDING",
+      "focusedFacts": {
+        "providerCalls": 1,
+        "runStatus": "failed",
+        "passed": false
+      }
+    },
+    {
+      "name": "S3 file.read boundary",
+      "command": "node scripts/verify-interpreter-adapter-b5-s3-file-read-boundary-001.mjs",
+      "exitCode": 0,
+      "status": "PASS",
+      "module": "INTERPRETER-ADAPTER-B5-S3-FILE-READ-BOUNDARY"
+    },
+    {
+      "name": "S4 single execution path",
+      "command": "node scripts/verify-interpreter-adapter-b5-s4-remove-execution-shortcuts-001.mjs",
+      "exitCode": 0,
+      "status": "PASS",
+      "module": "INTERPRETER-ADAPTER-B5-S4-REMOVE-EXECUTION-SHORTCUTS"
+    },
+    {
+      "name": "S5 multi-assignment fail-closed",
+      "command": "node scripts/verify-interpreter-adapter-b5-s5-multi-assignment-001.mjs",
+      "exitCode": 0,
+      "status": "PASS",
+      "module": "INTERPRETER-ADAPTER-B5-S5-MULTI-ASSIGNMENT-FAIL-CLOSED"
+    },
+    {
+      "name": "B5 integration",
+      "command": "node scripts/verify-interpreter-adapter-b5-integration-001.mjs",
+      "exitCode": 0,
+      "status": "PASS",
+      "module": "INTERPRETER-ADAPTER-PHASE-B5-INTEGRATION"
+    },
+    {
+      "name": "D0-1B ground truth",
+      "command": "node scripts/verify-original-ground-truth-phase-b.mjs",
+      "exitCode": 0,
+      "status": "PASS",
+      "module": "ORIGINAL-GROUND-TRUTH-EXTRACTOR-001-PHASE-B"
+    },
+    {
+      "name": "CQ-003-B failed persistence replay",
+      "command": "node scripts/verify-failed-task-persistence-and-replay-001.mjs",
+      "exitCode": 0,
+      "status": "PASS",
+      "module": "CQ003B-EXECUTION-STAGE-FAILED-TASK-PERSISTENCE-AND-REPLAY",
+      "focusedFacts": {
+        "failedReplayVerified": false,
+        "taskReplayed": true,
+        "messageReplayed": false,
+        "failureHashBeforeReplay": "f1996ef6bf853e8f71149bc99e4bd3f69bad95eb09139d1b4ed241faeed29061",
+        "failureHashAfterReplay": "f1996ef6bf853e8f71149bc99e4bd3f69bad95eb09139d1b4ed241faeed29061",
+        "failureImmutable": true
+      }
+    },
+    {
+      "name": "Terminal replay matrix",
+      "command": "node scripts/verify-terminal-task-replay-classification-001.mjs",
+      "exitCode": 0,
+      "status": "PASS",
+      "module": "TERMINAL-TASK-REPLAY-STATE-MATRIX-001",
+      "focusedFacts": {
+        "scenarios": [
+          {
+            "id": "A",
+            "state": "failed",
+            "verified": false,
+            "status": "PASS"
+          },
+          {
+            "id": "B",
+            "state": "completed_bound_pass",
+            "verified": true,
+            "status": "PASS"
+          },
+          {
+            "id": "C",
+            "state": "completed_missing_verification",
+            "verified": false,
+            "status": "PASS"
+          },
+          {
+            "id": "D",
+            "state": "completed_wrong_run",
+            "verified": false,
+            "status": "PASS"
+          },
+          {
+            "id": "E",
+            "state": "completed_wrong_acceptance_revision",
+            "verified": false,
+            "status": "PASS"
+          },
+          {
+            "id": "F",
+            "state": "cancelled",
+            "verified": false,
+            "status": "PASS"
+          },
+          {
+            "id": "G",
+            "state": "capability_unavailable",
+            "writeSideVerified": true,
+            "replayVerified": false,
+            "status": "PASS"
+          },
+          {
+            "id": "H",
+            "state": "non_execution_message_replay",
+            "taskReplayed": false,
+            "messageReplayed": true,
+            "status": "PASS"
+          }
+        ],
+        "authoritativeAcceptanceRevision": "run.taskRevision"
+      }
+    }
+  ]
+}
