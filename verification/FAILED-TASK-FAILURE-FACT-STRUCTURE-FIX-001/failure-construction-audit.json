@@ -1,0 +1,40 @@
+{
+  "schema": "ai-workbench.failed-task-failure-construction-audit/v1",
+  "baselineHead": "52d18fab5e12b6b09a5d8752a71127a7f12150f2",
+  "failTaskDefinition": "agents/agent-runtime.mjs:173-179",
+  "callSites": [
+    {
+      "callSite": "agents/agent-runtime.mjs:419-421 AgentRuntime.handle generic catch",
+      "currentTaskState": "null before Task creation; otherwise any non-terminal state from accepted through verifying",
+      "runAvailable": "conditional",
+      "trustedRunIdSource": "For executeWithRun failures, identity.runId is available inside executeWithRun before TaskStore.failRunVerification clears activeRunId; current generic catch receives no explicit identity. For failures outside a Run, null.",
+      "failureStage": "runtime_internal today; provider_execution or verification can be determined only if executeWithRun attaches Runtime-owned context before rethrow",
+      "defaultErrorCode": "RUNTIME_INTERNAL_FAILED today; proposed Runtime enums PROVIDER_EXECUTION_FAILED / VERIFICATION_FAILED / RUNTIME_INTERNAL_FAILED",
+      "failureClassification": "runtime_failure today; proposed provider_failure / verification_failure / runtime_failure",
+      "taskRevisionSource": "The authoritative value must be the revision produced by the TaskStore.patch that successfully persists Task.failure after the Task has transitioned to failed.",
+      "failedAtSource": "AgentRuntime trusted clock (options.now or Date.now), captured once during first failure persistence"
+    }
+  ],
+  "runFacts": {
+    "availableFields": ["runId", "taskId", "taskRevision", "status", "failureReason", "verification.verifierId", "verification.verificationMethod", "verification.failureReason", "verification.verifiedAt", "finishedAt"],
+    "activeRunIdClearedAt": "channels/task-store.mjs:59 failRunVerification saves activeRunId=null after locating the active Run from the supplied trusted identity",
+    "requiredPreservation": "executeWithRun must retain its local identity and attach a Runtime-owned failure context before rethrow; failTask must not attempt to rediscover runId from activeRunId after it is cleared."
+  },
+  "taskRevisionRules": {
+    "patch": "TaskStore.patch increments taskRevision only when activeRunId is null; otherwise revision is unchanged.",
+    "transitionTask": "transitionTask increments taskRevision only when activeRunId is null; otherwise revision is unchanged.",
+    "approvedFailureMeaning": "Transition the Task to failed, then persist Task.failure with taskRevision equal to the revision produced by that failure patch."
+  },
+  "taskStoreSupport": {
+    "extendedFailureObjectSupported": true,
+    "taskStoreChangeRequired": false,
+    "reason": "TaskStore.patch already accepts an arbitrary failure object and persists it atomically; failure is not a protected field."
+  },
+  "trustedEnums": {
+    "failureStage": ["provider_execution", "verification", "runtime_internal"],
+    "errorCode": ["PROVIDER_EXECUTION_FAILED", "VERIFICATION_FAILED", "RUNTIME_INTERNAL_FAILED"],
+    "failureClassification": ["provider_failure", "verification_failure", "runtime_failure"]
+  },
+  "causeCodePolicy": "Optional. Accept only a string matching a bounded identifier pattern and maximum length; never use it to derive stage, classification, authorization, risk or provider selection.",
+  "conclusion": "RUNTIME_ONLY_MINIMUM_FIX_SUFFICIENT"
+}
