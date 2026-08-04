@@ -1,6 +1,6 @@
 # CURRENT_STATUS.md — 当前真实工程状态唯一权威
 
-- **状态时间：2026-08-03**
+- **状态时间：2026-08-04**
 - 本文件只记录已证明事实。
 - 计划、愿景和目标不得写成已完成能力。
 - 其他文件与本文件冲突时，以本文件为准。
@@ -70,9 +70,47 @@ RUN-FENCING候选（已通过、未部署）
 - **MEDIUM · CAPABILITY_ADVERTISED_NOT_REGISTERED**：Interpreter中提及但Registry未注册`file.write`、`file.manage`、`computer.control`、`commerce.*`、`media.video.create`、`web.research`和`system.diagnose`。阶段B必须把这些稳定收敛到unsupported，不得暗示已经可以执行。
 - **LOW · HERMES_CONFIG_VERSION_LAG**：当前Hermes配置版本提示`0 → 33`。本轮不迁移，留到独立维护窗口。
 - **PLANNED · CHECKPOINT-REPORT-CONSISTENCY-001**：S6完成后、阶段B最终收口之前实施。Checkpoint创建时若缺少对应任务报告，应拒绝`saved=true`。本轮只登记，不修改Checkpoint Runner、不新增门禁。
+- **MEDIUM · MULTI_TURN_CLARIFICATION_CONTEXT_NOT_SUPPORTED**：CQ-001现行契约将`clarify`定义为非执行消息，必须保留结构化`missingFields/questions`证据，但当前尚不支持跨消息、多轮澄清上下文恢复。由后续M1处理，本轮未修改测试或生产代码。
 - **HIGH · ENVIRONMENT_COMPATIBILITY_RISK（未修复）**：固定路径`D:\\Anaconda\\Scripts\\hermes.exe`必须在真人陌生Windows机器验收前处理。本轮不批量修改生产路径。
 - 盘符清单中其余31项`PRODUCTION_PATH`登记为`PENDING_ENVIRONMENT_COMPATIBILITY_REVIEW`，需逐项确认配置化、自动发现或保留理由后再修改。
 
-## 九、未裁定资产
+## 九、Task Lifecycle七项产品裁定与迁移顺序
+
+七项`CONTRACT_QUESTION`产品裁定已完成，并已固化到`verification/task-lifecycle-contract-migration/MIGRATION-PLAN.md`及`migration-plan.json`：
+
+1. **CQ-001**：`clarify`属于非执行消息，不创建Task、不进入`waiting_for_clarification`；必须保留结构化`missingFields/questions`。历史waiting Task断言标记为`SUPERSEDED_BY_NON_EXECUTION_CLARIFY_CONTRACT`并在后续迁移时逐字存档。
+2. **CQ-002**：迁移到TaskInterpreter受限纠正成功专项，保留模型调用2次、仅一次纠正、第二次合法输出通过。
+3. **CQ-003**：拆分为TaskInterpreter受限纠正失败专项，以及Runtime failed Task事实持久化和终态重放专项。
+4. **CQ-004**：迁移到Authorization/Confirmation Boundary专项，状态为`ACTIVE_SECURITY_GATE`，必须始终运行。
+5. **CQ-005**：Adapter层保持unsupported且Task=0；Scheduler层建立直接输入的`capability_unavailable`安全兜底，状态为`ACTIVE_SECURITY_GATE`。
+6. **CQ-006**：迁移到code能力专项；当前状态为`NOT_APPLICABLE_CAPABILITY_DISABLED`，能力进入Allowlist后自动转为`REQUIRED`，未PASS则Deployment BLOCKED。
+7. **CQ-007**：迁移到process能力专项；当前状态为`NOT_APPLICABLE_CAPABILITY_DISABLED`，`process.stop`进入Allowlist后自动转为`REQUIRED`，未PASS则Deployment BLOCKED。
+
+后续必须按独立原子工作包顺序执行，不得合并：
+
+```text
+M1 · Clarify与Interpreter契约迁移
+→ M2 · 安全边界专项
+→ M3 · 能力封存专项与机器阻断
+→ M4 · 两项OUTDATED_SAMPLE修正、Task Lifecycle重跑、阶段回归和契约收口
+```
+
+当前事实：
+
+```text
+M1=NOT_STARTED
+M2=NOT_STARTED
+M3=NOT_STARTED
+M4=NOT_STARTED
+测试迁移=NOT_STARTED
+生产修改=NONE
+新门禁=NONE
+完整回归=NOT_RUN
+当前状态=BLOCKED
+```
+
+在M1—M4按顺序完成并通过之前，不得进入完整阶段回归或最终收口。
+
+## 十、未裁定资产
 
 `E:\AI-Workbench`主仓库仍存在原有modified和untracked资产。它们尚未全部确定来源和权威性，不得清除，也不得自动视为正式成果。本次施工只将其作为只读参考，并在仓库外保存资产清单。

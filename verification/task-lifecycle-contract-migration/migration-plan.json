@@ -1,0 +1,323 @@
+{
+  "schema": "ai-workbench.task-lifecycle-contract-migration-plan/v1",
+  "taskId": "TASK-LIFECYCLE-CONTRACT-MIGRATION-PLAN-001",
+  "baselineHead": "e0d86283d692c4d471f03240919a2ee3cd26cb4d",
+  "branch": "candidate/interpreter-adapter-v1-work",
+  "planningOnly": true,
+  "implementedThisRound": {
+    "testMigration": false,
+    "productionChanges": false,
+    "newGates": false,
+    "allowlistExpansion": false,
+    "fullRegression": false,
+    "deployment": false
+  },
+  "currentAllowlist": ["runtime.status", "file.read"],
+  "decisions": [
+    {
+      "questionId": "CQ-001",
+      "currentContract": {
+        "object": "non-execution message",
+        "decision": "clarify",
+        "createsTask": false,
+        "entersWaitingForClarification": false,
+        "requiredEvidence": ["missingFields", "questions"]
+      },
+      "historicalContractDisposition": {
+        "status": "SUPERSEDED_BY_NON_EXECUTION_CLARIFY_CONTRACT",
+        "historicalAssertionsMustBeArchivedVerbatim": true,
+        "mayExecuteInCurrentFormalGate": false
+      },
+      "migrationTarget": "non-execution-clarify-contract-specific-gate",
+      "technicalDebt": {
+        "severity": "MEDIUM",
+        "code": "MULTI_TURN_CLARIFICATION_CONTEXT_NOT_SUPPORTED"
+      }
+    },
+    {
+      "questionId": "CQ-002",
+      "migrationTarget": "task-interpreter-bounded-correction-success-specific-gate",
+      "mustPreserve": [
+        "modelCallCount=2",
+        "onlyOneCorrectionAttempt",
+        "secondValidOutputPasses"
+      ]
+    },
+    {
+      "questionId": "CQ-003",
+      "splitContracts": [
+        {
+          "id": "CQ-003-A",
+          "target": "task-interpreter-bounded-correction-failure-specific-gate",
+          "mustPreserve": ["/Task Interpreter/ error", "mustNotMasqueradeAsClarification"]
+        },
+        {
+          "id": "CQ-003-B",
+          "target": "runtime-failed-task-fact-persistence-and-terminal-replay-specific-gate",
+          "mustPreserve": ["failedFactPersisted", "failedFactReplayable"]
+        }
+      ]
+    },
+    {
+      "questionId": "CQ-004",
+      "migrationTarget": "authorization-confirmation-boundary-specific-gate",
+      "specialGateState": "ACTIVE_SECURITY_GATE",
+      "mustPreserve": ["needs_confirmation", "providerStarts=0", "runs=0", "sideEffects=0"]
+    },
+    {
+      "questionId": "CQ-005",
+      "contracts": [
+        {
+          "layer": "Adapter",
+          "contract": "unregistered-or-disabled-capability-is-unsupported-before-task-creation",
+          "createsTask": false
+        },
+        {
+          "layer": "Scheduler",
+          "contract": "direct-scheduler-input-for-unregistered-capability-returns-capability_unavailable",
+          "specialGateState": "ACTIVE_SECURITY_GATE",
+          "providerStarts": 0,
+          "runs": 0,
+          "terminalReplayRequired": true
+        }
+      ]
+    },
+    {
+      "questionId": "CQ-006",
+      "migrationTarget": "code-capability-specific-gate",
+      "specialGateState": "NOT_APPLICABLE_CAPABILITY_DISABLED",
+      "activationCapabilities": ["code.read", "code.modify", "code.execute"],
+      "mustArchiveVerbatim": ["toolUsed=codex", "codexCalls=1", "trusted authorization", "verified terminal result"],
+      "whenCapabilityAllowed": "REQUIRED",
+      "failedRequiredGateEffect": "DEPLOYMENT_BLOCKED"
+    },
+    {
+      "questionId": "CQ-007",
+      "migrationTarget": "process-capability-specific-gate",
+      "specialGateState": "NOT_APPLICABLE_CAPABILITY_DISABLED",
+      "activationCapabilities": ["process.list", "process.stop"],
+      "mustArchiveVerbatim": ["toolUsed=process.stop", "processStopCalls=1", "trusted authorization", "verified side effect"],
+      "whenCapabilityAllowed": "REQUIRED",
+      "failedRequiredGateEffect": "DEPLOYMENT_BLOCKED"
+    }
+  ],
+  "specialGateStateMachine": {
+    "states": {
+      "ACTIVE_SECURITY_GATE": {
+        "mustRunRegardlessOfUserFacingCapabilityExposure": true,
+        "appliesTo": ["CQ-004", "CQ-005-Scheduler"],
+        "notRunOrNotPass": "DEPLOYMENT_BLOCKED"
+      },
+      "NOT_APPLICABLE_CAPABILITY_DISABLED": {
+        "executesBusinessSideEffectTest": false,
+        "countsAsPass": false,
+        "reporting": "show capability names and count separately",
+        "mayBeUsedAsFormalGatePassSkip": false
+      },
+      "REQUIRED": {
+        "activation": "capability enters Allowlist",
+        "mustExecuteAndPass": true,
+        "notPass": "DEPLOYMENT_BLOCKED"
+      }
+    },
+    "machineRules": [
+      {
+        "if": "capability in Allowlist AND specificGateState == NOT_APPLICABLE_CAPABILITY_DISABLED",
+        "then": ["FAIL", "DEPLOYMENT_BLOCKED"]
+      },
+      {
+        "if": "specificGateState == ACTIVE_SECURITY_GATE AND (notRun OR notPass)",
+        "then": ["DEPLOYMENT_BLOCKED"]
+      },
+      {
+        "if": "specificGateState == NOT_APPLICABLE_CAPABILITY_DISABLED",
+        "then": ["doNotCountAsPass", "reportCapabilityName", "incrementDisabledCapabilityCount"]
+      }
+    ],
+    "forbiddenMechanism": "registered-as-deferred-and-total-gate-still-reported-all-pass"
+  },
+  "workPackages": [
+    {
+      "id": "M1",
+      "name": "Clarify与Interpreter契约迁移",
+      "questions": ["CQ-001", "CQ-002", "CQ-003"],
+      "executionOrder": 1,
+      "proposedModifiedFiles": [
+        "scripts/verify-task-lifecycle-001.mjs",
+        "scripts/verify-task-interpreter.mjs",
+        "scripts/verify-task-interpreter-fixture-contracts.mjs",
+        "scripts/task-interpreter-contract-fixtures.mjs"
+      ],
+      "proposedNewTestFiles": [
+        "scripts/verify-non-execution-clarify-contract-001.mjs",
+        "scripts/verify-task-interpreter-bounded-correction-001.mjs",
+        "scripts/verify-runtime-failed-task-replay-001.mjs",
+        "verification/task-lifecycle-contract-migration/archive/CQ-001-waiting-for-clarification-historical-fixture.mjs.txt"
+      ],
+      "preservedAssertions": [
+        "missingFields/questions structured evidence",
+        "model calls=2",
+        "only one correction attempt",
+        "second valid interpretation passes",
+        "/Task Interpreter/ error",
+        "interpreter failure is not clarification",
+        "failed fact persists and replays"
+      ],
+      "supersededAssertions": [
+        "CQ-001 waiting_for_clarification Task assertion in current formal Runtime gate is SUPERSEDED_BY_NON_EXECUTION_CLARIFY_CONTRACT"
+      ],
+      "safetyBoundary": [
+        "clarify remains Task=0/Run=0/Scheduler=0/Provider=0/Model=0",
+        "historical assertion archived verbatim",
+        "no restored chat Task path",
+        "failed replay uses a real persisted failed Task, not direct terminalResult construction"
+      ],
+      "acceptanceMetrics": [
+        "clarify structured missingFields/questions preserved",
+        "clarify message idempotency passes",
+        "correction success calls=2 and exactly one retry",
+        "correction failure retains Task Interpreter error and not-clarification invariant",
+        "failed Task second handling replayed=true with zero new Run/Provider/Final/reply"
+      ],
+      "estimatedCheckpoint": "TASK-LIFECYCLE-CONTRACT-MIGRATION-M1-CLARIFY-INTERPRETER-001"
+    },
+    {
+      "id": "M2",
+      "name": "安全边界专项",
+      "questions": ["CQ-004", "CQ-005"],
+      "executionOrder": 2,
+      "proposedModifiedFiles": [
+        "scripts/verify-task-lifecycle-001.mjs",
+        "scripts/verify-authorization-boundary-001.mjs",
+        "scripts/authorization-context-fixtures.mjs"
+      ],
+      "proposedNewTestFiles": [
+        "scripts/verify-authorization-confirmation-boundary-001.mjs",
+        "scripts/verify-scheduler-capability-unavailable-fallback-001.mjs"
+      ],
+      "preservedAssertions": [
+        "needs_confirmation",
+        "Provider=0",
+        "Run=0",
+        "sideEffects=0",
+        "capability_unavailable",
+        "terminal capability_unavailable fact can replay"
+      ],
+      "supersededAssertions": [
+        "pay/video user-message samples are no longer valid current Runtime inputs for these Scheduler-layer contracts"
+      ],
+      "safetyBoundary": [
+        "both gates are ACTIVE_SECURITY_GATE",
+        "direct Scheduler fixture must not broaden Adapter Allowlist",
+        "no provider invocation or authorization consumption",
+        "ACTIVE_SECURITY_GATE cannot be archived or reported as not applicable"
+      ],
+      "acceptanceMetrics": [
+        "confirmation gate always runs and returns needs_confirmation with zero Provider/Run/side effects",
+        "Scheduler direct unregistered-capability input returns capability_unavailable",
+        "Scheduler fallback creates zero Provider and zero Run",
+        "persisted terminal fallback fact is replayable",
+        "not-run or fail blocks Deployment"
+      ],
+      "estimatedCheckpoint": "TASK-LIFECYCLE-CONTRACT-MIGRATION-M2-SECURITY-BOUNDARIES-001"
+    },
+    {
+      "id": "M3",
+      "name": "能力封存专项与机器阻断",
+      "questions": ["CQ-006", "CQ-007"],
+      "executionOrder": 3,
+      "proposedModifiedFiles": [
+        "scripts/verify-task-lifecycle-001.mjs",
+        "scripts/run-mandatory-gates.mjs",
+        "CURRENT_STATUS.md"
+      ],
+      "proposedNewTestFiles": [
+        "scripts/verify-disabled-capability-gate-state-001.mjs",
+        "scripts/verify-code-capability-contract-001.mjs",
+        "scripts/verify-process-capability-contract-001.mjs",
+        "verification/task-lifecycle-contract-migration/archive/CQ-006-code-execution-historical-fixture.mjs.txt",
+        "verification/task-lifecycle-contract-migration/archive/CQ-007-process-stop-historical-fixture.mjs.txt"
+      ],
+      "preservedAssertions": [
+        "toolUsed=codex",
+        "codexCalls=1",
+        "code trusted authorization",
+        "code verified terminal result",
+        "toolUsed=process.stop",
+        "processStopCalls=1",
+        "process trusted authorization",
+        "process verified side effect"
+      ],
+      "supersededAssertions": [
+        "code and process samples must not execute inside current Task Lifecycle gate while capabilities are disabled"
+      ],
+      "safetyBoundary": [
+        "NOT_APPLICABLE_CAPABILITY_DISABLED is not PASS",
+        "disabled capability names and count are explicit in aggregate report",
+        "capability in Allowlist while still disabled-state is FAIL",
+        "REQUIRED gate failure blocks Deployment",
+        "no registration-only skip channel"
+      ],
+      "acceptanceMetrics": [
+        "code/process disabled-state reported separately and passCount unchanged",
+        "machine fixture proves Allowlist activation converts status to REQUIRED",
+        "stale disabled-state under active capability fails",
+        "archived historical source/assertions are byte-preserved",
+        "Deployment decision blocks on failed REQUIRED gate"
+      ],
+      "estimatedCheckpoint": "TASK-LIFECYCLE-CONTRACT-MIGRATION-M3-CAPABILITY-GATE-STATES-001"
+    },
+    {
+      "id": "M4",
+      "name": "OUTDATED_SAMPLE修正、Task Lifecycle重跑、阶段回归和契约收口",
+      "questions": [],
+      "outdatedSamples": ["cancel-control-transition", "restart-recovery-replays-terminal-result"],
+      "executionOrder": 4,
+      "proposedModifiedFiles": [
+        "scripts/verify-task-lifecycle-001.mjs",
+        "verification/task-replay-and-message-idempotency/CONTRACT.md",
+        "verification/TASK-REPLAY-AND-NON-EXECUTION-IDEMPOTENCY-CONTRACT-001/report.md",
+        "CURRENT_STATUS.md"
+      ],
+      "proposedNewTestFiles": [
+        "none unless an isolated lifecycle fixture helper is required"
+      ],
+      "preservedAssertions": [
+        "second.replayed === true",
+        "completed/failed/cancelled coverage",
+        "zero duplicate Provider/Run/Final/Progress/assistant reply",
+        "activeRunId terminal constraint",
+        "original finalResult preserved"
+      ],
+      "supersededAssertions": [
+        "hello as a business Task replay sample",
+        "direct TaskStore-only cancellation precondition when real business Task creation is required"
+      ],
+      "safetyBoundary": [
+        "runtime.status uses isolated state sources",
+        "file.read uses os.tmpdir and isolated allowedRoots",
+        "cancellation uses official cancel entry",
+        "no production Runtime or IPC access",
+        "M1-M3 checkpoints must already PASS before M4 starts"
+      ],
+      "acceptanceMetrics": [
+        "both OUTDATED_SAMPLE replacements prove original lifecycle semantics",
+        "Task Lifecycle exits 0",
+        "specified phase regression suite passes",
+        "Task replay and message idempotency contract report completed",
+        "worktree and staging clean after checkpoint"
+      ],
+      "estimatedCheckpoint": "TASK-LIFECYCLE-CONTRACT-MIGRATION-M4-LIFECYCLE-REGRESSION-CLOSEOUT-001"
+    }
+  ],
+  "executionConstraint": "M1, M2, M3 and M4 are separate atomic executions and must not be merged.",
+  "currentStatus": {
+    "migrationImplemented": false,
+    "productionModified": false,
+    "testsModified": false,
+    "blocked": true,
+    "fullRegressionAllowed": false,
+    "finalCloseoutAllowed": false,
+    "deployment": "NOT_DEPLOYED"
+  }
+}
