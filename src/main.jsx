@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import { toWritableDataDto } from './lib/writable-data-dto.js';
 import './styles.css';
 
 const internalActionTexts = new Set(['把这条消息同步为任务']);
