@@ -1,0 +1,19 @@
+{
+  "schema": "ai-workbench.trust-field-path-matching-audit/v1",
+  "function": "server.mjs:findClientSuppliedTrustFields",
+  "callSites": [
+    {"endpoint":"POST /api/runs","line":2176,"endpointRoot":"payload is one formal Run root"},
+    {"endpoint":"PUT /api/data","line":2313,"endpointRoot":"payload.runs[] are formal Run roots"}
+  ],
+  "protocolRunRoots": ["POST /api/runs payload", "PUT /api/data payload.runs[]"],
+  "opaqueBoundaries": ["input","output","evidence","errorRaw","errorUserMessage","memorySuggestions"],
+  "currentTraversal": "Recursive traversal of every array/object descendant; matches by key name at any depth",
+  "currentKeyNames": ["verified","verification","trustedTask","verificationPassed","finalEvidence","finalResult","verifierId","verifiedAt","verificationResult","runEvidenceValidated","legacyVerifiedClaimObserved","verification.passed"],
+  "currentFalsePositivePaths": ["runs[0].output.importedRecord.verified","runs[0].input.payload.verification","runs[0].evidence.source.finalResult.verified","runs[0].memorySuggestions[0].finalEvidence"],
+  "currentTruePositivePaths": ["verified","verification","verificationPassed","verificationResult","finalEvidence","finalResult.verified","verifierId","verifiedAt","runEvidenceValidated","legacyVerifiedClaimObserved","trustedTask","runs[0].verified","runs[0].verification","runs[0].finalResult.verified"],
+  "dtoPolicySource": "src/lib/server-owned-run-paths.js",
+  "serverPolicySource": "server.mjs local key-name Set",
+  "sharedPolicyPossible": true,
+  "scopeRisks": ["False positives inside opaque business data","Server and DTO policy drift","finalResult root rejected despite only finalResult.verified being externally forbidden"],
+  "recommendedCanonicalPolicy": "shared/run-trust-field-policy.mjs with formal Run roots, EXACT/SUBTREE modes and explicit opaque boundaries"
+}
