@@ -426,9 +426,9 @@ export class AgentRuntime {
         const stopped = results.find((item) => item.capabilityId === 'process.stop');
         if (!stopped) throw new Error('process.stop result missing');
         const text = `Completed: ${interpretation.goal}. Stopped PID ${stopped.result.target.pid} and verified it is absent.`;
-        await this.sessions.appendMessage(state, { role: 'tool', text: JSON.stringify({ capability: 'process.stop', provider: stopped.providerId, pid: stopped.result.target.pid, verified: true }), messageId: job.messageId, provider: stopped.providerId, taskId });
+        await this.sessions.appendMessage(state, { role: 'tool', text: JSON.stringify({ capability: 'process.stop', provider: stopped.providerId, pid: stopped.result.target.pid, verified: false, executionStarted: true, executionCompleted: true, postconditionObserved: stopped.result.verification?.pidAbsent === true }), messageId: job.messageId, provider: stopped.providerId, taskId });
         await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: stopped.providerId, taskId });
-        return this.finalize(task, { messageId: job.messageId, text, provider: stopped.providerId, toolUsed: 'process.stop', verified: true, interpretation, schedulerStatus: capabilityPlan.status, capabilityResults: results, metrics: { readFileCalls: 0, codexCalls: 0, processStopCalls: 1 } }, progress);
+        return this.finalize(task, { messageId: job.messageId, text, provider: stopped.providerId, toolUsed: 'process.stop', verified: false, executionStarted: true, executionCompleted: true, postconditionObserved: stopped.result.verification?.pidAbsent === true, interpretation, schedulerStatus: capabilityPlan.status, capabilityResults: results, metrics: { readFileCalls: 0, codexCalls: 0, processStopCalls: 1 } }, progress);
       }
 
       const codeTask = interpretation.taskType === 'code_task' && interpretation.requiredCapabilities.some((item) => item.startsWith('code.'));
@@ -448,7 +448,7 @@ export class AgentRuntime {
         const finalModel = await this.models.express({ messages: [{ role: 'system', content: 'Summarize the verified execution result as the final user reply.' }, { role: 'user', content: `Original request: ${job.text}\nExecution result: ${execution.text}` }] });
         const text = this.verifier.verifyModelResult(finalModel).text;
         await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: 'deepseek', taskId });
-        return this.finalize(task, { messageId: job.messageId, text, provider: 'deepseek', providerSessionId: execution.sessionId, toolUsed: 'codex', verified: true, classification, metrics: { readFileCalls: 0, codexCalls: 1 } }, progress);
+        return this.finalize(task, { messageId: job.messageId, text, provider: 'deepseek', providerSessionId: execution.sessionId, toolUsed: 'codex', verified: false, executionStarted: true, executionCompleted: true, postconditionObserved: false, classification, metrics: { readFileCalls: 0, codexCalls: 1 } }, progress);
       }
 
       const conversationTask = interpretation.taskType === 'chat' || interpretation.requiredCapabilities.length === 0;
@@ -457,7 +457,7 @@ export class AgentRuntime {
       const finalModel = await this.models.express({ messages: [{ role: 'system', content: 'Answer naturally from the structured task interpretation. Do not claim unexecuted tools or operations.' }, { role: 'user', content: JSON.stringify({ task: interpretation, userMessage: job.text, conversationContext: historyPrompt(state.originalMessages || []) }) }] });
       const text = this.verifier.verifyModelResult(finalModel).text;
       await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: 'deepseek', taskId });
-      return this.finalize(task, { messageId: job.messageId, text, provider: 'deepseek', providerSessionId: '', toolUsed: '', verified: true, interpretation, schedulerStatus: capabilityPlan.status, classification, metrics: { readFileCalls: 0, codexCalls: 0 } }, progress);
+      return this.finalize(task, { messageId: job.messageId, text, provider: 'deepseek', providerSessionId: '', toolUsed: '', verified: false, handled: true, rendered: true, executionStarted: false, executionCompleted: false, interpretation, schedulerStatus: capabilityPlan.status, classification, metrics: { readFileCalls: 0, codexCalls: 0 } }, progress);
     } catch (error) {
       await this.failTask(task, error, progress, error?.runtimeFailureContext || {});
       throw error;

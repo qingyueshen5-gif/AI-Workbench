@@ -1355,7 +1355,10 @@ async function executeWorkbenchToolCall({
       ...patchedRun,
       id: run.id,
       status: verification.ok ? 'done' : 'failed',
-      verified: verification.ok,
+      verified: false,
+      executionStarted: true,
+      executionCompleted: Boolean(patchedRun.finishedAt),
+      postconditionObserved: verification.ok,
       verificationResult: verification,
       errorRaw: verification.ok ? patchedRun.errorRaw : { adapterError: adapterResult.error || null, verification },
       errorUserMessage: verification.ok ? '' : normalizedRunError.userMessage,
@@ -1860,7 +1863,10 @@ const server = createServer(async (request, response) => {
       run = {
         ...run,
         status: verification.ok ? run.status : 'failed',
-        verified: verification.ok,
+        verified: false,
+        executionStarted: true,
+        executionCompleted: Boolean(run.finishedAt),
+        postconditionObserved: verification.ok,
         verificationResult: verification,
         errorRaw: verification.ok ? run.errorRaw : { adapterError: adapterResult.error || null, verification },
         errorUserMessage: verification.ok ? run.errorUserMessage : normalizedRunError.userMessage,
@@ -2044,7 +2050,10 @@ const server = createServer(async (request, response) => {
         costEstimate: payload.costEstimate || { currency: 'USD', amount: 0, note: 'MVP estimate' },
         startedAt: payload.startedAt || new Date().toISOString(),
         finishedAt: payload.finishedAt || '',
-        verified: Boolean(payload.verified),
+        verified: false,
+        executionStarted: Boolean(payload.startedAt),
+        executionCompleted: Boolean(payload.finishedAt),
+        postconditionObserved: false,
         verificationResult: payload.verificationResult || null
       });
       await writeData({ ...currentData, runs: [run, ...currentData.runs] });
@@ -2113,7 +2122,10 @@ const server = createServer(async (request, response) => {
           ? {
               ...item,
               status: nextStatus,
-              verified: verification.ok,
+              verified: false,
+              executionStarted: true,
+              executionCompleted: Boolean(item.finishedAt),
+              postconditionObserved: verification.ok,
               verificationResult: verification,
               errorRaw: verification.ok ? item.errorRaw : { verification },
               errorUserMessage: verification.ok ? item.errorUserMessage : normalizedVerificationError.userMessage,

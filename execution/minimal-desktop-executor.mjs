@@ -41,7 +41,7 @@ export async function verifyMinimalResult(plan, execution) {
   for (const item of execution.results || []) {
     const stats = await fs.stat(item.path);
     if (!stats.isFile()) throw new Error('本地文件验证失败');
-    results.push({ ...item, verified: true, extension: extname(item.path), currentSha256: await sha256(item.path) });
+    results.push({ ...item, verified: false, executionStarted: true, executionCompleted: true, postconditionObserved: true, extension: extname(item.path), currentSha256: await sha256(item.path) });
   }
   return { ok: true, actions: plan.actions?.length || 0, results };
 }
