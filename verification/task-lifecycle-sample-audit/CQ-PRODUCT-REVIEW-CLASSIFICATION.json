@@ -1,0 +1,72 @@
+{
+  "schema": "ai-workbench.task-lifecycle-cq-product-review/v1",
+  "sourceEvidenceCommit": "16dc1dda5090c3b4ff1a7ac6d0268faf4310f082",
+  "allowlist": ["runtime.status", "file.read"],
+  "voidedProposal": {
+    "name": "DEFERRED_PENDING_ALLOWLIST",
+    "status": "VOID",
+    "reason": "A registration-based skip path inside the formal gate would lower test standards."
+  },
+  "futureDirectionRecordOnly": {
+    "status": "NOT_IMPLEMENTED",
+    "concept": "Disabled capabilities may later move to independent capability-specific gates with NOT_APPLICABLE_CAPABILITY_DISABLED; when enabled they must automatically execute and PASS before Deployment."
+  },
+  "questions": [
+    {
+      "questionId": "CQ-001",
+      "actualCapability": "clarification / structured missing-context handling",
+      "inStageAllowlist": "NO",
+      "recommendedCategory": "D",
+      "recommendedCategoryLabel": "需要重新定义产品契约",
+      "reason": "Current clarify/respond is intentionally non-execution and creates no Task, while the old assertions require waiting_for_clarification Task state. No allowlisted capability expresses that lifecycle."
+    },
+    {
+      "questionId": "CQ-002",
+      "actualCapability": "TaskInterpreter structured-output correction plus chat completion",
+      "inStageAllowlist": "NO",
+      "recommendedCategory": "B",
+      "recommendedCategoryLabel": "迁移到独立能力专项",
+      "reason": "The core ability is TaskInterpreter correction, not current Runtime Task replay. The deterministic Adapter prevents this input from reaching TaskInterpreter, so a direct interpreter contract is the only way to preserve calls=2 without weakening assertions."
+    },
+    {
+      "questionId": "CQ-003",
+      "actualCapability": "TaskInterpreter bounded-correction failure and failed-Task recording",
+      "inStageAllowlist": "NO",
+      "recommendedCategory": "B",
+      "recommendedCategoryLabel": "迁移到独立能力专项",
+      "reason": "The specific capability under test is interpreter validation/failure. A grounded-provider failure would test a different failure boundary, while the current Adapter prevents hello from reaching the interpreter."
+    },
+    {
+      "questionId": "CQ-004",
+      "actualCapability": "commerce.payment confirmation gating",
+      "inStageAllowlist": "NO",
+      "recommendedCategory": "B",
+      "recommendedCategoryLabel": "迁移到独立能力专项",
+      "reason": "needs_confirmation belongs to the confirmation/authorization capability boundary. Neither allowlisted capability requires confirmation, so replacing the sample cannot preserve the original lifecycle."
+    },
+    {
+      "questionId": "CQ-005",
+      "actualCapability": "media.video.create unavailable-capability scheduling",
+      "inStageAllowlist": "NO",
+      "recommendedCategory": "D",
+      "recommendedCategoryLabel": "需要重新定义产品契约",
+      "reason": "The product must decide whether disabled capabilities are rejected before Task creation as unsupported or still create a Task that terminates capability_unavailable. Those are different product contracts, not just different test locations."
+    },
+    {
+      "questionId": "CQ-006",
+      "actualCapability": "code.read + code.modify + code.execute through Codex",
+      "inStageAllowlist": "NO",
+      "recommendedCategory": "B",
+      "recommendedCategoryLabel": "迁移到独立能力专项",
+      "reason": "The assertions specifically require Codex and one code execution. runtime.status/file.read cannot substitute. The code capability should be verified by its own gate when enabled and must PASS before Deployment."
+    },
+    {
+      "questionId": "CQ-007",
+      "actualCapability": "process.list + process.stop",
+      "inStageAllowlist": "NO",
+      "recommendedCategory": "B",
+      "recommendedCategoryLabel": "迁移到独立能力专项",
+      "reason": "Records the established owner ruling: do not substitute runtime.status/file.read; restore and require the process.stop capability-specific gate when process.stop is reopened."
+    }
+  ]
+}
