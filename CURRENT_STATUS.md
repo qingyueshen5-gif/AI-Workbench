@@ -76,6 +76,11 @@ RUN-FENCING候选（已通过、未部署）
 - **HIGH · NON_TERMINAL_RUNTIME_VERIFIED_TRUE_WITHOUT_BOUND_VERIFIER**：`agents/agent-runtime.mjs:278,330,342,348,350`的控制拦截、clarification、confirmation和capability_unavailable路径在缺少Task/Run/revision绑定Verifier PASS时输出或持久化`verified=true`。本轮terminalResult修复不得修改这些写入或非执行路径；统一由`VERIFIED-SEMANTICS-UNIFICATION-001`处理。状态=`OPEN`；deploymentImpact=`BLOCKED`。
 - **HIGH · LEGACY_EXECUTION_RESULTS_VERIFIED_TRUE_WITHOUT_UNIFORM_RUN_BINDING**：`agents/agent-runtime.mjs:408,410,430,439`的process.stop、code执行和conversation路径使用异构检查后直接输出`verified=true`，缺少统一持久化Task/Run/revision绑定Verifier PASS。本轮禁止修改成功执行路径；统一由`VERIFIED-SEMANTICS-UNIFICATION-001`处理。状态=`OPEN`；deploymentImpact=`BLOCKED`。
 - **HIGH · NON_EXECUTION_RENDERER_VERIFIED_TRUE_SEMANTICS_UNBOUND**：`agents/interpreter-adapter-contract.mjs:68`的非执行renderer使用共享字段`verified=true`，但没有Task/Run/revision身份，机器协议无法区分renderer有效与业务验证成功。本轮禁止修改非执行旁路；统一由`VERIFIED-SEMANTICS-UNIFICATION-001`处理。状态=`OPEN`；deploymentImpact=`BLOCKED`。
+- **HIGH · USER_NOT_INFORMED_OF_EXECUTION_FAILURE_UNVERIFIED**：Runtime执行失败时直接throw；当前尚未确认Delivery或Gateway是否保证向用户发送明确失败通知。本轮不修改用户文案、Delivery、Gateway或IPC；必须在独立工作包中只读核查责任层后裁定。状态=`OPEN`；deploymentImpact=`BLOCKED`。
+- **MEDIUM · TASK_INTERPRETER_NO_LONGER_ON_PRODUCTION_PATH**：`AgentRuntime`仍保存`this.taskInterpreter`，但`handle()`正式路径不存在可达调用，当前业务理解由`InterpreterAdapter`完成。CQ-002与CQ-003-A只证明组件自身契约，不证明其仍在生产链。M4必须明确选择重新接入真实模型理解链或正式移除死代码。状态=`OPEN`。
+- **RESOLVED · FAILED_TASK_FAILURE_FACT_INCOMPLETE**：Task.failure已持久化稳定`errorCode/failureStage/failureClassification/taskId/runId/taskRevision/failedAt/message/name`及受控`causeCode`，并绑定正式失败Run。
+- **RESOLVED · TERMINAL_TASK_REPLAY_CLASSIFICATION_MISSING**：业务Task终态重放现显式返回`replayed=true/taskReplayed=true/messageReplayed=false`；非执行消息重放保持相反分类。
+- **RESOLVED · TERMINAL_REPLAY_VERIFIED_DEFAULT_TRUE_ON_FAILED_TASK**：terminalResult不再默认true；failed、cancelled及capability_unavailable重放均fail-closed，completed仅在Run verification与Final identity全部绑定一致时为true。
 - **HIGH · ENVIRONMENT_COMPATIBILITY_RISK（未修复）**：固定路径`D:\\Anaconda\\Scripts\\hermes.exe`必须在真人陌生Windows机器验收前处理。本轮不批量修改生产路径。
 - 盘符清单中其余31项`PRODUCTION_PATH`登记为`PENDING_ENVIRONMENT_COMPATIBILITY_REVIEW`，需逐项确认配置化、自动发现或保留理由后再修改。
 

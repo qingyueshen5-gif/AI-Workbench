@@ -3,17 +3,36 @@
 ```text
 task=TASK-LIFECYCLE-M1-CQ003-INTERPRETER-FAILURE-AND-FAILED-TASK-001
 cq003A=PASS
-cq003B=DEFERRED_PENDING_PRODUCT_DECISION
+cq003B=COMPLETED_BY_RE_ANCHORED_CONTRACT
 cq003BConclusion=B. HISTORICAL_CONTRACT_DRIFT
-productionCodeTouched=false
-impactRegression=6/6 PASS
+productDecision=RE_ANCHORED_TO_EXECUTION_STAGE_FAILURE_BY_PRODUCT_DECISION
+productionCodeTouched=true
+impactRegression=PENDING_THIS_REPORT_UPDATE
 ```
 
-## CQ-003-B可行性
+## CQ-003-B产品重新锚定
 
-当前Runtime先执行确定性InterpreterAdapter；只有`execute`决策才创建Task。Task创建后的`interpreting`直接采用`adapterResult.taskDraft`，没有可达的TaskInterpreter调用。因此无法形成“Task已创建→TaskInterpreter失败→failTask→failed”的当前正式路径。
+原“Task已创建→TaskInterpreter失败→failed”的控制流仍为：
 
-没有恢复旧chat Task、提前创建占位Task、手工写failed状态或用其他失败替代。
+```text
+B. HISTORICAL_CONTRACT_DRIFT
+```
+
+产品负责人已将其承载的通用安全语义重新锚定到当前正式可达边界：
+
+```text
+EXECUTION_STAGE_FAILED_TASK_PERSISTENCE_AND_REPLAY
+```
+
+专项：
+
+```text
+scripts/verify-failed-task-persistence-and-replay-001.mjs
+```
+
+真实Provider隔离失败通过Runtime正式错误处理产生结构化failed Task；同一正式Task身份重放时Provider、Run、Final、Progress、assistant和Delivery相对增量均为0，Task.failure哈希保持不变，`taskReplayed=true`、`messageReplayed=false`、`verified=false`。
+
+没有恢复旧chat Task、提前创建占位Task、手工写failed状态或恢复不可达TaskInterpreter入口。
 
 ## CQ-003-A
 
@@ -42,20 +61,14 @@ Run=0
 
 ## 影响面回归
 
-基础5项与CQ-003-A专项真实重跑，共6项，全部exitCode=0。未触及生产代码，因此未扩展到14项。
-
-机器证据：
-
-```text
-verification/TASK-LIFECYCLE-M1-CQ003-INTERPRETER-FAILURE-AND-FAILED-TASK-001/impact-regression.json
-```
+本轮生产代码已触及，完整影响面回归将在独立Checkpoint `TERMINAL-TASK-REPLAY-VERIFICATION-IMPACT-REGRESSION-001`执行。本报告更新时CQ-003-A与CQ-003-B'专项均已独立PASS；不得以旧6/6替代本轮完整回归。
 
 ## 状态
 
 ```text
-CQ-003整体=PARTIALLY_COMPLETED_BLOCKED_BY_PRODUCT_DECISION
+CQ-003整体=COMPONENT_CONTRACTS_COMPLETED_IMPACT_REGRESSION_PENDING
 CQ-003-A=COMPLETED
-CQ-003-B=NOT_EXECUTED
+CQ-003-B'=COMPLETED_BY_RE_ANCHORED_CONTRACT
 旧脚本迁出=NOT_STARTED
 M1聚合门禁=NOT_STARTED
 ```
