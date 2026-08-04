@@ -14,7 +14,8 @@ actions/targets/constraints/requiredCapabilities/successCriteria必须为数组�
 function parseJson(text) { return JSON.parse(String(text||'').trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'')); }
 function correctionPrompt(error, originalText) { return `上一次Task Interpreter输出不符合契约：${error.message}。请只纠正JSON结构；普通问候、闲聊、问答必须使用taskType=chat。原始用户消息：${originalText}`; }
 export function validateTaskInterpretation(input) {
-  const value=stripInterpretationAuthorization(input);
+  const sanitized=stripInterpretationAuthorization(input);
+  const value=Object.fromEntries(taskSchema.required.filter((key)=>key in (sanitized||{})).map((key)=>[key,sanitized[key]]));
   for (const key of taskSchema.required) if (!(key in (value||{}))) throw new Error(`Task Interpreter缺少字段 ${key}`);
   if (!allowedTaskTypes.has(value.taskType)) throw new Error('Task Interpreter taskType无效');
   for (const key of ['actions','targets','constraints','requiredCapabilities','successCriteria']) if (!Array.isArray(value[key])) throw new Error(`Task Interpreter ${key}必须为数组`);
