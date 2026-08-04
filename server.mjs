@@ -227,9 +227,27 @@ function normalizeTasks(tasks) {
   });
 }
 
+function deriveLegacyRunVerified(run) {
+  const task = run?.trustedTask;
+  const verification = run?.verification;
+  const finalResult = run?.finalResult;
+  if (!task || task.status !== 'completed' || task.failure) return false;
+  if (!run || run.status !== 'completed') return false;
+  if (verification?.passed !== true || finalResult?.verified !== true) return false;
+  const revision = verification.taskRevision;
+  if (revision === undefined || revision === null) return false;
+  return verification.taskId === task.id
+    && verification.runId === run.id
+    && finalResult.taskId === task.id
+    && finalResult.runId === run.id
+    && finalResult.taskRevision === revision;
+}
+
 function normalizeRuns(runs) {
   return (Array.isArray(runs) ? runs : []).map((run) => {
     const startedAt = run.startedAt || run.createdAt || new Date().toISOString();
+    const trustedVerified = deriveLegacyRunVerified(run);
+    const legacyVerifiedClaimObserved = run.verified === true && !trustedVerified;
     return {
       id: run.id || createId('run'),
       taskId: run.taskId || '',
@@ -244,7 +262,8 @@ function normalizeRuns(runs) {
       costEstimate: run.costEstimate || { currency: 'USD', amount: 0, note: 'MVP estimate' },
       startedAt,
       finishedAt: run.finishedAt || '',
-      verified: run.verified === true,
+      verified: trustedVerified,
+      legacyVerifiedClaimObserved,
       handled: run.handled === true,
       rendered: run.rendered === true,
       policyApplied: run.policyApplied === true,
@@ -569,7 +588,6 @@ function createRunRecord({
   costEstimate = { currency: 'USD', amount: 0, note: 'MVP estimate' },
   startedAt = new Date().toISOString(),
   finishedAt = '',
-  verified = false,
   handled = false,
   rendered = false,
   policyApplied = false,
@@ -593,7 +611,8 @@ function createRunRecord({
     costEstimate,
     startedAt,
     finishedAt,
-    verified: verified === true,
+    verified: false,
+    legacyVerifiedClaimObserved: false,
     handled: handled === true,
     rendered: rendered === true,
     policyApplied: policyApplied === true,

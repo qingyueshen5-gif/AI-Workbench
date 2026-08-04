@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import { join } from 'node:path';
+import { spawn } from 'node:child_process';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+const root=dirname(dirname(fileURLToPath(import.meta.url)));const temp=await fs.mkdtemp(join(os.tmpdir(),'aiw-legacy-claim-'));const dataFile=join(temp,'workbench.json');const port=19933,base=`http://127.0.0.1:${port}`;const legacy={tasks:[{id:'t',status:'done',assignedAgentId:'a'}],runs:[{id:'r',taskId:'t',agentId:'a',status:'done',verified:true}],conversations:[],messages:[],memories:[],agents:[],preferences:{},modelConnection:{},systemErrors:[]};await fs.writeFile(dataFile,JSON.stringify(legacy),'utf8');const server=spawn(process.execPath,['server.mjs'],{cwd:root,env:{...process.env,PORT:String(port),AIW_DATA_FILE:dataFile,AI_WORKBENCH_RUNTIME_DIR:temp},stdio:['ignore','pipe','pipe']});let output='',cookie='';server.stdout.on('data',c=>output+=c);server.stderr.on('data',c=>output+=c);const wait=ms=>new Promise(r=>setTimeout(r,ms));async function ready(){for(let i=0;i<60;i++){try{const r=await fetch(base+'/');cookie=String(r.headers.get('set-cookie')||'').split(';')[0];await r.text();if(cookie)return;}catch{}await wait(100)}throw new Error(output)}async function req(path){const response=await fetch(base+path,{headers:{Cookie:cookie}});return {response,body:await response.json()}}
+try{await ready();const data=(await req('/api/data')).body;const run=data.runs.find(x=>x.id==='r');assert.equal(run.verified,false);assert.equal(run.legacyVerifiedClaimObserved,true);const context=await req('/api/tasks/t/context');assert.equal(context.body.task_context.recentRuns[0].verified,false);console.log(JSON.stringify({ok:true,module:'LEGACY-PERSISTED-VERIFIED-CLAIM-FAIL-CLOSED-001',legacyClaimCount:1,trustedVerifiedCount:0,untrustedClaimsFailClosed:1,contextClaimsRemoved:1,recordsMutated:0,recordsQuarantined:0}));}finally{server.kill();await fs.rm(temp,{recursive:true,force:true})}

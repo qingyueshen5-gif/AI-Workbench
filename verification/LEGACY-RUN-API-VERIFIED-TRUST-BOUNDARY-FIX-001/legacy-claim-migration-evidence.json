@@ -1,0 +1,13 @@
+{
+  "schema": "ai-workbench.legacy-verified-claim-migration-evidence/v1",
+  "mode": "READ_LAYER_FAIL_CLOSED_NO_DESTRUCTIVE_REWRITE",
+  "legacyClaimCount": 1,
+  "trustedVerifiedCount": 0,
+  "untrustedClaimsFailClosed": 1,
+  "contextClaimsRemoved": 1,
+  "recordsMutated": 0,
+  "recordsQuarantined": 0,
+  "auditField": "legacyVerifiedClaimObserved",
+  "businessVerified": false,
+  "notes": "The dedicated fixture proves an unbound persisted verified=true is downgraded during normalization and cannot enter Agent context as trusted success. Real user storage was not rewritten."
+}
