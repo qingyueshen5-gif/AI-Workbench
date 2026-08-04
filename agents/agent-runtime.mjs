@@ -286,7 +286,15 @@ export class AgentRuntime {
           provider: 'ai-workbench',
           providerSessionId: '',
           toolUsed: '',
-          verified: true,
+          verified: false,
+          handled: true,
+          rendered: Boolean(control.text),
+          policyApplied: true,
+          requiresUserInput: false,
+          confirmationRequired: control.kind === 'confirmation',
+          capabilityAvailable: true,
+          executionStarted: false,
+          executionCompleted: false,
           controlKind: control.kind,
           activeTaskId: control.activeTaskId,
           taskId: control.activeTaskId,
@@ -338,7 +346,7 @@ export class AgentRuntime {
           questions: interpretation.context.questions,
           confidence: interpretation.confidence
         }, progress);
-        return { text, provider: 'task-interpreter', toolUsed: '', verified: true, interpretation, schedulerStatus: 'needs_clarification', classification, activeTaskId: task.taskId, taskId: task.taskId, metrics: { readFileCalls: 0, codexCalls: 0 } };
+        return { text, provider: 'task-interpreter', toolUsed: '', verified: false, handled: true, rendered: true, policyApplied: false, requiresUserInput: true, confirmationRequired: false, capabilityAvailable: true, executionStarted: false, executionCompleted: false, interpretation, schedulerStatus: 'needs_clarification', classification, activeTaskId: task.taskId, taskId: task.taskId, metrics: { readFileCalls: 0, codexCalls: 0 } };
       }
 
       task = await this.transition(task, 'scheduling', 'scheduler_started', 'agent-runtime', { requiredCapabilities: interpretation.requiredCapabilities }, progress);
@@ -350,15 +358,15 @@ export class AgentRuntime {
         await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: 'capability-scheduler', taskId });
         task = await this.tasks.patch(task.taskId, { waitingFor: { confirmation: true, reason: 'capability_scheduler' } });
         await this.transition(task, 'waiting_for_confirmation', 'confirmation_required', 'capability-scheduler', { riskLevel: interpretation.riskLevel, requiredCapabilities: interpretation.requiredCapabilities }, progress);
-        return { text, provider: 'capability-scheduler', toolUsed: '', verified: true, interpretation, schedulerStatus: capabilityPlan.status, classification, activeTaskId: task.taskId, taskId: task.taskId, metrics: { readFileCalls: 0, codexCalls: 0 } };
+        return { text, provider: 'capability-scheduler', toolUsed: '', verified: false, handled: true, rendered: true, policyApplied: true, requiresUserInput: false, confirmationRequired: true, capabilityAvailable: true, executionStarted: false, executionCompleted: false, interpretation, schedulerStatus: capabilityPlan.status, classification, activeTaskId: task.taskId, taskId: task.taskId, metrics: { readFileCalls: 0, codexCalls: 0 } };
       }
 
       if (capabilityPlan.status === 'capability_unavailable') {
         const text = `Missing capabilities: ${capabilityPlan.missingCapabilities.join(', ')}. The task was not executed.`;
         await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: 'capability-scheduler', taskId });
-        task = await this.tasks.patch(task.taskId, { finalResult: { messageId: job.messageId, text, provider: 'capability-scheduler', toolUsed: '', verified: true, metrics: { readFileCalls: 0, codexCalls: 0 } } });
+        task = await this.tasks.patch(task.taskId, { finalResult: { messageId: job.messageId, text, provider: 'capability-scheduler', toolUsed: '', verified: false, handled: true, rendered: true, policyApplied: false, requiresUserInput: false, confirmationRequired: false, capabilityAvailable: false, executionStarted: false, executionCompleted: false, metrics: { readFileCalls: 0, codexCalls: 0 } } });
         await this.transition(task, 'capability_unavailable', 'capability_unavailable', 'capability-scheduler', { missingCapabilities: capabilityPlan.missingCapabilities }, progress);
-        return { text, provider: 'capability-scheduler', toolUsed: '', verified: true, interpretation, schedulerStatus: capabilityPlan.status, classification, activeTaskId: task.taskId, taskId: task.taskId, metrics: { readFileCalls: 0, codexCalls: 0 } };
+        return { text, provider: 'capability-scheduler', toolUsed: '', verified: false, handled: true, rendered: true, policyApplied: false, requiresUserInput: false, confirmationRequired: false, capabilityAvailable: false, executionStarted: false, executionCompleted: false, interpretation, schedulerStatus: capabilityPlan.status, classification, activeTaskId: task.taskId, taskId: task.taskId, metrics: { readFileCalls: 0, codexCalls: 0 } };
       }
 
       task = await this.transition(task, 'ready', 'schedule_ready', 'capability-scheduler', { assignments: capabilityPlan.assignments.map((item) => item.capabilityId) }, progress);

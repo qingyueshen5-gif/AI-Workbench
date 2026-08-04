@@ -784,35 +784,35 @@ async function answerBuiltInChatIntent(content, currentData = initialData, previ
   if (isCasualGreeting(content)) {
     return {
       reply: /谢|感谢/.test(content) ? '不客气。' : (/哈/.test(content) ? '我在。' : '你好，我在。'),
-      evidence: { intent: 'casual_chat', verified: true },
+      evidence: { intent: 'casual_chat', verified: false, handled: true, rendered: true },
       createsTask: false
     };
   }
   if (isAllClarificationAnswer(content) && lastAssistantAskedHermesOrDeploy(previousMessages)) {
     return {
       reply: buildNamedProgressReply(currentData, ['Hermes', '网站部署']),
-      evidence: { intent: 'clarification_all_status', verified: true },
+      evidence: { intent: 'clarification_all_status', verified: false, handled: true, rendered: true },
       createsTask: false
     };
   }
   if (isLotteryFutureQuestion(content)) {
     return {
       reply: '查不到明天彩票开奖号。彩票开奖号码是在开奖后才产生并公布，明天的号码现在不存在可查询的确定数据；我不会编造号码。',
-      evidence: { intent: 'future_lottery', verified: true },
+      evidence: { intent: 'future_lottery', verified: false, handled: true, rendered: true, capabilityAvailable: false },
       createsTask: false
     };
   }
   if (isFuzzyStatusQuestion(content)) {
     return {
       reply: '你是想问 Hermes 的修复进度，还是网站部署的事？',
-      evidence: { intent: 'ambiguous_status_clarification', verified: true },
+      evidence: { intent: 'ambiguous_status_clarification', verified: false, handled: true, rendered: true, requiresUserInput: true },
       createsTask: false
     };
   }
   if (isCurrentTaskQuestion(content)) {
     return {
       reply: await buildCurrentTaskReply(),
-      evidence: { intent: 'current_task_file', filePath: 'CURRENT_TASK.md', verified: true },
+      evidence: { intent: 'current_task_file', filePath: 'CURRENT_TASK.md', verified: false, handled: true, rendered: true },
       createsTask: false
     };
   }

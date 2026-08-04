@@ -65,7 +65,15 @@ export function toNonExecutionRuntimeResult(adapterResult,{originalMessageId,cre
     provider:'deterministic-response-renderer',
     providerSessionId:'',
     toolUsed:'',
-    verified:true,
+    verified:false,
+    handled:true,
+    rendered:true,
+    policyApplied:false,
+    requiresUserInput:adapterResult.decision==='clarify',
+    confirmationRequired:false,
+    capabilityAvailable:adapterResult.decision!=='unsupported',
+    executionStarted:false,
+    executionCompleted:false,
     classification:{kind:'non_execution',decision:adapterResult.decision,originalMessageId:String(originalMessageId||''),renderer:adapterResult.response.renderer,missingFields:adapterResult.missingFields||[],questions:adapterResult.questions||[],recognizedIntents:adapterResult.recognizedIntents||[],riskSignals:adapterResult.riskSignals,executionStarted:false,createdAt},
     metrics:{readFileCalls:0,codexCalls:0,modelCalls:0,schedulerCalls:0,providerCalls:0,taskCreates:0,runCreates:0}
   };
