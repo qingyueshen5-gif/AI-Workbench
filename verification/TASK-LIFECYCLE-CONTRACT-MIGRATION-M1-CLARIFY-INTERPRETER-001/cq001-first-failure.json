@@ -1,0 +1,38 @@
+{
+  "schema": "ai-workbench.m1-cq001-first-failure/v1",
+  "taskId": "TASK-LIFECYCLE-CONTRACT-MIGRATION-M1-CLARIFY-INTERPRETER-001",
+  "stage": "CQ-001",
+  "gate": "NON-EXECUTION-CLARIFY-CONTRACT-001",
+  "classification": "PRODUCT_OR_SECURITY_FAILURE",
+  "command": "node --check scripts/verify-non-execution-clarify-contract-001.mjs && node scripts/verify-non-execution-clarify-contract-001.mjs",
+  "workingDirectory": "E:\\AI-Workbench-candidates\\interpreter-adapter-001",
+  "exitCode": 1,
+  "firstFailure": {
+    "scenario": "compound-file-and-runtime",
+    "input": "读一下文件，然后检查 Runtime",
+    "expectedDecision": "clarify",
+    "actualDecision": "execute",
+    "observedConsequence": "AgentRuntime proceeded to Task creation; the fail-closed fixture threw 'clarify must not create Task'.",
+    "stackAnchor": "scripts/verify-non-execution-clarify-contract-001.mjs:41 / agents/agent-runtime.mjs:293"
+  },
+  "rootCauseEvidence": {
+    "adapterReadIntentPattern": "(?:读取|打开并读取|只读|查看|看一下|看下|看看|read|open)",
+    "inputReadPhrase": "读一下文件",
+    "hasRead": false,
+    "hasRuntime": true,
+    "compoundDetected": false,
+    "adapterBranch": "runtime.status execute",
+    "requiredProductContract": "compound file-read plus runtime-status intent must clarify and must not create Task"
+  },
+  "disposition": {
+    "fixed": false,
+    "reasonNotFixed": "Task requires hard stop on PRODUCT_OR_SECURITY_FAILURE; no production change was authorized after first failure.",
+    "laterSameGatePass": null,
+    "m1Status": "WIP_NOT_GATED",
+    "cq002Started": false,
+    "cq003Started": false,
+    "m2Started": false,
+    "m3Started": false,
+    "m4Started": false
+  }
+}

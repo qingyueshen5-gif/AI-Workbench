@@ -70,7 +70,7 @@ RUN-FENCING候选（已通过、未部署）
 - **MEDIUM · CAPABILITY_ADVERTISED_NOT_REGISTERED**：Interpreter中提及但Registry未注册`file.write`、`file.manage`、`computer.control`、`commerce.*`、`media.video.create`、`web.research`和`system.diagnose`。阶段B必须把这些稳定收敛到unsupported，不得暗示已经可以执行。
 - **LOW · HERMES_CONFIG_VERSION_LAG**：当前Hermes配置版本提示`0 → 33`。本轮不迁移，留到独立维护窗口。
 - **PLANNED · CHECKPOINT-REPORT-CONSISTENCY-001**：S6完成后、阶段B最终收口之前实施。Checkpoint创建时若缺少对应任务报告，应拒绝`saved=true`。本轮只登记，不修改Checkpoint Runner、不新增门禁。
-- **MEDIUM · MULTI_TURN_CLARIFICATION_CONTEXT_NOT_SUPPORTED**：CQ-001现行契约将`clarify`定义为非执行消息，必须保留结构化`missingFields/questions`证据，但当前尚不支持跨消息、多轮澄清上下文恢复。由后续M1处理，本轮未修改测试或生产代码。
+- **MEDIUM · MULTI_TURN_CLARIFICATION_CONTEXT_NOT_SUPPORTED**：CQ-001现行契约将`clarify`定义为非执行消息，必须保留结构化`missingFields/questions`证据。当前clarify返回后，用户下一条回答尚不会自动与前一条缺失字段请求关联，也不支持跨消息、多轮澄清上下文恢复。须在开放远程入口（飞书）之前评估；本轮只登记，不实施多轮上下文。
 - **HIGH · ENVIRONMENT_COMPATIBILITY_RISK（未修复）**：固定路径`D:\\Anaconda\\Scripts\\hermes.exe`必须在真人陌生Windows机器验收前处理。本轮不批量修改生产路径。
 - 盘符清单中其余31项`PRODUCTION_PATH`登记为`PENDING_ENVIRONMENT_COMPATIBILITY_REVIEW`，需逐项确认配置化、自动发现或保留理由后再修改。
 
