@@ -16,6 +16,7 @@ import { checkModelAvailability, doctor as versionDoctor, loadMatrix } from './v
 import { collectReadiness, explainPortStatus } from './readiness.mjs';
 import { deriveBoundVerifierResult } from './agents/verified-semantics.mjs';
 import { findForbiddenTrustPathsForEndpoint } from './shared/run-trust-field-policy.mjs';
+import { projectRunForAgentContext } from './shared/run-context-projection.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const dataFile = runtimeDataFile;
@@ -450,19 +451,7 @@ function buildTaskContextPackage(data, task) {
       task_history: memoryByType('task_history'),
       error_experiences: relatedErrorExperiences.length ? relatedErrorExperiences : memoryByType('error_experiences', 5)
     },
-    recentRuns: relatedRuns.map((run) => ({
-      id: run.id,
-      taskId: run.taskId,
-      agentId: run.agentId,
-      status: run.status,
-      verified: run.verified === true,
-      handled: run.handled === true,
-      rendered: run.rendered === true,
-      executionCompleted: run.executionCompleted === true,
-      postconditionObserved: run.postconditionObserved === true,
-      errorUserMessage: run.errorUserMessage,
-      verificationResult: run.verificationResult
-    }))
+    recentRuns: relatedRuns.map(projectRunForAgentContext)
   };
 }
 
