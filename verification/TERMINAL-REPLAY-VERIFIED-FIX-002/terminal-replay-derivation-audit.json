@@ -1,0 +1,65 @@
+{
+  "schema": "ai-workbench.terminal-replay-derivation-audit/v2",
+  "baselineHead": "26869632656d20d78a33cf23c86304c750ac31fb",
+  "terminalResult": {
+    "definition": "agents/agent-runtime.mjs:156-170",
+    "callSites": ["agents/agent-runtime.mjs:175", "agents/agent-runtime.mjs:268"],
+    "currentVerifiedExpression": "task.finalResult?.verified !== false",
+    "availableFacts": ["task.currentState", "task.taskId", "task.taskRevision", "task.runs[]", "task.finalResult", "task.failure"]
+  },
+  "terminalRunLocation": {
+    "failed": "task.failure.runId -> task.runs.find(runId)",
+    "completed": "task.finalResult.runId -> task.runs.find(runId)",
+    "cancelled": "fail-closed; no successful terminal Run required",
+    "capability_unavailable": "fail-closed; no successful terminal Run exists"
+  },
+  "completedVerification": {
+    "location": "matching completed run.verification",
+    "bindingFields": ["taskId", "runId", "taskRevision", "passed"],
+    "source": "AgentRuntime verificationRecord spread of executeWithRun identity, persisted by TaskStore.bindRunVerification"
+  },
+  "finalBinding": {
+    "finalResultFields": ["runId", "taskRevision", "verified", "verification"],
+    "finalEvidenceFields": ["taskId", "runId", "taskRevision", "passed"],
+    "taskIdAuthority": "Task.taskId plus run.finalEvidence.taskId; finalResult does not independently persist taskId",
+    "requiredComparison": "finalResult.runId/taskRevision and run.finalEvidence.taskId/runId/taskRevision must match the terminal Run identity"
+  },
+  "authoritativeAcceptanceRevision": {
+    "fieldName": "run.taskRevision",
+    "semanticName": "Run activation / verification acceptance revision",
+    "reason": "TaskStore.startRun creates the Run and increments Task.taskRevision once. bindRunVerification preserves the same identity.taskRevision. finalizeRun requires the same active identity and persists it in run.finalEvidence without incrementing Task revision.",
+    "comparisons": [
+      "verification.taskRevision === run.taskRevision",
+      "finalResult.taskRevision === run.taskRevision",
+      "run.finalEvidence.taskRevision === run.taskRevision"
+    ],
+    "notRequired": "The pure derivation does not use latest Task.taskRevision as the authority; later unrelated Task persistence must not invalidate the original verifier acceptance revision."
+  },
+  "replayClassification": {
+    "businessTaskCurrent": {"replayed": true, "taskReplayed": "missing", "messageReplayed": "missing"},
+    "nonExecutionCurrent": {"taskReplayed": false, "messageReplayed": true},
+    "businessTaskRequired": {"replayed": true, "taskReplayed": true, "messageReplayed": false}
+  },
+  "terminalStates": ["completed", "capability_unavailable", "failed", "cancelled"],
+  "capabilityUnavailableDifference": {
+    "writeSide": "Existing production path persists finalResult.verified=true; known deferred risk NON_TERMINAL_RUNTIME_VERIFIED_TRUE_WITHOUT_BOUND_VERIFIER.",
+    "replaySide": "terminalResult must ignore that untrusted write-side boolean and derive verified=false because terminalState is capability_unavailable.",
+    "writeSideModified": false
+  },
+  "knownRiskException": {
+    "workPackage": "VERIFIED-SEMANTICS-UNIFICATION-001",
+    "risks": [
+      "NON_TERMINAL_RUNTIME_VERIFIED_TRUE_WITHOUT_BOUND_VERIFIER",
+      "LEGACY_EXECUTION_RESULTS_VERIFIED_TRUE_WITHOUT_UNIFORM_RUN_BINDING",
+      "NON_EXECUTION_RENDERER_VERIFIED_TRUE_SEMANTICS_UNBOUND"
+    ],
+    "status": "OPEN",
+    "deploymentImpact": "BLOCKED"
+  },
+  "newRiskScanResult": {
+    "fourthRiskFound": false,
+    "knownRiskExpandedToNewProductionPath": false,
+    "terminalResultTouchedKnownRiskPath": false
+  },
+  "conclusion": "TERMINAL_RESULT_MINIMUM_FIX_AUTHORIZED"
+}

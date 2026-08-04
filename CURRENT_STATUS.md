@@ -73,6 +73,9 @@ RUN-FENCING候选（已通过、未部署）
 - **MEDIUM · MULTI_TURN_CLARIFICATION_CONTEXT_NOT_SUPPORTED**：CQ-001现行契约将`clarify`定义为非执行消息，必须保留结构化`missingFields/questions`证据。当前clarify返回后，用户下一条回答尚不会自动与前一条缺失字段请求关联，也不支持跨消息、多轮澄清上下文恢复。须在开放远程入口（飞书）之前评估；本轮只登记，不实施多轮上下文。
 - **MEDIUM · INTENT_RECOGNITION_KEYWORD_MATCHING_INCOMPLETE_BY_DESIGN**：当前确定性意图识别依赖关键词及结构规则，无法穷尽自然语言表达，漏判在设计上无法完全消除。当前缓解是复合意图连接结构优先fail-closed到`clarify`，防止只识别部分要求后直接执行。后续在真实模型Production Path Smoke阶段重新评估：模型负责语义理解，Adapter只负责确定性协议映射、安全收口和事实保真；本轮不接入真实模型。
 - **LOW · TEST_ASSERTIONS_COUPLED_TO_LITERAL_USER_FACING_TEXT**：部分测试绑定具体用户文案，而不是结构化行为契约；后续调整表达层可能导致与产品行为无关的门禁失败。当前盘点见`verification/CQ-001-COMPOUND-NOTICE-BEHAVIORAL-ASSERTION-FIX-001/literal-text-assertion-inventory.json`，阶段B收口后统一整改；本轮只修复导致CQ-001回归失败的旁路断言。
+- **HIGH · NON_TERMINAL_RUNTIME_VERIFIED_TRUE_WITHOUT_BOUND_VERIFIER**：`agents/agent-runtime.mjs:278,330,342,348,350`的控制拦截、clarification、confirmation和capability_unavailable路径在缺少Task/Run/revision绑定Verifier PASS时输出或持久化`verified=true`。本轮terminalResult修复不得修改这些写入或非执行路径；统一由`VERIFIED-SEMANTICS-UNIFICATION-001`处理。状态=`OPEN`；deploymentImpact=`BLOCKED`。
+- **HIGH · LEGACY_EXECUTION_RESULTS_VERIFIED_TRUE_WITHOUT_UNIFORM_RUN_BINDING**：`agents/agent-runtime.mjs:408,410,430,439`的process.stop、code执行和conversation路径使用异构检查后直接输出`verified=true`，缺少统一持久化Task/Run/revision绑定Verifier PASS。本轮禁止修改成功执行路径；统一由`VERIFIED-SEMANTICS-UNIFICATION-001`处理。状态=`OPEN`；deploymentImpact=`BLOCKED`。
+- **HIGH · NON_EXECUTION_RENDERER_VERIFIED_TRUE_SEMANTICS_UNBOUND**：`agents/interpreter-adapter-contract.mjs:68`的非执行renderer使用共享字段`verified=true`，但没有Task/Run/revision身份，机器协议无法区分renderer有效与业务验证成功。本轮禁止修改非执行旁路；统一由`VERIFIED-SEMANTICS-UNIFICATION-001`处理。状态=`OPEN`；deploymentImpact=`BLOCKED`。
 - **HIGH · ENVIRONMENT_COMPATIBILITY_RISK（未修复）**：固定路径`D:\\Anaconda\\Scripts\\hermes.exe`必须在真人陌生Windows机器验收前处理。本轮不批量修改生产路径。
 - 盘符清单中其余31项`PRODUCTION_PATH`登记为`PENDING_ENVIRONMENT_COMPATIBILITY_REVIEW`，需逐项确认配置化、自动发现或保留理由后再修改。
 
