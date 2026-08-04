@@ -1898,6 +1898,17 @@ const server = createServer(async (request, response) => {
     if (pathname === '/api/agents/hermes/invoke' && request.method === 'POST') {
       const body = await readBody(request);
       const payload = JSON.parse(body || '{}');
+      if (Object.prototype.hasOwnProperty.call(payload, 'context')) {
+        sendJson(response, 422, {
+          error: '客户端不得提交Agent Context',
+          errorCode: 'CLIENT_SUPPLIED_CONTEXT_FORBIDDEN',
+          accepted: false,
+          serverOwnedField: true,
+          offendingPaths: ['context'],
+          retryable: false
+        });
+        return;
+      }
       const currentData = await readData();
       let task = payload.taskId
         ? currentData.tasks.find((item) => item.id === payload.taskId)
@@ -1916,7 +1927,7 @@ const server = createServer(async (request, response) => {
         tasks = patchTask(tasks, task.id, { status: 'running', assignedAgentId: 'hermes', assignee: 'hermes', owner: 'Hermes' });
         task = tasks.find((item) => item.id === task.id);
       }
-      const taskContext = payload.context || buildTaskContextPackage({ ...currentData, tasks }, task);
+      const taskContext = buildTaskContextPackage({ ...currentData, tasks }, task);
       const adapterResult = await agentRegistry.invoke('hermes', task, {
         ...taskContext,
         timeoutMs: payload.timeoutMs || 180000,
