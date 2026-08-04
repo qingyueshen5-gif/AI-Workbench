@@ -1,0 +1,3541 @@
+{
+  "schema": "ai-workbench.literal-text-assertion-inventory/v1",
+  "scope": "scripts/*.mjs",
+  "generatedFromHead": "7a3ae26e5aa8badc37d792506d5d84ce2b2f753c",
+  "total": 353,
+  "userFacingCount": 80,
+  "nonUserFacingCount": 273,
+  "fileCount": 68,
+  "entries": [
+    {
+      "file": "scripts/capture-round2-ui.mjs",
+      "line": 205,
+      "testName": "capture-round2-ui",
+      "literalOrPattern": "Hermes 修复进度",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/capture-round2-ui.mjs",
+      "line": 213,
+      "testName": "capture-round2-ui",
+      "literalOrPattern": "负责人",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/capture-round2-ui.mjs",
+      "line": 215,
+      "testName": "capture-round2-ui",
+      "literalOrPattern": "验证MVP闭环",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/capture-round3-ui.mjs",
+      "line": 164,
+      "testName": "capture-round3-ui",
+      "literalOrPattern": "登录页修复",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/checkpoint-protection-core.mjs",
+      "line": 68,
+      "testName": "checkpoint-protection-core",
+      "literalOrPattern": "R",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/checkpoint-protection-core.mjs",
+      "line": 68,
+      "testName": "checkpoint-protection-core",
+      "literalOrPattern": "C",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/checkpoint-state-model.mjs",
+      "line": 23,
+      "testName": "checkpoint-state-model",
+      "literalOrPattern": "SAVED', 'final acceptance requires SAVED",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/checkpoint-state-model.mjs",
+      "line": 24,
+      "testName": "checkpoint-state-model",
+      "literalOrPattern": "GATE_PASSED', 'final acceptance requires GATE_PASSED",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/openclaw-runtime-deep-dive.mjs",
+      "line": 84,
+      "testName": "openclaw-runtime-deep-dive",
+      "literalOrPattern": "\\\\agents\\\\main\\\\sessions\\\\",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/openclaw-runtime-deep-dive.mjs",
+      "line": 84,
+      "testName": "openclaw-runtime-deep-dive",
+      "literalOrPattern": "\\\\workspace\\\\牧原股份\\\\",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/openclaw-runtime-deep-dive.mjs",
+      "line": 97,
+      "testName": "openclaw-runtime-deep-dive",
+      "literalOrPattern": "state",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/openclaw-runtime-deep-dive.mjs",
+      "line": 99,
+      "testName": "openclaw-runtime-deep-dive",
+      "literalOrPattern": "\\\\browser\\\\",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/openclaw-runtime-inventory.mjs",
+      "line": 40,
+      "testName": "openclaw-runtime-inventory",
+      "literalOrPattern": "\\\\agents\\\\main\\\\sessions",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/openclaw-runtime-inventory.mjs",
+      "line": 41,
+      "testName": "openclaw-runtime-inventory",
+      "literalOrPattern": "\\\\workspace\\\\牧原股份",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/runtime-dependency-contract-fixtures.mjs",
+      "line": 79,
+      "testName": "runtime-dependency-contract-fixtures",
+      "literalOrPattern": "string",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/runtime-dependency-contract-fixtures.mjs",
+      "line": 79,
+      "testName": "runtime-dependency-contract-fixtures",
+      "literalOrPattern": "string",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/runtime-dependency-contract-fixtures.mjs",
+      "line": 79,
+      "testName": "runtime-dependency-contract-fixtures",
+      "literalOrPattern": "number",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/runtime-dependency-contract-fixtures.mjs",
+      "line": 85,
+      "testName": "runtime-dependency-contract-fixtures",
+      "literalOrPattern": "string",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/runtime-dependency-contract-fixtures.mjs",
+      "line": 86,
+      "testName": "runtime-dependency-contract-fixtures",
+      "literalOrPattern": "string",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/runtime-dependency-contract-fixtures.mjs",
+      "line": 87,
+      "testName": "runtime-dependency-contract-fixtures",
+      "literalOrPattern": "string",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/runtime-dependency-contract-fixtures.mjs",
+      "line": 91,
+      "testName": "runtime-dependency-contract-fixtures",
+      "literalOrPattern": "string",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/runtime-dependency-contract-fixtures.mjs",
+      "line": 108,
+      "testName": "runtime-dependency-contract-fixtures",
+      "literalOrPattern": "contract",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/runtime-dependency-contract-fixtures.mjs",
+      "line": 109,
+      "testName": "runtime-dependency-contract-fixtures",
+      "literalOrPattern": "interpreting",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/runtime-dependency-contract-fixtures.mjs",
+      "line": 110,
+      "testName": "runtime-dependency-contract-fixtures",
+      "literalOrPattern": "string",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/runtime-dependency-contract-fixtures.mjs",
+      "line": 111,
+      "testName": "runtime-dependency-contract-fixtures",
+      "literalOrPattern": "string",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/runtime-dependency-contract-fixtures.mjs",
+      "line": 111,
+      "testName": "runtime-dependency-contract-fixtures",
+      "literalOrPattern": "string",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/runtime-dependency-contract-fixtures.mjs",
+      "line": 111,
+      "testName": "runtime-dependency-contract-fixtures",
+      "literalOrPattern": "string",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/scan-windows-drive-paths-001.mjs",
+      "line": 8,
+      "testName": "scan-windows-drive-paths-001",
+      "literalOrPattern": "/tests/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-3a-final.mjs",
+      "line": 390,
+      "testName": "verify-3a-final",
+      "literalOrPattern": "③A总验收通过",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-acceptance.mjs",
+      "line": 60,
+      "testName": "verify-acceptance",
+      "literalOrPattern": "牧原股份",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-acceptance.mjs",
+      "line": 60,
+      "testName": "verify-acceptance",
+      "literalOrPattern": "2026-07-18",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-acceptance.mjs",
+      "line": 61,
+      "testName": "verify-acceptance",
+      "literalOrPattern": "已拿到的最新数据",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-acceptance.mjs",
+      "line": 65,
+      "testName": "verify-acceptance",
+      "literalOrPattern": "CURRENT_TASK.md",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-acceptance.mjs",
+      "line": 66,
+      "testName": "verify-acceptance",
+      "literalOrPattern": "P1",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-acceptance.mjs",
+      "line": 66,
+      "testName": "verify-acceptance",
+      "literalOrPattern": "P4",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-acceptance.mjs",
+      "line": 66,
+      "testName": "verify-acceptance",
+      "literalOrPattern": "P5",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-acceptance.mjs",
+      "line": 71,
+      "testName": "verify-acceptance",
+      "literalOrPattern": "你是想问",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-acceptance.mjs",
+      "line": 71,
+      "testName": "verify-acceptance",
+      "literalOrPattern": "还是",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-acceptance.mjs",
+      "line": 75,
+      "testName": "verify-acceptance",
+      "literalOrPattern": "查不到",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-acceptance.mjs",
+      "line": 75,
+      "testName": "verify-acceptance",
+      "literalOrPattern": "不会编造",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-active-task-semantic-routing.mjs",
+      "line": 30,
+      "testName": "verify-active-task-semantic-routing",
+      "literalOrPattern": "accepted",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-active-task-semantic-routing.mjs",
+      "line": 51,
+      "testName": "verify-active-task-semantic-routing",
+      "literalOrPattern": "new_task",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-authorization-boundary-001.mjs",
+      "line": 13,
+      "testName": "verify-authorization-boundary-001",
+      "literalOrPattern": "needs_confirmation",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-authorization-boundary-001.mjs",
+      "line": 24,
+      "testName": "verify-authorization-boundary-001",
+      "literalOrPattern": "ready",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-background-process-ledger-001.mjs",
+      "line": 13,
+      "testName": "verify-background-process-ledger-001",
+      "literalOrPattern": "FORMAL_GATE_FAILURE",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-background-process-ledger-001.mjs",
+      "line": 15,
+      "testName": "verify-background-process-ledger-001",
+      "literalOrPattern": "PASS",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 66,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "PASS",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 67,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "SAVED",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 68,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "GATE_PASSED",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 70,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "PASS",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 72,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "TEST-CHECKPOINT",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 89,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "/\"saved\":true/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 99,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "FIRST_FAILURE",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 100,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "UNSAVED",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 101,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "BLOCKED",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 105,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "tracked.txt",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 115,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "/scope allowlist violation: unrelated\\.txt/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 117,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "tracked.txt",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 130,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "/SHA-256 mismatch/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 143,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "/clean checkpointed worktree/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 145,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "tracked.txt",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 157,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "tracked.txt",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 159,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "/\"action\":\"guarded_restore\"/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 169,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "scripts/bad.mjs",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 196,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "PASS",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 197,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "UNSAVED",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 198,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "NOT_RUN",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 202,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "/failed/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-checkpoint-protection-001.mjs",
+      "line": 204,
+      "testName": "verify-checkpoint-protection-001",
+      "literalOrPattern": "tracked.txt",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-docs-consistency.mjs",
+      "line": 74,
+      "testName": "verify-docs-consistency",
+      "literalOrPattern": "| 当前真实状态 | `CURRENT_STATUS.md` |",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-docs-consistency.mjs",
+      "line": 75,
+      "testName": "verify-docs-consistency",
+      "literalOrPattern": "| 当前唯一下一步 | `NEXT_STEP.md` |",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-docs-consistency.mjs",
+      "line": 78,
+      "testName": "verify-docs-consistency",
+      "literalOrPattern": "RUN-FENCING验收候选：`c2ed8c13e42b5c006a6c30a943b08975cff6c3a5`",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-docs-consistency.mjs",
+      "line": 79,
+      "testName": "verify-docs-consistency",
+      "literalOrPattern": "仅在用户明确批准后开始Interpreter Adapter",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-docs-consistency.mjs",
+      "line": 79,
+      "testName": "verify-docs-consistency",
+      "literalOrPattern": "本轮D0-1B完成后必须停止",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-docs-consistency.mjs",
+      "line": 90,
+      "testName": "verify-docs-consistency",
+      "literalOrPattern": "当前真实状态唯一以CURRENT_STATUS.md为准；",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-docs-consistency.mjs",
+      "line": 90,
+      "testName": "verify-docs-consistency",
+      "literalOrPattern": "当前唯一下一步以NEXT_STEP.md为准。",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-docs-consistency.mjs",
+      "line": 91,
+      "testName": "verify-docs-consistency",
+      "literalOrPattern": "当前真实状态唯一以CURRENT_STATUS.md为准；",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-docs-consistency.mjs",
+      "line": 91,
+      "testName": "verify-docs-consistency",
+      "literalOrPattern": "当前唯一下一步以NEXT_STEP.md为准。",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-docs-consistency.mjs",
+      "line": 93,
+      "testName": "verify-docs-consistency",
+      "literalOrPattern": "AI Workbench是一个以人的目标为中心，能够调度多个AI、Agent和电脑工具，把任务真正执行完成并交付经过验证结果的智能工作台。",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-docs-consistency.mjs",
+      "line": 96,
+      "testName": "verify-docs-consistency",
+      "literalOrPattern": "RUN-FENCING候选",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-docs-consistency.mjs",
+      "line": 96,
+      "testName": "verify-docs-consistency",
+      "literalOrPattern": "D0-1B原始事实提取器候选",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-docs-consistency.mjs",
+      "line": 96,
+      "testName": "verify-docs-consistency",
+      "literalOrPattern": "Production Smoke未重新执行或通过",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-docs-consistency.mjs",
+      "line": 97,
+      "testName": "verify-docs-consistency",
+      "literalOrPattern": "产品尚未达到可部署和真人稳定使用状态",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-docs-consistency.mjs",
+      "line": 97,
+      "testName": "verify-docs-consistency",
+      "literalOrPattern": "当前不能进入正式发布",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-docs-consistency.mjs",
+      "line": 101,
+      "testName": "verify-docs-consistency",
+      "literalOrPattern": "CURRENT_STATUS.md",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-environment-fixture-protection-001.mjs",
+      "line": 11,
+      "testName": "verify-environment-fixture-protection-001",
+      "literalOrPattern": "/mkdtemp\\(join\\(os\\.tmpdir\\(\\),'aiw-gateway-switch-'\\)\\)/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-external-skill-drift-001.mjs",
+      "line": 14,
+      "testName": "verify-external-skill-drift-001",
+      "literalOrPattern": "--self-test",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-feishu-delivery-idempotency-001.mjs",
+      "line": 33,
+      "testName": "verify-feishu-delivery-idempotency-001",
+      "literalOrPattern": "remote-1",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 65,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/gateway ping",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 66,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "owner-open-id",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 67,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "abcd...3456",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 68,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "sample",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 76,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/只支持文本/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 79,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/未授权/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 85,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/不正确/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 87,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/配对成功/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 90,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/没有有效配对码/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 96,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/过期/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 105,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "pong",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 108,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "pong",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 113,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/owner: true/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 114,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "other-open-id",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 117,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/task_gateway: available/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 120,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/工作台群/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 122,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/报告群已绑定/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 132,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/waiting_approval/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 133,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/尚未启动Codex/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 134,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "BAD",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 137,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "waiting_approval",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 141,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/任务未批准/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 146,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/approved/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 148,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "approved",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 152,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/run finished/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 154,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "completed",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 161,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "Read status only",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 168,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/completed/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 170,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "Read status only",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 172,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/cleanup/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 184,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/cancelled/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 190,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "completed",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 199,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "/disabled/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-feishu-task-channel.mjs",
+      "line": 201,
+      "testName": "verify-feishu-task-channel",
+      "literalOrPattern": "tenant_access_token",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-gateway-runtime-business-boundary.mjs",
+      "line": 8,
+      "testName": "verify-gateway-runtime-business-boundary",
+      "literalOrPattern": "/acceptAndEnqueueJob\\(\\{ messageId/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-gateway-runtime-business-boundary.mjs",
+      "line": 12,
+      "testName": "verify-gateway-runtime-business-boundary",
+      "literalOrPattern": "NEXT_STEP.md",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-gateway-runtime-business-boundary.mjs",
+      "line": 17,
+      "testName": "verify-gateway-runtime-business-boundary",
+      "literalOrPattern": "new_task",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-gateway-runtime-business-boundary.mjs",
+      "line": 17,
+      "testName": "verify-gateway-runtime-business-boundary",
+      "literalOrPattern": "read",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-gateway-runtime-business-boundary.mjs",
+      "line": 20,
+      "testName": "verify-gateway-runtime-business-boundary",
+      "literalOrPattern": "new_task",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-gateway-runtime-switch.mjs",
+      "line": 16,
+      "testName": "verify-gateway-runtime-switch",
+      "literalOrPattern": "rc1-commit",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-gateway-runtime-switch.mjs",
+      "line": 17,
+      "testName": "verify-gateway-runtime-switch",
+      "literalOrPattern": "rc2-commit",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-gateway-runtime-switch.mjs",
+      "line": 18,
+      "testName": "verify-gateway-runtime-switch",
+      "literalOrPattern": "rc1-commit",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-gateway-runtime-switch.mjs",
+      "line": 19,
+      "testName": "verify-gateway-runtime-switch",
+      "literalOrPattern": "rc1-commit",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-health-self-heal.mjs",
+      "line": 96,
+      "testName": "verify-health-self-heal",
+      "literalOrPattern": "缺少 DEEPSEEK_API_KEY 配置",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-hermes-adapter.mjs",
+      "line": 74,
+      "testName": "verify-hermes-adapter",
+      "literalOrPattern": "hermes chat",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-hermes-adapter.mjs",
+      "line": 75,
+      "testName": "verify-hermes-adapter",
+      "literalOrPattern": "--provider custom",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-hermes-adapter.mjs",
+      "line": 76,
+      "testName": "verify-hermes-adapter",
+      "literalOrPattern": "-m deepseek-chat",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-hermes-adapter.mjs",
+      "line": 77,
+      "testName": "verify-hermes-adapter",
+      "literalOrPattern": "--toolsets memory,terminal",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-authorization-001.mjs",
+      "line": 16,
+      "testName": "verify-interpreter-adapter-authorization-001",
+      "literalOrPattern": "unsupported",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-authorization-001.mjs",
+      "line": 18,
+      "testName": "verify-interpreter-adapter-authorization-001",
+      "literalOrPattern": "/没有启动任何操作/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-authorization-001.mjs",
+      "line": 20,
+      "testName": "verify-interpreter-adapter-authorization-001",
+      "literalOrPattern": "authorizationContext",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-authorization-001.mjs",
+      "line": 21,
+      "testName": "verify-interpreter-adapter-authorization-001",
+      "literalOrPattern": "providerId",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-authorization-001.mjs",
+      "line": 31,
+      "testName": "verify-interpreter-adapter-authorization-001",
+      "literalOrPattern": "needs_confirmation",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-integration-001.mjs",
+      "line": 36,
+      "testName": "verify-interpreter-adapter-b5-integration-001",
+      "literalOrPattern": "/isolated-online/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-integration-001.mjs",
+      "line": 36,
+      "testName": "verify-interpreter-adapter-b5-integration-001",
+      "literalOrPattern": "runtime.status",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-integration-001.mjs",
+      "line": 36,
+      "testName": "verify-interpreter-adapter-b5-integration-001",
+      "literalOrPattern": "local-runtime-state",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-integration-001.mjs",
+      "line": 37,
+      "testName": "verify-interpreter-adapter-b5-integration-001",
+      "literalOrPattern": "completed",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-integration-001.mjs",
+      "line": 37,
+      "testName": "verify-interpreter-adapter-b5-integration-001",
+      "literalOrPattern": "completed",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-integration-001.mjs",
+      "line": 37,
+      "testName": "verify-interpreter-adapter-b5-integration-001",
+      "literalOrPattern": "runtime.status",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-integration-001.mjs",
+      "line": 41,
+      "testName": "verify-interpreter-adapter-b5-integration-001",
+      "literalOrPattern": "file.read",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-integration-001.mjs",
+      "line": 41,
+      "testName": "verify-interpreter-adapter-b5-integration-001",
+      "literalOrPattern": "local-tool-executor",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-integration-001.mjs",
+      "line": 42,
+      "testName": "verify-interpreter-adapter-b5-integration-001",
+      "literalOrPattern": "completed",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-integration-001.mjs",
+      "line": 42,
+      "testName": "verify-interpreter-adapter-b5-integration-001",
+      "literalOrPattern": "completed",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-integration-001.mjs",
+      "line": 42,
+      "testName": "verify-interpreter-adapter-b5-integration-001",
+      "literalOrPattern": "file.read",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s1-grounded-evidence-001.mjs",
+      "line": 20,
+      "testName": "verify-interpreter-adapter-b5-s1-grounded-evidence-001",
+      "literalOrPattern": "",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s1-grounded-evidence-001.mjs",
+      "line": 22,
+      "testName": "verify-interpreter-adapter-b5-s1-grounded-evidence-001",
+      "literalOrPattern": "/未能读取可验证的Runtime状态来源/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s1-grounded-evidence-001.mjs",
+      "line": 23,
+      "testName": "verify-interpreter-adapter-b5-s1-grounded-evidence-001",
+      "literalOrPattern": "/无法确认当前运行状态/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s1-grounded-evidence-001.mjs",
+      "line": 24,
+      "testName": "verify-interpreter-adapter-b5-s1-grounded-evidence-001",
+      "literalOrPattern": "/没有把推测内容当成真实结果/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s1-grounded-evidence-001.mjs",
+      "line": 28,
+      "testName": "verify-interpreter-adapter-b5-s1-grounded-evidence-001",
+      "literalOrPattern": "/未执行成功|真实可验证/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s2-verifier-binding-001.mjs",
+      "line": 10,
+      "testName": "verify-interpreter-adapter-b5-s2-verifier-binding-001",
+      "literalOrPattern": "/fixture evidence authenticity failed|verification failed/i",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s2-verifier-binding-001.mjs",
+      "line": 12,
+      "testName": "verify-interpreter-adapter-b5-s2-verifier-binding-001",
+      "literalOrPattern": "/fixture evidence authenticity failed/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s2-verifier-binding-001.mjs",
+      "line": 12,
+      "testName": "verify-interpreter-adapter-b5-s2-verifier-binding-001",
+      "literalOrPattern": "failed",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s3-file-read-boundary-001.mjs",
+      "line": 6,
+      "testName": "verify-interpreter-adapter-b5-s3-file-read-boundary-001",
+      "literalOrPattern": "allowed fixture",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s3-file-read-boundary-001.mjs",
+      "line": 7,
+      "testName": "verify-interpreter-adapter-b5-s3-file-read-boundary-001",
+      "literalOrPattern": "拒绝读取：解析后的文件位置不在允许的读取范围内，没有执行文件读取。",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s3-file-read-boundary-001.mjs",
+      "line": 8,
+      "testName": "verify-interpreter-adapter-b5-s3-file-read-boundary-001",
+      "literalOrPattern": "link",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s3-file-read-boundary-001.mjs",
+      "line": 8,
+      "testName": "verify-interpreter-adapter-b5-s3-file-read-boundary-001",
+      "literalOrPattern": "拒绝读取：解析后的文件位置不在允许的读取范围内，没有执行文件读取。",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s4-remove-execution-shortcuts-001.mjs",
+      "line": 4,
+      "testName": "verify-interpreter-adapter-b5-s4-remove-execution-shortcuts-001",
+      "literalOrPattern": "/executeWithRun/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s4-remove-execution-shortcuts-001.mjs",
+      "line": 4,
+      "testName": "verify-interpreter-adapter-b5-s4-remove-execution-shortcuts-001",
+      "literalOrPattern": "/bindRunVerification/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s4-remove-execution-shortcuts-001.mjs",
+      "line": 4,
+      "testName": "verify-interpreter-adapter-b5-s4-remove-execution-shortcuts-001",
+      "literalOrPattern": "/finalizeRun/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s5-multi-assignment-001.mjs",
+      "line": 18,
+      "testName": "verify-interpreter-adapter-b5-s5-multi-assignment-001",
+      "literalOrPattern": "file.read",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s5-multi-assignment-001.mjs",
+      "line": 23,
+      "testName": "verify-interpreter-adapter-b5-s5-multi-assignment-001",
+      "literalOrPattern": "/多个可执行任务/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s5-multi-assignment-001.mjs",
+      "line": 23,
+      "testName": "verify-interpreter-adapter-b5-s5-multi-assignment-001",
+      "literalOrPattern": "/一次只执行一个/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s5-multi-assignment-001.mjs",
+      "line": 23,
+      "testName": "verify-interpreter-adapter-b5-s5-multi-assignment-001",
+      "literalOrPattern": "/没有启动任何操作/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s5-multi-assignment-001.mjs",
+      "line": 23,
+      "testName": "verify-interpreter-adapter-b5-s5-multi-assignment-001",
+      "literalOrPattern": "/先执行哪一个/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s5-multi-assignment-001.mjs",
+      "line": 23,
+      "testName": "verify-interpreter-adapter-b5-s5-multi-assignment-001",
+      "literalOrPattern": "failed",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-bypass-001.mjs",
+      "line": 38,
+      "testName": "verify-interpreter-adapter-bypass-001",
+      "literalOrPattern": "selectedIntent",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-bypass-001.mjs",
+      "line": 42,
+      "testName": "verify-interpreter-adapter-bypass-001",
+      "literalOrPattern": "/一次只执行一个任务/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-bypass-001.mjs",
+      "line": 43,
+      "testName": "verify-interpreter-adapter-bypass-001",
+      "literalOrPattern": "/尚未启动任何操作/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-bypass-001.mjs",
+      "line": 68,
+      "testName": "verify-interpreter-adapter-bypass-001",
+      "literalOrPattern": "execute",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-bypass-001.mjs",
+      "line": 69,
+      "testName": "verify-interpreter-adapter-bypass-001",
+      "literalOrPattern": "file_operation",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-bypass-001.mjs",
+      "line": 71,
+      "testName": "verify-interpreter-adapter-bypass-001",
+      "literalOrPattern": "E:\\\\AI-Workbench\\\\NEXT_STEP.md",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-bypass-001.mjs",
+      "line": 72,
+      "testName": "verify-interpreter-adapter-bypass-001",
+      "literalOrPattern": "hostile-v1",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-bypass-001.mjs",
+      "line": 73,
+      "testName": "verify-interpreter-adapter-bypass-001",
+      "literalOrPattern": "attacker",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-bypass-001.mjs",
+      "line": 74,
+      "testName": "verify-interpreter-adapter-bypass-001",
+      "literalOrPattern": "C:\\\\\\\\wrong.txt",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-variants-001.mjs",
+      "line": 16,
+      "testName": "verify-interpreter-adapter-variants-001",
+      "literalOrPattern": "clarify",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-variants-001.mjs",
+      "line": 17,
+      "testName": "verify-interpreter-adapter-variants-001",
+      "literalOrPattern": "clarify",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-variants-001.mjs",
+      "line": 19,
+      "testName": "verify-interpreter-adapter-variants-001",
+      "literalOrPattern": "execute",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-ipc-acceptance-recovery-001.mjs",
+      "line": 21,
+      "testName": "verify-ipc-acceptance-recovery-001",
+      "literalOrPattern": "recover me",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-ipc-closed-loop.mjs",
+      "line": 18,
+      "testName": "verify-ipc-closed-loop",
+      "literalOrPattern": "isolated-result",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-ipc-closed-loop.mjs",
+      "line": 18,
+      "testName": "verify-ipc-closed-loop",
+      "literalOrPattern": "utf8",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-managed-proxy-production.mjs",
+      "line": 247,
+      "testName": "verify-managed-proxy-production",
+      "literalOrPattern": "生产共享模型调用成功",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-managed-proxy-production.mjs",
+      "line": 282,
+      "testName": "verify-managed-proxy-production",
+      "literalOrPattern": "生产共享模型调用成功",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-mandatory-gates-contract.mjs",
+      "line": 8,
+      "testName": "verify-mandatory-gates-contract",
+      "literalOrPattern": "node scripts/verify-mandatory-gates-001.mjs",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-mandatory-gates-contract.mjs",
+      "line": 9,
+      "testName": "verify-mandatory-gates-contract",
+      "literalOrPattern": "node scripts/verify.mjs",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-mandatory-gates-contract.mjs",
+      "line": 12,
+      "testName": "verify-mandatory-gates-contract",
+      "literalOrPattern": "/deployment: 'BLOCKED'/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-mandatory-gates-contract.mjs",
+      "line": 13,
+      "testName": "verify-mandatory-gates-contract",
+      "literalOrPattern": "/process\\.exit\\(1\\)/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-mandatory-gates-contract.mjs",
+      "line": 14,
+      "testName": "verify-mandatory-gates-contract",
+      "literalOrPattern": "/if \\(!result\\.ok\\)/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-minimal-progress-protocol.mjs",
+      "line": 9,
+      "testName": "verify-minimal-progress-protocol",
+      "literalOrPattern": "最终结果",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-minimal-progress-protocol.mjs",
+      "line": 11,
+      "testName": "verify-minimal-progress-protocol",
+      "literalOrPattern": "失败隔离后的最终结果",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-minimal-progress-protocol.mjs",
+      "line": 12,
+      "testName": "verify-minimal-progress-protocol",
+      "literalOrPattern": "/listProgress\\(\\)/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-minimal-progress-protocol.mjs",
+      "line": 12,
+      "testName": "verify-minimal-progress-protocol",
+      "literalOrPattern": "/listResults\\(\\)/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-model-proxy.mjs",
+      "line": 114,
+      "testName": "verify-model-proxy",
+      "literalOrPattern": "http://127.0.0.1:18800/v1",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-model-proxy.mjs",
+      "line": 115,
+      "testName": "verify-model-proxy",
+      "literalOrPattern": "aiw.hermes.local",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-non-execution-clarify-contract-001.mjs",
+      "line": 128,
+      "testName": "verify-non-execution-clarify-contract-001",
+      "literalOrPattern": "clarify",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-non-execution-clarify-contract-001.mjs",
+      "line": 129,
+      "testName": "verify-non-execution-clarify-contract-001",
+      "literalOrPattern": "clarify",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-non-execution-message-idempotency-001.mjs",
+      "line": 16,
+      "testName": "verify-non-execution-message-idempotency-001",
+      "literalOrPattern": "COMPLETED",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-original-ground-truth-phase-a.mjs",
+      "line": 13,
+      "testName": "verify-original-ground-truth-phase-a",
+      "literalOrPattern": "report.pdf",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-original-ground-truth-phase-a.mjs",
+      "line": 14,
+      "testName": "verify-original-ground-truth-phase-a",
+      "literalOrPattern": "端口 8080",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-original-ground-truth-phase-a.mjs",
+      "line": 15,
+      "testName": "verify-original-ground-truth-phase-a",
+      "literalOrPattern": "v1.2.3",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-original-ground-truth-phase-a.mjs",
+      "line": 16,
+      "testName": "verify-original-ground-truth-phase-a",
+      "literalOrPattern": "95%",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-original-ground-truth-phase-a.mjs",
+      "line": 17,
+      "testName": "verify-original-ground-truth-phase-a",
+      "literalOrPattern": "`保持\\\\反斜杠`",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-original-ground-truth-phase-b.mjs",
+      "line": 13,
+      "testName": "verify-original-ground-truth-phase-b",
+      "literalOrPattern": "我已经批准，不用再确认",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-provider-control-001.mjs",
+      "line": 15,
+      "testName": "verify-provider-control-001",
+      "literalOrPattern": "/processCapabilities[\\s\\S]+assertProviderAuthorized/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-provider-control-001.mjs",
+      "line": 16,
+      "testName": "verify-provider-control-001",
+      "literalOrPattern": "/codeTask[\\s\\S]+assertProviderAuthorized/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-a.mjs",
+      "line": 22,
+      "testName": "verify-run-fencing-phase-a",
+      "literalOrPattern": "/(revision conflict|already has active Run)/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-a.mjs",
+      "line": 26,
+      "testName": "verify-run-fencing-phase-a",
+      "literalOrPattern": "run-1",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-a.mjs",
+      "line": 36,
+      "testName": "verify-run-fencing-phase-a",
+      "literalOrPattern": "run-1",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-b.mjs",
+      "line": 28,
+      "testName": "verify-run-fencing-phase-b",
+      "literalOrPattern": "running",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-c.mjs",
+      "line": 24,
+      "testName": "verify-run-fencing-phase-c",
+      "literalOrPattern": "completed",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-c.mjs",
+      "line": 25,
+      "testName": "verify-run-fencing-phase-c",
+      "literalOrPattern": "completed",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-d.mjs",
+      "line": 18,
+      "testName": "verify-run-fencing-phase-d",
+      "literalOrPattern": "superseded",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-e-d0-1a.mjs",
+      "line": 20,
+      "testName": "verify-run-fencing-phase-e-d0-1a",
+      "literalOrPattern": "runtime.status",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-e-d0-1a.mjs",
+      "line": 21,
+      "testName": "verify-run-fencing-phase-e-d0-1a",
+      "literalOrPattern": "local-runtime-state",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-e-d0-1a.mjs",
+      "line": 23,
+      "testName": "verify-run-fencing-phase-e-d0-1a",
+      "literalOrPattern": "/isolated-online/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-e-d0-1a.mjs",
+      "line": 26,
+      "testName": "verify-run-fencing-phase-e-d0-1a",
+      "literalOrPattern": "file.read",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-e-d0-1a.mjs",
+      "line": 27,
+      "testName": "verify-run-fencing-phase-e-d0-1a",
+      "literalOrPattern": "local-tool-executor",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-e-d0-1a.mjs",
+      "line": 32,
+      "testName": "verify-run-fencing-phase-e-d0-1a",
+      "literalOrPattern": "/RUN-FENCING-001/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-lease-001.mjs",
+      "line": 11,
+      "testName": "verify-run-lease-001",
+      "literalOrPattern": "worker-a",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-lease-001.mjs",
+      "line": 12,
+      "testName": "verify-run-lease-001",
+      "literalOrPattern": "worker-b",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-lease-001.mjs",
+      "line": 13,
+      "testName": "verify-run-lease-001",
+      "literalOrPattern": "worker-b",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-run-lease-001.mjs",
+      "line": 17,
+      "testName": "verify-run-lease-001",
+      "literalOrPattern": "worker-a",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-lease-001.mjs",
+      "line": 20,
+      "testName": "verify-run-lease-001",
+      "literalOrPattern": "worker-b",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-lease-001.mjs",
+      "line": 22,
+      "testName": "verify-run-lease-001",
+      "literalOrPattern": "worker-b",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-lease-001.mjs",
+      "line": 24,
+      "testName": "verify-run-lease-001",
+      "literalOrPattern": "worker-b",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-recovery-001.mjs",
+      "line": 12,
+      "testName": "verify-run-recovery-001",
+      "literalOrPattern": "dead-worker",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-recovery-001.mjs",
+      "line": 22,
+      "testName": "verify-run-recovery-001",
+      "literalOrPattern": "replacement-worker",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-run-recovery-001.mjs",
+      "line": 24,
+      "testName": "verify-run-recovery-001",
+      "literalOrPattern": "replacement-worker",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-runtime-business-convergence.mjs",
+      "line": 23,
+      "testName": "verify-runtime-business-convergence",
+      "literalOrPattern": "read_file",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-runtime-business-convergence.mjs",
+      "line": 26,
+      "testName": "verify-runtime-business-convergence",
+      "literalOrPattern": "Follow-up",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-runtime-business-convergence.mjs",
+      "line": 31,
+      "testName": "verify-runtime-business-convergence",
+      "literalOrPattern": "NEXT_STEP.md",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-runtime-business-convergence.mjs",
+      "line": 33,
+      "testName": "verify-runtime-business-convergence",
+      "literalOrPattern": "状态",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-runtime-business-convergence.mjs",
+      "line": 35,
+      "testName": "verify-runtime-business-convergence",
+      "literalOrPattern": "修改代码",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-runtime-business-convergence.mjs",
+      "line": 55,
+      "testName": "verify-runtime-business-convergence",
+      "literalOrPattern": "new_task",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-runtime-business-convergence.mjs",
+      "line": 56,
+      "testName": "verify-runtime-business-convergence",
+      "literalOrPattern": "read",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-runtime-business-convergence.mjs",
+      "line": 102,
+      "testName": "verify-runtime-business-convergence",
+      "literalOrPattern": "local-status",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-runtime-business-convergence.mjs",
+      "line": 103,
+      "testName": "verify-runtime-business-convergence",
+      "literalOrPattern": "/Gateway PID 1/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-runtime-switch-fixture-portability-001.mjs",
+      "line": 9,
+      "testName": "verify-runtime-switch-fixture-portability-001",
+      "literalOrPattern": "/fs\\.mkdtemp\\(join\\(os\\.tmpdir\\(\\),'aiw-gateway-switch-'\\)\\)/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-runtime-task-isolation-hotfix.mjs",
+      "line": 7,
+      "testName": "verify-runtime-task-isolation-hotfix",
+      "literalOrPattern": "chat",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-runtime-task-isolation-hotfix.mjs",
+      "line": 8,
+      "testName": "verify-runtime-task-isolation-hotfix",
+      "literalOrPattern": "chat",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-save-decoupled-from-gate-001.mjs",
+      "line": 15,
+      "testName": "verify-save-decoupled-from-gate-001",
+      "literalOrPattern": "ENVIRONMENT_OR_DEPENDENCY_FAILURE",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-save-decoupled-from-gate-001.mjs",
+      "line": 17,
+      "testName": "verify-save-decoupled-from-gate-001",
+      "literalOrPattern": "PRODUCT_OR_SECURITY_FAILURE",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-shared-key.mjs",
+      "line": 166,
+      "testName": "verify-shared-key",
+      "literalOrPattern": "<leaked-shared-key>",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-atomicity-001.mjs",
+      "line": 17,
+      "testName": "verify-task-atomicity-001",
+      "literalOrPattern": "/Task state conflict/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-task-atomicity-001.mjs",
+      "line": 27,
+      "testName": "verify-task-atomicity-001",
+      "literalOrPattern": "one",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-execution-loop.mjs",
+      "line": 6,
+      "testName": "verify-task-execution-loop",
+      "literalOrPattern": "ready",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-task-execution-loop.mjs",
+      "line": 6,
+      "testName": "verify-task-execution-loop",
+      "literalOrPattern": "local-process-provider",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-task-execution-loop.mjs",
+      "line": 9,
+      "testName": "verify-task-execution-loop",
+      "literalOrPattern": "ambiguous_multiple_exact_matches",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-task-execution-loop.mjs",
+      "line": 10,
+      "testName": "verify-task-execution-loop",
+      "literalOrPattern": "protected_process",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-task-execution-loop.mjs",
+      "line": 11,
+      "testName": "verify-task-execution-loop",
+      "literalOrPattern": "ready",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-execution-loop.mjs",
+      "line": 13,
+      "testName": "verify-task-execution-loop",
+      "literalOrPattern": "needs_confirmation",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-execution-loop.mjs",
+      "line": 14,
+      "testName": "verify-task-execution-loop",
+      "literalOrPattern": "needs_clarification",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 64,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "/ARGS:\"arg one\" \"safe&echo injected>/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 65,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "/CWD:.*launcher path with spaces/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 66,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "/STDIN:stdin payload/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 67,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "/STDERR:arg one/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 89,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "secret prompt",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 114,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "waiting_approval",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 115,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "testing_quality",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 120,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "approved",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 122,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "completed",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 125,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "verify-readonly",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 131,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "abcdefghijklmnopqrstuvwxyz",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 132,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "supersecretvalue",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 134,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "codex_quota_or_billing",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 135,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "codex_auth_failed",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 149,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "blocked",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 150,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "baseline_mismatch",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 159,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "failed",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 160,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "codex_quota_or_billing",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 168,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "cancelled",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 176,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "codex.cmd",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 177,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "--json",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 178,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "read-only",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-gateway.mjs",
+      "line": 179,
+      "testName": "verify-task-gateway",
+      "literalOrPattern": "--ask-for-approval",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-interpreter-fixture-contracts.mjs",
+      "line": 1,
+      "testName": "verify-task-interpreter-fixture-contracts",
+      "literalOrPattern": "high",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-interpreter-fixture-contracts.mjs",
+      "line": 1,
+      "testName": "verify-task-interpreter-fixture-contracts",
+      "literalOrPattern": "clarification",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-interpreter.mjs",
+      "line": 15,
+      "testName": "verify-task-interpreter",
+      "literalOrPattern": "再次查询",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-interpreter.mjs",
+      "line": 15,
+      "testName": "verify-task-interpreter",
+      "literalOrPattern": "微信不再运行",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-interpreter.mjs",
+      "line": 15,
+      "testName": "verify-task-interpreter",
+      "literalOrPattern": "medium",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-interpreter.mjs",
+      "line": 17,
+      "testName": "verify-task-interpreter",
+      "literalOrPattern": "needs_confirmation",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-interpreter.mjs",
+      "line": 17,
+      "testName": "verify-task-interpreter",
+      "literalOrPattern": "needs_confirmation",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-interpreter.mjs",
+      "line": 17,
+      "testName": "verify-task-interpreter",
+      "literalOrPattern": "ready",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-interpreter.mjs",
+      "line": 17,
+      "testName": "verify-task-interpreter",
+      "literalOrPattern": "needs_confirmation",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 82,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "completed",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 91,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "local-tool-executor",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 103,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "local-runtime-state",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 104,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "/Runtime PID 2/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 114,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "progress",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 115,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "/interpreting/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 124,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "cancel",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 125,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "cancelled",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 134,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "pause",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 135,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "paused",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 146,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "continue",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 147,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "interpreting",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 154,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "needs_clarification",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 166,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "deepseek",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 177,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "failed",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 184,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "needs_confirmation",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 191,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "capability_unavailable",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 192,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "capability_unavailable",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 199,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "codex",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 208,
+      "testName": "verify-task-lifecycle-001",
+      "literalOrPattern": "process.stop",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-unified-model-proxy.mjs",
+      "line": 283,
+      "testName": "verify-unified-model-proxy",
+      "literalOrPattern": ".hermes-runtime",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-unified-model-proxy.mjs",
+      "line": 285,
+      "testName": "verify-unified-model-proxy",
+      "literalOrPattern": "aiw.hermes.local",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-v1-critical-high-gates.mjs",
+      "line": 3,
+      "testName": "verify-v1-critical-high-gates",
+      "literalOrPattern": "/aiw_session/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-v1-critical-high-gates.mjs",
+      "line": 3,
+      "testName": "verify-v1-critical-high-gates",
+      "literalOrPattern": "/isTrustedHost/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-v1-critical-high-gates.mjs",
+      "line": 3,
+      "testName": "verify-v1-critical-high-gates",
+      "literalOrPattern": "/randomBytes\\(32\\)/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-v1-critical-high-gates.mjs",
+      "line": 3,
+      "testName": "verify-v1-critical-high-gates",
+      "literalOrPattern": "Access-Control-Allow-Origin': '*'",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-v1-critical-high-gates.mjs",
+      "line": 8,
+      "testName": "verify-v1-critical-high-gates",
+      "literalOrPattern": "/acceptAndEnqueueJob/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-v1-critical-high-gates.mjs",
+      "line": 8,
+      "testName": "verify-v1-critical-high-gates",
+      "literalOrPattern": "/reconcileIpcState/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify-v1-critical-high-gates.mjs",
+      "line": 9,
+      "testName": "verify-v1-critical-high-gates",
+      "literalOrPattern": "/state\\.workspace!==resolvedWorkspace/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-v1-critical-high-gates.mjs",
+      "line": 9,
+      "testName": "verify-v1-critical-high-gates",
+      "literalOrPattern": "/state\\.sandbox!==sandbox/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-v1-critical-high-gates.mjs",
+      "line": 9,
+      "testName": "verify-v1-critical-high-gates",
+      "literalOrPattern": "/AbortError/",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-v1-release-archive.mjs",
+      "line": 6,
+      "testName": "verify-v1-release-archive",
+      "literalOrPattern": "GO",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-v1-release-archive.mjs",
+      "line": 8,
+      "testName": "verify-v1-release-archive",
+      "literalOrPattern": "','release archive commits must not change frozen production code",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-version-management.mjs",
+      "line": 95,
+      "testName": "verify-version-management",
+      "literalOrPattern": "hermes==0.17.0",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-version-management.mjs",
+      "line": 96,
+      "testName": "verify-version-management",
+      "literalOrPattern": "openclaw@1.2.3",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify-version-management.mjs",
+      "line": 103,
+      "testName": "verify-version-management",
+      "literalOrPattern": "/不可用|下线|候选模型|功能降级/",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 155,
+      "testName": "verify",
+      "literalOrPattern": "aria-label=\"更多对话操作\"",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 155,
+      "testName": "verify",
+      "literalOrPattern": "删除",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 156,
+      "testName": "verify",
+      "literalOrPattern": ".conversation-row:hover .conversation-menu-button",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 157,
+      "testName": "verify",
+      "literalOrPattern": "scrollTo({ top: container.scrollHeight",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 158,
+      "testName": "verify",
+      "literalOrPattern": "查看关联任务",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 158,
+      "testName": "verify",
+      "literalOrPattern": "setSelectedTaskId(task.id)",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 159,
+      "testName": "verify",
+      "literalOrPattern": "负责人",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 159,
+      "testName": "verify",
+      "literalOrPattern": "ownerOptions",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 160,
+      "testName": "verify",
+      "literalOrPattern": "备注</span>",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 160,
+      "testName": "verify",
+      "literalOrPattern": "失败原因</span>",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 160,
+      "testName": "verify",
+      "literalOrPattern": "标记失败并自动生成原因",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 161,
+      "testName": "verify",
+      "literalOrPattern": "pastGoalsOpen",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 161,
+      "testName": "verify",
+      "literalOrPattern": "setPastGoalsOpen",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 162,
+      "testName": "verify",
+      "literalOrPattern": "task-list-item",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 162,
+      "testName": "verify",
+      "literalOrPattern": ".task-list-item-active",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 163,
+      "testName": "verify",
+      "literalOrPattern": "今天要推进什么？",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 164,
+      "testName": "verify",
+      "literalOrPattern": "聊天驱动目标、任务和偏好",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 165,
+      "testName": "verify",
+      "literalOrPattern": "F:\\\\AI-Workbench",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 166,
+      "testName": "verify",
+      "literalOrPattern": "name: 'web_search'",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 166,
+      "testName": "verify",
+      "literalOrPattern": "https://google.serper.dev/search",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 167,
+      "testName": "verify",
+      "literalOrPattern": "tool_calls",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 167,
+      "testName": "verify",
+      "literalOrPattern": "实时数据、新闻、当前状态、价格",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 168,
+      "testName": "verify",
+      "literalOrPattern": "Serper Google Search API",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/verify.mjs",
+      "line": 293,
+      "testName": "verify",
+      "literalOrPattern": "系统自动记录",
+      "userFacingText": true,
+      "securityMeaning": "Potential user-visible safety/error/result wording assertion",
+      "currentRisk": "LITERAL_USER_FACING_TEXT_COUPLING",
+      "recommendedAction": "Review after Phase B closeout; prefer structured behavior fields and semantic notices"
+    },
+    {
+      "file": "scripts/versions-check-models.mjs",
+      "line": 5,
+      "testName": "versions-check-models",
+      "literalOrPattern": "--remote",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    },
+    {
+      "file": "scripts/versions-restore.mjs",
+      "line": 4,
+      "testName": "versions-restore",
+      "literalOrPattern": "--execute",
+      "userFacingText": false,
+      "securityMeaning": "Internal protocol, fixture, path, or source assertion",
+      "currentRisk": "LOW_OR_NOT_USER_FACING",
+      "recommendedAction": "Keep unless future review finds user-visible coupling"
+    }
+  ]
+}

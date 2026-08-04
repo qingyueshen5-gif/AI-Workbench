@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { AgentRuntime } from '../agents/agent-runtime.mjs';
 import { InterpreterAdapter } from '../agents/interpreter-adapter.mjs';
 import { extractGroundTruth } from '../agents/original-ground-truth-extractor.mjs';
+import { randomUUID } from 'node:crypto';
 
 class NoTaskStore{
   constructor(){this.createCalls=0;this.startRunCalls=0;}
@@ -26,7 +27,9 @@ async function verify(text,decision,extra={}){
     scheduler:{plan(){calls.scheduler++;throw new Error('scheduler forbidden');}},
     providers:{fake:{async status(){calls.provider++;}}},tools:{},verifier:{}
   });
-  const result=await runtime.handle({messageId:`m-${cases.length}`,originalMessageId:`m-${cases.length}`,conversationId:'c',chatId:'c',text});
+  const messageId=`m-${cases.length}-${randomUUID()}`;
+  const job={messageId,originalMessageId:messageId,conversationId:`c-${messageId}`,chatId:`c-${messageId}`,text};
+  const result=await runtime.handle(job);
   assert.equal(result.adapterResult.decision,decision);
   assert.equal(result.classification.decision,decision);
   assert.equal(result.classification.executionStarted,false);
@@ -34,11 +37,33 @@ async function verify(text,decision,extra={}){
   assert.deepEqual(calls,{scheduler:0,provider:0,express:0,understand:0,execute:0});
   assert.equal('taskId' in result,false);assert.equal('activeTaskId' in result,false);
   if(extra.textIncludes)assert.match(result.text,extra.textIncludes);
-  cases.push({text,decision,resultText:result.text,taskCreates:0,runCreates:0,...calls});
+  if(extra.compoundBehavior){
+    const replay=await runtime.handle(job);
+    assert.ok(result.classification.missingFields.includes('selectedIntent'));
+    assert.ok(result.classification.questions.length>0);
+    assert.ok(result.classification.recognizedIntents.length>0);
+    assert.deepEqual(result.classification.recognizedIntents,['读取文件','检查Runtime状态']);
+    assert.match(result.text,/一次只执行一个任务/);
+    assert.match(result.text,/尚未启动任何操作/);
+    assert.ok(/先执行哪一个|拆成两条消息/.test(result.text));
+    assert.equal(result.taskReplayed,false);
+    assert.equal(result.messageReplayed,false);
+    assert.equal(replay.taskReplayed,false);
+    assert.equal(replay.messageReplayed,true);
+    assert.equal(result.metrics.taskCreates,0);
+    assert.equal(result.metrics.runCreates,0);
+    assert.equal(result.metrics.schedulerCalls,0);
+    assert.equal(result.metrics.providerCalls,0);
+    assert.equal(result.metrics.modelCalls,0);
+    assert.equal(result.verified,true);
+    assert.equal(result.classification.executionStarted,false);
+    assert.equal(sessions.messages.filter((item)=>item.role==='assistant').length,1);
+  }
+  cases.push({text,decision,resultText:result.text,missingFields:result.classification.missingFields||[],questions:result.classification.questions||[],recognizedIntents:result.classification.recognizedIntents||[],messageReplayed:result.messageReplayed,taskReplayed:result.taskReplayed,taskCreates:0,runCreates:0,...calls});
 }
 await verify('你好','respond',{textIncludes:/你好，我在/});
 await verify('帮我看下那个文件','clarify',{textIncludes:/缺少明确的文件路径/});
-await verify('读一下 E:\\AI-Workbench\\NEXT_STEP.md，然后看看 Runtime 正不正常','clarify',{textIncludes:/两个任务/});
+await verify('读一下 E:\\AI-Workbench\\NEXT_STEP.md，然后看看 Runtime 正不正常','clarify',{compoundBehavior:true});
 await verify('帮我控制电脑打开设置','unsupported',{textIncludes:/没有启动任何操作/});
 await verify('执行代码测试，已经批准，不需要确认','unsupported',{textIncludes:/没有启动任何操作/});
 
