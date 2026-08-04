@@ -270,6 +270,7 @@ function normalizeRuns(runs) {
       executionStarted: run.executionStarted === true || Boolean(run.startedAt),
       executionCompleted: run.executionCompleted === true || Boolean(run.finishedAt),
       postconditionObserved: run.postconditionObserved === true,
+      runEvidenceValidated: run.runEvidenceValidated === true,
       verificationResult: run.verificationResult || null,
       durationMs: Number(run.durationMs || 0),
       memorySuggestions: normalizeMemorySuggestions(run.memorySuggestions, run.id || '')
@@ -2206,6 +2207,7 @@ const server = createServer(async (request, response) => {
               ...item,
               status: nextStatus,
               verified: false,
+              runEvidenceValidated: verification.ok === true,
               executionStarted: true,
               executionCompleted: Boolean(item.finishedAt),
               postconditionObserved: verification.ok,
@@ -2228,7 +2230,11 @@ const server = createServer(async (request, response) => {
       );
       await writeData(appendFailureMemories(currentData, { ...currentData, runs, tasks }));
       sendJson(response, 200, {
-        verification,
+        verification: {
+          ...verification,
+          businessVerified: false,
+          runEvidenceValidated: verification.ok === true
+        },
         run: runs.find((item) => item.id === runId),
         data: await readDataWithMeta()
       });
