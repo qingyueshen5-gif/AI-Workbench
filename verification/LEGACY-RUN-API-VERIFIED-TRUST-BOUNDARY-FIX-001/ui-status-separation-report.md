@@ -7,3 +7,5 @@
 Task历史、TodayPanel列表、Task列表和详情改为同时显示两个明确徽标/区域：“执行”和“验收”。done/completed只显示“执行已结束”；仅服务器可信verified显示“可信验收通过”。失败显示“执行失败”，取消显示“已取消”。TodayPanel进度改为明确的执行已结束比例，并单独显示可信验收通过数量。
 
 未新增公共协议字段，未修改server.mjs、Context投影、DTO、Gateway、Delivery或失败提示责任链。
+
+正式十项聚焦回归与构建均通过；状态矩阵A—L全部PASS。第四类主风险仍为HIGH/OPEN，本报告只证明UI状态分离聚焦范围。
