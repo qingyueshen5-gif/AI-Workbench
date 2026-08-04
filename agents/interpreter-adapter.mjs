@@ -3,8 +3,11 @@ import { makeAdapterResult, sanitizeSemanticCandidate, validateAdapterInput } fr
 
 const greeting=/^(?:你好|您好|在吗|早上好|上午好|下午好|晚上好|hello|hi|hey|嗨)[！!。.，,\s]*$/iu;
 const runtimeStatus=/(?:runtime|运行时|系统).*(?:状态|怎么样|正常|检查|查看|运行状态)|(?:状态|检查|查看|运行状态).*(?:runtime|运行时|系统)/iu;
-const readIntent=/(?:读取|打开并读取|只读|查看|看一下|看下|看看|read|open)/iu;
-const compoundConnector=/(?:然后|并且|同时|再|以及|,\s*then|\band\b)/iu;
+const readAction=/(?:读取|读取内容|读一下|读下|帮我读|帮我看|只读|查看|查看内容|看一下|看下|看看|打开并读取|打开看|打开看看|瞅一下|瞧一下|\bread\b|\bopen\b)/iu;
+const fileObject=/(?:文件|文档|文本|内容|完整路径|[\w.-]+\.[A-Za-z0-9]{1,12})(?:\b|$)/iu;
+const actionFragment=/(?:读取|读一下|读下|帮我读|帮我看|查看|看一下|看下|看看|打开|瞅一下|瞧一下|检查|检测|确认|处理|执行|运行|测试|构建|停止|结束|控制|创建|生成|修改|修复|分析|浏览|审阅|核对|inspect|check|read|open|run|test|stop|create|modify)/iu;
+const strongCompoundConnector=/(?:然后|接着|并且|以及|同时|顺便|另外|还要|之后再|，\s*之后|，\s*接着|,\s*then|\band\b)/iu;
+const explicitSequence=/(?:先[^，。；,;]+?(?:再|然后|后)[^，。；,;]+|做完[^，。；,;]+?再[^，。；,;]+)/iu;
 const unsupportedRules=[
   {id:'file.write',pattern:/(?:写入|新建|创建|保存|改写|修改).*(?:文件|文档)|file\.(?:write|manage)/iu,label:'写入或管理文件'},
   {id:'computer.control',pattern:/(?:控制|操作).*(?:电脑|鼠标|键盘|桌面)|computer\.control/iu,label:'控制电脑'},
@@ -31,9 +34,22 @@ const riskRules=[
 ];
 
 function pathFacts(groundTruth){return groundTruth.facts.filter((item)=>item.type==='windows_path'||item.type==='unc_path');}
+function filenameFacts(groundTruth){return groundTruth.facts.filter((item)=>item.type==='filename');}
 function riskSignals(text){return riskRules.filter(([,pattern])=>pattern.test(text)).map(([id])=>id);}
 function sourceValues(items){return items.map((item)=>item.raw);}
 function baseTask({taskType,goal,actions,targets,constraints,requiredCapabilities,successCriteria,context={}}){return {taskType,goal,actions,targets,context,constraints,riskLevel:'low',requiredCapabilities,successCriteria,requiresConfirmation:false,confidence:1};}
+function hasFileReadIntent(text,groundTruth){
+  const hasObject=fileObject.test(text)||pathFacts(groundTruth).length>0||filenameFacts(groundTruth).length>0;
+  return hasObject&&readAction.test(text);
+}
+function compoundStructure(text){
+  if(explicitSequence.test(text))return true;
+  const match=strongCompoundConnector.exec(text);
+  if(!match)return false;
+  const before=text.slice(0,match.index).trim();
+  const after=text.slice(match.index+match[0].length).trim();
+  return Boolean(before&&after&&actionFragment.test(before)&&actionFragment.test(after));
+}
 
 export class InterpreterAdapter{
   adapt(input){
@@ -43,10 +59,14 @@ export class InterpreterAdapter{
     const signals=riskSignals(originalText);
     const paths=pathFacts(groundTruth);
     const hasRuntime=runtimeStatus.test(originalText);
-    const hasRead=readIntent.test(originalText);
+    const hasRead=hasFileReadIntent(originalText,groundTruth);
     const independent=[hasRead?'读取文件':'',hasRuntime?'检查Runtime状态':''].filter(Boolean);
-    const compound=independent.length>1&&(compoundConnector.test(originalText)||groundTruth.actions.length>1);
-    if(compound)return makeAdapterResult({decision:'clarify',response:{renderer:'deterministic-v1',text:`我识别到两个任务：${independent.join('、')}。当前版本一次只执行一个任务，请告诉我先做哪一个。`},riskSignals:signals,unresolved:groundTruth.unresolved,semanticCandidateVersion:cleaned.version,missingFields:['selectedIntent'],questions:['请告诉我先执行哪个任务。'],recognizedIntents:independent});
+    const compound=compoundStructure(originalText);
+    if(compound){
+      const complete=independent.length>1;
+      const detail=complete?`我识别到多个任务：${independent.join('、')}。`:'当前消息可能包含多个任务，我可能没有完整识别另一部分要求。';
+      return makeAdapterResult({decision:'clarify',response:{renderer:'deterministic-v1',text:`${detail}当前版本一次只执行一个任务，尚未启动任何操作。请指定先执行哪一个，或拆成两条消息发送。`},riskSignals:signals,unresolved:groundTruth.unresolved,semanticCandidateVersion:cleaned.version,missingFields:['selectedIntent'],questions:['当前消息可能包含多个任务；请指定先执行哪一个，或拆成两条消息发送。'],recognizedIntents:independent});
+    }
     const unsupported=unsupportedRules.find((rule)=>rule.pattern.test(originalText));
     if(unsupported)return makeAdapterResult({decision:'unsupported',response:{renderer:'deterministic-v1',text:`我理解你希望${unsupported.label}，但当前版本还没有开放能够安全执行该目标的能力，因此没有启动任何操作。目前可以检查Runtime状态，或只读读取你明确提供路径的文件。`},riskSignals:signals,unresolved:groundTruth.unresolved,semanticCandidateVersion:cleaned.version,recognizedIntents:[unsupported.id]});
     if(hasRuntime){

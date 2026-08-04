@@ -5,6 +5,8 @@ import { join } from 'node:path';
 import { AgentRuntime } from '../agents/agent-runtime.mjs';
 import { NonExecutionMessageStore } from '../channels/non-execution-message-store.mjs';
 import { ContractSessionStore } from './runtime-dependency-contract-fixtures.mjs';
+import { InterpreterAdapter } from '../agents/interpreter-adapter.mjs';
+import { extractGroundTruth } from '../agents/original-ground-truth-extractor.mjs';
 
 const root = await fs.mkdtemp(join(os.tmpdir(), 'aiw-clarify-contract-'));
 const scenarios = [
@@ -18,7 +20,25 @@ const scenarios = [
     id: 'compound-file-and-runtime',
     text: '读一下文件，然后检查 Runtime',
     expectedMissing: 'selectedIntent',
-    expectedText: /两个任务|先做哪一个/
+    expectedText: /多个任务|先执行哪一个/
+  },
+  {
+    id: 'compound-explicit-path-and-runtime',
+    text: '读取 E:\\AI-Workbench\\NEXT_STEP.md，然后看看 Runtime 正不正常',
+    expectedMissing: 'selectedIntent',
+    expectedText: /多个任务|先执行哪一个/
+  },
+  {
+    id: 'compound-unrecognized-front-fragment',
+    text: '浏览一下那个资料，接着检查 Runtime 状态',
+    expectedMissing: 'selectedIntent',
+    expectedText: /可能包含多个任务|没有完整识别另一部分/
+  },
+  {
+    id: 'compound-explicit-sequence',
+    text: '先看看这个文件，之后再检查Runtime',
+    expectedMissing: 'selectedIntent',
+    expectedText: /多个任务|先执行哪一个/
   },
   {
     id: 'missing-explicit-target',
@@ -29,6 +49,26 @@ const scenarios = [
 ];
 
 const rows = [];
+const adapter = new InterpreterAdapter();
+const directAdapterChecks = [
+  { id: 'single-runtime', text: '检查一下Runtime状态', decision: 'execute', capability: 'runtime.status' },
+  { id: 'single-file', text: '读一下 E:\\AI-Workbench\\NEXT_STEP.md', decision: 'execute', capability: 'file.read' },
+  { id: 'single-repeat-runtime', text: '再检查一下Runtime状态', decision: 'execute', capability: 'runtime.status' },
+  { id: 'greeting', text: '你好', decision: 'respond', capability: null },
+  { id: 'negative-display-runtime', text: '展示Runtime状态', decision: 'execute', capability: 'runtime.status', notFileRead: true },
+  { id: 'negative-output-tests', text: '输出测试结果', decision: 'respond', capability: null, notFileRead: true },
+  { id: 'negative-open-settings', text: '打开设置', decision: 'respond', capability: null, notFileRead: true },
+  { id: 'negative-look-system', text: '看看系统是否正常', decision: 'execute', capability: 'runtime.status', notFileRead: true },
+  { id: 'runtime-finished-word', text: 'Runtime完了', decision: 'respond', capability: null },
+  { id: 'system-finished-word', text: '系统是不是完了', decision: 'respond', capability: null }
+];
+const directResults = directAdapterChecks.map((check) => {
+  const result = adapter.adapt({ originalText: check.text, groundTruth: extractGroundTruth(check.text) });
+  assert.equal(result.decision, check.decision, check.id);
+  assert.deepEqual(result.taskDraft?.requiredCapabilities?.[0] || null, check.capability, check.id);
+  if (check.notFileRead) assert.notEqual(result.taskDraft?.requiredCapabilities?.[0], 'file.read', check.id);
+  return { id: check.id, input: check.text, decision: result.decision, capability: result.taskDraft?.requiredCapabilities?.[0] || null };
+});
 try {
   for (const scenario of scenarios) {
     const sessions = new ContractSessionStore();
@@ -141,6 +181,7 @@ console.log(JSON.stringify({
   ok: true,
   module: 'NON-EXECUTION-CLARIFY-CONTRACT-001',
   rows,
+  directResults,
   hardContract: {
     decision: 'clarify',
     tasks: 0,
