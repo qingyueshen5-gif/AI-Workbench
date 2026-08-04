@@ -1,0 +1,43 @@
+{
+  "schema": "ai-workbench.cq003b-execution-failure-reachability/v1",
+  "baselineHead": "fb5b7050fe34f3667ba14900811b6ca8bca7dcfc",
+  "providerFailurePath": {
+    "reachable": true,
+    "selectedAsPrimary": true,
+    "flow": ["InterpreterAdapter execute", "TaskStore.create", "interpreting", "scheduling", "ready", "executing", "TaskStore.startRun", "Run starting", "Provider throws", "failRunVerification", "AgentRuntime.failTask", "Task failed"],
+    "noFormalContractChangeRequired": true,
+    "isolatableWithoutSideEffects": true,
+    "stableFailureStageAvailableToday": false,
+    "formalTaskFailureWritten": true,
+    "currentFailureShape": ["message", "name"]
+  },
+  "verifierFailurePath": {
+    "reachable": true,
+    "selectedAsPrimary": false,
+    "providerCandidateCanBeIsolated": true,
+    "verifierCanRejectThroughExistingContract": true,
+    "taskActuallyEntersVerifyingBeforeRejection": false,
+    "reason": "verifyCapabilityResult is called inside executeCapabilityPlan before that method returns; the Task transition to verifying occurs only after executeWithRun succeeds.",
+    "currentEquivalentFlow": ["Task executing", "Provider candidate", "Verifier rejects", "executeCapabilityPlan throws", "failRunVerification", "AgentRuntime.failTask", "Task failed"]
+  },
+  "answers": {
+    "1_providerPathReachable": true,
+    "2_verifierPathReachable": true,
+    "3_pathWithoutContractModification": "Both can use existing injection boundaries, but Provider failure is the primary case.",
+    "4_sideEffectFreeFixturePath": "Provider failure with runtime.status and isolated registry/provider/verifier/task store.",
+    "5_stableStageAndClassification": "Run verification contains a failureReason, but Task.failure currently has only message/name; no stable errorCode/failureStage/failureClassification is persisted.",
+    "6_formalTaskFailureFactWritten": "YES, by AgentRuntime.failTask through TaskStore.patch and transitionTask, but its current structure is insufficient for the approved contract.",
+    "7_failedTerminalReplay": "YES. failed is in TERMINAL_TASK_STATES and handle returns terminalResult before control, adapter, scheduler or provider execution.",
+    "8_taskIdentityDerivation": "taskId = job.taskId || job.messageId; TaskStore originalMessageId = job.originalMessageId || job.messageId; conversationId = job.conversationId || job.chatId.",
+    "9_secondProcessingIdentity": "Reuse the same messageId, originalMessageId, conversationId/chatId, user identity and required context; do not provide taskId directly in the fixture.",
+    "10_userFailureNotificationOwner": "AgentRuntime currently rethrows execution errors. The user notification responsibility therefore lies outside Runtime, in Delivery/Gateway handling. No Runtime structured failed result is returned. The present isolated Runtime surface alone does not prove user notification."
+  },
+  "knownContractRisksBeforeFocusedTest": [
+    "TASK_FAILURE_MISSING_STABLE_ERROR_CODE_STAGE_CLASSIFICATION_AND_RUN_IDENTITY",
+    "TERMINAL_FAILED_REPLAY_HAS_NO_EXPLICIT_TASK_REPLAYED_MESSAGE_REPLAYED_DISTINCTION",
+    "TERMINAL_FAILED_REPLAY_DEFAULTS_VERIFIED_TRUE_WHEN_FINAL_RESULT_IS_ABSENT",
+    "RUNTIME_FAILURE_NOTIFICATION_NOT_GUARANTEED_AT_RUNTIME_SURFACE"
+  ],
+  "conclusion": "CURRENT_PROVIDER_FAILURE_PATH_REACHABLE_WITH_CONTRACT_RISKS",
+  "nextStep": "Implement the approved focused fixture without production changes. If any listed risk is observed, classify PRODUCT_OR_SECURITY_FAILURE, save WIP evidence and hard stop."
+}
