@@ -14,6 +14,7 @@ import { checkHealth, repairAll, selfHeal, setupEnv } from './health/self-heal.m
 import { ensureRuntimeDirs, migrateLegacyRuntimeData, runtimeDataFile, runtimeRoot, runtimeStartupErrorLogFile } from './runtime-paths.mjs';
 import { checkModelAvailability, doctor as versionDoctor, loadMatrix } from './versions/manager.mjs';
 import { collectReadiness, explainPortStatus } from './readiness.mjs';
+import { deriveBoundVerifierResult } from './agents/verified-semantics.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const dataFile = runtimeDataFile;
@@ -57,8 +58,10 @@ const internalActionTexts = new Set(['把这条消息同步为任务']);
 const serverOwnedTrustFieldNames = new Set([
   'verified',
   'verification',
+  'trustedTask',
   'verificationPassed',
   'finalEvidence',
+  'finalResult',
   'verifierId',
   'verifiedAt',
   'verificationResult',
@@ -96,16 +99,36 @@ function rejectClientSuppliedTrustFields(response, payload) {
   return true;
 }
 
+function runIdentityConflicts(incomingRun, existingRun) {
+  const conflicts = [];
+  if (String(incomingRun.taskId || '') !== String(existingRun.taskId || '')) conflicts.push('taskId');
+  if (existingRun.taskRevision !== undefined && incomingRun.taskRevision !== existingRun.taskRevision) conflicts.push('taskRevision');
+  if (existingRun.agentId && incomingRun.agentId && incomingRun.agentId !== existingRun.agentId) conflicts.push('agentId');
+  return conflicts;
+}
+
+function findRunIdentityConflict(incomingRuns, currentRuns) {
+  const currentById = new Map((Array.isArray(currentRuns) ? currentRuns : []).map((run) => [run.id, run]));
+  for (const incomingRun of Array.isArray(incomingRuns) ? incomingRuns : []) {
+    if (!incomingRun?.id) continue;
+    const existingRun = currentById.get(incomingRun.id);
+    if (!existingRun) continue;
+    const conflictingFields = runIdentityConflicts(incomingRun, existingRun);
+    if (conflictingFields.length) return { runId: incomingRun.id, conflictingFields };
+  }
+  return null;
+}
+
 function preserveServerOwnedRunFacts(incomingRuns, currentRuns) {
   const currentById = new Map((Array.isArray(currentRuns) ? currentRuns : []).map((run) => [run.id, run]));
   return (Array.isArray(incomingRuns) ? incomingRuns : []).map((run) => {
     const current = currentById.get(run.id);
     if (!current) return run;
-    return {
+    const preserved = {
       ...run,
-      verified: current.verified === true,
+      taskRevision: current.taskRevision,
+      trustedTask: current.trustedTask,
       verification: current.verification,
-      verificationPassed: current.verificationPassed,
       verificationResult: current.verificationResult,
       finalEvidence: current.finalEvidence,
       finalResult: current.finalResult,
@@ -114,6 +137,15 @@ function preserveServerOwnedRunFacts(incomingRuns, currentRuns) {
       runEvidenceValidated: current.runEvidenceValidated === true,
       legacyVerifiedClaimObserved: current.legacyVerifiedClaimObserved === true
     };
+    preserved.verified = deriveBoundVerifierResult({
+      task: preserved.trustedTask,
+      run: { ...preserved, runId: preserved.id },
+      verification: preserved.verification,
+      finalResult: preserved.finalResult,
+      finalEvidence: preserved.finalEvidence
+    });
+    if (current.verified === true && preserved.verified !== true) preserved.legacyVerifiedClaimObserved = true;
+    return preserved;
   });
 }
 
@@ -249,29 +281,24 @@ function normalizeTasks(tasks) {
 }
 
 function deriveLegacyRunVerified(run) {
-  const task = run?.trustedTask;
-  const verification = run?.verification;
-  const finalResult = run?.finalResult;
-  if (!task || task.status !== 'completed' || task.failure) return false;
-  if (!run || run.status !== 'completed') return false;
-  if (verification?.passed !== true || finalResult?.verified !== true) return false;
-  const revision = verification.taskRevision;
-  if (revision === undefined || revision === null) return false;
-  return verification.taskId === task.id
-    && verification.runId === run.id
-    && finalResult.taskId === task.id
-    && finalResult.runId === run.id
-    && finalResult.taskRevision === revision;
+  return deriveBoundVerifierResult({
+    task: run?.trustedTask,
+    run: run ? { ...run, runId: run.id } : null,
+    verification: run?.verification,
+    finalResult: run?.finalResult,
+    finalEvidence: run?.finalEvidence
+  });
 }
 
 function normalizeRuns(runs) {
   return (Array.isArray(runs) ? runs : []).map((run) => {
     const startedAt = run.startedAt || run.createdAt || new Date().toISOString();
     const trustedVerified = deriveLegacyRunVerified(run);
-    const legacyVerifiedClaimObserved = run.verified === true && !trustedVerified;
+    const legacyVerifiedClaimObserved = run.legacyVerifiedClaimObserved === true || (run.verified === true && !trustedVerified);
     return {
       id: run.id || createId('run'),
       taskId: run.taskId || '',
+      taskRevision: run.taskRevision,
       agentId: run.agentId || '',
       status: run.status || 'pending',
       input: run.input || {},
@@ -285,6 +312,12 @@ function normalizeRuns(runs) {
       finishedAt: run.finishedAt || '',
       verified: trustedVerified,
       legacyVerifiedClaimObserved,
+      trustedTask: run.trustedTask,
+      verification: run.verification,
+      finalEvidence: run.finalEvidence,
+      finalResult: run.finalResult,
+      verifierId: run.verifierId,
+      verifiedAt: run.verifiedAt,
       handled: run.handled === true,
       rendered: run.rendered === true,
       policyApplied: run.policyApplied === true,
@@ -2279,6 +2312,17 @@ const server = createServer(async (request, response) => {
       const payload = JSON.parse(body || '{}');
       if (rejectClientSuppliedTrustFields(response, payload)) return;
       const currentData = await readData();
+      const identityConflict = findRunIdentityConflict(payload.runs, currentData.runs);
+      if (identityConflict) {
+        sendJson(response, 409, {
+          accepted: false,
+          errorCode: 'RUN_IDENTITY_CONFLICT',
+          runId: identityConflict.runId,
+          conflictingFields: identityConflict.conflictingFields,
+          retryable: false
+        });
+        return;
+      }
       const data = normalizeData({
         ...payload,
         runs: preserveServerOwnedRunFacts(payload.runs, currentData.runs)
