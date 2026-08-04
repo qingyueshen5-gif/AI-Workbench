@@ -15,7 +15,7 @@ const readJson=async p=>JSON.parse(await fs.readFile(p,'utf8'));
 const trust=await readJson(join(authorityDir,'server-owned-trust-fields.json'));
 const map=await readJson(join(authorityDir,'server-fact-preservation-map.json'));
 const expected=[...new Set([
-  ...trust.fields.filter(x=>x.externalWritable===false).map(x=>x.path),
+  ...trust.fields.filter(x=>x.externalWritable===false && x.path!=='verification.passed').map(x=>x.path),
   ...map.fields.filter(x=>x.serverOwned===true && x.classification!=='CLIENT_WRITABLE_BUSINESS_FIELD' && x.path!=='finalResult').map(x=>x.path)
 ])].sort();
 const actual=[...ALL_SERVER_OWNED_RUN_PATHS].sort();

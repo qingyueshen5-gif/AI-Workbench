@@ -15,6 +15,7 @@ import { ensureRuntimeDirs, migrateLegacyRuntimeData, runtimeDataFile, runtimeRo
 import { checkModelAvailability, doctor as versionDoctor, loadMatrix } from './versions/manager.mjs';
 import { collectReadiness, explainPortStatus } from './readiness.mjs';
 import { deriveBoundVerifierResult } from './agents/verified-semantics.mjs';
+import { findForbiddenTrustPathsForEndpoint } from './shared/run-trust-field-policy.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const dataFile = runtimeDataFile;
@@ -55,38 +56,8 @@ const initialData = {
 const extractionConfidenceThreshold = 0.75;
 const ownerOptions = ['DeepSeek', '人工', 'Codex', 'GPT', 'Claude'];
 const internalActionTexts = new Set(['把这条消息同步为任务']);
-const serverOwnedTrustFieldNames = new Set([
-  'verified',
-  'verification',
-  'trustedTask',
-  'verificationPassed',
-  'finalEvidence',
-  'finalResult',
-  'verifierId',
-  'verifiedAt',
-  'verificationResult',
-  'runEvidenceValidated',
-  'legacyVerifiedClaimObserved'
-]);
-
-function findClientSuppliedTrustFields(value, path = '', offendingPaths = []) {
-  if (Array.isArray(value)) {
-    value.forEach((item, index) => findClientSuppliedTrustFields(item, `${path}[${index}]`, offendingPaths));
-    return offendingPaths;
-  }
-  if (!value || typeof value !== 'object') return offendingPaths;
-  for (const [key, child] of Object.entries(value)) {
-    const childPath = path ? `${path}.${key}` : key;
-    if (serverOwnedTrustFieldNames.has(key) || (key === 'passed' && path.split('.').at(-1) === 'verification')) {
-      offendingPaths.push(childPath);
-    }
-    findClientSuppliedTrustFields(child, childPath, offendingPaths);
-  }
-  return [...new Set(offendingPaths)].sort();
-}
-
-function rejectClientSuppliedTrustFields(response, payload) {
-  const offendingPaths = findClientSuppliedTrustFields(payload);
+function rejectClientSuppliedTrustFields(response, endpoint, payload) {
+  const offendingPaths = findForbiddenTrustPathsForEndpoint(endpoint, payload);
   if (!offendingPaths.length) return false;
   sendJson(response, 422, {
     accepted: false,
@@ -2173,7 +2144,7 @@ const server = createServer(async (request, response) => {
     if (pathname === '/api/runs' && request.method === 'POST') {
       const body = await readBody(request);
       const payload = JSON.parse(body || '{}');
-      if (rejectClientSuppliedTrustFields(response, payload)) return;
+      if (rejectClientSuppliedTrustFields(response, 'POST /api/runs', payload)) return;
       const currentData = await readData();
       const run = createRunRecord({
         taskId: payload.taskId,
@@ -2310,7 +2281,7 @@ const server = createServer(async (request, response) => {
     if (pathname === '/api/data' && request.method === 'PUT') {
       const body = await readBody(request);
       const payload = JSON.parse(body || '{}');
-      if (rejectClientSuppliedTrustFields(response, payload)) return;
+      if (rejectClientSuppliedTrustFields(response, 'PUT /api/data', payload)) return;
       const currentData = await readData();
       const identityConflict = findRunIdentityConflict(payload.runs, currentData.runs);
       if (identityConflict) {
