@@ -1,0 +1,87 @@
+{
+  "schema": "ai-workbench.terminal-replay-audit/v1",
+  "baselineHead": "db746967ac8c55e88a7f656c04ad478db58c7fea",
+  "terminalResult": {
+    "definition": "agents/agent-runtime.mjs:156-170",
+    "callSites": [
+      "agents/agent-runtime.mjs:175 AgentRuntime.finalize terminal guard",
+      "agents/agent-runtime.mjs:268 AgentRuntime.handle existing terminal Task"
+    ],
+    "defaultTrueCode": "verified: task.finalResult?.verified !== false",
+    "availableFacts": [
+      "task.currentState",
+      "task.taskId",
+      "task.taskRevision",
+      "task.activeRunId",
+      "task.runs[]",
+      "task.finalResult",
+      "task.failure"
+    ],
+    "terminalStates": ["completed", "capability_unavailable", "failed", "cancelled"],
+    "currentOutputs": {
+      "completed": "replayed=true; verified defaults true unless finalResult.verified===false; taskReplayed/messageReplayed absent",
+      "capability_unavailable": "replayed=true; current stored finalResult.verified=true; taskReplayed/messageReplayed absent",
+      "failed": "replayed=true; no finalResult produces verified=true; taskReplayed/messageReplayed absent",
+      "cancelled": "replayed=true; no finalResult produces verified=true; taskReplayed/messageReplayed absent"
+    }
+  },
+  "identityAndBinding": {
+    "failedRunLocator": "Task.failure.runId is authoritative for failed Task; locate matching task.runs[] entry and require taskId match.",
+    "completedRunLocator": "Task.finalResult.runId identifies the completed terminal Run; locate matching task.runs[] entry.",
+    "completedVerification": "The completed Run stores verification via TaskStore.bindRunVerification(); finalResult.verification and run.verification contain passed plus taskId/runId/taskRevision for the grounded execution path.",
+    "finalBinding": "Grounded finalResult contains runId and taskRevision, but currently relies on enclosing Task for taskId. Run finalEvidence contains taskId/runId/taskRevision through spread verificationRecord.",
+    "strictDerivation": "verified=true is possible only for completed, no failure, completed Run, passed verification with exact task/run/revision bindings, and finalResult/finalEvidence with matching identity. Otherwise false."
+  },
+  "replayClassification": {
+    "businessTaskCurrent": {"replayed": true, "taskReplayed": "missing", "messageReplayed": "missing"},
+    "nonExecutionCurrent": {"taskReplayed": false, "messageReplayed": true},
+    "requiredBusinessTask": {"replayed": true, "taskReplayed": true, "messageReplayed": false}
+  },
+  "assignmentInventory": {
+    "path": "verification/TERMINAL-REPLAY-VERIFIED-FIX-001/verified-assignment-inventory.json",
+    "method": "Lexical assignment inventory followed by semantic boundary review",
+    "stats": {
+      "totalEntries": 66,
+      "productionEntries": 33,
+      "testFixtureEntries": 33,
+      "defaultTrueEntries": 33,
+      "missingVerifierSourceEntries": 55,
+      "missingAnyTaskRunRevisionBindingEntries": 66
+    }
+  },
+  "newProductionRisks": [
+    {
+      "code": "NON_TERMINAL_RUNTIME_VERIFIED_TRUE_WITHOUT_BOUND_VERIFIER",
+      "classification": "PRODUCT_OR_SECURITY_FAILURE",
+      "locations": [
+        "agents/agent-runtime.mjs:278 control interception",
+        "agents/agent-runtime.mjs:330 clarification",
+        "agents/agent-runtime.mjs:342 confirmation",
+        "agents/agent-runtime.mjs:348,350 capability_unavailable"
+      ],
+      "reason": "verified=true is emitted or persisted without a taskId/runId/taskRevision-bound Verifier PASS; capability_unavailable is explicitly required to be verified=false.",
+      "scopeDecision": "OUT_OF_SCOPE_FOR_TERMINAL_RESULT_ONLY_FIX_EXCEPT_TERMINAL_REPLAY_DERIVATION"
+    },
+    {
+      "code": "LEGACY_EXECUTION_RESULTS_VERIFIED_TRUE_WITHOUT_UNIFORM_RUN_BINDING",
+      "classification": "PRODUCT_OR_SECURITY_FAILURE",
+      "locations": [
+        "agents/agent-runtime.mjs:408,410 process.stop",
+        "agents/agent-runtime.mjs:430 code execution",
+        "agents/agent-runtime.mjs:439 conversation answer"
+      ],
+      "reason": "verified=true is emitted after heterogeneous checks but without the uniform persisted taskId/runId/taskRevision-bound verification contract required by the audit instruction.",
+      "scopeDecision": "OUT_OF_SCOPE; DO_NOT_MODIFY_SUCCESS_EXECUTION_PATH"
+    },
+    {
+      "code": "NON_EXECUTION_RENDERER_VERIFIED_TRUE_SEMANTICS_UNBOUND",
+      "classification": "PRODUCT_OR_SECURITY_FAILURE",
+      "locations": [
+        "agents/interpreter-adapter-contract.mjs:68"
+      ],
+      "reason": "Non-execution renderer uses verified=true without Task/Run/revision binding. This may represent renderer validity rather than business verification, but it is not namespaced and is machine-indistinguishable in the shared result field.",
+      "scopeDecision": "OUT_OF_SCOPE; NON_EXECUTION_BEHAVIOR MUST_NOT_BE_CHANGED"
+    }
+  ],
+  "decision": "NEW_PRODUCT_OR_SECURITY_FAILURES_FOUND_DURING_REQUIRED_SCAN_HARD_STOP_AFTER_AUDIT_CHECKPOINT"
+}
