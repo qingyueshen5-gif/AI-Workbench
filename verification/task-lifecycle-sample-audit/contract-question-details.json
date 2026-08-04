@@ -1,0 +1,280 @@
+{
+  "schema": "ai-workbench.task-lifecycle-contract-question-details/v1",
+  "sourceHead": "fe862d967a3c17a3801a59fc339ba81f8b8303fd",
+  "sourceFile": "scripts/verify-task-lifecycle-001.mjs",
+  "readOnlyExport": true,
+  "statistics": {
+    "stillValid": 7,
+    "outdatedSample": 2,
+    "contractQuestion": 7,
+    "contractQuestionIds": [
+      "CQ-001",
+      "CQ-002",
+      "CQ-003",
+      "CQ-004",
+      "CQ-005",
+      "CQ-006",
+      "CQ-007"
+    ]
+  },
+  "questions": [
+    {
+      "questionId": "CQ-001",
+      "file": "scripts/verify-task-lifecycle-001.mjs:151-157",
+      "testName": "clarification-requires-context-evidence",
+      "sampleInput": "处理一下",
+      "originalTestPurpose": "验证低置信度且缺少目标信息的请求会创建业务Task，进入waiting_for_clarification，并保存结构化missingFields证据，而不是直接失败或继续执行。",
+      "originalLifecycleSemantics": ["waiting", "clarification", "waiting_for_clarification", "needs_clarification", "structured context evidence"],
+      "assertions": [
+        "assert.equal(result.schedulerStatus, 'needs_clarification')",
+        "assert.deepEqual((await tasks.load('clarify')).waitingFor.missingFields, ['target'])"
+      ],
+      "preB2Path": {
+        "adapterDecision": "N/A：B2前Runtime没有确定性InterpreterAdapter决策层；请求进入TaskInterpreter",
+        "createsTask": true,
+        "taskType": "clarification（由ContractTaskInterpreter Fixture返回）",
+        "scheduler": "不进入CapabilityScheduler；Runtime在识别taskType=clarification后提前返回",
+        "run": "不创建Run",
+        "provider": "不启动业务Provider；assistant结果由task-interpreter分支生成",
+        "final": "不生成终态Final；Task停留在waiting_for_clarification",
+        "terminalResult": false,
+        "replayed": "未验证；该状态不是TERMINAL_TASK_STATES"
+      },
+      "postB2Path": {
+        "adapterDecision": "respond",
+        "createsTask": false,
+        "taskType": null,
+        "scheduler": false,
+        "run": false,
+        "provider": false,
+        "final": "生成并复用非执行确定性消息结果，不生成业务Task Final",
+        "terminalResult": false,
+        "replayed": "taskReplayed=false；重复时使用messageReplayed，不使用Task replay"
+      },
+      "whyNoAutomaticDecision": "未知的是契约应当拆分还是原断言应当退出当前Runtime生命周期矩阵。当前Adapter把缺信息请求定义为非执行clarify/respond，Task=0；但原断言要求存在waiting_for_clarification业务Task。仅替换成runtime.status或file.read会丢失waiting/clarification语义；手工写Task状态或伪造Scheduler结果又违反真实生命周期要求。当前Allowlist也没有能够自然创建clarification业务Task的输入，因此不能自动判为单纯换样本。",
+      "assistantSuggestion": "D",
+      "assistantSuggestionLabel": "需要产品负责人裁定"
+    },
+    {
+      "questionId": "CQ-002",
+      "file": "scripts/verify-task-lifecycle-001.mjs:159-169",
+      "testName": "invalid-interpreter-one-correction-success",
+      "sampleInput": "hello",
+      "originalTestPurpose": "验证TaskInterpreter第一次输出非法JSON时只进行一次受限纠正，第二次返回合法chat解释后继续完成业务Task。",
+      "originalLifecycleSemantics": ["interpreter correction", "completed", "model validation", "single correction attempt"],
+      "assertions": [
+        "assert.equal(result.provider, 'deepseek')",
+        "assert.equal(calls, 2)"
+      ],
+      "preB2Path": {
+        "adapterDecision": "N/A：B2前无确定性Adapter；TaskInterpreter第一次解析失败后执行一次correction prompt",
+        "createsTask": true,
+        "taskType": "chat（第二次TaskInterpreter输出）",
+        "scheduler": "进入CapabilityScheduler，空requiredCapabilities形成ready计划",
+        "run": "旧chat路径不创建正式grounded Run",
+        "provider": "TaskInterpreter模型调用2次，随后DeepSeek express生成最终回复",
+        "final": "通过Runtime.finalize形成completed Task与finalResult",
+        "terminalResult": "首次不进入；若后续重放终态Task则可进入",
+        "replayed": "首次不是replay；本用例未断言第二次处理"
+      },
+      "postB2Path": {
+        "adapterDecision": "respond（greeting）",
+        "createsTask": false,
+        "taskType": null,
+        "scheduler": false,
+        "run": false,
+        "provider": false,
+        "final": "确定性Renderer消息结果；不生成业务Final",
+        "terminalResult": false,
+        "replayed": "taskReplayed=false；重复时messageReplayed=true"
+      },
+      "whyNoAutomaticDecision": "未知的是该测试应继续作为Runtime生命周期契约、改为TaskInterpreter直接单元契约，还是拆为两个契约。更换为真实runtime.status/file.read只会验证grounded Task完成，无法保留calls=2和受限纠正语义；保留hello则当前正式路径根本不调用TaskInterpreter。因而既不能只换样本，也不能在未裁定时修改断言或绕过Adapter。",
+      "assistantSuggestion": "D",
+      "assistantSuggestionLabel": "需要产品负责人裁定"
+    },
+    {
+      "questionId": "CQ-003",
+      "file": "scripts/verify-task-lifecycle-001.mjs:171-179",
+      "testName": "invalid-interpreter-fails-not-clarification",
+      "sampleInput": "hello",
+      "originalTestPurpose": "验证TaskInterpreter初次输出和受限纠正均无效时，业务Task确定性进入failed，而不是被误当作clarification。",
+      "originalLifecycleSemantics": ["failed", "interpreter failure", "not clarification", "failure fact preservation"],
+      "assertions": [
+        "await assert.rejects(() => runtime.handle(...), /Task Interpreter/)",
+        "assert.equal((await tasks.load('bad')).currentState, 'failed')"
+      ],
+      "preB2Path": {
+        "adapterDecision": "N/A：B2前无确定性Adapter；请求直接进入TaskInterpreter",
+        "createsTask": true,
+        "taskType": "无法形成合法taskType；两次解释输出均非法",
+        "scheduler": "不进入Scheduler",
+        "run": "不创建Run",
+        "provider": "TaskInterpreter理解模型调用两次；无业务Provider执行",
+        "final": "不生成成功Final；catch路径调用failTask并持久化失败事实",
+        "terminalResult": "首次不进入；failed Task后续重放可由terminalResult返回",
+        "replayed": "首次异常；本用例未断言第二次处理"
+      },
+      "postB2Path": {
+        "adapterDecision": "respond（greeting）",
+        "createsTask": false,
+        "taskType": null,
+        "scheduler": false,
+        "run": false,
+        "provider": false,
+        "final": "确定性非执行结果；不生成failed Task或业务Final",
+        "terminalResult": false,
+        "replayed": "taskReplayed=false；重复时messageReplayed=true"
+      },
+      "whyNoAutomaticDecision": "未知的是failed生命周期覆盖应继续绑定TaskInterpreter失败，还是改为独立的确定性Provider/Verifier失败业务Task并把Interpreter纠错另拆门禁。后者能保留failed与终态重放，却不能保留原断言中的Task Interpreter错误和纠正机制；前者又无法经过当前正式Runtime Adapter路径。故涉及样本、断言和契约拆分三者的归属，不能自动处理。",
+      "assistantSuggestion": "D",
+      "assistantSuggestionLabel": "需要产品负责人裁定"
+    },
+    {
+      "questionId": "CQ-004",
+      "file": "scripts/verify-task-lifecycle-001.mjs:181-186",
+      "testName": "confirmation-transition",
+      "sampleInput": "pay",
+      "originalTestPurpose": "验证需要确认的高风险能力在执行前由Scheduler阻断，Task进入waiting_for_confirmation。",
+      "originalLifecycleSemantics": ["waiting", "needs_confirmation", "waiting_for_confirmation", "no provider before confirmation"],
+      "assertions": [
+        "assert.equal(result.schedulerStatus, 'needs_confirmation')"
+      ],
+      "preB2Path": {
+        "adapterDecision": "N/A：B2前无确定性Adapter；ContractTaskInterpreter返回commerce解释",
+        "createsTask": true,
+        "taskType": "commerce",
+        "scheduler": "进入CapabilityScheduler；commerce.payment缺少有效授权，返回needs_confirmation",
+        "run": "不创建Run",
+        "provider": "不启动Provider",
+        "final": "不生成终态Final；Task进入waiting_for_confirmation",
+        "terminalResult": false,
+        "replayed": "未验证；waiting_for_confirmation不是终态"
+      },
+      "postB2Path": {
+        "adapterDecision": "respond",
+        "createsTask": false,
+        "taskType": null,
+        "scheduler": false,
+        "run": false,
+        "provider": false,
+        "final": "确定性非执行消息结果",
+        "terminalResult": false,
+        "replayed": "taskReplayed=false；重复时messageReplayed=true"
+      },
+      "whyNoAutomaticDecision": "主要未知是Allowlist无法表达原契约。当前正式Allowlist仅runtime.status与file.read，二者均不要求确认；commerce.payment不允许进入当前Adapter执行路径。仅换样本无法真实触发needs_confirmation，伪造Scheduler或AuthorizationContext又违反本任务限制。因此必须裁定该确认契约应迁移到Scheduler直接门禁、保留为历史能力矩阵，还是由未来获批能力重新承载。",
+      "assistantSuggestion": "D",
+      "assistantSuggestionLabel": "需要产品负责人裁定"
+    },
+    {
+      "questionId": "CQ-005",
+      "file": "scripts/verify-task-lifecycle-001.mjs:188-194",
+      "testName": "capability-unavailable-terminal",
+      "sampleInput": "video",
+      "originalTestPurpose": "验证Task已经创建但所需能力无可用Provider时，Scheduler返回capability_unavailable并保存对应终态事实。",
+      "originalLifecycleSemantics": ["capability_unavailable", "terminal", "no provider execution", "failure-like final fact"],
+      "assertions": [
+        "assert.equal(result.schedulerStatus, 'capability_unavailable')",
+        "assert.equal((await tasks.load('unavailable')).currentState, 'capability_unavailable')"
+      ],
+      "preB2Path": {
+        "adapterDecision": "N/A：B2前无确定性Adapter；ContractTaskInterpreter返回media_creation解释",
+        "createsTask": true,
+        "taskType": "media_creation",
+        "scheduler": "进入CapabilityScheduler；media.video.create无可用Provider，返回capability_unavailable",
+        "run": "不创建Run",
+        "provider": "不启动Provider",
+        "final": "写入capability-scheduler finalResult，Task进入capability_unavailable终态",
+        "terminalResult": "首次不进入；后续同Task可通过terminalResult重放",
+        "replayed": "首次false/未设置；本用例未执行第二次处理"
+      },
+      "postB2Path": {
+        "adapterDecision": "respond；若改成明确的“创建视频”则为unsupported",
+        "createsTask": false,
+        "taskType": null,
+        "scheduler": false,
+        "run": false,
+        "provider": false,
+        "final": "非执行消息结果，不产生capability_unavailable Task Final",
+        "terminalResult": false,
+        "replayed": "taskReplayed=false；重复时messageReplayed=true"
+      },
+      "whyNoAutomaticDecision": "未知的是capability_unavailable应继续作为业务Task终态契约，还是已被Adapter层unsupported非执行契约取代或拆分。当前Allowlist中的runtime.status/file.read均有可用Provider，不能构造相同终态；选择未开放能力会被Adapter提前unsupported。样本替换无法保留原断言，断言变更又属于产品契约裁定。",
+      "assistantSuggestion": "D",
+      "assistantSuggestionLabel": "需要产品负责人裁定"
+    },
+    {
+      "questionId": "CQ-006",
+      "file": "scripts/verify-task-lifecycle-001.mjs:196-202",
+      "testName": "code-execution-terminal",
+      "sampleInput": "修改代码并运行测试",
+      "originalTestPurpose": "验证受信授权后的代码业务Task进入代码执行路径，调用Codex一次并形成终态结果。",
+      "originalLifecycleSemantics": ["completed", "code execution", "authorized provider", "provider invocation", "terminal final"],
+      "assertions": [
+        "assert.equal(result.toolUsed, 'codex')",
+        "assert.equal(result.metrics.codexCalls, 1)"
+      ],
+      "preB2Path": {
+        "adapterDecision": "N/A：B2前无确定性Adapter；ContractTaskInterpreter返回code_task解释",
+        "createsTask": true,
+        "taskType": "code_task",
+        "scheduler": "进入CapabilityScheduler并选择code.read/code.modify/code.execute assignments；使用trustedAuthorizations",
+        "run": "旧代码路径不使用当前grounded executeWithRun业务Run结构",
+        "provider": "调用models.execute（Codex Fixture）一次，随后models.express生成最终回复",
+        "final": "Runtime.finalize写入completed Task和finalResult",
+        "terminalResult": "首次不进入；后续同终态Task可进入",
+        "replayed": "首次不是replay；本用例未执行第二次处理"
+      },
+      "postB2Path": {
+        "adapterDecision": "unsupported（recognizedIntent=code.modify）",
+        "createsTask": false,
+        "taskType": null,
+        "scheduler": false,
+        "run": false,
+        "provider": false,
+        "final": "非执行unsupported确定性结果；不调用Codex",
+        "terminalResult": false,
+        "replayed": "taskReplayed=false；重复时messageReplayed=true"
+      },
+      "whyNoAutomaticDecision": "未知的是该旧代码执行矩阵是否应继续属于当前阶段Task Lifecycle、迁移到代码能力直接门禁，还是由unsupported契约替代。当前Allowlist明确不含code能力且本轮禁止真实模型；换成runtime.status/file.read会把代码执行语义改成grounded读取语义，保留断言则必然失败。需要产品负责人决定契约归属和阶段边界。",
+      "assistantSuggestion": "D",
+      "assistantSuggestionLabel": "需要产品负责人裁定"
+    },
+    {
+      "questionId": "CQ-007",
+      "file": "scripts/verify-task-lifecycle-001.mjs:204-211",
+      "testName": "process-provider-terminal",
+      "sampleInput": "停止受控进程",
+      "originalTestPurpose": "验证受信授权后的process.stop业务Task进入正式Provider，停止精确目标并验证目标消失。",
+      "originalLifecycleSemantics": ["completed", "process.stop", "authorized provider", "verified side effect", "terminal final"],
+      "assertions": [
+        "assert.equal(result.toolUsed, 'process.stop')",
+        "assert.equal(result.metrics.processStopCalls, 1)"
+      ],
+      "preB2Path": {
+        "adapterDecision": "N/A：B2前无确定性Adapter；ContractTaskInterpreter返回computer_operation解释",
+        "createsTask": true,
+        "taskType": "computer_operation",
+        "scheduler": "进入CapabilityScheduler并选择process.list/process.stop；trusted authorization用于process.stop",
+        "run": "旧process路径不使用当前grounded executeWithRun业务Run结构",
+        "provider": "调用隔离local-process-provider list/stop Fixture",
+        "final": "验证pidAbsent后Runtime.finalize写入completed Task和finalResult",
+        "terminalResult": "首次不进入；后续同终态Task可进入",
+        "replayed": "首次不是replay；本用例未执行第二次处理"
+      },
+      "postB2Path": {
+        "adapterDecision": "unsupported（recognizedIntent=process.stop）",
+        "createsTask": false,
+        "taskType": null,
+        "scheduler": false,
+        "run": false,
+        "provider": false,
+        "final": "非执行unsupported确定性结果；不触发进程副作用",
+        "terminalResult": false,
+        "replayed": "taskReplayed=false；重复时messageReplayed=true"
+      },
+      "whyNoAutomaticDecision": "未知的是process.stop生命周期测试应保留在当前阶段矩阵、迁移到能力专项，还是由Adapter unsupported契约取代。process.stop超出当前Allowlist，任何能进入当前execute路径的替代样本都会改变原授权和副作用验证语义；恢复旧行为又会扩大Allowlist和生产范围。因此不能自动换样本或改断言。",
+      "assistantSuggestion": "D",
+      "assistantSuggestionLabel": "需要产品负责人裁定"
+    }
+  ]
+}
