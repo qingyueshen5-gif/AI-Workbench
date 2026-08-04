@@ -1,0 +1,57 @@
+{
+  "schema": "ai-workbench.cq003b-control-flow-feasibility/v1",
+  "task": "TASK-LIFECYCLE-M1-CQ003-INTERPRETER-FAILURE-AND-FAILED-TASK-001",
+  "baselineHead": "30afd0ae493929d8de3dd8ec8111c9e0cc60109f",
+  "conclusion": "B. HISTORICAL_CONTRACT_DRIFT",
+  "answers": {
+    "1_interpreterInvocationRelativeToTaskCreation": {
+      "answer": "TaskInterpreter is not invoked in the current AgentRuntime.handle execution path. InterpreterAdapter.adapt runs before Task creation; for execute decisions its taskDraft becomes the interpretation.",
+      "evidence": [
+        "agents/agent-runtime.mjs:266-269 normalize/classify, Ground Truth and InterpreterAdapter before Task creation",
+        "agents/agent-runtime.mjs:293 Task creation",
+        "agents/agent-runtime.mjs:297 interpretation = adapterResult.taskDraft",
+        "agents/agent-runtime.mjs:107 constructs TaskInterpreter but handle has no reachable taskInterpreter.interpret call"
+      ]
+    },
+    "2_formalBusinessTaskExistsWhenInterpreterFails": {
+      "answer": "NO. A TaskInterpreter failure can occur only when TaskInterpreter is called directly by an isolated component suite or by the pre-B2 historical Runtime. The current Runtime does not call it, so no current formal business Task exists for that failure.",
+      "evidence": [
+        "agents/agent-runtime.mjs:268 Adapter decision occurs before Task creation",
+        "agents/agent-runtime.mjs:269-290 non-execute decisions return through message-level idempotency with Task=0",
+        "agents/agent-runtime.mjs:293 Task is created only after adapterResult.decision=execute"
+      ]
+    },
+    "3_reachableTaskInterpretingInterpreterFailureFailTaskPath": {
+      "answer": "NO for TaskInterpreter failure. The general catch/failTask path at lines 419-421 is reachable for failures after Task creation, but current interpreting uses adapterResult.taskDraft and contains no TaskInterpreter call that can fail there.",
+      "evidence": [
+        "agents/agent-runtime.mjs:295 transition to interpreting",
+        "agents/agent-runtime.mjs:297 uses already-created adapterResult.taskDraft",
+        "agents/agent-runtime.mjs:419-421 generic catch invokes failTask",
+        "No taskInterpreter.interpret invocation exists between Task creation and the generic catch"
+      ]
+    },
+    "4_architectureStatus": {
+      "answer": "The asserted Interpreter-failure-to-failed-Task path belongs to the pre-B2 historical Runtime/test contract, not the current B2 architecture.",
+      "evidence": [
+        "scripts/verify-task-lifecycle-001.mjs:171-178 historical fixture explicitly injects TaskInterpreter into AgentRuntime and expects failed Task",
+        "Current agents/agent-runtime.mjs constructs taskInterpreter for compatibility but handle routes through deterministic InterpreterAdapter"
+      ]
+    },
+    "5_canValidateWithoutRestoringOldBehavior": {
+      "answer": "NO. Validating CQ-003-B as specified would require restoring Runtime TaskInterpreter invocation, creating a placeholder Task before interpretation, manually setting failed state, or substituting another failure boundary. All are forbidden or would validate a different contract.",
+      "forbiddenAlternatives": [
+        "Restore hello/chat Task path",
+        "Create empty Task before Adapter decision",
+        "Manually patch Task currentState to failed",
+        "Use Provider or Verifier failure as a substitute"
+      ]
+    }
+  },
+  "disposition": {
+    "cq003A": "ALLOWED_TO_PROCEED_INDEPENDENTLY",
+    "cq003B": "DEFERRED_PENDING_PRODUCT_DECISION",
+    "productionCodeChange": false,
+    "fixtureImplementationAllowed": false,
+    "reason": "Only conclusion A permits CQ-003-B implementation. Conclusion B requires evidence preservation and no restoration of historical behavior."
+  }
+}
