@@ -1,0 +1,136 @@
+{
+  "schema": "ai-workbench.cq001-impact-regression/v1",
+  "allPassed": false,
+  "status": "BLOCKED_BY_TEST_FIXTURE_CONTRACT_FAILURE",
+  "passed": 9,
+  "failed": 2,
+  "uniqueFailureRoots": 1,
+  "count": 11,
+  "rows": [
+    {
+      "name": "interpreter-adapter-variants",
+      "command": "node scripts/verify-interpreter-adapter-variants-001.mjs",
+      "workingDirectory": "E:\\AI-Workbench-candidates\\interpreter-adapter-001",
+      "startedAt": "2026-08-04T04:36:20.141517+00:00",
+      "finishedAt": "2026-08-04T04:36:20.431912+00:00",
+      "exitCode": 0,
+      "classification": null,
+      "supersededBy": null,
+      "output": "{\n  \"ok\": true,\n  \"module\": \"INTERPRETER-ADAPTER-B4-VARIANTS-001\",\n  \"convergence\": {\n    \"runtime\": {\n      \"count\": 5,\n      \"signature\": {\n        \"decision\": \"execute\",\n        \"taskType\": \"system_diagnosis\",\n        \"requiredCapabilities\": [\n          \"runtime.status\"\n        ],\n        \"path\": null\n      },\n      \"rate\": 1\n    },\n    \"file\": {\n      \"count\": 5,\n      \"signature\": {\n        \"decision\": \"execute\",\n        \"taskType\": \"file_operation\",\n        \"requiredCapabilities\": [\n          \"file.read\"\n        ],\n        \"path\": \"E:\\\\AI-Workbench\\\\NEXT_STEP.md\"\n      },\n      \"rate\": 1\n    },\n    \"greeting\": {\n      \"count\": 5,\n      \"signature\": {\n        \"decision\": \"respond\",\n        \"taskType\": null,\n        \"requiredCapabilities\": null,\n        \"path\": null\n      },\n      \"rate\": 1\n    }\n  },\n  \"historicalFixtureCount\": 10,\n  \"historicalResults\": [\n    {\n      \"decision\": \"respond\",\n      \"taskType\": null,\n      \"requiredCapabilities\": null,\n      \"path\": null\n    },\n    {\n      \"decision\": \"respond\",\n      \"taskType\": null,\n      \"requiredCapabilities\": null,\n      \"path\": null\n    },\n    {\n      \"decision\": \"respond\",\n      \"taskType\": null,\n      \"requiredCapabilities\": null,\n      \"path\": null\n    },\n    {\n      \"decision\": \"respond\",\n      \"taskType\": null,\n      \"requiredCapabilities\": null,\n      \"path\": null\n    },\n    {\n      \"decision\": \"respond\",\n      \"taskType\": null,\n      \"requiredCapabilities\": null,\n      \"path\": null\n    },\n    {\n      \"decision\": \"respond\",\n      \"taskType\": null,\n      \"requiredCapabilities\": null,\n      \"path\": null\n    },\n    {\n      \"decision\": \"execute\",\n      \"taskType\": \"file_operation\",\n      \"requiredCapabilities\": [\n        \"file.read\"\n      ],\n      \"path\": \"E:\\\\AI-Workbench\\\\NEXT_STEP.md\"\n    },\n    {\n      \"decision\": \"respond\",\n      \"taskType\": null,\n      \"requiredCapabilities\": null,\n      \"path\": null\n    },\n    {\n      \"decision\": \"respond\",\n      \"taskType\": null,\n      \"requiredCapabilities\": null,\n      \"path\": null\n    },\n    {\n      \"decision\": \"respond\",\n      \"taskType\": null,\n      \"requiredCapabilities\": null,\n      \"path\": null\n    }\n  ],\n  \"noPath\": {\n    \"decision\": \"clarify\",\n    \"taskType\": null,\n    \"requiredCapabilities\": null,\n    \"path\": null\n  },\n  \"compound\": {\n    \"decision\": \"clarify\",\n    \"taskType\": null,\n    \"requiredCapabilities\": null,\n    \"path\": null\n  },\n  \"typo\": {\n    \"decision\": \"respond\",\n    \"taskType\": null,\n    \"requiredCapabilities\": null,\n    \"path\": null\n  },\n  \"mixed\": {\n    \"decision\": \"execute\",\n    \"taskType\": \"file_operation\",\n    \"requiredCapabilities\": [\n      \"file.read\"\n    ],\n    \"path\": \"E:\\\\AI-Workbench\\\\NEXT_STEP.md\"\n  },\n  \"highRiskSignals\": [\n    [\n      \"financial_operation\"\n    ],\n    [\n      \"destructive_file_operation\"\n    ],\n    [\n      \"external_communication\"\n    ],\n    [\n      \"credential_or_permission\"\n    ],\n    [\n      \"code_execution_or_modification\"\n    ],\n    [\n      \"process_stop\"\n    ],\n    [\n      \"device_control\"\n    ],\n    [\n      \"irreversible_operation\"\n    ]\n  ],\n  \"metrics\": {\n    \"convergenceRate\": 1,\n    \"illegalTaskTypesPassed\": 0,\n    \"unregisteredCapabilitiesPassed\": 0,\n    \"providerIdControlledByModel\": 0,\n    \"modelAuthorizationEffective\": 0,\n    \"windowsPathsDamaged\": 0,\n    \"groundTruthOverwritten\": 0,\n    \"friendlyFallbackCoverage\": 1\n  }\n}"
+    },
+    {
+      "name": "non-execution-bypass",
+      "command": "node scripts/verify-interpreter-adapter-bypass-001.mjs",
+      "workingDirectory": "E:\\AI-Workbench-candidates\\interpreter-adapter-001",
+      "startedAt": "2026-08-04T04:36:20.431912+00:00",
+      "finishedAt": "2026-08-04T04:36:20.853640+00:00",
+      "exitCode": 1,
+      "classification": "TEST_FIXTURE_CONTRACT_FAILURE",
+      "supersededBy": null,
+      "evidencePath": "scripts/verify-interpreter-adapter-bypass-001.mjs:41",
+      "rootCause": "The regression fixture requires the obsolete exact phrase /两个任务/, while the approved CQ-001 contract now uses a broader, safer multiple-task explanation and retains all required no-execution semantics.",
+      "output": "node:internal/modules/run_main:107\r\n    triggerUncaughtException(\r\n    ^\r\n\r\nAssertionError [ERR_ASSERTION]: The input did not match the regular expression /两个任务/. Input:\r\n\r\n'我识别到多个任务：读取文件、检查Runtime状态。当前版本一次只执行一个任务，尚未启动任何操作。请指定先执行哪一个，或拆成两条消息发送。'\r\n\r\n    at verify (file:///E:/AI-Workbench-candidates/interpreter-adapter-001/scripts/verify-interpreter-adapter-bypass-001.mjs:36:32)\r\n    at async file:///E:/AI-Workbench-candidates/interpreter-adapter-001/scripts/verify-interpreter-adapter-bypass-001.mjs:41:1 {\r\n  generatedMessage: true,\r\n  code: 'ERR_ASSERTION',\r\n  actual: '我识别到多个任务：读取文件、检查Runtime状态。当前版本一次只执行一个任务，尚未启动任何操作。请指定先执行哪一个，或拆成两条消息发送。',\r\n  expected: /两个任务/,\r\n  operator: 'match',\r\n  diff: 'simple'\r\n}\r\n\r\nNode.js v24.18.0"
+    },
+    {
+      "name": "non-execution-message-idempotency",
+      "command": "node scripts/verify-non-execution-message-idempotency-001.mjs",
+      "workingDirectory": "E:\\AI-Workbench-candidates\\interpreter-adapter-001",
+      "startedAt": "2026-08-04T04:36:20.853640+00:00",
+      "finishedAt": "2026-08-04T04:36:21.273696+00:00",
+      "exitCode": 0,
+      "classification": null,
+      "supersededBy": null,
+      "output": "{\n  \"ok\": true,\n  \"module\": \"NON-EXECUTION-MESSAGE-IDEMPOTENCY-001\",\n  \"rows\": [\n    {\n      \"case\": \"serial-respond\",\n      \"claims\": 1,\n      \"renderer\": 1,\n      \"userAppends\": 1,\n      \"assistantAppends\": 1,\n      \"results\": 1,\n      \"delivery\": 1\n    },\n    {\n      \"case\": \"serial-clarify\",\n      \"claims\": 1,\n      \"renderer\": 1,\n      \"userAppends\": 1,\n      \"assistantAppends\": 1,\n      \"results\": 1,\n      \"delivery\": 1\n    },\n    {\n      \"case\": \"serial-unsupported\",\n      \"claims\": 1,\n      \"renderer\": 1,\n      \"userAppends\": 1,\n      \"assistantAppends\": 1,\n      \"results\": 1,\n      \"delivery\": 1\n    },\n    {\n      \"case\": \"concurrent-respond\",\n      \"claims\": 1,\n      \"renderer\": 1,\n      \"userAppends\": 1,\n      \"assistantAppends\": 1,\n      \"results\": 1,\n      \"delivery\": 1\n    },\n    {\n      \"case\": \"concurrent-clarify\",\n      \"claims\": 1,\n      \"renderer\": 1,\n      \"userAppends\": 1,\n      \"assistantAppends\": 1,\n      \"results\": 1,\n      \"delivery\": 1\n    },\n    {\n      \"case\": \"concurrent-unsupported\",\n      \"claims\": 1,\n      \"renderer\": 1,\n      \"userAppends\": 1,\n      \"assistantAppends\": 1,\n      \"results\": 1,\n      \"delivery\": 1\n    },\n    {\n      \"case\": \"crash-after-claim-before-result\",\n      \"successfulTakeovers\": 1,\n      \"results\": 1,\n      \"duplicateReplies\": 0\n    },\n    {\n      \"case\": \"crash-after-result-before-delivery\",\n      \"renderer\": 1,\n      \"userAppends\": 0,\n      \"assistantAppends\": 0,\n      \"results\": 1,\n      \"delivery\": 0\n    },\n    {\n      \"case\": \"different-message-same-text\",\n      \"falseReplays\": 0,\n      \"renderer\": 2,\n      \"results\": 2\n    },\n    {\n      \"case\": \"same-original-different-wrapper\",\n      \"renderer\": 1,\n      \"results\": 1,\n      \"delivery\": 1\n    }\n  ],\n  \"hardMetrics\": {\n    \"successfulClaimsPerKey\": 1,\n    \"concurrentRendererCalls\": 1,\n    \"concurrentAssistantAppends\": 1,\n    \"concurrentResults\": 1,\n    \"externalDeliveriesAtMost\": 1,\n    \"replayTasks\": 0,\n    \"replayRuns\": 0,\n    \"replayScheduler\": 0,\n    \"replayProviders\": 0,\n    \"replayModels\": 0,\n    \"falseReplaySameTextDifferentIds\": 0,\n    \"crashRecoveryDuplicateReplies\": 0\n  }\n}"
+    },
+    {
+      "name": "s6-terminal-task-replay",
+      "command": "node scripts/verify-interpreter-adapter-b5-s6-task-replay-001.mjs",
+      "workingDirectory": "E:\\AI-Workbench-candidates\\interpreter-adapter-001",
+      "startedAt": "2026-08-04T04:36:21.273696+00:00",
+      "finishedAt": "2026-08-04T04:36:21.696396+00:00",
+      "exitCode": 0,
+      "classification": null,
+      "supersededBy": null,
+      "output": "{\n  \"ok\": true,\n  \"module\": \"INTERPRETER-ADAPTER-B5-S6-TASK-REPLAY\",\n  \"terminalCases\": [\n    {\n      \"state\": \"completed\",\n      \"replayed\": true,\n      \"providerStarts\": 0,\n      \"newRuns\": 0,\n      \"newFinals\": 0,\n      \"newProgress\": 0,\n      \"newAssistantReplies\": 0,\n      \"originalMessageId\": \"s6-completed\"\n    },\n    {\n      \"state\": \"failed\",\n      \"replayed\": true,\n      \"providerStarts\": 0,\n      \"newRuns\": 0,\n      \"newFinals\": 0,\n      \"newProgress\": 0,\n      \"newAssistantReplies\": 0,\n      \"originalMessageId\": \"s6-failed\"\n    },\n    {\n      \"state\": \"cancelled\",\n      \"replayed\": true,\n      \"providerStarts\": 0,\n      \"newRuns\": 0,\n      \"newFinals\": 0,\n      \"newProgress\": 0,\n      \"newAssistantReplies\": 0,\n      \"originalMessageId\": \"s6-cancelled\"\n    }\n  ],\n  \"executionStarted\": false\n}"
+    },
+    {
+      "name": "b5-integration",
+      "command": "node scripts/verify-interpreter-adapter-b5-integration-001.mjs",
+      "workingDirectory": "E:\\AI-Workbench-candidates\\interpreter-adapter-001",
+      "startedAt": "2026-08-04T04:36:21.696396+00:00",
+      "finishedAt": "2026-08-04T04:36:22.500159+00:00",
+      "exitCode": 0,
+      "classification": null,
+      "supersededBy": null,
+      "output": "{\n  \"ok\": true,\n  \"module\": \"INTERPRETER-ADAPTER-PHASE-B5-INTEGRATION\",\n  \"runtimeStatus\": {\n    \"toolUsed\": \"runtime.status\",\n    \"taskId\": \"status\",\n    \"runId\": \"b5-run-1\",\n    \"provider\": \"local-runtime-state\",\n    \"providerStarts\": 1,\n    \"finalCount\": 1,\n    \"verified\": true\n  },\n  \"fileRead\": {\n    \"toolUsed\": \"file.read\",\n    \"path\": \"C:\\\\Users\\\\qingy\\\\AppData\\\\Local\\\\Temp\\\\aiw-adapter-b5-J4XibS\\\\B5-FILE.md\",\n    \"taskId\": \"read\",\n    \"runId\": \"b5-run-2\",\n    \"provider\": \"local-tool-executor\",\n    \"providerStarts\": 1,\n    \"finalCount\": 1,\n    \"sha256\": \"0a5dad3ac6b0ce41c9e7e52e9cf2abf8809599538ae74f1e21e846988f9fd4e0\",\n    \"size\": 30,\n    \"fileUnchanged\": true,\n    \"verified\": true\n  },\n  \"metrics\": {\n    \"modelCalls\": 0,\n    \"providerStarts\": 2,\n    \"duplicateFinalsAccepted\": 0,\n    \"staleRunResultsAccepted\": 0,\n    \"windowsPathsDamaged\": 0\n  }\n}"
+    },
+    {
+      "name": "s1-grounded-evidence",
+      "command": "node scripts/verify-interpreter-adapter-b5-s1-grounded-evidence-001.mjs",
+      "workingDirectory": "E:\\AI-Workbench-candidates\\interpreter-adapter-001",
+      "startedAt": "2026-08-04T04:36:22.500159+00:00",
+      "finishedAt": "2026-08-04T04:36:22.785832+00:00",
+      "exitCode": 0,
+      "classification": null,
+      "supersededBy": null,
+      "output": "{\n  \"ok\": true,\n  \"module\": \"INTERPRETER-ADAPTER-B5-S1-GROUNDED-EVIDENCE\",\n  \"sources\": [\n    {\n      \"sourceId\": \"gateway-health\",\n      \"sourceType\": \"file\",\n      \"entry\": \"AgentRuntime.groundedStatus/fs.readFile\",\n      \"readAtProducedAt\": \"immediately before read attempt\",\n      \"failureExpression\": \"ENOENT\",\n      \"evidenceReference\": \"file:gateway-health@<readAt>\"\n    },\n    {\n      \"sourceId\": \"runtime-worker-state\",\n      \"sourceType\": \"file\",\n      \"entry\": \"AgentRuntime.groundedStatus/fs.readFile\",\n      \"readAtProducedAt\": \"immediately before read attempt\",\n      \"failureExpression\": \"ENOENT\",\n      \"evidenceReference\": \"file:runtime-worker-state@<readAt>\"\n    },\n    {\n      \"sourceId\": \"task:<taskId>\",\n      \"sourceType\": \"task-store\",\n      \"entry\": \"TaskStore.load/latestNonTerminal\",\n      \"readAtProducedAt\": \"after successful task read\",\n      \"failureExpression\": \"source omitted\",\n      \"evidenceReference\": \"task-store:task:<taskId>@<readAt>\"\n    }\n  ],\n  \"providerResult\": {\n    \"ok\": false,\n    \"reason\": \"未能读取可验证的Runtime状态来源，因此无法确认当前运行状态。没有把推测内容当成真实结果。\",\n    \"text\": \"\",\n    \"evidence\": {\n      \"evidenceSources\": []\n    },\n    \"identity\": {\n      \"taskId\": \"s1-task\",\n      \"runId\": \"s1-run\",\n      \"taskRevision\": 1\n    }\n  },\n  \"verifierFailure\": \"能力runtime.status未执行成功：未能读取可验证的Runtime状态来源，因此无法确认当前运行状态。没有把推测内容当成真实结果。\",\n  \"runVerification\": {\n    \"passed\": false,\n    \"failureReason\": \"能力runtime.status未执行成功：未能读取可验证的Runtime状态来源，因此无法确认当前运行状态。没有把推测内容当成真实结果。\",\n    \"verifiedAt\": 1785818182675,\n    \"verifierId\": \"ResultVerifier\",\n    \"verificationMethod\": \"grounded-source-evidence\",\n    \"evidenceReferences\": []\n  },\n  \"final\": {\n    \"verified\": false,\n    \"text\": \"未能读取可验证的Runtime状态来源，因此无法确认当前运行状态。没有把推测内容当成真实结果。\"\n  },\n  \"modelCalls\": 0\n}"
+    },
+    {
+      "name": "s2-verifier-binding",
+      "command": "node scripts/verify-interpreter-adapter-b5-s2-verifier-binding-001.mjs",
+      "workingDirectory": "E:\\AI-Workbench-candidates\\interpreter-adapter-001",
+      "startedAt": "2026-08-04T04:36:22.785832+00:00",
+      "finishedAt": "2026-08-04T04:36:23.204046+00:00",
+      "exitCode": 0,
+      "classification": null,
+      "supersededBy": null,
+      "output": "{\n  \"ok\": true,\n  \"module\": \"INTERPRETER-ADAPTER-B5-S2-VERIFIER-BINDING\",\n  \"providerCalls\": 1,\n  \"run\": {\n    \"status\": \"failed\",\n    \"verification\": {\n      \"passed\": false,\n      \"verifierId\": \"ResultVerifier\",\n      \"verificationMethod\": \"capability-result-verification\",\n      \"evidenceReferences\": [],\n      \"failureReason\": \"fixture evidence authenticity failed\",\n      \"verifiedAt\": 1785818183014\n    }\n  },\n  \"finalResult\": null,\n  \"failure\": \"fixture evidence authenticity failed\",\n  \"userText\": \"Provider执行完成，但结果未通过验证，因此没有标记为已验证。\"\n}"
+    },
+    {
+      "name": "s3-file-read-boundary",
+      "command": "node scripts/verify-interpreter-adapter-b5-s3-file-read-boundary-001.mjs",
+      "workingDirectory": "E:\\AI-Workbench-candidates\\interpreter-adapter-001",
+      "startedAt": "2026-08-04T04:36:23.204046+00:00",
+      "finishedAt": "2026-08-04T04:36:23.500936+00:00",
+      "exitCode": 0,
+      "classification": null,
+      "supersededBy": null,
+      "output": "{\n  \"ok\": true,\n  \"module\": \"INTERPRETER-ADAPTER-B5-S3-FILE-READ-BOUNDARY\",\n  \"allowed\": {\n    \"read\": true,\n    \"unchanged\": true,\n    \"path\": \"C:\\\\Users\\\\qingy\\\\AppData\\\\Local\\\\Temp\\\\aiw-s3-root-1LtqBB\\\\ok.md\"\n  },\n  \"outside\": {\n    \"rejected\": true,\n    \"text\": \"拒绝读取：解析后的文件位置不在允许的读取范围内，没有执行文件读取。\"\n  },\n  \"resolvedEscape\": {\n    \"rejected\": true,\n    \"text\": \"拒绝读取：解析后的文件位置不在允许的读取范围内，没有执行文件读取。\",\n    \"fixture\": \"injected realpath equivalent to symlink/reparse point\"\n  },\n  \"executeCalls\": 2\n}"
+    },
+    {
+      "name": "s4-unique-execution-path",
+      "command": "node scripts/verify-interpreter-adapter-b5-s4-remove-execution-shortcuts-001.mjs",
+      "workingDirectory": "E:\\AI-Workbench-candidates\\interpreter-adapter-001",
+      "startedAt": "2026-08-04T04:36:23.500936+00:00",
+      "finishedAt": "2026-08-04T04:36:23.916391+00:00",
+      "exitCode": 1,
+      "classification": "TEST_FIXTURE_CONTRACT_FAILURE",
+      "supersededBy": null,
+      "evidencePath": "scripts/verify-interpreter-adapter-b5-s4-remove-execution-shortcuts-001.mjs -> scripts/verify-interpreter-adapter-bypass-001.mjs:41",
+      "rootCause": "S4 invokes the non-execution bypass gate and therefore inherits the same obsolete exact-copy assertion /两个任务/; no execution-path invariant failed.",
+      "output": "node:internal/modules/run_main:107\r\n    triggerUncaughtException(\r\n    ^\r\n\r\nAssertionError [ERR_ASSERTION]: node:internal/modules/run_main:107\r\r\n    triggerUncaughtException(\r\r\n    ^\r\r\n\r\r\nAssertionError [ERR_ASSERTION]: The input did not match the regular expression /两个任务/. Input:\r\r\n\r\r\n'我识别到多个任务：读取文件、检查Runtime状态。当前版本一次只执行一个任务，尚未启动任何操作。请指定先执行哪一个，或拆成两条消息发送。'\r\r\n\r\r\n    at verify (file:///E:/AI-Workbench-candidates/interpreter-adapter-001/scripts/verify-interpreter-adapter-bypass-001.mjs:36:32)\r\r\n    at async file:///E:/AI-Workbench-candidates/interpreter-adapter-001/scripts/verify-interpreter-adapter-bypass-001.mjs:41:1 {\r\r\n  generatedMessage: true,\r\r\n  code: 'ERR_ASSERTION',\r\r\n  actual: '我识别到多个任务：读取文件、检查Runtime状态。当前版本一次只执行一个任务，尚未启动任何操作。请指定先执行哪一个，或拆成两条消息发送。',\r\r\n  expected: /两个任务/,\r\r\n  operator: 'match',\r\r\n  diff: 'simple'\r\r\n}\r\r\n\r\r\nNode.js v24.18.0\r\r\n\r\n\r\n1 !== 0\r\n\r\n    at file:///E:/AI-Workbench-candidates/interpreter-adapter-001/scripts/verify-interpreter-adapter-b5-s4-remove-execution-shortcuts-001.mjs:5:174 {\r\n  generatedMessage: false,\r\n  code: 'ERR_ASSERTION',\r\n  actual: 1,\r\n  expected: 0,\r\n  operator: 'strictEqual',\r\n  diff: 'simple'\r\n}\r\n\r\nNode.js v24.18.0"
+    },
+    {
+      "name": "s5-multi-assignment-fail-closed",
+      "command": "node scripts/verify-interpreter-adapter-b5-s5-multi-assignment-001.mjs",
+      "workingDirectory": "E:\\AI-Workbench-candidates\\interpreter-adapter-001",
+      "startedAt": "2026-08-04T04:36:23.916391+00:00",
+      "finishedAt": "2026-08-04T04:36:24.526117+00:00",
+      "exitCode": 0,
+      "classification": null,
+      "supersededBy": null,
+      "output": "{\n  \"ok\": true,\n  \"module\": \"INTERPRETER-ADAPTER-B5-S5-MULTI-ASSIGNMENT-FAIL-CLOSED\",\n  \"zero\": {\n    \"providerStarts\": 0,\n    \"successFinals\": 0,\n    \"runs\": 0\n  },\n  \"single\": {\n    \"runtimeStatus\": \"PASS\",\n    \"fileRead\": \"PASS\",\n    \"providerStarts\": 2,\n    \"finals\": 2\n  },\n  \"multi\": {\n    \"counts\": [\n      2,\n      3\n    ],\n    \"providerStarts\": 0,\n    \"tasks\": 2,\n    \"runs\": 0,\n    \"effectiveExecutionRuns\": 0,\n    \"successFinals\": 0,\n    \"verifiedTrue\": 0,\n    \"userText\": \"我识别到多个可执行任务：检查Runtime状态、读取文件。当前版本一次只执行一个任务，因此没有启动任何操作。请告诉我先执行哪一个。\"\n  },\n  \"modelCalls\": 0\n}"
+    },
+    {
+      "name": "d0-1b-ground-truth",
+      "command": "node scripts/verify-original-ground-truth-phase-b.mjs",
+      "workingDirectory": "E:\\AI-Workbench-candidates\\interpreter-adapter-001",
+      "startedAt": "2026-08-04T04:36:24.526117+00:00",
+      "finishedAt": "2026-08-04T04:36:24.817081+00:00",
+      "exitCode": 0,
+      "classification": null,
+      "supersededBy": null,
+      "output": "{\"ok\":true,\"module\":\"ORIGINAL-GROUND-TRUTH-EXTRACTOR-001-PHASE-B\",\"explicitAction\":true,\"constraints\":2,\"successCriteria\":2,\"unresolved\":true,\"authorizationClaims\":1,\"falseAuthorizationGrant\":0}"
+    }
+  ]
+}
