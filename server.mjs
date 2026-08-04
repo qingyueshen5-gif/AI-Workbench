@@ -96,6 +96,27 @@ function rejectClientSuppliedTrustFields(response, payload) {
   return true;
 }
 
+function preserveServerOwnedRunFacts(incomingRuns, currentRuns) {
+  const currentById = new Map((Array.isArray(currentRuns) ? currentRuns : []).map((run) => [run.id, run]));
+  return (Array.isArray(incomingRuns) ? incomingRuns : []).map((run) => {
+    const current = currentById.get(run.id);
+    if (!current) return run;
+    return {
+      ...run,
+      verified: current.verified === true,
+      verification: current.verification,
+      verificationPassed: current.verificationPassed,
+      verificationResult: current.verificationResult,
+      finalEvidence: current.finalEvidence,
+      finalResult: current.finalResult,
+      verifierId: current.verifierId,
+      verifiedAt: current.verifiedAt,
+      runEvidenceValidated: current.runEvidenceValidated === true,
+      legacyVerifiedClaimObserved: current.legacyVerifiedClaimObserved === true
+    };
+  });
+}
+
 function loadLocalEnv() {
   try {
     const raw = readFileSync(envFile, 'utf8');
@@ -2257,8 +2278,11 @@ const server = createServer(async (request, response) => {
       const body = await readBody(request);
       const payload = JSON.parse(body || '{}');
       if (rejectClientSuppliedTrustFields(response, payload)) return;
-      const data = normalizeData(payload);
       const currentData = await readData();
+      const data = normalizeData({
+        ...payload,
+        runs: preserveServerOwnedRunFacts(payload.runs, currentData.runs)
+      });
       await writeData(appendFailureMemories(currentData, data));
       sendJson(response, 200, await readDataWithMeta());
       return;

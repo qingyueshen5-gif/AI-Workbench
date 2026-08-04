@@ -86,10 +86,11 @@ function App() {
   }, [data.tasks, selectedTaskId]);
 
   async function saveData(next) {
+    const writable = toWritableDataDto(next);
     const response = await fetch('/api/data', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(next)
+      body: JSON.stringify(writable)
     });
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.error || '保存失败');
