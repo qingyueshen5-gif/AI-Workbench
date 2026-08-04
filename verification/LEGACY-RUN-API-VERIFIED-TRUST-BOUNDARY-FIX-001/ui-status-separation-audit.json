@@ -1,0 +1,29 @@
+{
+  "schema":"ai-workbench.ui-status-separation-audit/v1",
+  "locations":[
+    {"file":"src/main.jsx","line":401,"component":"ConversationList/PastGoals","displayPurpose":"task lifecycle badge text","fieldsRead":["task.status"],"currentMeaning":"done renders 已完成","executionMeaning":"lifecycle terminal","verificationMeaning":"absent","conflated":true,"frontendDerivedVerified":false,"recommendedAction":"render separate execution and verification views"},
+    {"file":"src/main.jsx","line":423,"component":"TopBar","displayPurpose":"runtime pipeline stage","fieldsRead":["runtimeStatus.currentStage"],"currentMeaning":"completed renders 已完成","executionMeaning":"Workbench runtime stage, not Task/Run result","verificationMeaning":"not applicable","conflated":false,"frontendDerivedVerified":false,"recommendedAction":"no Task/Run change"},
+    {"file":"src/main.jsx","line":449,"component":"TopBar","displayPurpose":"runtime latest successful task text supplied by runtime API","fieldsRead":["runtimeStatus.latestSuccessfulTask"],"currentMeaning":"runtime operational field","executionMeaning":"external runtime summary","verificationMeaning":"not derived in this UI","conflated":false,"frontendDerivedVerified":false,"recommendedAction":"out of Task/Run display scope; do not alter protocol"},
+    {"file":"src/main.jsx","line":903,"component":"TodayPanel","displayPurpose":"daily progress summary","fieldsRead":["task.status"],"currentMeaning":"done counts as completed progress and uses green bar","executionMeaning":"task lifecycle terminal count","verificationMeaning":"implicitly success-like","conflated":true,"frontendDerivedVerified":false,"recommendedAction":"count trusted verified tasks separately or label as execution-ended progress"},
+    {"file":"src/main.jsx","line":927,"component":"TodayPanel","displayPurpose":"task badge","fieldsRead":["task.status"],"currentMeaning":"done uses green 已完成","executionMeaning":"lifecycle terminal","verificationMeaning":"implicitly passed","conflated":true,"frontendDerivedVerified":false,"recommendedAction":"two explicit badges"},
+    {"file":"src/main.jsx","line":946,"component":"TaskPanel/taskSummary","displayPurpose":"task summary","fieldsRead":["task.status","task.userVisibleSummary"],"currentMeaning":"done fallback says 这件事已经完成","executionMeaning":"execution ended","verificationMeaning":"implies goal accomplished","conflated":true,"frontendDerivedVerified":false,"recommendedAction":"neutral execution-ended fallback plus verification label"},
+    {"file":"src/main.jsx","line":990,"component":"TaskPanel list","displayPurpose":"task badge","fieldsRead":["task.status"],"currentMeaning":"single lifecycle badge","executionMeaning":"lifecycle","verificationMeaning":"absent","conflated":true,"frontendDerivedVerified":false,"recommendedAction":"two explicit badges"},
+    {"file":"src/main.jsx","line":1008,"component":"TaskPanel detail","displayPurpose":"task detail status","fieldsRead":["task.status"],"currentMeaning":"single 状态 line","executionMeaning":"lifecycle","verificationMeaning":"absent","conflated":true,"frontendDerivedVerified":false,"recommendedAction":"separate 执行状态 and 可信验收 lines"},
+    {"file":"src/main.jsx","line":1027,"component":"statusClass/statusText","displayPurpose":"shared badge color/text mapping","fieldsRead":["status"],"currentMeaning":"done maps emerald and 已完成","executionMeaning":"terminal","verificationMeaning":"success visual","conflated":true,"frontendDerivedVerified":false,"recommendedAction":"replace with production structured view module"}
+  ],
+  "taskList":true,
+  "runList":false,
+  "taskDetail":true,
+  "runDetail":false,
+  "filters":[],
+  "sorts":["conversations by updatedAt","goal days by date; no status success sort"],
+  "summaryCounts":["TodayPanel doneCount counts task.status done/已完成 as progress"],
+  "emptyStates":["no status semantics"],
+  "frontendDerivedVerified":false,
+  "completedDisplayedAsSuccessLike":true,
+  "executionCompletedDisplayedAsSuccess":false,
+  "failureDisplay":"failed status uses red badge and detail failure notice",
+  "cancelledDisplay":"falls through generic status styling/text; not explicit",
+  "canSeparateWithoutServerChange":true,
+  "recommendedModule":"src/lib/run-status-view.js"
+}
