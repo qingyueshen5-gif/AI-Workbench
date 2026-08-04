@@ -1,0 +1,84 @@
+{
+  "classification": "PRODUCT_OR_SECURITY_FAILURE",
+  "code": "FAILED_TASK_FAILURE_FACT_INCOMPLETE",
+  "missingFailureFields": [
+    "errorCode",
+    "failureStage",
+    "failureClassification",
+    "taskId",
+    "runId",
+    "taskRevision",
+    "failedAt"
+  ],
+  "observedFailure": {
+    "message": "isolated provider execution failed",
+    "name": "Error"
+  },
+  "task": {
+    "taskId": "message-72fa70a9-b8d3-4b06-9480-829c36864fdf",
+    "currentState": "failed",
+    "activeRunId": null,
+    "taskRevision": 9
+  },
+  "run": {
+    "runId": "run-53b0b64b-908f-49a0-a2e2-93b687626865",
+    "status": "failed",
+    "taskRevision": 7,
+    "failureReason": "isolated provider execution failed",
+    "verification": {
+      "passed": false,
+      "verifierId": "ResultVerifier",
+      "verificationMethod": "capability-result-verification",
+      "evidenceReferences": [],
+      "failureReason": "isolated provider execution failed",
+      "verifiedAt": 1785823494032
+    }
+  },
+  "counts": {
+    "taskCreates": 1,
+    "runCreates": 1,
+    "providerCalls": 1,
+    "verifierCalls": 0,
+    "finalWrites": 0,
+    "progressWrites": 4,
+    "assistantAppends": 0,
+    "deliveryAttempts": 0,
+    "sideEffects": 0
+  }
+}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
++ [
++   'errorCode',
++   'failureStage',
++   'failureClassification',
++   'taskId',
++   'runId',
++   'taskRevision',
++   'failedAt'
++ ]
+- []
+
+    at file:///E:/AI-Workbench-candidates/interpreter-adapter-001/scripts/verify-failed-task-persistence-and-replay-001.mjs:59:10 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [
+    'errorCode',
+    'failureStage',
+    'failureClassification',
+    'taskId',
+    'runId',
+    'taskRevision',
+    'failedAt'
+  ],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.18.0
