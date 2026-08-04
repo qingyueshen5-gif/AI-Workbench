@@ -2,13 +2,11 @@
   "schema": "ai-workbench.verified-consumer-inventory/v1",
   "summary": {
     "baselineHead": "7249188bb2fedb84d74fa6f4f7fa3f7e645b2add",
-    "producerCount": 30,
-    "consumerCount": 5,
-    "testAssertionCount": 89,
+    "producerCount": 31,
+    "consumerCount": 6,
+    "testAssertionCount": 163,
     "knownRiskClasses": [
-      "LEGACY_EXECUTION_RESULTS_VERIFIED_TRUE_WITHOUT_UNIFORM_RUN_BINDING",
-      "NON_EXECUTION_RENDERER_VERIFIED_TRUE_SEMANTICS_UNBOUND",
-      "NON_TERMINAL_RUNTIME_VERIFIED_TRUE_WITHOUT_BOUND_VERIFIER"
+      "LEGACY_EXECUTION_RESULTS_VERIFIED_TRUE_WITHOUT_UNIFORM_RUN_BINDING"
     ],
     "fourthRiskFound": false,
     "knownRiskExpandedToNewProductionPaths": true,
@@ -21,7 +19,7 @@
   "entries": [
     {
       "file": "agents/agent-runtime.mjs",
-      "line": 188,
+      "line": 166,
       "function": "terminalResult",
       "consumerType": "condition_or_serialization",
       "currentBranchCondition": "const verification = { ...rawVerification, verifierId: rawVerification?.verifierId || this.verifier.constructor?.name || 'ResultVerifier', verificationMethod: rawVerification?.verificationMethod || providerSpec.verificationMethod || 'capability-result-verification', evidenceReferences: rawVerification?.evidenceReferences || completed.result?.evidence?.evidenceReferences || (completed.result?.evidence?.path ? [completed.result.evidence.path] : []), passed, failureReason: passed ? null : (rawVerification?.failureReason || 'Verifier rejected capability result'), verifiedAt: rawVerification?.verifiedAt || Date.now() };",
@@ -34,7 +32,7 @@
     },
     {
       "file": "agents/agent-runtime.mjs",
-      "line": 397,
+      "line": 383,
       "function": "if",
       "consumerType": "condition_or_serialization",
       "currentBranchCondition": "verifiedAt: Math.max(...verificationResults.map((item) => Number(item.verifiedAt) || 0)),",
@@ -47,7 +45,7 @@
     },
     {
       "file": "agents/agent-runtime.mjs",
-      "line": 425,
+      "line": 413,
       "function": "if",
       "consumerType": "condition_or_serialization",
       "currentBranchCondition": "const text = `Completed: ${interpretation.goal}. Stopped PID ${stopped.result.target.pid} and verified it is absent.`;",
@@ -60,7 +58,7 @@
     },
     {
       "file": "agents/agent-runtime.mjs",
-      "line": 443,
+      "line": 431,
       "function": "if",
       "consumerType": "condition_or_serialization",
       "currentBranchCondition": "const finalModel = await this.models.express({ messages: [{ role: 'system', content: 'Summarize the verified execution result as the final user reply.' }, { role: 'user', content: `Original request: ${job.text}\\nExecution result: ${execution.text}` }] });",
@@ -72,12 +70,25 @@
       "recommendedChange": "Retain verified only for trusted business acceptance; migrate handling/render/execution routing to explicit field"
     },
     {
-      "file": "server.mjs",
-      "line": 521,
-      "function": "createRunRecord",
+      "file": "agents/interpreter-adapter-contract.mjs",
+      "line": 68,
+      "function": "toNonExecutionRuntimeResult",
       "consumerType": "condition_or_serialization",
-      "currentBranchCondition": "verified,",
-      "currentlyTreatsVerifiedAsSuccess": false,
+      "currentBranchCondition": "if (!finalResult || finalResult.verified !== true) return false;",
+      "currentlyTreatsVerifiedAsSuccess": true,
+      "currentlyTreatsVerifiedAsHandled": false,
+      "currentlyTreatsVerifiedAsRendered": false,
+      "targetField": "rendered/handled/executionCompleted according to path",
+      "userVisibleImpact": "none direct",
+      "recommendedChange": "Retain verified only for trusted business acceptance; migrate handling/render/execution routing to explicit field"
+    },
+    {
+      "file": "server.mjs",
+      "line": 2147,
+      "function": "if",
+      "consumerType": "condition_or_serialization",
+      "currentBranchCondition": "import { deriveBoundVerifierResult, deriveTaskTerminalVerification } from './verified-semantics.mjs';",
+      "currentlyTreatsVerifiedAsSuccess": true,
       "currentlyTreatsVerifiedAsHandled": false,
       "currentlyTreatsVerifiedAsRendered": false,
       "targetField": "rendered/handled/executionCompleted according to path",
