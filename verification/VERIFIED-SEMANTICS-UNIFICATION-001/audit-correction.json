@@ -1,0 +1,35 @@
+{
+  "schema": "ai-workbench.verified-semantics-audit-correction/v1",
+  "correctionMarker": "CORRECTED_BY_FOURTH_RISK_LATE_AUDIT",
+  "originalConclusion": {
+    "fourthRiskFound": false,
+    "preservedAt": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/producer-inventory.json:11"
+  },
+  "correctedConclusion": {
+    "fourthRiskFound": true,
+    "riskName": "LEGACY_WORKBENCH_RUN_VERIFIED_TRUST_BOUNDARY_BYPASS",
+    "riskClassification": "HIGH_INDEPENDENT_FOURTH_RISK"
+  },
+  "correctionStatus": "CORRECTED_BY_FOURTH_RISK_LATE_AUDIT",
+  "discoveredAt": "2026-08-04T18:34:19+08:00",
+  "correctedAt": "2026-08-04T19:10:23+08:00",
+  "lateReturnReason": "A previously dispatched read-only baseline audit returned after the first six checkpoints had completed.",
+  "baselineHead": "7249188bb2fedb84d74fa6f4f7fa3f7e645b2add",
+  "baselineEvidence": [
+    {"file":"server.mjs","line":206,"path":"normalizeRuns()/PUT /api/data","finding":"external or imported run.verified could enter persistence"},
+    {"file":"server.mjs","line":366,"path":"buildTaskContextPackage()","finding":"untrusted run.verified could enter Agent context"},
+    {"file":"server.mjs","line":1358,"path":"legacy Workbench tool execution","finding":"isolated verification.ok could be projected to verified"},
+    {"file":"server.mjs","line":1863,"path":"/api/hermes/invoke","finding":"isolated verification.ok could be projected to verified"},
+    {"file":"server.mjs","line":2047,"path":"POST /api/runs","finding":"client payload.verified could be trusted"},
+    {"file":"server.mjs","line":2116,"path":"POST /api/runs/:id/verify","finding":"isolated Run validation could create business verified"}
+  ],
+  "propagationChain": ["external write entry","JSON persistence","Agent context","UI whole-data writeback","legacy tests","isolated Run validation","Gateway/Delivery boundary pending audit","legacy persisted bare verified claims"],
+  "independenceReason": "The first three risks are internal semantic misuse paths. This risk is an external trust-boundary bypass that lets a caller submit, import, persist, or influence server-owned acceptance state.",
+  "sourceCheckpoint": "VERIFIED-SEMANTICS-UNIFICATION-FOURTH-RISK-WIP-001",
+  "sourceCommit": "80b538b36ed1ec282477e2e8d2276cceb14c4d68",
+  "sourcePatchSha256": "a1f25a5567f3303c3e27c943be5b533b9eb69cfb3a81f8de69a27826709972df",
+  "correctionEvidence": [
+    "verification/VERIFIED-SEMANTICS-UNIFICATION-001/fourth-risk-late-audit.md",
+    "CURRENT_STATUS.md risk ledger"
+  ]
+}
