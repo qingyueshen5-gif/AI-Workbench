@@ -178,6 +178,7 @@ export class AgentRuntime {
   }
 
   async terminalResult(task) {
+    const failed=task.currentState==='failed';
     return {
       ...(task.finalResult || {}),
       text: task.finalResult?.text || '',
@@ -188,6 +189,12 @@ export class AgentRuntime {
       activeTaskId: task.taskId,
       taskId: task.taskId,
       terminalState: task.currentState,
+      completionStatus: task.currentState,
+      executionStarted: Array.isArray(task.runs)&&task.runs.length>0,
+      executionCompleted: task.currentState==='completed',
+      failureCode: failed?task.failure?.errorCode||'':'',
+      failureStage: failed?task.failure?.failureStage||'':'',
+      userNotificationRequired: failed,
       replayed: true,
       taskReplayed: true,
       messageReplayed: false,

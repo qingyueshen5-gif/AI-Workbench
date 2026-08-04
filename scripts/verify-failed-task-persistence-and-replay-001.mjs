@@ -66,9 +66,10 @@ try{
     console.error(JSON.stringify({classification:'PRODUCT_OR_SECURITY_FAILURE',code:'TERMINAL_TASK_REPLAY_CLASSIFICATION_MISSING',observed:{replayed:replay.replayed,taskReplayed:replay.taskReplayed,messageReplayed:replay.messageReplayed,verified:replay.verified,terminalState:replay.terminalState},expected:{taskReplayed:true,messageReplayed:'false-or-undefined'},failureBefore,counts:{before,after}},null,2));
   }
   assert.equal(replay.taskReplayed,true);
-  assert.notEqual(replay.messageReplayed,true);
+  assert.equal(replay.messageReplayed,false);
   assert.equal(replay.replayed,true);
   assert.equal(replay.verified,false);
+  assert.equal(replay.terminalState,'failed');
   assert.equal(replay.completionStatus,'failed');
   assert.equal(replay.executionStarted,true);
   assert.equal(replay.executionCompleted,false);
