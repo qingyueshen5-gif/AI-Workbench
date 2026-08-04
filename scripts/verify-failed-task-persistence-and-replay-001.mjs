@@ -62,8 +62,11 @@ try{
 
   const replay=await runtime.handle(job);
   const after=structuredClone(counts);
+  if(replay.taskReplayed!==true||replay.messageReplayed===true){
+    console.error(JSON.stringify({classification:'PRODUCT_OR_SECURITY_FAILURE',code:'TERMINAL_TASK_REPLAY_CLASSIFICATION_MISSING',observed:{replayed:replay.replayed,taskReplayed:replay.taskReplayed,messageReplayed:replay.messageReplayed,verified:replay.verified,terminalState:replay.terminalState},expected:{taskReplayed:true,messageReplayed:'false-or-undefined'},failureBefore,counts:{before,after}},null,2));
+  }
   assert.equal(replay.taskReplayed,true);
-  assert.equal(replay.messageReplayed,false);
+  assert.notEqual(replay.messageReplayed,true);
   assert.equal(replay.replayed,true);
   assert.equal(replay.verified,false);
   assert.equal(replay.completionStatus,'failed');

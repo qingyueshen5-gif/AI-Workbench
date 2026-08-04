@@ -1,0 +1,69 @@
+{
+  "classification": "PRODUCT_OR_SECURITY_FAILURE",
+  "code": "TERMINAL_TASK_REPLAY_CLASSIFICATION_MISSING",
+  "observed": {
+    "replayed": true,
+    "verified": true,
+    "terminalState": "failed"
+  },
+  "expected": {
+    "taskReplayed": true,
+    "messageReplayed": "false-or-undefined"
+  },
+  "failureBefore": {
+    "errorCode": "PROVIDER_EXECUTION_FAILED",
+    "failureStage": "provider_execution",
+    "failureClassification": "provider_failure",
+    "taskId": "message-f6bedff8-fe5c-4a77-a105-ac9817503ebe",
+    "runId": "run-4ad629d3-4f08-4afc-9408-9a57121e584f",
+    "taskRevision": 9,
+    "failedAt": 1785825173169,
+    "message": "isolated provider execution failed",
+    "name": "Error",
+    "causeCode": "ISOLATED_PROVIDER_EXECUTION_FAILED"
+  },
+  "counts": {
+    "before": {
+      "taskCreates": 1,
+      "runCreates": 1,
+      "providerCalls": 1,
+      "verifierCalls": 0,
+      "finalWrites": 0,
+      "progressWrites": 4,
+      "assistantAppends": 0,
+      "deliveryAttempts": 0,
+      "sideEffects": 0
+    },
+    "after": {
+      "taskCreates": 1,
+      "runCreates": 1,
+      "providerCalls": 1,
+      "verifierCalls": 0,
+      "finalWrites": 0,
+      "progressWrites": 4,
+      "assistantAppends": 0,
+      "deliveryAttempts": 0,
+      "sideEffects": 0
+    }
+  }
+}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ undefined
+- true
+
+    at file:///E:/AI-Workbench-candidates/interpreter-adapter-001/scripts/verify-failed-task-persistence-and-replay-001.mjs:68:10 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: undefined,
+  expected: true,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.18.0
