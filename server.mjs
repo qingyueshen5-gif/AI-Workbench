@@ -54,6 +54,47 @@ const initialData = {
 const extractionConfidenceThreshold = 0.75;
 const ownerOptions = ['DeepSeek', '人工', 'Codex', 'GPT', 'Claude'];
 const internalActionTexts = new Set(['把这条消息同步为任务']);
+const serverOwnedTrustFieldNames = new Set([
+  'verified',
+  'verification',
+  'verificationPassed',
+  'finalEvidence',
+  'verifierId',
+  'verifiedAt',
+  'verificationResult',
+  'runEvidenceValidated',
+  'legacyVerifiedClaimObserved'
+]);
+
+function findClientSuppliedTrustFields(value, path = '', offendingPaths = []) {
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => findClientSuppliedTrustFields(item, `${path}[${index}]`, offendingPaths));
+    return offendingPaths;
+  }
+  if (!value || typeof value !== 'object') return offendingPaths;
+  for (const [key, child] of Object.entries(value)) {
+    const childPath = path ? `${path}.${key}` : key;
+    if (serverOwnedTrustFieldNames.has(key) || (key === 'passed' && path.split('.').at(-1) === 'verification')) {
+      offendingPaths.push(childPath);
+    }
+    findClientSuppliedTrustFields(child, childPath, offendingPaths);
+  }
+  return [...new Set(offendingPaths)].sort();
+}
+
+function rejectClientSuppliedTrustFields(response, payload) {
+  const offendingPaths = findClientSuppliedTrustFields(payload);
+  if (!offendingPaths.length) return false;
+  sendJson(response, 422, {
+    accepted: false,
+    serverOwnedField: true,
+    errorCode: 'CLIENT_SUPPLIED_TRUST_FIELD_FORBIDDEN',
+    offendingPaths,
+    retryable: false,
+    message: 'Server-owned trust fields cannot be supplied by a client.'
+  });
+  return true;
+}
 
 function loadLocalEnv() {
   try {
@@ -2058,6 +2099,7 @@ const server = createServer(async (request, response) => {
     if (pathname === '/api/runs' && request.method === 'POST') {
       const body = await readBody(request);
       const payload = JSON.parse(body || '{}');
+      if (rejectClientSuppliedTrustFields(response, payload)) return;
       const currentData = await readData();
       const run = createRunRecord({
         taskId: payload.taskId,
@@ -2076,7 +2118,7 @@ const server = createServer(async (request, response) => {
         executionStarted: Boolean(payload.startedAt),
         executionCompleted: Boolean(payload.finishedAt),
         postconditionObserved: false,
-        verificationResult: payload.verificationResult || null
+        verificationResult: null
       });
       await writeData({ ...currentData, runs: [run, ...currentData.runs] });
       sendJson(response, 201, { run, data: await readDataWithMeta() });
@@ -2188,7 +2230,9 @@ const server = createServer(async (request, response) => {
 
     if (pathname === '/api/data' && request.method === 'PUT') {
       const body = await readBody(request);
-      const data = normalizeData(JSON.parse(body || '{}'));
+      const payload = JSON.parse(body || '{}');
+      if (rejectClientSuppliedTrustFields(response, payload)) return;
+      const data = normalizeData(payload);
       const currentData = await readData();
       await writeData(appendFailureMemories(currentData, data));
       sendJson(response, 200, await readDataWithMeta());

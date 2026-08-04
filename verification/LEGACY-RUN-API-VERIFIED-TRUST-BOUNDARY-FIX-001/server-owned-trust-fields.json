@@ -1,0 +1,23 @@
+{
+  "schema": "ai-workbench.server-owned-trust-fields/v1",
+  "rejection": {
+    "httpStatus": 422,
+    "errorCode": "CLIENT_SUPPLIED_TRUST_FIELD_FORBIDDEN",
+    "accepted": false,
+    "serverOwnedField": true,
+    "retryable": false
+  },
+  "fields": [
+    {"path":"verified","endpoint":["POST /api/runs","PUT /api/data"],"reason":"Business acceptance is server-derived only","authority":"deriveBoundVerifierResult","externalWritable":false,"rejectionCode":"CLIENT_SUPPLIED_TRUST_FIELD_FORBIDDEN","nested":true,"arrayAware":true},
+    {"path":"verification","endpoint":["POST /api/runs","PUT /api/data"],"reason":"Persisted Result Verifier record is server-owned","authority":"ResultVerifier","externalWritable":false,"rejectionCode":"CLIENT_SUPPLIED_TRUST_FIELD_FORBIDDEN","nested":true,"arrayAware":true},
+    {"path":"verification.passed","endpoint":["POST /api/runs","PUT /api/data"],"reason":"Verifier PASS cannot be client supplied","authority":"ResultVerifier","externalWritable":false,"rejectionCode":"CLIENT_SUPPLIED_TRUST_FIELD_FORBIDDEN","nested":true,"arrayAware":true},
+    {"path":"verificationPassed","endpoint":["POST /api/runs","PUT /api/data"],"reason":"Protocol alias for verifier PASS is forbidden","authority":"ResultVerifier","externalWritable":false,"rejectionCode":"CLIENT_SUPPLIED_TRUST_FIELD_FORBIDDEN","nested":true,"arrayAware":true},
+    {"path":"finalEvidence","endpoint":["POST /api/runs","PUT /api/data"],"reason":"Final acceptance evidence is server-owned","authority":"ResultVerifier/finalizeRun","externalWritable":false,"rejectionCode":"CLIENT_SUPPLIED_TRUST_FIELD_FORBIDDEN","nested":true,"arrayAware":true},
+    {"path":"finalResult.verified","endpoint":["POST /api/runs","PUT /api/data"],"reason":"Final business verification is server-derived","authority":"deriveBoundVerifierResult","externalWritable":false,"rejectionCode":"CLIENT_SUPPLIED_TRUST_FIELD_FORBIDDEN","nested":true,"arrayAware":true},
+    {"path":"verifierId","endpoint":["POST /api/runs","PUT /api/data"],"reason":"Verifier identity is server-owned","authority":"ResultVerifier","externalWritable":false,"rejectionCode":"CLIENT_SUPPLIED_TRUST_FIELD_FORBIDDEN","nested":true,"arrayAware":true},
+    {"path":"verifiedAt","endpoint":["POST /api/runs","PUT /api/data"],"reason":"Verifier timestamp is server-owned","authority":"ResultVerifier","externalWritable":false,"rejectionCode":"CLIENT_SUPPLIED_TRUST_FIELD_FORBIDDEN","nested":true,"arrayAware":true},
+    {"path":"verificationResult","endpoint":["POST /api/runs","PUT /api/data"],"reason":"Legacy evidence-validation result is server-generated and cannot be submitted as trusted state","authority":"server verify endpoint","externalWritable":false,"rejectionCode":"CLIENT_SUPPLIED_TRUST_FIELD_FORBIDDEN","nested":true,"arrayAware":true},
+    {"path":"runEvidenceValidated","endpoint":["POST /api/runs","PUT /api/data"],"reason":"Isolated evidence validation result is server-owned","authority":"verifyRun","externalWritable":false,"rejectionCode":"CLIENT_SUPPLIED_TRUST_FIELD_FORBIDDEN","nested":true,"arrayAware":true},
+    {"path":"legacyVerifiedClaimObserved","endpoint":["POST /api/runs","PUT /api/data"],"reason":"Legacy trust-claim audit marker is server-owned","authority":"normalizeRuns","externalWritable":false,"rejectionCode":"CLIENT_SUPPLIED_TRUST_FIELD_FORBIDDEN","nested":true,"arrayAware":true}
+  ]
+}
