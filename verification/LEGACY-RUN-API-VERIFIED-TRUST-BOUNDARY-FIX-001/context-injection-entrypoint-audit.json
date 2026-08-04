@@ -1,0 +1,21 @@
+{
+  "schema":"ai-workbench.context-injection-entrypoint-audit/v1",
+  "entrypoints":[{"endpoint":"POST /api/agents/hermes/invoke","file":"server.mjs","line":1898}],
+  "contextCandidatePaths":["context","task_context","taskContext","agentContext","agent_context","runtimeContext","runtime_context","options.context","invokeOptions.context"],
+  "confirmedForbiddenPaths":["context"],
+  "callSites":[{"file":"server.mjs","line":1920,"call":"agentRegistry.invoke('hermes', task, {...taskContext,...serverRuntimeOptions})"}],
+  "internalCallers":[{"file":"scripts/verify-hermes-adapter.mjs","line":64,"submitsContext":false,"purpose":"manual existing Hermes API verifier; invokes real Hermes and is not run in this work package"}],
+  "externalCallers":["HTTP clients of POST /api/agents/hermes/invoke"],
+  "agentContextFlow":"payload.context OR buildTaskContextPackage -> spread into agentRegistry.invoke",
+  "runInputContextFlow":"same taskContext variable -> createRunRecord input.task_context",
+  "payloadSpreads":[],
+  "mergeOperations":["taskContext is spread with server-owned runtime metadata; payload itself is not spread"],
+  "sideEffectsBeforeValidation":["readData","create or patch in-memory Task before current context selection; persistence and Agent invoke occur after"],
+  "compatibilityDependencies":[],
+  "additionalInformationNeeds":[],
+  "otherProjectionBypasses":[],
+  "websocketEntrypoints":[],
+  "ipcEntrypoints":[],
+  "rpcEntrypoints":[],
+  "recommendedFix":"Reject own property context with HTTP 422 before readData/task creation; always call buildTaskContextPackage; do not support supplements or fallback"
+}
