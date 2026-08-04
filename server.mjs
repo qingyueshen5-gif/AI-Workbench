@@ -203,7 +203,13 @@ function normalizeRuns(runs) {
       costEstimate: run.costEstimate || { currency: 'USD', amount: 0, note: 'MVP estimate' },
       startedAt,
       finishedAt: run.finishedAt || '',
-      verified: Boolean(run.verified),
+      verified: run.verified === true,
+      handled: run.handled === true,
+      rendered: run.rendered === true,
+      policyApplied: run.policyApplied === true,
+      executionStarted: run.executionStarted === true || Boolean(run.startedAt),
+      executionCompleted: run.executionCompleted === true || Boolean(run.finishedAt),
+      postconditionObserved: run.postconditionObserved === true,
       verificationResult: run.verificationResult || null,
       durationMs: Number(run.durationMs || 0),
       memorySuggestions: normalizeMemorySuggestions(run.memorySuggestions, run.id || '')
@@ -363,7 +369,11 @@ function buildTaskContextPackage(data, task) {
       taskId: run.taskId,
       agentId: run.agentId,
       status: run.status,
-      verified: run.verified,
+      verified: run.verified === true,
+      handled: run.handled === true,
+      rendered: run.rendered === true,
+      executionCompleted: run.executionCompleted === true,
+      postconditionObserved: run.postconditionObserved === true,
       errorUserMessage: run.errorUserMessage,
       verificationResult: run.verificationResult
     }))
@@ -519,6 +529,12 @@ function createRunRecord({
   startedAt = new Date().toISOString(),
   finishedAt = '',
   verified = false,
+  handled = false,
+  rendered = false,
+  policyApplied = false,
+  executionStarted = false,
+  executionCompleted = false,
+  postconditionObserved = false,
   verificationResult = null
 } = {}) {
   const durationMs = finishedAt ? Math.max(0, new Date(finishedAt).getTime() - new Date(startedAt).getTime()) : 0;
@@ -536,7 +552,13 @@ function createRunRecord({
     costEstimate,
     startedAt,
     finishedAt,
-    verified,
+    verified: verified === true,
+    handled: handled === true,
+    rendered: rendered === true,
+    policyApplied: policyApplied === true,
+    executionStarted: executionStarted === true,
+    executionCompleted: executionCompleted === true,
+    postconditionObserved: postconditionObserved === true,
     verificationResult,
     durationMs
   };
