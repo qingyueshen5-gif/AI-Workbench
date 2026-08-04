@@ -474,5 +474,33 @@
       ],
       "recommendedChange": "Retain verified only for trusted business acceptance; migrate handling/render/execution routing to explicit field"
     }
-  ]
+  ],
+  "correction": {
+    "originalConclusion": {
+      "fourthRiskFound": false,
+      "classification": "known risk expansion only"
+    },
+    "correctedConclusion": {
+      "fourthRiskFound": true,
+      "riskName": "LEGACY_WORKBENCH_RUN_VERIFIED_TRUST_BOUNDARY_BYPASS",
+      "riskClassification": "HIGH"
+    },
+    "correctionStatus": "CORRECTED_BY_FOURTH_RISK_LATE_AUDIT",
+    "correctionEvidence": [
+      "server.mjs baseline:206 normalizeRuns/PUT data import",
+      "server.mjs baseline:366 buildTaskContextPackage",
+      "server.mjs baseline:1358 legacy Workbench execution",
+      "server.mjs baseline:1863 /api/hermes/invoke",
+      "server.mjs baseline:2047 POST /api/runs",
+      "server.mjs baseline:2116 isolated Run verify",
+      "external write -> JSON persistence -> Agent context -> UI whole-data writeback -> legacy tests"
+    ],
+    "riskName": "LEGACY_WORKBENCH_RUN_VERIFIED_TRUST_BOUNDARY_BYPASS",
+    "riskClassification": "HIGH",
+    "discoveredAt": "2026-08-04T17:28:25+08:00",
+    "correctedAt": "2026-08-04T18:00:00+08:00",
+    "sourceCheckpoint": "VERIFIED-SEMANTICS-UNIFICATION-FOURTH-RISK-WIP-001",
+    "sourceCommit": "80b538b36ed1ec282477e2e8d2276cceb14c4d68",
+    "sourcePatchSha256": "a1f25a5567f3303c3e27c943be5b533b9eb69cfb3a81f8de69a27826709972df"
+  }
 }
