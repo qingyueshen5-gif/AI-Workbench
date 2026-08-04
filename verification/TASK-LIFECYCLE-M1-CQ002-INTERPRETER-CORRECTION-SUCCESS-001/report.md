@@ -56,6 +56,22 @@ realExecution=0
 
 `providerId/approved/authorized/trusted/authorizationContext`均未进入最终解释协议。
 
+影响面回归：
+
+```text
+productionCodeTouched=true
+expandedForProductionChange=true
+executed=14
+passed=14
+failed=0
+```
+
+机器证据：
+
+```text
+verification/TASK-LIFECYCLE-M1-CQ002-INTERPRETER-CORRECTION-SUCCESS-001/impact-regression.json
+```
+
 历史断言：
 
 ```text
