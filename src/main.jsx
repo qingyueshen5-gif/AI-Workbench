@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { toWritableDataDto } from './lib/writable-data-dto.js';
+import { deriveRunStatusView } from './lib/run-status-view.js';
 import './styles.css';
 
 const internalActionTexts = new Set(['把这条消息同步为任务']);
@@ -398,7 +399,7 @@ function ConversationList({ data, updateData, className, onSelect }) {
                           {tasks.map((task) => (
                             <div key={task.id} className="rounded-md px-2 py-1.5 text-xs text-zinc-600">
                               <div className="truncate text-zinc-800">{task.title}</div>
-                              <div className="mt-0.5">{statusText(task.status)}</div>
+                              <TaskStatusPair task={task} compact />
                             </div>
                           ))}
                           {!tasks.length && <div className="px-2 py-2 text-xs text-zinc-500">这个目标下暂无关联任务。</div>}
@@ -900,8 +901,10 @@ function TodayPanel({ data, selectedTaskId, setSelectedTaskId }) {
   const [expanded, setExpanded] = useState(false);
   const today = todayKey();
   const todayTasks = data.tasks.filter((task) => dateKey(task.createdAt) === today);
-  const doneCount = todayTasks.filter((task) => task.status === '已完成' || task.status === 'done').length;
-  const progress = todayTasks.length ? Math.round((doneCount / todayTasks.length) * 100) : 0;
+  const taskViews = todayTasks.map((task) => deriveRunStatusView(task));
+  const terminalCount = taskViews.filter((view) => view.execution.terminal).length;
+  const verifiedCount = taskViews.filter((view) => view.verification.verified).length;
+  const progress = todayTasks.length ? Math.round((terminalCount / todayTasks.length) * 100) : 0;
   return (
     <section className="border-b border-zinc-200 pb-3">
       <h2 className="text-xs font-semibold uppercase tracking-wide text-zinc-500">今日</h2>
@@ -924,7 +927,7 @@ function TodayPanel({ data, selectedTaskId, setSelectedTaskId }) {
             >
               <div className="flex items-start justify-between gap-3">
                 <span className="min-w-0 text-sm font-medium text-zinc-900">{task.title}</span>
-                <span className={`shrink-0 rounded-md px-2 py-1 text-xs ${statusClass(task.status)}`}>{statusText(task.status)}</span>
+                <TaskStatusPair task={task} compact />
               </div>
               <div className="mt-2 text-xs text-zinc-500">{task.userVisibleSummary || '等待处理结果'}</div>
             </button>
@@ -932,7 +935,8 @@ function TodayPanel({ data, selectedTaskId, setSelectedTaskId }) {
           {!todayTasks.length && <div className="px-2 py-3 text-sm text-zinc-500">这个目标下还没有关联任务。</div>}
         </div>
       )}
-      <div className="mt-3 h-1 overflow-hidden rounded-full bg-zinc-200">
+      <div className="mt-3 text-xs text-zinc-500">执行已结束 {terminalCount}/{todayTasks.length} · 可信验收通过 {verifiedCount}/{todayTasks.length}</div>
+      <div className="mt-2 h-1 overflow-hidden rounded-full bg-zinc-200">
         <div className="h-full bg-emerald-600" style={{ width: `${progress}%` }} />
       </div>
     </section>
@@ -944,16 +948,13 @@ function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId }) {
   const [detailTaskId, setDetailTaskId] = useState('');
 
   function taskSummary(task) {
-    if (task.status === '失败' || task.status === 'failed') {
-      return task.userVisibleSummary || '这件事没有完成，原因已在对话里说明。';
-    }
-    if (task.status === '已完成' || task.status === 'done') {
-      return task.userVisibleSummary || '这件事已经完成。';
-    }
-    if (task.status === '进行中' || task.status === 'running') {
-      return task.userVisibleSummary || '正在处理这件事。';
-    }
-    return task.userVisibleSummary || task.notes || '还没有开始处理。';
+    const view = deriveRunStatusView(task);
+    if (view.execution.failed) return task.userVisibleSummary || '执行失败，原因已在对话里说明。';
+    if (view.execution.cancelled) return task.userVisibleSummary || '执行已取消。';
+    if (view.execution.code === 'VERIFIED_COMPLETED') return task.userVisibleSummary || '执行已结束，并已通过可信验收。';
+    if (view.execution.code === 'TERMINAL_UNVERIFIED') return task.userVisibleSummary || '执行已结束，尚未通过可信验收。';
+    if (view.execution.code === 'RUNNING') return task.userVisibleSummary || '正在执行。';
+    return task.userVisibleSummary || task.notes || '尚未开始执行。';
   }
 
   function toggleSummary(task) {
@@ -987,7 +988,7 @@ function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId }) {
                 className="flex w-full items-center justify-between gap-3 text-left"
               >
                 <span className="min-w-0 text-sm font-medium text-zinc-900">{task.title}</span>
-                <span className={`shrink-0 rounded-md px-2 py-1 text-xs ${statusClass(task.status)}`}>{statusText(task.status)}</span>
+                <TaskStatusPair task={task} compact />
               </button>
               {summaryOpen && (
                 <>
@@ -1005,7 +1006,8 @@ function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId }) {
                 <div className="mt-3 border-t border-zinc-200 pt-3">
                   <div className="text-sm font-medium">{task.title}</div>
                   <div className="mt-3 rounded-md border border-zinc-200 bg-zinc-50 p-3 text-xs leading-5 text-zinc-700">
-                    <div>状态：{statusText(task.status)}</div>
+                    <div>执行状态：{executionText(deriveRunStatusView(task).execution.code)}</div>
+                    <div>可信验收：{verificationText(deriveRunStatusView(task).verification.code)}</div>
                     <div>创建时间：{timeText(task.createdAt)}</div>
                     <div>更新时间：{timeText(task.updatedAt || task.createdAt)}</div>
                     {(task.status === '失败' || task.status === 'failed') && (
@@ -1024,18 +1026,35 @@ function TaskPanel({ data, selectedTask, selectedTaskId, setSelectedTaskId }) {
   );
 }
 
-function statusClass(status) {
-  if (status === '已完成' || status === 'done') return 'bg-emerald-100 text-emerald-800';
-  if (status === '进行中' || status === 'running') return 'bg-sky-100 text-sky-800';
-  if (status === '失败' || status === 'failed') return 'bg-red-100 text-red-800';
+function executionText(code) {
+  return ({ NOT_STARTED: '尚未开始', RUNNING: '执行中', TERMINAL_UNVERIFIED: '执行已结束', VERIFIED_COMPLETED: '执行已结束', FAILED: '执行失败', CANCELLED: '已取消' })[code] || '状态未记录';
+}
+
+function verificationText(code) {
+  return code === 'VERIFIED' ? '可信验收通过' : '尚未可信验收';
+}
+
+function executionClass(code) {
+  if (code === 'FAILED') return 'bg-red-100 text-red-800';
+  if (code === 'CANCELLED') return 'bg-zinc-200 text-zinc-700';
+  if (code === 'RUNNING') return 'bg-sky-100 text-sky-800';
+  if (code === 'TERMINAL_UNVERIFIED' || code === 'VERIFIED_COMPLETED') return 'bg-amber-100 text-amber-900';
   return 'bg-zinc-100 text-zinc-700';
 }
 
-function statusText(status) {
-  if (status === 'done') return '已完成';
-  if (status === 'running') return '进行中';
-  if (status === 'failed') return '失败';
-  return status || '未记录';
+function verificationClass(code) {
+  return code === 'VERIFIED' ? 'bg-emerald-100 text-emerald-800' : 'bg-zinc-100 text-zinc-600';
+}
+
+function TaskStatusPair({ task, compact = false }) {
+  const view = deriveRunStatusView(task);
+  const size = compact ? 'px-2 py-1 text-xs' : 'px-2.5 py-1 text-xs';
+  return (
+    <span className="flex shrink-0 flex-wrap justify-end gap-1" aria-label={`执行状态：${executionText(view.execution.code)}；可信验收：${verificationText(view.verification.code)}`}>
+      <span className={`rounded-md ${size} ${executionClass(view.execution.code)}`}>执行：{executionText(view.execution.code)}</span>
+      <span className={`rounded-md ${size} ${verificationClass(view.verification.code)}`}>验收：{verificationText(view.verification.code)}</span>
+    </span>
+  );
 }
 
 createRoot(document.getElementById('root')).render(<App />);
