@@ -1,0 +1,997 @@
+{
+  "schema": "ai-workbench.verified-test-assertion-inventory/v1",
+  "summary": {
+    "baselineHead": "7249188bb2fedb84d74fa6f4f7fa3f7e645b2add",
+    "producerCount": 30,
+    "consumerCount": 5,
+    "testAssertionCount": 89,
+    "knownRiskClasses": [
+      "LEGACY_EXECUTION_RESULTS_VERIFIED_TRUE_WITHOUT_UNIFORM_RUN_BINDING",
+      "NON_EXECUTION_RENDERER_VERIFIED_TRUE_SEMANTICS_UNBOUND",
+      "NON_TERMINAL_RUNTIME_VERIFIED_TRUE_WITHOUT_BOUND_VERIFIER"
+    ],
+    "fourthRiskFound": false,
+    "knownRiskExpandedToNewProductionPaths": true,
+    "expandedPaths": [
+      "server.mjs legacy Run API, built-in non-execution evidence, desktop/Hermes execution verification",
+      "execution/minimal-desktop-executor.mjs action-level verified marker"
+    ],
+    "unclassifiedProducerCount": 0
+  },
+  "entries": [
+    {
+      "file": "scripts/capture-round2-ui.mjs",
+      "line": 159,
+      "function": "main",
+      "oldAssertion": "verified: false,",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/capture-round2-ui.mjs",
+      "line": 159,
+      "function": "main",
+      "oldAssertion": "verified: false,",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-docs-consistency.mjs",
+      "line": 122,
+      "function": "catch",
+      "oldAssertion": "verifiedAt: new Date().toISOString(),",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-environment-fixture-protection-001.mjs",
+      "line": 17,
+      "function": "<module>",
+      "oldAssertion": "const artifact=join(artifactRoot,'sample.patch');await fs.writeFile(artifact,'patch evidence\\n');const sha=await sha256File(artifact);const verified=await assertExternalRecoveryArtifact(root,artifact,sha);assert.equal(verified.sha256,sha);",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [
+        "postconditionObserved"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-environment-fixture-protection-001.mjs",
+      "line": 17,
+      "function": "<module>",
+      "oldAssertion": "const artifact=join(artifactRoot,'sample.patch');await fs.writeFile(artifact,'patch evidence\\n');const sha=await sha256File(artifact);const verified=await assertExternalRecoveryArtifact(root,artifact,sha);assert.equal(verified.sha256,sha);",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [
+        "postconditionObserved"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-failed-task-persistence-and-replay-001.mjs",
+      "line": 52,
+      "function": "catch",
+      "oldAssertion": "assert.notEqual(firstTask.finalResult?.verified,true);",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-failed-task-persistence-and-replay-001.mjs",
+      "line": 66,
+      "function": "if",
+      "oldAssertion": "console.error(JSON.stringify({classification:'PRODUCT_OR_SECURITY_FAILURE',code:'TERMINAL_TASK_REPLAY_CLASSIFICATION_MISSING',observed:{replayed:replay.replayed,taskReplayed:replay.taskReplayed,messageReplayed:replay.messageReplayed,verified:replay.verified,terminalState:replay.terminalState},expected:{taskReplayed:true,messageReplayed:'false-or-undefined'},failureBefore,counts:{before,after}},null,2));",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-failed-task-persistence-and-replay-001.mjs",
+      "line": 66,
+      "function": "if",
+      "oldAssertion": "console.error(JSON.stringify({classification:'PRODUCT_OR_SECURITY_FAILURE',code:'TERMINAL_TASK_REPLAY_CLASSIFICATION_MISSING',observed:{replayed:replay.replayed,taskReplayed:replay.taskReplayed,messageReplayed:replay.messageReplayed,verified:replay.verified,terminalState:replay.terminalState},expected:{taskReplayed:true,messageReplayed:'false-or-undefined'},failureBefore,counts:{before,after}},null,2));",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-failed-task-persistence-and-replay-001.mjs",
+      "line": 71,
+      "function": "if",
+      "oldAssertion": "assert.equal(replay.verified,false);",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-gateway-runtime-business-boundary.mjs",
+      "line": 11,
+      "function": "<module>",
+      "oldAssertion": "const tools=new ContractToolExecutor(async(_id,call)=>{const content=await fs.readFile(call.path,'utf8');return{ok:true,actions:1,results:[{type:'read_file',path:call.path,content,size:Buffer.byteLength(content),sha256:'test-sha256',currentSha256:'test-sha256',verified:true}]}});",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [
+        "postconditionObserved"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-gateway-runtime-business-boundary.mjs",
+      "line": 11,
+      "function": "<module>",
+      "oldAssertion": "const tools=new ContractToolExecutor(async(_id,call)=>{const content=await fs.readFile(call.path,'utf8');return{ok:true,actions:1,results:[{type:'read_file',path:call.path,content,size:Buffer.byteLength(content),sha256:'test-sha256',currentSha256:'test-sha256',verified:true}]}});",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [
+        "postconditionObserved"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-install-release.mjs",
+      "line": 765,
+      "function": "if",
+      "oldAssertion": "summary.knownIssues.push('shared_managed production injection is not verified in 3A; mechanism test used mock upstream only.');",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-integration-001.mjs",
+      "line": 36,
+      "function": "handle",
+      "oldAssertion": "assert.equal(status.toolUsed,'runtime.status');assert.equal(status.provider,'local-runtime-state');assert.match(status.text,/isolated-online/);assert.ok(status.runId);assert.equal(status.verified,true);",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-integration-001.mjs",
+      "line": 41,
+      "function": "handle",
+      "oldAssertion": "assert.equal(read.toolUsed,'file.read');assert.equal(read.provider,'local-tool-executor');assert.ok(read.runId);assert.equal(read.verified,true);assert.equal(read.interpretation.targets[0].path,fixture);",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-integration-001.mjs",
+      "line": 46,
+      "function": "handle",
+      "oldAssertion": "console.log(JSON.stringify({ok:true,module:'INTERPRETER-ADAPTER-PHASE-B5-INTEGRATION',runtimeStatus:{toolUsed:status.toolUsed,taskId:status.taskId,runId:status.runId,provider:status.provider,providerStarts:counters.statusStarts,finalCount:1,verified:true},fileRead:{toolUsed:read.toolUsed,path:fixture,taskId:read.taskId,runId:read.runId,provider:read.provider,providerStarts:counters.readStarts,finalCount:1,sha256:evidence.sha256,size:evidence.size,mtimeMs:evidence.mtimeMs,fileUnchanged:true,verified:true},metrics:{modelCalls:0,providerStarts:counters.providerStarts,duplicateFinalsAccepted:0,staleRunResultsAccepted:0,windowsPathsDamaged:0}},null,2));",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [
+        "postconditionObserved"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-integration-001.mjs",
+      "line": 46,
+      "function": "handle",
+      "oldAssertion": "console.log(JSON.stringify({ok:true,module:'INTERPRETER-ADAPTER-PHASE-B5-INTEGRATION',runtimeStatus:{toolUsed:status.toolUsed,taskId:status.taskId,runId:status.runId,provider:status.provider,providerStarts:counters.statusStarts,finalCount:1,verified:true},fileRead:{toolUsed:read.toolUsed,path:fixture,taskId:read.taskId,runId:read.runId,provider:read.provider,providerStarts:counters.readStarts,finalCount:1,sha256:evidence.sha256,size:evidence.size,mtimeMs:evidence.mtimeMs,fileUnchanged:true,verified:true},metrics:{modelCalls:0,providerStarts:counters.providerStarts,duplicateFinalsAccepted:0,staleRunResultsAccepted:0,windowsPathsDamaged:0}},null,2));",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [
+        "postconditionObserved"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-integration-001.mjs",
+      "line": 46,
+      "function": "handle",
+      "oldAssertion": "console.log(JSON.stringify({ok:true,module:'INTERPRETER-ADAPTER-PHASE-B5-INTEGRATION',runtimeStatus:{toolUsed:status.toolUsed,taskId:status.taskId,runId:status.runId,provider:status.provider,providerStarts:counters.statusStarts,finalCount:1,verified:true},fileRead:{toolUsed:read.toolUsed,path:fixture,taskId:read.taskId,runId:read.runId,provider:read.provider,providerStarts:counters.readStarts,finalCount:1,sha256:evidence.sha256,size:evidence.size,mtimeMs:evidence.mtimeMs,fileUnchanged:true,verified:true},metrics:{modelCalls:0,providerStarts:counters.providerStarts,duplicateFinalsAccepted:0,staleRunResultsAccepted:0,windowsPathsDamaged:0}},null,2));",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [
+        "postconditionObserved"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s1-grounded-evidence-001.mjs",
+      "line": 29,
+      "function": "catch",
+      "oldAssertion": "const runVerification={passed:false,failureReason:verifierFailure,verifiedAt:Date.now(),verifierId:'ResultVerifier',verificationMethod:'grounded-source-evidence',evidenceReferences:[]};",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s1-grounded-evidence-001.mjs",
+      "line": 30,
+      "function": "catch",
+      "oldAssertion": "const final={verified:false,text:result.reason};",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s1-grounded-evidence-001.mjs",
+      "line": 30,
+      "function": "catch",
+      "oldAssertion": "const final={verified:false,text:result.reason};",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s1-grounded-evidence-001.mjs",
+      "line": 32,
+      "function": "catch",
+      "oldAssertion": "assert.equal(final.verified,false);",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s2-verifier-binding-001.mjs",
+      "line": 6,
+      "function": "verifyCapabilityResult",
+      "oldAssertion": "const verifier={verifyCapabilityResult(){return {ok:false,passed:false,failureReason:'fixture evidence authenticity failed',verifierId:'RejectingVerifier',verificationMethod:'fixture-authenticity',evidenceReferences:['file:fixture@1'],verifiedAt:Date.now()};}};",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s2-verifier-binding-001.mjs",
+      "line": 12,
+      "function": "catch",
+      "oldAssertion": "assert.equal(providerCalls,1);assert.equal(run.status,'failed');assert.equal(run.verification.passed,false);assert.match(run.verification.failureReason,/fixture evidence authenticity failed/);assert.equal(task.finalResult,null);assert.notEqual(task.finalResult?.verified,true);",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s5-multi-assignment-001.mjs",
+      "line": 21,
+      "function": "plan",
+      "oldAssertion": "const status=make({taskDraft:draft(['runtime.status'])});const sr=await status.runtime.handle({taskId:'one-status',messageId:'one-status',conversationId:'one-status',openId:'u',text:'status'});assert.equal(sr.verified,true);assert.equal(counters.providerStarts,1);",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s5-multi-assignment-001.mjs",
+      "line": 22,
+      "function": "plan",
+      "oldAssertion": "const read=make({taskDraft:draft(['file.read'])});const rr=await read.runtime.handle({taskId:'one-read',messageId:'one-read',conversationId:'one-read',openId:'u',text:'read'});assert.equal(rr.verified,true);assert.equal(counters.providerStarts,2);",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s5-multi-assignment-001.mjs",
+      "line": 23,
+      "function": "for",
+      "oldAssertion": "for(const count of [2,3]){const caps=['runtime.status','file.read',...(count===3?['runtime.status']:[])];const item=make({taskDraft:draft(caps)});const result=await item.runtime.handle({taskId:`multi-${count}`,messageId:`multi-${count}`,conversationId:`multi-${count}`,openId:'u',text:'multi'});const task=await item.tasks.load(`multi-${count}`);assert.equal(result.verified,false);assert.equal(result.rejection.assignmentCount,count);assert.equal(counters.providerStarts,2);assert.equal(task.runs.length,0);assert.equal(task.activeRunId,null);assert.equal(task.currentState,'failed');assert.equal(task.finalResult,null);assert.match(result.text,/多个可执行任务/);assert.match(result.text,/一次只执行一个/);assert.match(result.text,/没有启动任何操作/);assert.match(result.text,/先执行哪一个/);}",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s5-multi-assignment-001.mjs",
+      "line": 24,
+      "function": "for",
+      "oldAssertion": "console.log(JSON.stringify({ok:true,module:'INTERPRETER-ADAPTER-B5-S5-MULTI-ASSIGNMENT-FAIL-CLOSED',zero:{providerStarts:0,successFinals:0,runs:0},single:{runtimeStatus:'PASS',fileRead:'PASS',providerStarts:2,finals:2},multi:{counts:[2,3],providerStarts:0,tasks:2,runs:0,effectiveExecutionRuns:0,successFinals:0,verifiedTrue:0,userText:'我识别到多个可执行任务：检查Runtime状态、读取文件。当前版本一次只执行一个任务，因此没有启动任何操作。请告诉我先执行哪一个。'},modelCalls:counters.modelCalls},null,2));",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s6-task-replay-001.mjs",
+      "line": 7,
+      "function": "for",
+      "oldAssertion": "for(const state of terminals){const sessions=new ContractSessionStore();const task={taskId:`s6-${state}`,originalMessageId:`s6-${state}`,conversationId:`c-${state}`,currentState:state,finalResult:state==='completed'?{text:'done',provider:'fixture',verified:true}:{text:state==='failed'?'failed':'cancelled',provider:'fixture',verified:false},runs:[],activeRunId:null,stateHistory:[{from:'accepted',to:state}]};const tasks=new TaskStore({root:`${process.env.TEMP||'.'}/unused-${Math.random()}`});tasks.load=async(id)=>id===task.taskId?task:null;let activeCalls=0;const runtime=new AgentRuntime({tasks,sessions,models:{async understand(){throw new Error('model forbidden')},async express(){throw new Error('model forbidden')},async execute(){throw new Error('model forbidden')}},activeController:{async handle(){activeCalls++;throw new Error('must not execute')}}});const result=await runtime.handle({taskId:task.taskId,messageId:task.taskId,originalMessageId:task.originalMessageId,conversationId:task.conversationId,text:'repeat'});assert.equal(result.replayed,true);assert.equal(result.taskId,task.taskId);assert.equal(result.terminalState,state);assert.equal(activeCalls,0);assert.equal((await sessions.history(task.conversationId)).length,0);cases.push({state,replayed:result.replayed,providerStarts:0,newRuns:0,newFinals:0,newProgress:0,newAssistantReplies:0,originalMessageId:task.originalMessageId});}",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [
+        "handled",
+        "rendered",
+        "policyApplied",
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s6-task-replay-001.mjs",
+      "line": 7,
+      "function": "for",
+      "oldAssertion": "for(const state of terminals){const sessions=new ContractSessionStore();const task={taskId:`s6-${state}`,originalMessageId:`s6-${state}`,conversationId:`c-${state}`,currentState:state,finalResult:state==='completed'?{text:'done',provider:'fixture',verified:true}:{text:state==='failed'?'failed':'cancelled',provider:'fixture',verified:false},runs:[],activeRunId:null,stateHistory:[{from:'accepted',to:state}]};const tasks=new TaskStore({root:`${process.env.TEMP||'.'}/unused-${Math.random()}`});tasks.load=async(id)=>id===task.taskId?task:null;let activeCalls=0;const runtime=new AgentRuntime({tasks,sessions,models:{async understand(){throw new Error('model forbidden')},async express(){throw new Error('model forbidden')},async execute(){throw new Error('model forbidden')}},activeController:{async handle(){activeCalls++;throw new Error('must not execute')}}});const result=await runtime.handle({taskId:task.taskId,messageId:task.taskId,originalMessageId:task.originalMessageId,conversationId:task.conversationId,text:'repeat'});assert.equal(result.replayed,true);assert.equal(result.taskId,task.taskId);assert.equal(result.terminalState,state);assert.equal(activeCalls,0);assert.equal((await sessions.history(task.conversationId)).length,0);cases.push({state,replayed:result.replayed,providerStarts:0,newRuns:0,newFinals:0,newProgress:0,newAssistantReplies:0,originalMessageId:task.originalMessageId});}",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [
+        "handled",
+        "rendered",
+        "policyApplied",
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-b5-s6-task-replay-001.mjs",
+      "line": 7,
+      "function": "for",
+      "oldAssertion": "for(const state of terminals){const sessions=new ContractSessionStore();const task={taskId:`s6-${state}`,originalMessageId:`s6-${state}`,conversationId:`c-${state}`,currentState:state,finalResult:state==='completed'?{text:'done',provider:'fixture',verified:true}:{text:state==='failed'?'failed':'cancelled',provider:'fixture',verified:false},runs:[],activeRunId:null,stateHistory:[{from:'accepted',to:state}]};const tasks=new TaskStore({root:`${process.env.TEMP||'.'}/unused-${Math.random()}`});tasks.load=async(id)=>id===task.taskId?task:null;let activeCalls=0;const runtime=new AgentRuntime({tasks,sessions,models:{async understand(){throw new Error('model forbidden')},async express(){throw new Error('model forbidden')},async execute(){throw new Error('model forbidden')}},activeController:{async handle(){activeCalls++;throw new Error('must not execute')}}});const result=await runtime.handle({taskId:task.taskId,messageId:task.taskId,originalMessageId:task.originalMessageId,conversationId:task.conversationId,text:'repeat'});assert.equal(result.replayed,true);assert.equal(result.taskId,task.taskId);assert.equal(result.terminalState,state);assert.equal(activeCalls,0);assert.equal((await sessions.history(task.conversationId)).length,0);cases.push({state,replayed:result.replayed,providerStarts:0,newRuns:0,newFinals:0,newProgress:0,newAssistantReplies:0,originalMessageId:task.originalMessageId});}",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [
+        "handled",
+        "rendered",
+        "policyApplied",
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-interpreter-adapter-bypass-001.mjs",
+      "line": 58,
+      "function": "if",
+      "oldAssertion": "assert.equal(result.verified,true);",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-memories.mjs",
+      "line": 90,
+      "function": "main",
+      "oldAssertion": "verified: true,",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-memories.mjs",
+      "line": 90,
+      "function": "main",
+      "oldAssertion": "verified: true,",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-non-execution-clarify-contract-001.mjs",
+      "line": 100,
+      "function": "nonExecutionRenderer",
+      "oldAssertion": "verified: true,",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-non-execution-clarify-contract-001.mjs",
+      "line": 100,
+      "function": "nonExecutionRenderer",
+      "oldAssertion": "verified: true,",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-openclaw.mjs",
+      "line": 86,
+      "function": "main",
+      "oldAssertion": "assert(openclawRun?.output?.evidence?.commandRun && openclawRun?.verified, 'OpenClaw chat result missing structured evidence');",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-openclaw.mjs",
+      "line": 105,
+      "function": "main",
+      "oldAssertion": "verified: directVerification.ok",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-openclaw.mjs",
+      "line": 105,
+      "function": "main",
+      "oldAssertion": "verified: directVerification.ok",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-c.mjs",
+      "line": 18,
+      "function": "<module>",
+      "oldAssertion": "await store.bindRunVerification(task.taskId,identity,{verified:true,providerId:'verifier-c',...identity});",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-c.mjs",
+      "line": 18,
+      "function": "<module>",
+      "oldAssertion": "await store.bindRunVerification(task.taskId,identity,{verified:true,providerId:'verifier-c',...identity});",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-c.mjs",
+      "line": 21,
+      "function": "<module>",
+      "oldAssertion": "const finalResult={text:'done',provider:'provider-c',verified:true,...identity};",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-c.mjs",
+      "line": 21,
+      "function": "<module>",
+      "oldAssertion": "const finalResult={text:'done',provider:'provider-c',verified:true,...identity};",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-c.mjs",
+      "line": 28,
+      "function": "<module>",
+      "oldAssertion": "await assert.rejects(()=>store.bindRunVerification(task.taskId,identity,{verified:true}),/Stale Run/);",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-c.mjs",
+      "line": 28,
+      "function": "<module>",
+      "oldAssertion": "await assert.rejects(()=>store.bindRunVerification(task.taskId,identity,{verified:true}),/Stale Run/);",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-d.mjs",
+      "line": 22,
+      "function": "<module>",
+      "oldAssertion": "await assert.rejects(()=>store.bindRunVerification(task.taskId,oldIdentity,{verified:true}),/(Stale Run|revision conflict)/);",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-run-fencing-phase-d.mjs",
+      "line": 22,
+      "function": "<module>",
+      "oldAssertion": "await assert.rejects(()=>store.bindRunVerification(task.taskId,oldIdentity,{verified:true}),/(Stale Run|revision conflict)/);",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-runtime-dependency-contracts.mjs",
+      "line": 11,
+      "function": "<module>",
+      "oldAssertion": "tools:new ContractToolExecutor(async(_id,call)=>{const content=await fs.readFile(call.path,'utf8');return{ok:true,results:[{type:'read_file',path:call.path,content,size:Buffer.byteLength(content),sha256:'hash',currentSha256:'hash',verified:true}]}}),",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [
+        "postconditionObserved"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-runtime-dependency-contracts.mjs",
+      "line": 11,
+      "function": "<module>",
+      "oldAssertion": "tools:new ContractToolExecutor(async(_id,call)=>{const content=await fs.readFile(call.path,'utf8');return{ok:true,results:[{type:'read_file',path:call.path,content,size:Buffer.byteLength(content),sha256:'hash',currentSha256:'hash',verified:true}]}}),",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [
+        "postconditionObserved"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-task-atomicity-001.mjs",
+      "line": 24,
+      "function": "<module>",
+      "oldAssertion": "store.patch('atomic', { verification: { verified: true } })",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-task-atomicity-001.mjs",
+      "line": 24,
+      "function": "<module>",
+      "oldAssertion": "store.patch('atomic', { verification: { verified: true } })",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-task-atomicity-001.mjs",
+      "line": 28,
+      "function": "<module>",
+      "oldAssertion": "assert.equal(afterPatch.verification.verified, true);",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-task-execution-loop.mjs",
+      "line": 6,
+      "function": "for",
+      "oldAssertion": "for(let i=0;i<aliases.length;i++){const child=await start();const interpreter=new ContractTaskInterpreter(async()=>interpretation(child.pid));const runtime=new AgentRuntime({sessions,tasks:new ContractTaskStore(),models,tools,verifier:new ResultVerifier(),taskInterpreter:interpreter,capabilityRegistry:registry,scheduler,processProvider:new LocalProcessProvider({protectedPids:[]})});const r=await runtime.handle({messageId:`p${i}`,originalMessageId:`p${i}`,conversationId:`p${i}`,chatId:`p${i}`,openId:'test-user',text:aliases[i],authorizationContexts:trustedAuthorizations({taskId:`p${i}`,userId:'test-user',capabilityIds:['process.stop']})});assert.equal(interpreter.calls.length,1);assert.equal(r.schedulerStatus,'ready');assert.equal(r.provider,'local-process-provider');assert.equal(r.metrics.processStopCalls,1);assert.equal(r.capabilityResults.find(x=>x.capabilityId==='process.stop').result.verification.pidAbsent,true);assert.equal((await sessions.history(`p${i}`)).filter(x=>x.role==='assistant').length,1);results.push({alias:aliases[i],pid:child.pid,verified:true});}",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [
+        "policyApplied",
+        "executionStarted",
+        "executionCompleted",
+        "postconditionObserved"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-task-execution-loop.mjs",
+      "line": 6,
+      "function": "for",
+      "oldAssertion": "for(let i=0;i<aliases.length;i++){const child=await start();const interpreter=new ContractTaskInterpreter(async()=>interpretation(child.pid));const runtime=new AgentRuntime({sessions,tasks:new ContractTaskStore(),models,tools,verifier:new ResultVerifier(),taskInterpreter:interpreter,capabilityRegistry:registry,scheduler,processProvider:new LocalProcessProvider({protectedPids:[]})});const r=await runtime.handle({messageId:`p${i}`,originalMessageId:`p${i}`,conversationId:`p${i}`,chatId:`p${i}`,openId:'test-user',text:aliases[i],authorizationContexts:trustedAuthorizations({taskId:`p${i}`,userId:'test-user',capabilityIds:['process.stop']})});assert.equal(interpreter.calls.length,1);assert.equal(r.schedulerStatus,'ready');assert.equal(r.provider,'local-process-provider');assert.equal(r.metrics.processStopCalls,1);assert.equal(r.capabilityResults.find(x=>x.capabilityId==='process.stop').result.verification.pidAbsent,true);assert.equal((await sessions.history(`p${i}`)).filter(x=>x.role==='assistant').length,1);results.push({alias:aliases[i],pid:child.pid,verified:true});}",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [
+        "policyApplied",
+        "executionStarted",
+        "executionCompleted",
+        "postconditionObserved"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 40,
+      "function": "makeTools",
+      "oldAssertion": "return { ok: true, results: [{ type: 'read_file', path: call.path, content, size: Buffer.byteLength(content), sha256: 'sha', currentSha256: 'sha', verified: true }] };",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [
+        "postconditionObserved"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-task-lifecycle-001.mjs",
+      "line": 40,
+      "function": "makeTools",
+      "oldAssertion": "return { ok: true, results: [{ type: 'read_file', path: call.path, content, size: Buffer.byteLength(content), sha256: 'sha', currentSha256: 'sha', verified: true }] };",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [
+        "postconditionObserved"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-tasks-runs.mjs",
+      "line": 111,
+      "function": "main",
+      "oldAssertion": "'verified',",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-terminal-task-replay-classification-001.mjs",
+      "line": 17,
+      "function": "checkClassification",
+      "oldAssertion": "const checkClassification=(result,state,verified)=>{",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-terminal-task-replay-classification-001.mjs",
+      "line": 22,
+      "function": "checkClassification",
+      "oldAssertion": "assert.equal(result.verified,verified);",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-terminal-task-replay-classification-001.mjs",
+      "line": 28,
+      "function": "checkClassification",
+      "oldAssertion": "checkClassification(await terminal(failed),'failed',false);scenarios.push({id:'A',state:'failed',verified:false,status:'PASS'});",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-terminal-task-replay-classification-001.mjs",
+      "line": 28,
+      "function": "checkClassification",
+      "oldAssertion": "checkClassification(await terminal(failed),'failed',false);scenarios.push({id:'A',state:'failed',verified:false,status:'PASS'});",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-terminal-task-replay-classification-001.mjs",
+      "line": 35,
+      "function": "checkClassification",
+      "oldAssertion": "completed.finalResult={text:'done',provider:'fixture',verified:true,runId,taskRevision:revision,verification};",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-terminal-task-replay-classification-001.mjs",
+      "line": 35,
+      "function": "checkClassification",
+      "oldAssertion": "completed.finalResult={text:'done',provider:'fixture',verified:true,runId,taskRevision:revision,verification};",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-terminal-task-replay-classification-001.mjs",
+      "line": 36,
+      "function": "checkClassification",
+      "oldAssertion": "checkClassification(await terminal(completed),'completed',true);scenarios.push({id:'B',state:'completed_bound_pass',verified:true,status:'PASS'});",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-terminal-task-replay-classification-001.mjs",
+      "line": 36,
+      "function": "checkClassification",
+      "oldAssertion": "checkClassification(await terminal(completed),'completed',true);scenarios.push({id:'B',state:'completed_bound_pass',verified:true,status:'PASS'});",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-terminal-task-replay-classification-001.mjs",
+      "line": 39,
+      "function": "checkClassification",
+      "oldAssertion": "checkClassification(await terminal(missing),'completed',false);scenarios.push({id:'C',state:'completed_missing_verification',verified:false,status:'PASS'});",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-terminal-task-replay-classification-001.mjs",
+      "line": 39,
+      "function": "checkClassification",
+      "oldAssertion": "checkClassification(await terminal(missing),'completed',false);scenarios.push({id:'C',state:'completed_missing_verification',verified:false,status:'PASS'});",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-terminal-task-replay-classification-001.mjs",
+      "line": 42,
+      "function": "checkClassification",
+      "oldAssertion": "checkClassification(await terminal(wrongRun),'completed',false);scenarios.push({id:'D',state:'completed_wrong_run',verified:false,status:'PASS'});",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-terminal-task-replay-classification-001.mjs",
+      "line": 42,
+      "function": "checkClassification",
+      "oldAssertion": "checkClassification(await terminal(wrongRun),'completed',false);scenarios.push({id:'D',state:'completed_wrong_run',verified:false,status:'PASS'});",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-terminal-task-replay-classification-001.mjs",
+      "line": 45,
+      "function": "checkClassification",
+      "oldAssertion": "checkClassification(await terminal(wrongRevision),'completed',false);scenarios.push({id:'E',state:'completed_wrong_acceptance_revision',verified:false,status:'PASS'});",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-terminal-task-replay-classification-001.mjs",
+      "line": 45,
+      "function": "checkClassification",
+      "oldAssertion": "checkClassification(await terminal(wrongRevision),'completed',false);scenarios.push({id:'E',state:'completed_wrong_acceptance_revision',verified:false,status:'PASS'});",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-terminal-task-replay-classification-001.mjs",
+      "line": 47,
+      "function": "checkClassification",
+      "oldAssertion": "const cancelled=base('cancelled');checkClassification(await terminal(cancelled),'cancelled',false);scenarios.push({id:'F',state:'cancelled',verified:false,status:'PASS'});",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-terminal-task-replay-classification-001.mjs",
+      "line": 47,
+      "function": "checkClassification",
+      "oldAssertion": "const cancelled=base('cancelled');checkClassification(await terminal(cancelled),'cancelled',false);scenarios.push({id:'F',state:'cancelled',verified:false,status:'PASS'});",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-terminal-task-replay-classification-001.mjs",
+      "line": 49,
+      "function": "checkClassification",
+      "oldAssertion": "const unavailable=base('capability_unavailable');unavailable.finalResult={text:'missing',provider:'scheduler',verified:true};",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [
+        "handled",
+        "rendered",
+        "capabilityAvailable"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-terminal-task-replay-classification-001.mjs",
+      "line": 49,
+      "function": "checkClassification",
+      "oldAssertion": "const unavailable=base('capability_unavailable');unavailable.finalResult={text:'missing',provider:'scheduler',verified:true};",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [
+        "handled",
+        "rendered",
+        "capabilityAvailable"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-verification-layer.mjs",
+      "line": 109,
+      "function": "main",
+      "oldAssertion": "assert(success.afterVerify.verified === true, 'Success scenario should set verified=true');",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-verification-layer.mjs",
+      "line": 109,
+      "function": "main",
+      "oldAssertion": "assert(success.afterVerify.verified === true, 'Success scenario should set verified=true');",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-verification-layer.mjs",
+      "line": 109,
+      "function": "main",
+      "oldAssertion": "assert(success.afterVerify.verified === true, 'Success scenario should set verified=true');",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-verification-layer.mjs",
+      "line": 121,
+      "function": "main",
+      "oldAssertion": "assert(fakeDone.afterVerify.verified === false, 'Fake-done should set verified=false');",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-verification-layer.mjs",
+      "line": 121,
+      "function": "main",
+      "oldAssertion": "assert(fakeDone.afterVerify.verified === false, 'Fake-done should set verified=false');",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-verification-layer.mjs",
+      "line": 121,
+      "function": "main",
+      "oldAssertion": "assert(fakeDone.afterVerify.verified === false, 'Fake-done should set verified=false');",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-verification-layer.mjs",
+      "line": 148,
+      "function": "main",
+      "oldAssertion": "assert(executionFailed.afterVerify.verified === false, 'Execution-failed should set verified=false');",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-verification-layer.mjs",
+      "line": 148,
+      "function": "main",
+      "oldAssertion": "assert(executionFailed.afterVerify.verified === false, 'Execution-failed should set verified=false');",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/verify-verification-layer.mjs",
+      "line": 148,
+      "function": "main",
+      "oldAssertion": "assert(executionFailed.afterVerify.verified === false, 'Execution-failed should set verified=false');",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/workbench-agent-runtime.mjs",
+      "line": 73,
+      "function": "executeClaimedJob",
+      "oldAssertion": ": { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: true, text: result.text, provider: result.provider, providerSessionId: result.providerSessionId, toolUsed: result.toolUsed, verified: result.verified, controlKind: result.controlKind || '', ...(result.activeTaskId ? { activeTaskId: result.activeTaskId } : {}), classification: result.classification || null, finishedAt });",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [
+        "handled",
+        "rendered",
+        "policyApplied"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/workbench-agent-runtime.mjs",
+      "line": 73,
+      "function": "executeClaimedJob",
+      "oldAssertion": ": { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: true, text: result.text, provider: result.provider, providerSessionId: result.providerSessionId, toolUsed: result.toolUsed, verified: result.verified, controlKind: result.controlKind || '', ...(result.activeTaskId ? { activeTaskId: result.activeTaskId } : {}), classification: result.classification || null, finishedAt });",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [
+        "handled",
+        "rendered",
+        "policyApplied"
+      ],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/workbench-agent-runtime.mjs",
+      "line": 74,
+      "function": "executeClaimedJob",
+      "oldAssertion": "await runtimeEvent(stale?'result_suppressed':'result_generated',{messageId:job.messageId,finishedAt,provider:result.provider,toolUsed:result.toolUsed,verified:result.verified});",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/workbench-agent-runtime.mjs",
+      "line": 74,
+      "function": "executeClaimedJob",
+      "oldAssertion": "await runtimeEvent(stale?'result_suppressed':'result_generated',{messageId:job.messageId,finishedAt,provider:result.provider,toolUsed:result.toolUsed,verified:result.verified});",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/workbench-feishu-adapter.mjs",
+      "line": 267,
+      "function": "if",
+      "oldAssertion": "await event('result_delivered', { messageId: result.messageId, replyMessageId, provider: result.provider || '', toolUsed: result.toolUsed || '', verified: result.verified === true });",
+      "oldProtectedMeaning": "legacy asserted verified field value",
+      "newVerifiedAssertion": "verified must match trusted-bound contract; non-trusted scenarios false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    },
+    {
+      "file": "scripts/workbench-feishu-adapter.mjs",
+      "line": 267,
+      "function": "if",
+      "oldAssertion": "await event('result_delivered', { messageId: result.messageId, replyMessageId, provider: result.provider || '', toolUsed: result.toolUsed || '', verified: result.verified === true });",
+      "oldProtectedMeaning": "test/fixture verified contract",
+      "newVerifiedAssertion": "trusted-bound positive only; otherwise false",
+      "replacementSemanticAssertion": [],
+      "mayDelete": false
+    }
+  ]
+}

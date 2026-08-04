@@ -1,0 +1,451 @@
+{
+  "schema": "ai-workbench.verified-semantic-migration-map/v1",
+  "summary": {
+    "baselineHead": "7249188bb2fedb84d74fa6f4f7fa3f7e645b2add",
+    "producerCount": 30,
+    "consumerCount": 5,
+    "testAssertionCount": 89,
+    "knownRiskClasses": [
+      "LEGACY_EXECUTION_RESULTS_VERIFIED_TRUE_WITHOUT_UNIFORM_RUN_BINDING",
+      "NON_EXECUTION_RENDERER_VERIFIED_TRUE_SEMANTICS_UNBOUND",
+      "NON_TERMINAL_RUNTIME_VERIFIED_TRUE_WITHOUT_BOUND_VERIFIER"
+    ],
+    "fourthRiskFound": false,
+    "knownRiskExpandedToNewProductionPaths": true,
+    "expandedPaths": [
+      "server.mjs legacy Run API, built-in non-execution evidence, desktop/Hermes execution verification",
+      "execution/minimal-desktop-executor.mjs action-level verified marker"
+    ],
+    "unclassifiedProducerCount": 0
+  },
+  "allowedGroups": [
+    "A. TRUSTED_VERIFIER_RESULT",
+    "B. NON_EXECUTION_OR_CONTROL",
+    "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+    "D. NON_EXECUTION_RENDERER",
+    "E. CONSUMER_MIGRATION",
+    "F. UNRESOLVED_REQUIRES_PRODUCT_DECISION"
+  ],
+  "entries": [
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 45,
+      "function": "deriveTerminalVerification",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [],
+      "recommendedChange": "Set verified=false and express actual semantics with approved explicit fields"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 188,
+      "function": "terminalResult",
+      "migrationGroup": "A. TRUSTED_VERIFIER_RESULT",
+      "currentMeaning": "trusted verifier result",
+      "targetVerified": true,
+      "replacementFields": [],
+      "recommendedChange": "Use shared trusted derivation only"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 311,
+      "function": "if",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [],
+      "recommendedChange": "Set verified=false and express actual semantics with approved explicit fields"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 363,
+      "function": "if",
+      "migrationGroup": "B. NON_EXECUTION_OR_CONTROL",
+      "currentMeaning": "message/render/control disposition",
+      "targetVerified": false,
+      "replacementFields": [
+        "handled",
+        "rendered",
+        "requiresUserInput",
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "recommendedChange": "Set verified=false and express actual semantics with handled, rendered, requiresUserInput, executionStarted, executionCompleted"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 375,
+      "function": "if",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "recommendedChange": "Set verified=false and express actual semantics with executionStarted, executionCompleted"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 381,
+      "function": "if",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "recommendedChange": "Set verified=false and express actual semantics with executionStarted, executionCompleted"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 383,
+      "function": "if",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "recommendedChange": "Set verified=false and express actual semantics with executionStarted, executionCompleted"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 397,
+      "function": "if",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "recommendedChange": "Set verified=false and express actual semantics with executionStarted, executionCompleted"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 425,
+      "function": "if",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "recommendedChange": "Set verified=false and express actual semantics with executionStarted, executionCompleted"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 441,
+      "function": "if",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [
+        "executionStarted",
+        "executionCompleted",
+        "postconditionObserved"
+      ],
+      "recommendedChange": "Set verified=false and express actual semantics with executionStarted, executionCompleted, postconditionObserved"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 443,
+      "function": "if",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [
+        "executionStarted",
+        "executionCompleted",
+        "postconditionObserved"
+      ],
+      "recommendedChange": "Set verified=false and express actual semantics with executionStarted, executionCompleted, postconditionObserved"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 463,
+      "function": "if",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "recommendedChange": "Set verified=false and express actual semantics with executionStarted, executionCompleted"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 472,
+      "function": "if",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "recommendedChange": "Set verified=false and express actual semantics with executionStarted, executionCompleted"
+    },
+    {
+      "file": "agents/interpreter-adapter-contract.mjs",
+      "line": 68,
+      "function": "toNonExecutionRuntimeResult",
+      "migrationGroup": "D. NON_EXECUTION_RENDERER",
+      "currentMeaning": "message/render/control disposition",
+      "targetVerified": false,
+      "replacementFields": [],
+      "recommendedChange": "Set verified=false and express actual semantics with approved explicit fields"
+    },
+    {
+      "file": "execution/minimal-desktop-executor.mjs",
+      "line": 44,
+      "function": "for",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [
+        "postconditionObserved"
+      ],
+      "recommendedChange": "Set verified=false and express actual semantics with postconditionObserved"
+    },
+    {
+      "file": "server.mjs",
+      "line": 206,
+      "function": "normalizeRuns",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [],
+      "recommendedChange": "Set verified=false and express actual semantics with approved explicit fields"
+    },
+    {
+      "file": "server.mjs",
+      "line": 366,
+      "function": "memoryByType",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [],
+      "recommendedChange": "Set verified=false and express actual semantics with approved explicit fields"
+    },
+    {
+      "file": "server.mjs",
+      "line": 521,
+      "function": "createRunRecord",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [],
+      "recommendedChange": "Set verified=false and express actual semantics with approved explicit fields"
+    },
+    {
+      "file": "server.mjs",
+      "line": 787,
+      "function": "answerBuiltInChatIntent",
+      "migrationGroup": "B. NON_EXECUTION_OR_CONTROL",
+      "currentMeaning": "message/render/control disposition",
+      "targetVerified": false,
+      "replacementFields": [
+        "handled",
+        "rendered"
+      ],
+      "recommendedChange": "Set verified=false and express actual semantics with handled, rendered"
+    },
+    {
+      "file": "server.mjs",
+      "line": 794,
+      "function": "answerBuiltInChatIntent",
+      "migrationGroup": "B. NON_EXECUTION_OR_CONTROL",
+      "currentMeaning": "message/render/control disposition",
+      "targetVerified": false,
+      "replacementFields": [
+        "handled",
+        "rendered",
+        "requiresUserInput"
+      ],
+      "recommendedChange": "Set verified=false and express actual semantics with handled, rendered, requiresUserInput"
+    },
+    {
+      "file": "server.mjs",
+      "line": 801,
+      "function": "answerBuiltInChatIntent",
+      "migrationGroup": "B. NON_EXECUTION_OR_CONTROL",
+      "currentMeaning": "message/render/control disposition",
+      "targetVerified": false,
+      "replacementFields": [
+        "handled",
+        "rendered"
+      ],
+      "recommendedChange": "Set verified=false and express actual semantics with handled, rendered"
+    },
+    {
+      "file": "server.mjs",
+      "line": 808,
+      "function": "answerBuiltInChatIntent",
+      "migrationGroup": "B. NON_EXECUTION_OR_CONTROL",
+      "currentMeaning": "message/render/control disposition",
+      "targetVerified": false,
+      "replacementFields": [
+        "handled",
+        "rendered",
+        "requiresUserInput"
+      ],
+      "recommendedChange": "Set verified=false and express actual semantics with handled, rendered, requiresUserInput"
+    },
+    {
+      "file": "server.mjs",
+      "line": 815,
+      "function": "answerBuiltInChatIntent",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [],
+      "recommendedChange": "Set verified=false and express actual semantics with approved explicit fields"
+    },
+    {
+      "file": "server.mjs",
+      "line": 1344,
+      "function": "if",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [],
+      "recommendedChange": "Set verified=false and express actual semantics with approved explicit fields"
+    },
+    {
+      "file": "server.mjs",
+      "line": 1358,
+      "function": "if",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "recommendedChange": "Set verified=false and express actual semantics with executionStarted, executionCompleted"
+    },
+    {
+      "file": "server.mjs",
+      "line": 1420,
+      "function": "catch",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [],
+      "recommendedChange": "Set verified=false and express actual semantics with approved explicit fields"
+    },
+    {
+      "file": "server.mjs",
+      "line": 1850,
+      "function": "if",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [],
+      "recommendedChange": "Set verified=false and express actual semantics with approved explicit fields"
+    },
+    {
+      "file": "server.mjs",
+      "line": 1863,
+      "function": "if",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "recommendedChange": "Set verified=false and express actual semantics with executionStarted, executionCompleted"
+    },
+    {
+      "file": "server.mjs",
+      "line": 2047,
+      "function": "if",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [],
+      "recommendedChange": "Set verified=false and express actual semantics with approved explicit fields"
+    },
+    {
+      "file": "server.mjs",
+      "line": 2116,
+      "function": "if",
+      "migrationGroup": "C. LEGACY_EXECUTION_WITHOUT_BOUND_VERIFIER",
+      "currentMeaning": "legacy execution or local check result",
+      "targetVerified": false,
+      "replacementFields": [
+        "executionStarted",
+        "executionCompleted"
+      ],
+      "recommendedChange": "Set verified=false and express actual semantics with executionStarted, executionCompleted"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 188,
+      "function": "terminalResult",
+      "migrationGroup": "E. CONSUMER_MIGRATION",
+      "currentMeaning": "const verification = { ...rawVerification, verifierId: rawVerification?.verifierId || this.verifier.constructor?.name || 'ResultVerifier', verificationMethod: rawVerification?.verificationMethod || providerSpec.verificationMethod || 'capability-result-verification', evidenceReferences: rawVerification?.evidenceReferences || completed.result?.evidence?.evidenceReferences || (completed.result?.evidence?.path ? [completed.result.evidence.path] : []), passed, failureReason: passed ? null : (rawVerification?.failureReason || 'Verifier rejected capability result'), verifiedAt: rawVerification?.verifiedAt || Date.now() };",
+      "targetVerified": "read only for trusted acceptance",
+      "replacementFields": [
+        "rendered/handled/executionCompleted according to path"
+      ],
+      "recommendedChange": "Retain verified only for trusted business acceptance; migrate handling/render/execution routing to explicit field"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 397,
+      "function": "if",
+      "migrationGroup": "E. CONSUMER_MIGRATION",
+      "currentMeaning": "verifiedAt: Math.max(...verificationResults.map((item) => Number(item.verifiedAt) || 0)),",
+      "targetVerified": "read only for trusted acceptance",
+      "replacementFields": [
+        "rendered/handled/executionCompleted according to path"
+      ],
+      "recommendedChange": "Retain verified only for trusted business acceptance; migrate handling/render/execution routing to explicit field"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 425,
+      "function": "if",
+      "migrationGroup": "E. CONSUMER_MIGRATION",
+      "currentMeaning": "const text = `Completed: ${interpretation.goal}. Stopped PID ${stopped.result.target.pid} and verified it is absent.`;",
+      "targetVerified": "read only for trusted acceptance",
+      "replacementFields": [
+        "rendered/handled/executionCompleted according to path"
+      ],
+      "recommendedChange": "Retain verified only for trusted business acceptance; migrate handling/render/execution routing to explicit field"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 443,
+      "function": "if",
+      "migrationGroup": "E. CONSUMER_MIGRATION",
+      "currentMeaning": "const finalModel = await this.models.express({ messages: [{ role: 'system', content: 'Summarize the verified execution result as the final user reply.' }, { role: 'user', content: `Original request: ${job.text}\\nExecution result: ${execution.text}` }] });",
+      "targetVerified": "read only for trusted acceptance",
+      "replacementFields": [
+        "rendered/handled/executionCompleted according to path"
+      ],
+      "recommendedChange": "Retain verified only for trusted business acceptance; migrate handling/render/execution routing to explicit field"
+    },
+    {
+      "file": "server.mjs",
+      "line": 521,
+      "function": "createRunRecord",
+      "migrationGroup": "E. CONSUMER_MIGRATION",
+      "currentMeaning": "verified,",
+      "targetVerified": "read only for trusted acceptance",
+      "replacementFields": [
+        "rendered/handled/executionCompleted according to path"
+      ],
+      "recommendedChange": "Retain verified only for trusted business acceptance; migrate handling/render/execution routing to explicit field"
+    }
+  ]
+}

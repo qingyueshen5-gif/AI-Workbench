@@ -1,0 +1,88 @@
+{
+  "schema": "ai-workbench.verified-consumer-inventory/v1",
+  "summary": {
+    "baselineHead": "7249188bb2fedb84d74fa6f4f7fa3f7e645b2add",
+    "producerCount": 30,
+    "consumerCount": 5,
+    "testAssertionCount": 89,
+    "knownRiskClasses": [
+      "LEGACY_EXECUTION_RESULTS_VERIFIED_TRUE_WITHOUT_UNIFORM_RUN_BINDING",
+      "NON_EXECUTION_RENDERER_VERIFIED_TRUE_SEMANTICS_UNBOUND",
+      "NON_TERMINAL_RUNTIME_VERIFIED_TRUE_WITHOUT_BOUND_VERIFIER"
+    ],
+    "fourthRiskFound": false,
+    "knownRiskExpandedToNewProductionPaths": true,
+    "expandedPaths": [
+      "server.mjs legacy Run API, built-in non-execution evidence, desktop/Hermes execution verification",
+      "execution/minimal-desktop-executor.mjs action-level verified marker"
+    ],
+    "unclassifiedProducerCount": 0
+  },
+  "entries": [
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 188,
+      "function": "terminalResult",
+      "consumerType": "condition_or_serialization",
+      "currentBranchCondition": "const verification = { ...rawVerification, verifierId: rawVerification?.verifierId || this.verifier.constructor?.name || 'ResultVerifier', verificationMethod: rawVerification?.verificationMethod || providerSpec.verificationMethod || 'capability-result-verification', evidenceReferences: rawVerification?.evidenceReferences || completed.result?.evidence?.evidenceReferences || (completed.result?.evidence?.path ? [completed.result.evidence.path] : []), passed, failureReason: passed ? null : (rawVerification?.failureReason || 'Verifier rejected capability result'), verifiedAt: rawVerification?.verifiedAt || Date.now() };",
+      "currentlyTreatsVerifiedAsSuccess": true,
+      "currentlyTreatsVerifiedAsHandled": false,
+      "currentlyTreatsVerifiedAsRendered": false,
+      "targetField": "rendered/handled/executionCompleted according to path",
+      "userVisibleImpact": "none direct",
+      "recommendedChange": "Retain verified only for trusted business acceptance; migrate handling/render/execution routing to explicit field"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 397,
+      "function": "if",
+      "consumerType": "condition_or_serialization",
+      "currentBranchCondition": "verifiedAt: Math.max(...verificationResults.map((item) => Number(item.verifiedAt) || 0)),",
+      "currentlyTreatsVerifiedAsSuccess": true,
+      "currentlyTreatsVerifiedAsHandled": false,
+      "currentlyTreatsVerifiedAsRendered": false,
+      "targetField": "rendered/handled/executionCompleted according to path",
+      "userVisibleImpact": "none direct",
+      "recommendedChange": "Retain verified only for trusted business acceptance; migrate handling/render/execution routing to explicit field"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 425,
+      "function": "if",
+      "consumerType": "condition_or_serialization",
+      "currentBranchCondition": "const text = `Completed: ${interpretation.goal}. Stopped PID ${stopped.result.target.pid} and verified it is absent.`;",
+      "currentlyTreatsVerifiedAsSuccess": false,
+      "currentlyTreatsVerifiedAsHandled": false,
+      "currentlyTreatsVerifiedAsRendered": true,
+      "targetField": "rendered/handled/executionCompleted according to path",
+      "userVisibleImpact": "Potential success/handled rendering semantics",
+      "recommendedChange": "Retain verified only for trusted business acceptance; migrate handling/render/execution routing to explicit field"
+    },
+    {
+      "file": "agents/agent-runtime.mjs",
+      "line": 443,
+      "function": "if",
+      "consumerType": "condition_or_serialization",
+      "currentBranchCondition": "const finalModel = await this.models.express({ messages: [{ role: 'system', content: 'Summarize the verified execution result as the final user reply.' }, { role: 'user', content: `Original request: ${job.text}\\nExecution result: ${execution.text}` }] });",
+      "currentlyTreatsVerifiedAsSuccess": false,
+      "currentlyTreatsVerifiedAsHandled": true,
+      "currentlyTreatsVerifiedAsRendered": true,
+      "targetField": "rendered/handled/executionCompleted according to path",
+      "userVisibleImpact": "Potential success/handled rendering semantics",
+      "recommendedChange": "Retain verified only for trusted business acceptance; migrate handling/render/execution routing to explicit field"
+    },
+    {
+      "file": "server.mjs",
+      "line": 521,
+      "function": "createRunRecord",
+      "consumerType": "condition_or_serialization",
+      "currentBranchCondition": "verified,",
+      "currentlyTreatsVerifiedAsSuccess": false,
+      "currentlyTreatsVerifiedAsHandled": false,
+      "currentlyTreatsVerifiedAsRendered": false,
+      "targetField": "rendered/handled/executionCompleted according to path",
+      "userVisibleImpact": "none direct",
+      "recommendedChange": "Retain verified only for trusted business acceptance; migrate handling/render/execution routing to explicit field"
+    }
+  ]
+}
