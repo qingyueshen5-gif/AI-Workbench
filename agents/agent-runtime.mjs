@@ -16,6 +16,7 @@ import { extractGroundTruth } from './original-ground-truth-extractor.mjs';
 import { InterpreterAdapter } from './interpreter-adapter.mjs';
 import { toNonExecutionRuntimeResult } from './interpreter-adapter-contract.mjs';
 import { NonExecutionMessageStore, nonExecutionIdentity } from '../channels/non-execution-message-store.mjs';
+import { deriveBoundVerifierResult, deriveTaskTerminalVerification } from './verified-semantics.mjs';
 
 function historyPrompt(history) {
   return history.slice(-20).map((item) => `${item.role === 'assistant' ? 'assistant' : item.role === 'tool' ? 'tool' : 'user'}: ${item.text}`).join('\n');
@@ -28,29 +29,6 @@ const failureCodes = new Set(['PROVIDER_EXECUTION_FAILED','VERIFICATION_FAILED',
 const failureClassifications = new Set(['provider_failure','verification_failure','runtime_failure']);
 const safeCauseCode = /^[A-Z][A-Z0-9_]{0,95}$/;
 
-function deriveTerminalVerification(task) {
-  if (task?.currentState !== 'completed' || task?.failure) return false;
-  const finalResult = task.finalResult;
-  const runId = typeof finalResult?.runId === 'string' ? finalResult.runId : '';
-  const run = Array.isArray(task.runs) ? task.runs.find((item) => item.runId === runId) : null;
-  if (!run || run.status !== 'completed' || run.taskId !== task.taskId) return false;
-  const revision = run.taskRevision;
-  const verification = run.verification;
-  const finalEvidence = run.finalEvidence;
-  return Boolean(
-    verification?.passed === true &&
-    verification.taskId === task.taskId &&
-    verification.runId === run.runId &&
-    verification.taskRevision === revision &&
-    finalResult?.verified === true &&
-    finalResult.runId === run.runId &&
-    finalResult.taskRevision === revision &&
-    finalEvidence?.passed === true &&
-    finalEvidence.taskId === task.taskId &&
-    finalEvidence.runId === run.runId &&
-    finalEvidence.taskRevision === revision
-  );
-}
 
 function progressMessage(state) {
   return ({
@@ -185,7 +163,7 @@ export class AgentRuntime {
       provider: task.finalResult?.provider || 'ai-workbench',
       providerSessionId: task.finalResult?.providerSessionId || '',
       toolUsed: task.finalResult?.toolUsed || '',
-      verified: deriveTerminalVerification(task),
+      verified: deriveTaskTerminalVerification(task),
       activeTaskId: task.taskId,
       taskId: task.taskId,
       terminalState: task.currentState,
@@ -422,9 +400,11 @@ export class AgentRuntime {
         const text = status ? status.result.text : `Read \`${read.result.evidence.path}\`. Evidence: size ${read.result.evidence.size} bytes, SHA-256 \`${read.result.evidence.sha256}\`; file was not modified.`;
         const toolUsed = status ? 'runtime.status' : 'file.read';
         const provider = status?.providerId || read?.providerId || 'grounded-provider';
-        const finalResult = { messageId: job.messageId, text, provider, providerSessionId: '', toolUsed, verified: verificationRecord.passed, verification: verificationRecord, interpretation, schedulerStatus: capabilityPlan.status, capabilityResults: results, classification, runId: started.identity.runId, taskRevision: started.identity.taskRevision, metrics: { readFileCalls: read ? 1 : 0, codexCalls: 0 } };
+        const candidateFinalResult = { messageId: job.messageId, text, provider, providerSessionId: '', toolUsed, verified: true, verification: verificationRecord, interpretation, schedulerStatus: capabilityPlan.status, capabilityResults: results, classification, taskId: task.taskId, runId: started.identity.runId, taskRevision: started.identity.taskRevision, metrics: { readFileCalls: read ? 1 : 0, codexCalls: 0 } };
+        const candidateFinalEvidence = { ...verificationRecord, provider, toolUsed };
+        const finalResult = { ...candidateFinalResult, verified: deriveBoundVerifierResult({ task: { ...task, currentState: 'completed', failure: null, activeRunId: started.identity.runId }, run: { taskId: task.taskId, runId: started.identity.runId, taskRevision: started.identity.taskRevision, status: 'completed' }, verification: verificationRecord, finalResult: candidateFinalResult, finalEvidence: candidateFinalEvidence }) };
         await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider, taskId });
-        const completed = await this.tasks.finalizeRun(task.taskId, started.identity, { finalResult, finalEvidence: { ...verificationRecord, provider, toolUsed } });
+        const completed = await this.tasks.finalizeRun(task.taskId, started.identity, { finalResult, finalEvidence: candidateFinalEvidence });
         return { ...finalResult, activeTaskId: completed.taskId, taskId: completed.taskId };
       }
 

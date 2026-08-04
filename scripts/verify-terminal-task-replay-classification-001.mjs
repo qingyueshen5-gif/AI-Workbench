@@ -31,8 +31,9 @@ try{
   const runId=`run-${randomUUID()}`;const revision=5;
   const verification={passed:true,taskId:completed.taskId,runId,taskRevision:revision,verifierId:'FixtureVerifier'};
   const finalEvidence={...verification};
+  completed.activeRunId=runId;
   completed.runs=[{runId,taskId:completed.taskId,taskRevision:revision,status:'completed',verification,finalEvidence}];
-  completed.finalResult={text:'done',provider:'fixture',verified:true,runId,taskRevision:revision,verification};
+  completed.finalResult={text:'done',provider:'fixture',verified:true,taskId:completed.taskId,runId,taskRevision:revision,verification};
   checkClassification(await terminal(completed),'completed',true);scenarios.push({id:'B',state:'completed_bound_pass',verified:true,status:'PASS'});
 
   const missing=structuredClone(completed);missing.runs[0].verification=null;
