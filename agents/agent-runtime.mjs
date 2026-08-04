@@ -28,6 +28,30 @@ const failureCodes = new Set(['PROVIDER_EXECUTION_FAILED','VERIFICATION_FAILED',
 const failureClassifications = new Set(['provider_failure','verification_failure','runtime_failure']);
 const safeCauseCode = /^[A-Z][A-Z0-9_]{0,95}$/;
 
+function deriveTerminalVerification(task) {
+  if (task?.currentState !== 'completed' || task?.failure) return false;
+  const finalResult = task.finalResult;
+  const runId = typeof finalResult?.runId === 'string' ? finalResult.runId : '';
+  const run = Array.isArray(task.runs) ? task.runs.find((item) => item.runId === runId) : null;
+  if (!run || run.status !== 'completed' || run.taskId !== task.taskId) return false;
+  const revision = run.taskRevision;
+  const verification = run.verification;
+  const finalEvidence = run.finalEvidence;
+  return Boolean(
+    verification?.passed === true &&
+    verification.taskId === task.taskId &&
+    verification.runId === run.runId &&
+    verification.taskRevision === revision &&
+    finalResult?.verified === true &&
+    finalResult.runId === run.runId &&
+    finalResult.taskRevision === revision &&
+    finalEvidence?.passed === true &&
+    finalEvidence.taskId === task.taskId &&
+    finalEvidence.runId === run.runId &&
+    finalEvidence.taskRevision === revision
+  );
+}
+
 function progressMessage(state) {
   return ({
     accepted: 'Task accepted.',
@@ -160,11 +184,13 @@ export class AgentRuntime {
       provider: task.finalResult?.provider || 'ai-workbench',
       providerSessionId: task.finalResult?.providerSessionId || '',
       toolUsed: task.finalResult?.toolUsed || '',
-      verified: task.finalResult?.verified !== false,
+      verified: deriveTerminalVerification(task),
       activeTaskId: task.taskId,
       taskId: task.taskId,
       terminalState: task.currentState,
       replayed: true,
+      taskReplayed: true,
+      messageReplayed: false,
       metrics: { readFileCalls: 0, codexCalls: 0, ...(task.finalResult?.metrics || {}) }
     };
   }
