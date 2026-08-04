@@ -23,6 +23,10 @@ function historyPrompt(history) {
 
 const readOnlyConstraint = /不要修改|只读|仅查看|不要写入|不要删除|read-?only/i;
 const absolutePathPattern = /[A-Za-z]:[\\/][^\s，。；,;'"`]+|\/[^\s，。；,;'"`]+/;
+const failureStages = new Set(['provider_execution','verification','runtime_internal']);
+const failureCodes = new Set(['PROVIDER_EXECUTION_FAILED','VERIFICATION_FAILED','RUNTIME_INTERNAL_FAILED']);
+const failureClassifications = new Set(['provider_failure','verification_failure','runtime_failure']);
+const safeCauseCode = /^[A-Z][A-Z0-9_]{0,95}$/;
 
 function progressMessage(state) {
   return ({
@@ -103,6 +107,7 @@ export class AgentRuntime {
     this.onStage = options.onStage || (async () => {});
     this.onProgress = options.onProgress || (async () => {});
     this.progressOptions = options.progressOptions || {};
+    this.now = options.now || (() => Date.now());
     this.capabilityRegistry = options.capabilityRegistry || new CapabilityRegistry();
     this.taskInterpreter = options.taskInterpreter || new TaskInterpreter({ model: this.models });
     this.interpreterAdapter = options.interpreterAdapter || new InterpreterAdapter();
@@ -136,7 +141,14 @@ export class AgentRuntime {
       await this.tasks.transitionRun(activated.taskId,{...identity,from:'starting',to:'running',evidence:{providerId}});
       return {identity,result};
     } catch (error) {
-      await this.tasks.failRunVerification(activated.taskId,identity,{passed:false,verifierId:'ResultVerifier',verificationMethod:'capability-result-verification',evidenceReferences:[],failureReason:error.message||String(error),verifiedAt:Date.now()});
+      await this.tasks.failRunVerification(activated.taskId,identity,{passed:false,verifierId:'ResultVerifier',verificationMethod:'capability-result-verification',evidenceReferences:[],failureReason:error.message||String(error),verifiedAt:this.now()});
+      const verificationFailure=Boolean(error?.verification);
+      error.runtimeFailureContext={
+        failureStage:verificationFailure?'verification':'provider_execution',
+        errorCode:verificationFailure?'VERIFICATION_FAILED':'PROVIDER_EXECUTION_FAILED',
+        failureClassification:verificationFailure?'verification_failure':'provider_failure',
+        runId:identity.runId
+      };
       throw error;
     }
   }
@@ -170,12 +182,21 @@ export class AgentRuntime {
     return { ...finalResult, activeTaskId: completed.taskId, taskId: completed.taskId };
   }
 
-  async failTask(task, error, progress) {
+  async failTask(task, error, progress, failureContext={}) {
     if (!task || TERMINAL_TASK_STATES.has(task.currentState)) return;
     const latest = await this.tasks.load(task.taskId).catch(() => null);
     if (!latest || TERMINAL_TASK_STATES.has(latest.currentState)) return;
-    await this.tasks.patch(latest.taskId, { failure: { message: error.message || String(error), name: error.name || 'Error' } }).catch(() => {});
-    await this.transition(latest, 'failed', 'runtime_error', 'agent-runtime', { error: error.message || String(error), name: error.name || 'Error' }, progress).catch(() => {});
+    const failureStage=failureStages.has(failureContext.failureStage)?failureContext.failureStage:'runtime_internal';
+    const errorCode=failureCodes.has(failureContext.errorCode)?failureContext.errorCode:'RUNTIME_INTERNAL_FAILED';
+    const failureClassification=failureClassifications.has(failureContext.failureClassification)?failureContext.failureClassification:'runtime_failure';
+    const runId=typeof failureContext.runId==='string'&&failureContext.runId.trim()?failureContext.runId.trim():null;
+    const causeCode=typeof error?.code==='string'&&safeCauseCode.test(error.code)?error.code:undefined;
+    const failedAt=this.now();
+    const transitioned=await this.transition(latest,'failed','runtime_error','agent-runtime',{errorCode,failureStage,failureClassification,runId},progress).catch(()=>null);
+    if(!transitioned)return;
+    const expectedRevision=transitioned.taskRevision+1;
+    const failure={errorCode,failureStage,failureClassification,taskId:transitioned.taskId,runId,taskRevision:expectedRevision,failedAt,message:error.message||String(error),name:error.name||'Error',...(causeCode?{causeCode}:{})};
+    await this.tasks.patch(transitioned.taskId,{failure}).catch(()=>{});
   }
 
   async executeCapabilityPlan(plan, interpretation, runIdentity = null) {
@@ -417,7 +438,7 @@ export class AgentRuntime {
       await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: 'deepseek', taskId });
       return this.finalize(task, { messageId: job.messageId, text, provider: 'deepseek', providerSessionId: '', toolUsed: '', verified: true, interpretation, schedulerStatus: capabilityPlan.status, classification, metrics: { readFileCalls: 0, codexCalls: 0 } }, progress);
     } catch (error) {
-      await this.failTask(task, error, progress);
+      await this.failTask(task, error, progress, error?.runtimeFailureContext || {});
       throw error;
     } finally {
       progress.close();
