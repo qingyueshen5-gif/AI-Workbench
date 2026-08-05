@@ -1,0 +1,1174 @@
+{
+  "schemaVersion": "1.0",
+  "historyRange": "80b538b36ed1ec282477e2e8d2276cceb14c4d68^..HEAD",
+  "generatedFromHead": "14f083fd26364eaab7c7d6a6d2b9d906f031d2db",
+  "commitCount": 31,
+  "checkpointCount": 119,
+  "commitStatistics": {
+    "MATCHED_ONE_TO_ONE": 31
+  },
+  "checkpointStatistics": {
+    "ACTIVE_CHECKPOINT": 97,
+    "COMMIT_FIELD_MISSING": 21,
+    "INVALIDATED_CHECKPOINT": 1
+  },
+  "commits": [
+    {
+      "commitSha": "14f083fd26364eaab7c7d6a6d2b9d906f031d2db",
+      "parentSha": [
+        "3b4ef3629a9ca200b7e8fc4b27a5709de331f101"
+      ],
+      "subject": "docs: preserve invalid Step8 reconciliation evidence stop",
+      "authorDate": "2026-08-05T09:20:10+08:00",
+      "committerDate": "2026-08-05T09:20:10+08:00",
+      "changedFiles": [
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step8-authoritative-reconciliation-invalid-stop.md"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-API-STEP8-AUTHORITATIVE-RECONCILIATION-STOP-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "3b4ef3629a9ca200b7e8fc4b27a5709de331f101",
+      "parentSha": [
+        "6f9ec98925cfd53af370bc13158ec1313364ff46"
+      ],
+      "subject": "docs: preserve Step7 missing Step5 and Step6 preconditions",
+      "authorDate": "2026-08-05T08:20:01+08:00",
+      "committerDate": "2026-08-05T08:20:01+08:00",
+      "changedFiles": [
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/legacy-run-api-step7-precondition-stop-002.md"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-API-STEP7-PRECONDITION-STOP-002"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "6f9ec98925cfd53af370bc13158ec1313364ff46",
+      "parentSha": [
+        "22622652ce64470e77a745067a55ac29ab54b245"
+      ],
+      "subject": "docs: preserve Step7 audit-baseline precondition failure",
+      "authorDate": "2026-08-05T08:03:01+08:00",
+      "committerDate": "2026-08-05T08:03:01+08:00",
+      "changedFiles": [
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/legacy-run-api-step7-precondition-stop.md"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-API-STEP7-PRECONDITION-STOP-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "22622652ce64470e77a745067a55ac29ab54b245",
+      "parentSha": [
+        "8e111bb4531fe0fdd7ae219963c02e1deb88ca06"
+      ],
+      "subject": "docs: preserve Step6 baseline precondition failure",
+      "authorDate": "2026-08-05T07:51:24+08:00",
+      "committerDate": "2026-08-05T07:51:24+08:00",
+      "changedFiles": [
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/legacy-run-api-step6-precondition-stop.md"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-API-STEP6-PRECONDITION-STOP-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "8e111bb4531fe0fdd7ae219963c02e1deb88ca06",
+      "parentSha": [
+        "aa6f3dedc4a6f7b648166d944da36b1731db501d"
+      ],
+      "subject": "docs: close focused UI status separation",
+      "authorDate": "2026-08-05T00:43:35+08:00",
+      "committerDate": "2026-08-05T00:43:35+08:00",
+      "changedFiles": [
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/ui-status-separation-report.md"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-API-STEP5-UI-STATUS-SEPARATION-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "aa6f3dedc4a6f7b648166d944da36b1731db501d",
+      "parentSha": [
+        "655eb86ddb5b4158be06d30ac6cdd4870acf0e79"
+      ],
+      "subject": "test: verify UI execution and verification status matrix",
+      "authorDate": "2026-08-05T00:41:51+08:00",
+      "committerDate": "2026-08-05T00:41:51+08:00",
+      "changedFiles": [
+        "scripts/verify-ui-run-status-verification-separation-001.mjs"
+      ],
+      "checkpointDirectories": [
+        "UI-STATUS-SEPARATION-MATRIX-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "655eb86ddb5b4158be06d30ac6cdd4870acf0e79",
+      "parentSha": [
+        "ac38fe0465c4e9823655285cf12f311ff18f12f1"
+      ],
+      "subject": "fix: separate UI execution and verification status",
+      "authorDate": "2026-08-05T00:40:17+08:00",
+      "committerDate": "2026-08-05T00:40:17+08:00",
+      "changedFiles": [
+        "src/lib/run-status-view.js",
+        "src/main.jsx",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/ui-status-separation-report.md"
+      ],
+      "checkpointDirectories": [
+        "UI-STATUS-SEPARATION-FIX-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "ac38fe0465c4e9823655285cf12f311ff18f12f1",
+      "parentSha": [
+        "0618b838c0b85fe62339b5270ecf74255810b21c"
+      ],
+      "subject": "docs: audit UI execution and verification status",
+      "authorDate": "2026-08-05T00:38:16+08:00",
+      "committerDate": "2026-08-05T00:38:16+08:00",
+      "changedFiles": [
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/ui-status-separation-audit.json",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/ui-status-separation-audit.md"
+      ],
+      "checkpointDirectories": [
+        "UI-STATUS-SEPARATION-AUDIT-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "0618b838c0b85fe62339b5270ecf74255810b21c",
+      "parentSha": [
+        "5d5884b629ccdf52d4e51149fa5c369028dc912a"
+      ],
+      "subject": "docs: close context trust boundary with caller rejection",
+      "authorDate": "2026-08-05T00:03:44+08:00",
+      "committerDate": "2026-08-05T00:03:44+08:00",
+      "changedFiles": [
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/caller-context-injection-fix-report.md"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-002"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "5d5884b629ccdf52d4e51149fa5c369028dc912a",
+      "parentSha": [
+        "a408a5313865f0db2b45bc6fdc1515d41bd23df1"
+      ],
+      "subject": "test: verify external agent context rejection matrix",
+      "authorDate": "2026-08-05T00:02:25+08:00",
+      "committerDate": "2026-08-05T00:02:25+08:00",
+      "changedFiles": [
+        "scripts/verify-agent-context-injection-rejection-001.mjs"
+      ],
+      "checkpointDirectories": [
+        "CONTEXT-INJECTION-REJECTION-MATRIX-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "a408a5313865f0db2b45bc6fdc1515d41bd23df1",
+      "parentSha": [
+        "0bf9ac06120fb3d35396a6f8418ddb0a57fda9f7"
+      ],
+      "subject": "fix: reject caller supplied agent context",
+      "authorDate": "2026-08-04T23:59:40+08:00",
+      "committerDate": "2026-08-04T23:59:40+08:00",
+      "changedFiles": [
+        "server.mjs"
+      ],
+      "checkpointDirectories": [
+        "CONTEXT-INJECTION-REJECTION-FIX-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "0bf9ac06120fb3d35396a6f8418ddb0a57fda9f7",
+      "parentSha": [
+        "36d8bb70dd39ae182de6c74efacceb70a8692740"
+      ],
+      "subject": "docs: audit external agent context entrypoints",
+      "authorDate": "2026-08-04T23:58:40+08:00",
+      "committerDate": "2026-08-04T23:58:40+08:00",
+      "changedFiles": [
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/context-injection-entrypoint-audit.json",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/context-injection-entrypoint-audit.md",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/external-context-field-policy.json"
+      ],
+      "checkpointDirectories": [
+        "CONTEXT-INJECTION-ENTRYPOINT-AUDIT-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "36d8bb70dd39ae182de6c74efacceb70a8692740",
+      "parentSha": [
+        "0aa2f70c8dab4b80c80e78009d7058575279d845"
+      ],
+      "subject": "docs: record untrusted context bypass blocker",
+      "authorDate": "2026-08-04T23:40:07+08:00",
+      "committerDate": "2026-08-04T23:40:07+08:00",
+      "changedFiles": [
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/context-untrusted-caller-bypass-stop.md"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-API-STEP5-CONTEXT-UNTRUSTED-CALLER-BYPASS-WIP-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "0aa2f70c8dab4b80c80e78009d7058575279d845",
+      "parentSha": [
+        "52476f1758b5fe10cbdd7e368ccc48876f652603"
+      ],
+      "subject": "docs: close focused context trust boundary",
+      "authorDate": "2026-08-04T23:34:35+08:00",
+      "committerDate": "2026-08-04T23:34:35+08:00",
+      "changedFiles": [
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/context-trust-boundary-fix-report.md"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "52476f1758b5fe10cbdd7e368ccc48876f652603",
+      "parentSha": [
+        "a4f2872ff776fdd715a63e15ccd3e343d5a7fb4a"
+      ],
+      "subject": "test: verify workbench context trust boundary matrix",
+      "authorDate": "2026-08-04T23:32:49+08:00",
+      "committerDate": "2026-08-04T23:32:49+08:00",
+      "changedFiles": [
+        "scripts/verify-workbench-context-verified-trust-boundary-001.mjs"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-MATRIX-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "a4f2872ff776fdd715a63e15ccd3e343d5a7fb4a",
+      "parentSha": [
+        "01510e497a5087816b00c99cc41e5d03bd619df2"
+      ],
+      "subject": "fix: project bound verification into agent context",
+      "authorDate": "2026-08-04T23:30:58+08:00",
+      "committerDate": "2026-08-04T23:30:58+08:00",
+      "changedFiles": [
+        "server.mjs",
+        "shared/run-context-projection.mjs",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/context-trust-boundary-fix-report.md"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-FIX-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "01510e497a5087816b00c99cc41e5d03bd619df2",
+      "parentSha": [
+        "2bc72b9044dde9787cd8c75b5bbb80a14271da4c"
+      ],
+      "subject": "docs: audit run context trust boundary",
+      "authorDate": "2026-08-04T23:29:22+08:00",
+      "committerDate": "2026-08-04T23:29:22+08:00",
+      "changedFiles": [
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/context-trust-boundary-audit.json",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/context-trust-boundary-audit.md"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-AUDIT-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "2bc72b9044dde9787cd8c75b5bbb80a14271da4c",
+      "parentSha": [
+        "4288ba02ad176799f3e5f3977d5f43f9be35315e"
+      ],
+      "subject": "fix: complete UI writable DTO and trust path matching",
+      "authorDate": "2026-08-04T23:12:03+08:00",
+      "committerDate": "2026-08-04T23:12:03+08:00",
+      "changedFiles": [
+        "scripts/verify-data-import-verified-injection-rejection-001.mjs",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/trust-field-path-matching-report.md"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-API-STEP5-UI-WRITABLE-DTO-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "4288ba02ad176799f3e5f3977d5f43f9be35315e",
+      "parentSha": [
+        "2da2aaf01eac8f8aa514e0bddc804308684fc41e"
+      ],
+      "subject": "test: verify bidirectional run trust path matrix",
+      "authorDate": "2026-08-04T23:10:24+08:00",
+      "committerDate": "2026-08-04T23:10:24+08:00",
+      "changedFiles": [
+        "scripts/verify-trust-field-protocol-path-matching-001.mjs"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-TRUST-PATH-BIDIRECTIONAL-MATRIX-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "2da2aaf01eac8f8aa514e0bddc804308684fc41e",
+      "parentSha": [
+        "2996b9b1f4d004667724b00e0a1597aecbafcb45"
+      ],
+      "subject": "fix: enforce protocol-aware run trust paths",
+      "authorDate": "2026-08-04T23:06:41+08:00",
+      "committerDate": "2026-08-04T23:06:41+08:00",
+      "changedFiles": [
+        "scripts/verify-run-trust-path-rejection-baseline-001.mjs",
+        "scripts/verify-ui-writable-dto-001.mjs",
+        "server.mjs",
+        "shared/run-trust-field-policy.mjs",
+        "src/lib/server-owned-run-paths.js"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-TRUST-PATH-MATCHING-FIX-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "2996b9b1f4d004667724b00e0a1597aecbafcb45",
+      "parentSha": [
+        "f0945a37c4a2e15dbdf0b5e128d0d71576d5ffab"
+      ],
+      "subject": "test: freeze run trust path rejection baseline",
+      "authorDate": "2026-08-04T23:04:06+08:00",
+      "committerDate": "2026-08-04T23:04:06+08:00",
+      "changedFiles": [
+        "scripts/verify-run-trust-path-rejection-baseline-001.mjs"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-TRUST-PATH-REJECTION-BASELINE-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "f0945a37c4a2e15dbdf0b5e128d0d71576d5ffab",
+      "parentSha": [
+        "35a2b4a4cf77e90a476883d829d0b3003f77b41b"
+      ],
+      "subject": "docs: audit legacy run trust path matching",
+      "authorDate": "2026-08-04T23:02:45+08:00",
+      "committerDate": "2026-08-04T23:02:45+08:00",
+      "changedFiles": [
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/trust-field-path-matching-audit.json",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/trust-field-path-matching-audit.md"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-TRUST-PATH-MATCHING-AUDIT-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "35a2b4a4cf77e90a476883d829d0b3003f77b41b",
+      "parentSha": [
+        "58df1f714fcc13311b6c7b98145e239d61449fba"
+      ],
+      "subject": "wip: preserve UI DTO overbroad path failure evidence",
+      "authorDate": "2026-08-04T22:43:49+08:00",
+      "committerDate": "2026-08-04T22:43:49+08:00",
+      "changedFiles": [
+        "scripts/verify-ui-writable-dto-001.mjs",
+        "src/lib/server-owned-run-paths.js",
+        "src/lib/writable-data-dto.js",
+        "src/main.jsx",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/ui-writable-dto-report.md"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-API-STEP5-UI-WRITABLE-DTO-OVERBROAD-PATH-WIP-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "58df1f714fcc13311b6c7b98145e239d61449fba",
+      "parentSha": [
+        "957b53661f99329893569a79a374b7a10b46678d"
+      ],
+      "subject": "fix: preserve bound server-owned run facts",
+      "authorDate": "2026-08-04T21:16:48+08:00",
+      "committerDate": "2026-08-04T21:16:48+08:00",
+      "changedFiles": [
+        "scripts/verify-server-owned-run-fact-preservation-001.mjs",
+        "server.mjs",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/server-fact-preservation-map.json",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/server-fact-preservation-report.md"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-API-STEP5-SERVER-FACT-PRESERVATION-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "957b53661f99329893569a79a374b7a10b46678d",
+      "parentSha": [
+        "b7fe5238281432afad1c5f9d8e9e1aa53336a9c9"
+      ],
+      "subject": "audit: verify fourth risk registration and correction",
+      "authorDate": "2026-08-04T19:44:09+08:00",
+      "committerDate": "2026-08-04T19:44:09+08:00",
+      "changedFiles": [
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/audit-correction.json",
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/audit-correction.md"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-API-RISK-REGISTRATION-VERIFY-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "b7fe5238281432afad1c5f9d8e9e1aa53336a9c9",
+      "parentSha": [
+        "8273b7b4a15f73753fb796d2de187aabd5fb3a88"
+      ],
+      "subject": "wip: BROKEN_OR_INCOMPLETE_WIP NOT_RUNTIME_READY NOT_GATE_PASSED NOT_DEPLOYED",
+      "authorDate": "2026-08-04T19:42:10+08:00",
+      "committerDate": "2026-08-04T19:42:10+08:00",
+      "changedFiles": [
+        "server.mjs",
+        "src/main.jsx"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-API-STEP5-INTERRUPTED-WIP-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "8273b7b4a15f73753fb796d2de187aabd5fb3a88",
+      "parentSha": [
+        "0708a497b967065b669e6621608a412f9b9529e3"
+      ],
+      "subject": "fix: separate isolated run evidence validation",
+      "authorDate": "2026-08-04T19:24:02+08:00",
+      "committerDate": "2026-08-04T19:24:02+08:00",
+      "changedFiles": [
+        "scripts/verify-isolated-run-verification-not-business-verified-001.mjs",
+        "server.mjs"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-ISOLATED-VERIFICATION-SEPARATION-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "0708a497b967065b669e6621608a412f9b9529e3",
+      "parentSha": [
+        "e63507734abe7f38035fc368352fcb4b857e064a"
+      ],
+      "subject": "fix: fail closed legacy persisted verified claims",
+      "authorDate": "2026-08-04T19:19:20+08:00",
+      "committerDate": "2026-08-04T19:19:20+08:00",
+      "changedFiles": [
+        "scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs",
+        "server.mjs",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/legacy-claim-migration-evidence.json"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-VERIFIED-CANONICAL-DERIVATION-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "e63507734abe7f38035fc368352fcb4b857e064a",
+      "parentSha": [
+        "0368a093531c31792e766543affd2e08d19255cf"
+      ],
+      "subject": "fix: reject client supplied run trust fields",
+      "authorDate": "2026-08-04T19:15:24+08:00",
+      "committerDate": "2026-08-04T19:15:24+08:00",
+      "changedFiles": [
+        "scripts/verify-data-import-verified-injection-rejection-001.mjs",
+        "scripts/verify-run-api-verified-injection-rejection-001.mjs",
+        "server.mjs",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/server-owned-trust-fields.json"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-API-TRUSTED-FIELD-REJECTION-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "0368a093531c31792e766543affd2e08d19255cf",
+      "parentSha": [
+        "80b538b36ed1ec282477e2e8d2276cceb14c4d68"
+      ],
+      "subject": "audit: correct fourth verified trust boundary classification",
+      "authorDate": "2026-08-04T19:10:23+08:00",
+      "committerDate": "2026-08-04T19:10:23+08:00",
+      "changedFiles": [
+        "CURRENT_STATUS.md",
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/consumer-inventory.json",
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/producer-inventory.json",
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/semantic-migration-map.json",
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/test-assertion-inventory.json"
+      ],
+      "checkpointDirectories": [
+        "LEGACY-RUN-VERIFIED-TRUST-BOUNDARY-AUDIT-CORRECTION-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    },
+    {
+      "commitSha": "80b538b36ed1ec282477e2e8d2276cceb14c4d68",
+      "parentSha": [
+        "8ac2fde3086f75d6946d0c5a778d113ee1be1310"
+      ],
+      "subject": "audit: record fourth verified trust-boundary risk",
+      "authorDate": "2026-08-04T18:34:19+08:00",
+      "committerDate": "2026-08-04T18:34:19+08:00",
+      "changedFiles": [
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/fourth-risk-late-audit.md"
+      ],
+      "checkpointDirectories": [
+        "VERIFIED-SEMANTICS-UNIFICATION-FOURTH-RISK-WIP-001"
+      ],
+      "commitToCheckpointClassification": "MATCHED_ONE_TO_ONE",
+      "commitIsAncestorOfHead": true
+    }
+  ],
+  "checkpointToCommit": [
+    {
+      "checkpoint": "CHECKPOINT-MANIFEST-INTEGRITY-001",
+      "commit": "4c816859716d29f0541327d06b2b3697143ea047",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "CHECKPOINT-PROTECTION-001",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "CHECKPOINT-REPORT-BACKFILL-001",
+      "commit": "ea7e1d56e354933a1efebacdd90c2e8f97004dd2",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "CONTEXT-INJECTION-ENTRYPOINT-AUDIT-001",
+      "commit": "0bf9ac06120fb3d35396a6f8418ddb0a57fda9f7",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "CONTEXT-INJECTION-REJECTION-FIX-001",
+      "commit": "a408a5313865f0db2b45bc6fdc1515d41bd23df1",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "CONTEXT-INJECTION-REJECTION-MATRIX-001",
+      "commit": "5d5884b629ccdf52d4e51149fa5c369028dc912a",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "CQ-001-COMPOUND-INTENT-IMPACT-REGRESSION-001",
+      "commit": "d6f2f19cbfff7b52daa2eb872e323bd22c3b499b",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "CQ-001-COMPOUND-INTENT-IMPACT-REGRESSION-001-WIP",
+      "commit": "7a3ae26e5aa8badc37d792506d5d84ce2b2f753c",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "CQ-001-COMPOUND-NOTICE-BEHAVIORAL-ASSERTION-FIX-001",
+      "commit": "158c39820910401ede2b535dbe6c20f45a422731",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "D0-1B-DOCS-CLOSEOUT",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "D0-1B-FINAL",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "D0-1B-FIXTURE-FIX-001",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "D0-1B-PHASE-A",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "D0-1B-PHASE-B",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "D0-1B-PHASE-C",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "D0-1B-PHASE-D",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "DOCUMENT-AUTHORITY-CONSOLIDATION-001",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "ENVIRONMENT-FIXTURE-AND-PROCESS-REPORTING-001",
+      "commit": "0a14e07952de49a97070ed3cd89caffd6ef5059e",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "ENVIRONMENT-FIXTURE-AND-PROCESS-REPORTING-001-WIP",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "EXTERNAL-SKILL-GOVERNANCE-001",
+      "commit": "8d46b6c4f25ba28bbf31395be5f2e48b3b5e5d41",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "FAILED-TASK-FAILURE-FACT-AUDIT-001",
+      "commit": "7c2688dfa87552236fb5494618d19573f33115be",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "FAILED-TASK-FAILURE-FACT-CQ003B-RERUN-001-WIP",
+      "commit": "db746967ac8c55e88a7f656c04ad478db58c7fea",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "FAILED-TASK-FAILURE-FACT-STRUCTURE-FIX-001",
+      "commit": "def847e1d79c2413badd415025df376a348f558e",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "HERMES-EFFECTIVE-WRITE-GATE-RISK-REGISTER-001",
+      "commit": "3989dc4c66a54fc0d01db1141d3e8d8209d136a3",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-B5-S1-GROUNDED-EVIDENCE-001",
+      "commit": "46aaffc2525b85666e985440bb268955d9987b27",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-B5-S2-VERIFIER-BINDING-001",
+      "commit": "341cd2079b63f795c2f32f1597b4bb8dcef92ead",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-B5-S3-FILE-READ-BOUNDARY-001",
+      "commit": "8a89986c7074a83965459a2897d33d7935a6e94b",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-B5-S4-INTERRUPTED-WIP-001",
+      "commit": "c3b39c92c382040c1407cc0eeec5801335329127",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-B5-S4-REMOVE-EXECUTION-SHORTCUTS-001",
+      "commit": "738b6dbbfc0c25e01299f09b62a7f83336ffc9cb",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-B5-S5-MULTI-ASSIGNMENT-FAIL-CLOSED-001",
+      "commit": "2deb835a9cb0e1651ce653f119e531b624a75ac5",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-B5-S6-COMMIT-AUDIT-001",
+      "commit": "d419e2a932b73dd132ee2afad27c8a2ab7edaed2",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-001",
+      "commit": "242eea6f4883ece882816bd3f273115b87f7115c",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-CORRECTION-001",
+      "commit": "64f15bff99aaf561e0d3343c9429488c3cf24b6e",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-B5-S6-TASK-REPLAY-001-PREFLIGHT-BLOCKED",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-PHASE-A-001",
+      "commit": "a599e023c350837c721c41fe17a349ed9e4957fc",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-PHASE-B-001-B1-WIP",
+      "commit": "3d6daf8f64f820592c961dfc0a4678eaaafb8cb0",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-PHASE-B-B2-BYPASS-001",
+      "commit": "96718beed704d466b0bd58ff48d03fefa2162859",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-PHASE-B-B3-AUTHORIZATION-001",
+      "commit": "ed2303799ec2a8bc762018d0be65cb06ea409cb9",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-PHASE-B-B4-VARIANTS-001",
+      "commit": "ed8b9ee32a4b7a35cc9b8f39647970650e07664d",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-PHASE-B-BYPASS-PLAN-001",
+      "commit": "21e4afbf4dc7219c4825ab997ad8f5826b25db59",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-PHASE-B5-FILE-READ-001",
+      "commit": "fcc3bc9fede546966762603cfcc89189314c238e",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-PHASE-B5-INTEGRATION-001",
+      "commit": "8e60a2eab57edf8bf9554086e801892fa536dac3",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-PHASE-B5-INTERRUPTED-WIP-001",
+      "commit": "3706400747599b97bab1e3b6c555e7ac1c9867ca",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-PHASE-B5-NON-EXECUTION-REGRESSION-001",
+      "commit": "fa413db41009010d33d87bdc123afc47ebdb4a23",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-PHASE-B5-RUN-FENCING-COMPAT-001",
+      "commit": "47224b3e88e1102432524c0b9285c94e6bd1bdcb",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-PHASE-B5-RUNTIME-STATUS-001",
+      "commit": "d70496c0f26084d97606c6fbed9aa2d55a97d779",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-PHASE-B5-SECURITY-BLOCKER-001",
+      "commit": "fc152f310e75db9206cd78ed0376e612d8f642aa",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-PHASE-B5-SYNTAX-RECOVERY-001",
+      "commit": "4a4d858eb93af8d50ea6d95e54411a5803b0e7ee",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "INTERPRETER-ADAPTER-PHASE-B5-WIRING-001",
+      "commit": "602f7bdca21f329ff466f86ec3abaf0ef79862ab",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-API-RISK-REGISTRATION-VERIFY-001",
+      "commit": "957b53661f99329893569a79a374b7a10b46678d",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-001",
+      "commit": "0aa2f70c8dab4b80c80e78009d7058575279d845",
+      "classification": "INVALIDATED_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-002",
+      "commit": "0618b838c0b85fe62339b5270ecf74255810b21c",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-API-STEP5-CONTEXT-UNTRUSTED-CALLER-BYPASS-WIP-001",
+      "commit": "36d8bb70dd39ae182de6c74efacceb70a8692740",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-API-STEP5-INTERRUPTED-WIP-001",
+      "commit": "b7fe5238281432afad1c5f9d8e9e1aa53336a9c9",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-API-STEP5-SERVER-FACT-PRESERVATION-001",
+      "commit": "58df1f714fcc13311b6c7b98145e239d61449fba",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-API-STEP5-UI-STATUS-SEPARATION-001",
+      "commit": "8e111bb4531fe0fdd7ae219963c02e1deb88ca06",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-API-STEP5-UI-WRITABLE-DTO-001",
+      "commit": "2bc72b9044dde9787cd8c75b5bbb80a14271da4c",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-API-STEP5-UI-WRITABLE-DTO-OVERBROAD-PATH-WIP-001",
+      "commit": "35a2b4a4cf77e90a476883d829d0b3003f77b41b",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-API-STEP6-PRECONDITION-STOP-001",
+      "commit": "22622652ce64470e77a745067a55ac29ab54b245",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-API-STEP7-PRECONDITION-STOP-001",
+      "commit": "6f9ec98925cfd53af370bc13158ec1313364ff46",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-API-STEP7-PRECONDITION-STOP-002",
+      "commit": "3b4ef3629a9ca200b7e8fc4b27a5709de331f101",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-API-STEP8-AUTHORITATIVE-RECONCILIATION-STOP-001",
+      "commit": "14f083fd26364eaab7c7d6a6d2b9d906f031d2db",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-API-TRUSTED-FIELD-REJECTION-001",
+      "commit": "e63507734abe7f38035fc368352fcb4b857e064a",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-AUDIT-001",
+      "commit": "01510e497a5087816b00c99cc41e5d03bd619df2",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-FIX-001",
+      "commit": "a4f2872ff776fdd715a63e15ccd3e343d5a7fb4a",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-MATRIX-001",
+      "commit": "52476f1758b5fe10cbdd7e368ccc48876f652603",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-ISOLATED-VERIFICATION-SEPARATION-001",
+      "commit": "8273b7b4a15f73753fb796d2de187aabd5fb3a88",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-TRUST-PATH-BIDIRECTIONAL-MATRIX-001",
+      "commit": "4288ba02ad176799f3e5f3977d5f43f9be35315e",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-TRUST-PATH-MATCHING-AUDIT-001",
+      "commit": "f0945a37c4a2e15dbdf0b5e128d0d71576d5ffab",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-TRUST-PATH-MATCHING-FIX-001",
+      "commit": "2da2aaf01eac8f8aa514e0bddc804308684fc41e",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-TRUST-PATH-REJECTION-BASELINE-001",
+      "commit": "2996b9b1f4d004667724b00e0a1597aecbafcb45",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-VERIFIED-CANONICAL-DERIVATION-001",
+      "commit": "0708a497b967065b669e6621608a412f9b9529e3",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "LEGACY-RUN-VERIFIED-TRUST-BOUNDARY-AUDIT-CORRECTION-001",
+      "commit": "0368a093531c31792e766543affd2e08d19255cf",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "NON-EXECUTION-MESSAGE-IDEMPOTENCY-ATOMIC-001",
+      "commit": "87db9d73c2805271205fc827ffa8b759b8ceddd1",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "NON-EXECUTION-MESSAGE-IDEMPOTENCY-GATE-001",
+      "commit": "b6f00857f2f270bfaa5fe0af5143a69e7805a4f7",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "NON-EXECUTION-MESSAGE-IDEMPOTENCY-INVESTIGATION-001",
+      "commit": "da99d031173c0f99528580199c84b91959d2ea8b",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "PRODUCT-DEFINITION-CONSOLIDATION-001",
+      "commit": "7249188bb2fedb84d74fa6f4f7fa3f7e645b2add",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "RUN-FENCING-001-FINAL",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "RUN-FENCING-BASELINE-CORRECTION",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "RUN-FENCING-D0-1A-REAL-FILE",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "RUN-FENCING-FOCUSED-15",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "RUN-FENCING-MANDATORY-FIXTURE",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "RUN-FENCING-PHASE-A",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "RUN-FENCING-PHASE-B",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "RUN-FENCING-PHASE-C",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "RUN-FENCING-PHASE-D",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "RUN-FENCING-PHASE-E",
+      "commit": null,
+      "classification": "COMMIT_FIELD_MISSING"
+    },
+    {
+      "checkpoint": "TASK-LIFECYCLE-ALL-SAMPLES-AUDIT-001",
+      "commit": "fe862d967a3c17a3801a59fc339ba81f8b8303fd",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TASK-LIFECYCLE-CONTRACT-MIGRATION-PLAN-001",
+      "commit": "eb0e0747739042b94994a37c1f36b2a145cbe8b2",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TASK-LIFECYCLE-CONTRACT-QUESTION-EVIDENCE-001",
+      "commit": "16dc1dda5090c3b4ff1a7ac6d0268faf4310f082",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TASK-LIFECYCLE-CONTRACT-REAL-BUSINESS-TASK-001-WIP",
+      "commit": "b207b93c3edc2bc9caddc413db8106b8f28bb2d9",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TASK-LIFECYCLE-CQ-PRODUCT-REVIEW-INPUT-001",
+      "commit": "e0d86283d692c4d471f03240919a2ee3cd26cb4d",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TASK-LIFECYCLE-M1-CQ001-CLARIFY-CONTRACT-001",
+      "commit": "650c4ad88278d38f9455326d6ad44f57905946b0",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TASK-LIFECYCLE-M1-CQ001-CLARIFY-CONTRACT-001-WIP",
+      "commit": "e613d0ef622844f641b61b3370d7ff72b14126bb",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TASK-LIFECYCLE-M1-CQ002-IMPACT-REGRESSION-001",
+      "commit": "30afd0ae493929d8de3dd8ec8111c9e0cc60109f",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TASK-LIFECYCLE-M1-CQ002-INTERPRETER-CORRECTION-SUCCESS-001",
+      "commit": "78d27d45f7634d1cb73f8dbcd84d6e362fb5964a",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TASK-LIFECYCLE-M1-CQ003-HISTORICAL-ASSERTION-001",
+      "commit": "89eb347dccff9e7e4a756da04304c03f1a604a48",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TASK-LIFECYCLE-M1-CQ003-IMPACT-REGRESSION-001",
+      "commit": "fb5b7050fe34f3667ba14900811b6ca8bca7dcfc",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TASK-LIFECYCLE-M1-CQ003A-INTERPRETER-FAILURE-001",
+      "commit": "b70f68479af0f2aa4d5c0d693a71cf313425d494",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TASK-LIFECYCLE-M1-CQ003B-DOCUMENTATION-001",
+      "commit": "d402570788714365c928187a2126a4ca0d8f4e9f",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REACHABILITY-001",
+      "commit": "f39692bf33291edc1b34811e196bf307c81276b2",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REPLAY-001",
+      "commit": "db32657fd25d55bcb30f5d088b4ec477dee30fad",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REPLAY-001-WIP",
+      "commit": "52d18fab5e12b6b09a5d8752a71127a7f12150f2",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TASK-LIFECYCLE-M1-CQ003B-FEASIBILITY-001",
+      "commit": "68acc3b0643a170aefb33738b4ec60e1aed6c399",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TERMINAL-REPLAY-DERIVATION-AUDIT-002",
+      "commit": "9adcb8463df585071cfb200243e76fb2586ef81c",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TERMINAL-REPLAY-VERIFICATION-AUDIT-001",
+      "commit": "26869632656d20d78a33cf23c86304c750ac31fb",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TERMINAL-TASK-REPLAY-STATE-MATRIX-001",
+      "commit": "eb4aa93475e1c050eedc3d04a7aa20fc72d7ef82",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TERMINAL-TASK-REPLAY-VERIFICATION-CLASSIFICATION-FIX-002",
+      "commit": "78c54c20c941443dba2407e728a7c006886ec980",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "TERMINAL-TASK-REPLAY-VERIFICATION-IMPACT-REGRESSION-001",
+      "commit": "b9cfaac917f27cfebac7d0acb2c7e6c3a85b8c80",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "UI-STATUS-SEPARATION-AUDIT-001",
+      "commit": "ac38fe0465c4e9823655285cf12f311ff18f12f1",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "UI-STATUS-SEPARATION-FIX-001",
+      "commit": "655eb86ddb5b4158be06d30ac6cdd4870acf0e79",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "UI-STATUS-SEPARATION-MATRIX-001",
+      "commit": "aa6f3dedc4a6f7b648166d944da36b1731db501d",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "VERIFIED-SEMANTICS-CONSUMER-MIGRATION-001",
+      "commit": "58daf6a2438eb24204f3a9d50f6cf356d694d2d5",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "VERIFIED-SEMANTICS-GLOBAL-CONTRACT-001",
+      "commit": "8ac2fde3086f75d6946d0c5a778d113ee1be1310",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "VERIFIED-SEMANTICS-LEGACY-EXECUTION-MIGRATION-001",
+      "commit": "70bd3d0cbdf5a4650d7a45704bb7f1a11910c9dd",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "VERIFIED-SEMANTICS-NON-EXECUTION-MIGRATION-001",
+      "commit": "e97d787ecf482b972b5987255f7e47e5c8ed437e",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "VERIFIED-SEMANTICS-TRUSTED-DERIVATION-001",
+      "commit": "bea4ddaf6997a0f24d55396fafc789c7c2089cb0",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "VERIFIED-SEMANTICS-UNIFICATION-AUDIT-001",
+      "commit": "16abc9842461e5343e72e3d987ac92919c5eecc0",
+      "classification": "ACTIVE_CHECKPOINT"
+    },
+    {
+      "checkpoint": "VERIFIED-SEMANTICS-UNIFICATION-FOURTH-RISK-WIP-001",
+      "commit": "80b538b36ed1ec282477e2e8d2276cceb14c4d68",
+      "classification": "ACTIVE_CHECKPOINT"
+    }
+  ]
+}
