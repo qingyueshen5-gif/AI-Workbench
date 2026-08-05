@@ -1,20 +1,32 @@
-# 真实剩余工作（机器索引）
+# 真实剩余工作（机器一致化）
 
 ## PRESENT_AND_VERIFIED
 
 - STEP5-A
 - STEP5-B
-- STEP5-C（有效002版本；001保持INVALIDATED）
+- STEP5-C（002有效；001保持INVALIDATED）
 - STEP5-D
 
 ## PRESENT_NO_CHECKPOINT
 
 - 无
 
+## NAMING_DRIFT
+
+- 无
+
 ## ACTUALLY_MISSING
 
-- STEP5-E：Gateway / Delivery传播边界专项、证据与正式Checkpoint。
-- STEP6：三个旧测试迁移、历史断言存档、完备性专项与正式Checkpoint。
-- STEP7：十二项专项及三个旧测试的Mandatory Gates强制接线、完整门禁、防伪与正式Checkpoint。
+- STEP5-E：必须真实补做传播边界专项、审计、矩阵、报告和正式Checkpoint。
+- STEP6：必须真实迁移三个旧测试，建立历史断言存档、完备性专项和正式Checkpoint。
+- STEP7：必须真实完成十二项专项及三个旧测试的强制接线、防伪、完整全绿证据和正式Checkpoint。
 
-本清单不推进风险状态，不开始Step8。
+## 机器完成度与Step8
+
+- verifiedFunctionalItems=4
+- totalRequiredFunctionalItems=7
+- completionRatio=4/7
+- step8Eligible=false
+- step8=NOT_STARTED
+
+机器证据：`authoritative-index-consistency-reconciliation-findings.json`。本清单不推进风险状态。

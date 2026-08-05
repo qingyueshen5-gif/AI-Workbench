@@ -1,0 +1,3158 @@
+{
+  "ok": true,
+  "module": "AUTHORITATIVE-INDEX-CONSISTENCY-001",
+  "runtimeHead": "c6abaa8d94f7e645a6e53bbc61f83565e610649b",
+  "generatedFromHead": "e0001f15dc6a390d33270e4e638d072b1c9fa22b",
+  "checks": 523,
+  "failures": [],
+  "semanticConsistencyChecks": [
+    {
+      "id": "FILE_EXISTS:D:\\AI-Workbench-candidates\\interpreter-adapter-001\\verification\\VERIFIED-SEMANTICS-UNIFICATION-001\\step5-to-step8-authoritative-index.json",
+      "ok": true,
+      "detail": "D:\\AI-Workbench-candidates\\interpreter-adapter-001\\verification\\VERIFIED-SEMANTICS-UNIFICATION-001\\step5-to-step8-authoritative-index.json"
+    },
+    {
+      "id": "FILE_EXISTS:D:\\AI-Workbench-candidates\\interpreter-adapter-001\\verification\\VERIFIED-SEMANTICS-UNIFICATION-001\\step5-to-step8-authoritative-index.md",
+      "ok": true,
+      "detail": "D:\\AI-Workbench-candidates\\interpreter-adapter-001\\verification\\VERIFIED-SEMANTICS-UNIFICATION-001\\step5-to-step8-authoritative-index.md"
+    },
+    {
+      "id": "FILE_EXISTS:D:\\AI-Workbench-candidates\\interpreter-adapter-001\\verification\\VERIFIED-SEMANTICS-UNIFICATION-001\\step5-to-step8-real-remaining-work.md",
+      "ok": true,
+      "detail": "D:\\AI-Workbench-candidates\\interpreter-adapter-001\\verification\\VERIFIED-SEMANTICS-UNIFICATION-001\\step5-to-step8-real-remaining-work.md"
+    },
+    {
+      "id": "FILE_EXISTS:D:\\AI-Workbench-candidates\\interpreter-adapter-001\\verification\\VERIFIED-SEMANTICS-UNIFICATION-001\\authoritative-index-consistency-reconciliation-findings.json",
+      "ok": true,
+      "detail": "D:\\AI-Workbench-candidates\\interpreter-adapter-001\\verification\\VERIFIED-SEMANTICS-UNIFICATION-001\\authoritative-index-consistency-reconciliation-findings.json"
+    },
+    {
+      "id": "SCHEMA_VERSION",
+      "ok": true,
+      "detail": "ai-workbench.step5-step8-authoritative-index/v1"
+    },
+    {
+      "id": "GENERATED_HEAD_ANCESTOR",
+      "ok": true,
+      "detail": "e0001f15dc6a390d33270e4e638d072b1c9fa22b -> c6abaa8d94f7e645a6e53bbc61f83565e610649b"
+    },
+    {
+      "id": "GENERATED_REMOTE_BOUND",
+      "ok": true,
+      "detail": "e0001f15dc6a390d33270e4e638d072b1c9fa22b/e0001f15dc6a390d33270e4e638d072b1c9fa22b"
+    },
+    {
+      "id": "BRANCH",
+      "ok": true,
+      "detail": "candidate/interpreter-adapter-v1-work"
+    },
+    {
+      "id": "CHECKPOINT_DIR:CHECKPOINT-MANIFEST-INTEGRITY-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\CHECKPOINT-MANIFEST-INTEGRITY-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:CHECKPOINT-MANIFEST-INTEGRITY-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\CHECKPOINT-MANIFEST-INTEGRITY-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:CHECKPOINT-MANIFEST-INTEGRITY-001",
+      "ok": true,
+      "detail": "4c816859716d29f0541327d06b2b3697143ea047"
+    },
+    {
+      "id": "PATCH:CHECKPOINT-MANIFEST-INTEGRITY-001",
+      "ok": true,
+      "detail": "930e401380c4c335ca44ce51c17ea1c51545e2363350e1d3c48071efc334d65d"
+    },
+    {
+      "id": "CHECKPOINT_DIR:CHECKPOINT-PROTECTION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\CHECKPOINT-PROTECTION-001\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:CHECKPOINT-PROTECTION-001",
+      "ok": true,
+      "detail": {
+        "directoryName": "CHECKPOINT-PROTECTION-001",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\CHECKPOINT-PROTECTION-001\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:CHECKPOINT-REPORT-BACKFILL-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\CHECKPOINT-REPORT-BACKFILL-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:CHECKPOINT-REPORT-BACKFILL-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\CHECKPOINT-REPORT-BACKFILL-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:CHECKPOINT-REPORT-BACKFILL-001",
+      "ok": true,
+      "detail": "ea7e1d56e354933a1efebacdd90c2e8f97004dd2"
+    },
+    {
+      "id": "PATCH:CHECKPOINT-REPORT-BACKFILL-001",
+      "ok": true,
+      "detail": "be49abd328dad3444ef0d5b05790c37f0b2795d81c7ba54777d33fc2bd5ee4d6"
+    },
+    {
+      "id": "CHECKPOINT_DIR:CONTEXT-INJECTION-ENTRYPOINT-AUDIT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\CONTEXT-INJECTION-ENTRYPOINT-AUDIT-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:CONTEXT-INJECTION-ENTRYPOINT-AUDIT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\CONTEXT-INJECTION-ENTRYPOINT-AUDIT-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:CONTEXT-INJECTION-ENTRYPOINT-AUDIT-001",
+      "ok": true,
+      "detail": "0bf9ac06120fb3d35396a6f8418ddb0a57fda9f7"
+    },
+    {
+      "id": "PATCH:CONTEXT-INJECTION-ENTRYPOINT-AUDIT-001",
+      "ok": true,
+      "detail": "afadf7497727f91912314900ca21e3084f4ef037a13e359f100a6a52f1d95b9d"
+    },
+    {
+      "id": "CHECKPOINT_DIR:CONTEXT-INJECTION-REJECTION-FIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\CONTEXT-INJECTION-REJECTION-FIX-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:CONTEXT-INJECTION-REJECTION-FIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\CONTEXT-INJECTION-REJECTION-FIX-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:CONTEXT-INJECTION-REJECTION-FIX-001",
+      "ok": true,
+      "detail": "a408a5313865f0db2b45bc6fdc1515d41bd23df1"
+    },
+    {
+      "id": "PATCH:CONTEXT-INJECTION-REJECTION-FIX-001",
+      "ok": true,
+      "detail": "7a199c8434c59b8325d2af25da3df0047f3713d15c05e9eb49088090de2b2ba1"
+    },
+    {
+      "id": "CHECKPOINT_DIR:CONTEXT-INJECTION-REJECTION-MATRIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\CONTEXT-INJECTION-REJECTION-MATRIX-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:CONTEXT-INJECTION-REJECTION-MATRIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\CONTEXT-INJECTION-REJECTION-MATRIX-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:CONTEXT-INJECTION-REJECTION-MATRIX-001",
+      "ok": true,
+      "detail": "5d5884b629ccdf52d4e51149fa5c369028dc912a"
+    },
+    {
+      "id": "PATCH:CONTEXT-INJECTION-REJECTION-MATRIX-001",
+      "ok": true,
+      "detail": "5d6e9a0e84fdae66d289337c9823a66cefc7b0769d660e5f50ca56ac6b93e232"
+    },
+    {
+      "id": "CHECKPOINT_DIR:CQ-001-COMPOUND-INTENT-IMPACT-REGRESSION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\CQ-001-COMPOUND-INTENT-IMPACT-REGRESSION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:CQ-001-COMPOUND-INTENT-IMPACT-REGRESSION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\CQ-001-COMPOUND-INTENT-IMPACT-REGRESSION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:CQ-001-COMPOUND-INTENT-IMPACT-REGRESSION-001",
+      "ok": true,
+      "detail": "d6f2f19cbfff7b52daa2eb872e323bd22c3b499b"
+    },
+    {
+      "id": "PATCH:CQ-001-COMPOUND-INTENT-IMPACT-REGRESSION-001",
+      "ok": true,
+      "detail": "232fc919f875a91f7a27f16f3d8106cadd129e7c130bf858ebb6b12e52adb6b1"
+    },
+    {
+      "id": "CHECKPOINT_DIR:CQ-001-COMPOUND-INTENT-IMPACT-REGRESSION-001-WIP",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\CQ-001-COMPOUND-INTENT-IMPACT-REGRESSION-001-WIP\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:CQ-001-COMPOUND-INTENT-IMPACT-REGRESSION-001-WIP",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\CQ-001-COMPOUND-INTENT-IMPACT-REGRESSION-001-WIP\\manifest.json"
+    },
+    {
+      "id": "COMMIT:CQ-001-COMPOUND-INTENT-IMPACT-REGRESSION-001-WIP",
+      "ok": true,
+      "detail": "7a3ae26e5aa8badc37d792506d5d84ce2b2f753c"
+    },
+    {
+      "id": "PATCH:CQ-001-COMPOUND-INTENT-IMPACT-REGRESSION-001-WIP",
+      "ok": true,
+      "detail": "d96d6acab9418c185738510ae29041187c96e9765484291d114ce89d6e868355"
+    },
+    {
+      "id": "CHECKPOINT_DIR:CQ-001-COMPOUND-NOTICE-BEHAVIORAL-ASSERTION-FIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\CQ-001-COMPOUND-NOTICE-BEHAVIORAL-ASSERTION-FIX-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:CQ-001-COMPOUND-NOTICE-BEHAVIORAL-ASSERTION-FIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\CQ-001-COMPOUND-NOTICE-BEHAVIORAL-ASSERTION-FIX-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:CQ-001-COMPOUND-NOTICE-BEHAVIORAL-ASSERTION-FIX-001",
+      "ok": true,
+      "detail": "158c39820910401ede2b535dbe6c20f45a422731"
+    },
+    {
+      "id": "PATCH:CQ-001-COMPOUND-NOTICE-BEHAVIORAL-ASSERTION-FIX-001",
+      "ok": true,
+      "detail": "e396d1c6f95c7727da0b3db992f211e6ef260820cb7141edab1249d8bfe420b7"
+    },
+    {
+      "id": "CHECKPOINT_DIR:D0-1B-DOCS-CLOSEOUT",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\D0-1B-DOCS-CLOSEOUT\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:D0-1B-DOCS-CLOSEOUT",
+      "ok": true,
+      "detail": {
+        "directoryName": "D0-1B-DOCS-CLOSEOUT",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\D0-1B-DOCS-CLOSEOUT\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:D0-1B-FINAL",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\D0-1B-FINAL\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:D0-1B-FINAL",
+      "ok": true,
+      "detail": {
+        "directoryName": "D0-1B-FINAL",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\D0-1B-FINAL\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:D0-1B-FIXTURE-FIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\D0-1B-FIXTURE-FIX-001\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:D0-1B-FIXTURE-FIX-001",
+      "ok": true,
+      "detail": {
+        "directoryName": "D0-1B-FIXTURE-FIX-001",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\D0-1B-FIXTURE-FIX-001\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:D0-1B-PHASE-A",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\D0-1B-PHASE-A\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:D0-1B-PHASE-A",
+      "ok": true,
+      "detail": {
+        "directoryName": "D0-1B-PHASE-A",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\D0-1B-PHASE-A\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:D0-1B-PHASE-B",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\D0-1B-PHASE-B\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:D0-1B-PHASE-B",
+      "ok": true,
+      "detail": {
+        "directoryName": "D0-1B-PHASE-B",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\D0-1B-PHASE-B\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:D0-1B-PHASE-C",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\D0-1B-PHASE-C\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:D0-1B-PHASE-C",
+      "ok": true,
+      "detail": {
+        "directoryName": "D0-1B-PHASE-C",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\D0-1B-PHASE-C\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:D0-1B-PHASE-D",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\D0-1B-PHASE-D\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:D0-1B-PHASE-D",
+      "ok": true,
+      "detail": {
+        "directoryName": "D0-1B-PHASE-D",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\D0-1B-PHASE-D\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:DOCUMENT-AUTHORITY-CONSOLIDATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\DOCUMENT-AUTHORITY-CONSOLIDATION-001\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:DOCUMENT-AUTHORITY-CONSOLIDATION-001",
+      "ok": true,
+      "detail": {
+        "directoryName": "DOCUMENT-AUTHORITY-CONSOLIDATION-001",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\DOCUMENT-AUTHORITY-CONSOLIDATION-001\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:ENVIRONMENT-FIXTURE-AND-PROCESS-REPORTING-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\ENVIRONMENT-FIXTURE-AND-PROCESS-REPORTING-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:ENVIRONMENT-FIXTURE-AND-PROCESS-REPORTING-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\ENVIRONMENT-FIXTURE-AND-PROCESS-REPORTING-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:ENVIRONMENT-FIXTURE-AND-PROCESS-REPORTING-001",
+      "ok": true,
+      "detail": "0a14e07952de49a97070ed3cd89caffd6ef5059e"
+    },
+    {
+      "id": "PATCH:ENVIRONMENT-FIXTURE-AND-PROCESS-REPORTING-001",
+      "ok": true,
+      "detail": "e1e9b07dcc9d69c55525b5e4a53b1d99ec7a2ecd9954bb081ad20f270254b79a"
+    },
+    {
+      "id": "CHECKPOINT_DIR:ENVIRONMENT-FIXTURE-AND-PROCESS-REPORTING-001-WIP",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\ENVIRONMENT-FIXTURE-AND-PROCESS-REPORTING-001-WIP\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:ENVIRONMENT-FIXTURE-AND-PROCESS-REPORTING-001-WIP",
+      "ok": true,
+      "detail": {
+        "directoryName": "ENVIRONMENT-FIXTURE-AND-PROCESS-REPORTING-001-WIP",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\ENVIRONMENT-FIXTURE-AND-PROCESS-REPORTING-001-WIP\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:EXTERNAL-SKILL-GOVERNANCE-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\EXTERNAL-SKILL-GOVERNANCE-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:EXTERNAL-SKILL-GOVERNANCE-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\EXTERNAL-SKILL-GOVERNANCE-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:EXTERNAL-SKILL-GOVERNANCE-001",
+      "ok": true,
+      "detail": "8d46b6c4f25ba28bbf31395be5f2e48b3b5e5d41"
+    },
+    {
+      "id": "PATCH:EXTERNAL-SKILL-GOVERNANCE-001",
+      "ok": true,
+      "detail": "a141701e00af2a4ef283e31ed009410c419b0bb19a820f38ca5a8fb0927cc5ec"
+    },
+    {
+      "id": "CHECKPOINT_DIR:FAILED-TASK-FAILURE-FACT-AUDIT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\FAILED-TASK-FAILURE-FACT-AUDIT-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:FAILED-TASK-FAILURE-FACT-AUDIT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\FAILED-TASK-FAILURE-FACT-AUDIT-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:FAILED-TASK-FAILURE-FACT-AUDIT-001",
+      "ok": true,
+      "detail": "7c2688dfa87552236fb5494618d19573f33115be"
+    },
+    {
+      "id": "PATCH:FAILED-TASK-FAILURE-FACT-AUDIT-001",
+      "ok": true,
+      "detail": "401107e4af1781d9e7b6e5a795e822f71a31ca3755e7ef4dd645c195036d9198"
+    },
+    {
+      "id": "CHECKPOINT_DIR:FAILED-TASK-FAILURE-FACT-CQ003B-RERUN-001-WIP",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\FAILED-TASK-FAILURE-FACT-CQ003B-RERUN-001-WIP\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:FAILED-TASK-FAILURE-FACT-CQ003B-RERUN-001-WIP",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\FAILED-TASK-FAILURE-FACT-CQ003B-RERUN-001-WIP\\manifest.json"
+    },
+    {
+      "id": "COMMIT:FAILED-TASK-FAILURE-FACT-CQ003B-RERUN-001-WIP",
+      "ok": true,
+      "detail": "db746967ac8c55e88a7f656c04ad478db58c7fea"
+    },
+    {
+      "id": "PATCH:FAILED-TASK-FAILURE-FACT-CQ003B-RERUN-001-WIP",
+      "ok": true,
+      "detail": "e40c31309c9e68ea4098984171f12d6bc04f65f64582974bac1b0f870e33dbb3"
+    },
+    {
+      "id": "CHECKPOINT_DIR:FAILED-TASK-FAILURE-FACT-STRUCTURE-FIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\FAILED-TASK-FAILURE-FACT-STRUCTURE-FIX-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:FAILED-TASK-FAILURE-FACT-STRUCTURE-FIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\FAILED-TASK-FAILURE-FACT-STRUCTURE-FIX-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:FAILED-TASK-FAILURE-FACT-STRUCTURE-FIX-001",
+      "ok": true,
+      "detail": "def847e1d79c2413badd415025df376a348f558e"
+    },
+    {
+      "id": "PATCH:FAILED-TASK-FAILURE-FACT-STRUCTURE-FIX-001",
+      "ok": true,
+      "detail": "c19db8f9858ffccea224c9dcf193342f4959bc67d2563daeceda54d250548cf6"
+    },
+    {
+      "id": "CHECKPOINT_DIR:HERMES-EFFECTIVE-WRITE-GATE-RISK-REGISTER-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\HERMES-EFFECTIVE-WRITE-GATE-RISK-REGISTER-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:HERMES-EFFECTIVE-WRITE-GATE-RISK-REGISTER-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\HERMES-EFFECTIVE-WRITE-GATE-RISK-REGISTER-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:HERMES-EFFECTIVE-WRITE-GATE-RISK-REGISTER-001",
+      "ok": true,
+      "detail": "3989dc4c66a54fc0d01db1141d3e8d8209d136a3"
+    },
+    {
+      "id": "PATCH:HERMES-EFFECTIVE-WRITE-GATE-RISK-REGISTER-001",
+      "ok": true,
+      "detail": "3668022a68b7c884484170fd06066ba54e42f3e94c9c086f421abf0845d3f2f4"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-B5-S1-GROUNDED-EVIDENCE-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S1-GROUNDED-EVIDENCE-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-B5-S1-GROUNDED-EVIDENCE-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S1-GROUNDED-EVIDENCE-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-B5-S1-GROUNDED-EVIDENCE-001",
+      "ok": true,
+      "detail": "46aaffc2525b85666e985440bb268955d9987b27"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-B5-S1-GROUNDED-EVIDENCE-001",
+      "ok": true,
+      "detail": "d9d7d831ba24db2d575f18b799d6c3229b8dcea6c64b48b3eaf18e690be491cf"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-B5-S2-VERIFIER-BINDING-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S2-VERIFIER-BINDING-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-B5-S2-VERIFIER-BINDING-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S2-VERIFIER-BINDING-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-B5-S2-VERIFIER-BINDING-001",
+      "ok": true,
+      "detail": "341cd2079b63f795c2f32f1597b4bb8dcef92ead"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-B5-S2-VERIFIER-BINDING-001",
+      "ok": true,
+      "detail": "1d4e15d01e82b3576b991be91411691dfd3d7c8ef3653e7f230d73629c0451ac"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-B5-S3-FILE-READ-BOUNDARY-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S3-FILE-READ-BOUNDARY-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-B5-S3-FILE-READ-BOUNDARY-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S3-FILE-READ-BOUNDARY-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-B5-S3-FILE-READ-BOUNDARY-001",
+      "ok": true,
+      "detail": "8a89986c7074a83965459a2897d33d7935a6e94b"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-B5-S3-FILE-READ-BOUNDARY-001",
+      "ok": true,
+      "detail": "bcbb85dfd6809554b6f2dcb74e850ced7ef94f1e9a011dbf19a1d13609c0b928"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-B5-S4-INTERRUPTED-WIP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S4-INTERRUPTED-WIP-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-B5-S4-INTERRUPTED-WIP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S4-INTERRUPTED-WIP-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-B5-S4-INTERRUPTED-WIP-001",
+      "ok": true,
+      "detail": "c3b39c92c382040c1407cc0eeec5801335329127"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-B5-S4-INTERRUPTED-WIP-001",
+      "ok": true,
+      "detail": "b187fd67f1fdbe7a6ff37a44e853abc092d3177f9dafb5e62e6a46374400292e"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-B5-S4-REMOVE-EXECUTION-SHORTCUTS-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S4-REMOVE-EXECUTION-SHORTCUTS-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-B5-S4-REMOVE-EXECUTION-SHORTCUTS-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S4-REMOVE-EXECUTION-SHORTCUTS-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-B5-S4-REMOVE-EXECUTION-SHORTCUTS-001",
+      "ok": true,
+      "detail": "738b6dbbfc0c25e01299f09b62a7f83336ffc9cb"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-B5-S4-REMOVE-EXECUTION-SHORTCUTS-001",
+      "ok": true,
+      "detail": "fc413389d396c72e45eeb637a39d8a71391544e7e5c99034abaedcb3a7cb0639"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-B5-S5-MULTI-ASSIGNMENT-FAIL-CLOSED-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S5-MULTI-ASSIGNMENT-FAIL-CLOSED-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-B5-S5-MULTI-ASSIGNMENT-FAIL-CLOSED-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S5-MULTI-ASSIGNMENT-FAIL-CLOSED-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-B5-S5-MULTI-ASSIGNMENT-FAIL-CLOSED-001",
+      "ok": true,
+      "detail": "2deb835a9cb0e1651ce653f119e531b624a75ac5"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-B5-S5-MULTI-ASSIGNMENT-FAIL-CLOSED-001",
+      "ok": true,
+      "detail": "069c923c80c01ee48a895c245e1651ba73dd1be1bfd2b9a3c0c135a54c1c453a"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-B5-S6-COMMIT-AUDIT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S6-COMMIT-AUDIT-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-B5-S6-COMMIT-AUDIT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S6-COMMIT-AUDIT-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-B5-S6-COMMIT-AUDIT-001",
+      "ok": true,
+      "detail": "d419e2a932b73dd132ee2afad27c8a2ab7edaed2"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-B5-S6-COMMIT-AUDIT-001",
+      "ok": true,
+      "detail": "f118387430cc6efe246fb9842f00670e7245b445d3d5650a947b992662aff9f0"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-001",
+      "ok": true,
+      "detail": "242eea6f4883ece882816bd3f273115b87f7115c"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-001",
+      "ok": true,
+      "detail": "0412aa9f0ff61b2fd3aae39f7703ded3c151644aa6b54b2d91298b3210caab3a"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-CORRECTION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-CORRECTION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-CORRECTION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-CORRECTION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-CORRECTION-001",
+      "ok": true,
+      "detail": "64f15bff99aaf561e0d3343c9429488c3cf24b6e"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-B5-S6-ROOT-CAUSE-CORRECTION-001",
+      "ok": true,
+      "detail": "a100d250bb62fb8e732f93411009b443cde7ec139c011d942d1c7778c18cc9e4"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-B5-S6-TASK-REPLAY-001-PREFLIGHT-BLOCKED",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S6-TASK-REPLAY-001-PREFLIGHT-BLOCKED\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:INTERPRETER-ADAPTER-B5-S6-TASK-REPLAY-001-PREFLIGHT-BLOCKED",
+      "ok": true,
+      "detail": {
+        "directoryName": "INTERPRETER-ADAPTER-B5-S6-TASK-REPLAY-001-PREFLIGHT-BLOCKED",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-B5-S6-TASK-REPLAY-001-PREFLIGHT-BLOCKED\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-PHASE-A-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-A-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-PHASE-A-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-A-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-PHASE-A-001",
+      "ok": true,
+      "detail": "a599e023c350837c721c41fe17a349ed9e4957fc"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-PHASE-A-001",
+      "ok": true,
+      "detail": "6e73a49509c16ca74079c5f957bbab2d244777731fed3f253737112f718f23b7"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-PHASE-B-001-B1-WIP",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B-001-B1-WIP\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-PHASE-B-001-B1-WIP",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B-001-B1-WIP\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-PHASE-B-001-B1-WIP",
+      "ok": true,
+      "detail": "3d6daf8f64f820592c961dfc0a4678eaaafb8cb0"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-PHASE-B-001-B1-WIP",
+      "ok": true,
+      "detail": "6a86f77dddec75bc9a3c847fd29fed1730882ff6237fd56d12f4761986dbfe23"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-PHASE-B-B2-BYPASS-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B-B2-BYPASS-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-PHASE-B-B2-BYPASS-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B-B2-BYPASS-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-PHASE-B-B2-BYPASS-001",
+      "ok": true,
+      "detail": "96718beed704d466b0bd58ff48d03fefa2162859"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-PHASE-B-B2-BYPASS-001",
+      "ok": true,
+      "detail": "fe2df5ecc34981a887ab55993caf85bf57c82aa2b0c5a903f5f6b1ab7c4c2076"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-PHASE-B-B3-AUTHORIZATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B-B3-AUTHORIZATION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-PHASE-B-B3-AUTHORIZATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B-B3-AUTHORIZATION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-PHASE-B-B3-AUTHORIZATION-001",
+      "ok": true,
+      "detail": "ed2303799ec2a8bc762018d0be65cb06ea409cb9"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-PHASE-B-B3-AUTHORIZATION-001",
+      "ok": true,
+      "detail": "9287220ccd2ef8d1e3a71924c642da9326df4212fe5d7ffbe46c238a1b8e5011"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-PHASE-B-B4-VARIANTS-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B-B4-VARIANTS-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-PHASE-B-B4-VARIANTS-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B-B4-VARIANTS-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-PHASE-B-B4-VARIANTS-001",
+      "ok": true,
+      "detail": "ed8b9ee32a4b7a35cc9b8f39647970650e07664d"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-PHASE-B-B4-VARIANTS-001",
+      "ok": true,
+      "detail": "744e523b997cce50de6d017197124671febff4acc3b248e6b7376017aaec444a"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-PHASE-B-BYPASS-PLAN-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B-BYPASS-PLAN-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-PHASE-B-BYPASS-PLAN-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B-BYPASS-PLAN-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-PHASE-B-BYPASS-PLAN-001",
+      "ok": true,
+      "detail": "21e4afbf4dc7219c4825ab997ad8f5826b25db59"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-PHASE-B-BYPASS-PLAN-001",
+      "ok": true,
+      "detail": "01c8e6dca7643ec91728e897d2923b686666680bac5233bf1a347cf8d4347853"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-PHASE-B5-FILE-READ-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B5-FILE-READ-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-PHASE-B5-FILE-READ-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B5-FILE-READ-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-PHASE-B5-FILE-READ-001",
+      "ok": true,
+      "detail": "fcc3bc9fede546966762603cfcc89189314c238e"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-PHASE-B5-FILE-READ-001",
+      "ok": true,
+      "detail": "0b27497bf9f48271d526d674c46df0877a4b801684a9b4d82185630fa9bcd905"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-PHASE-B5-INTEGRATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B5-INTEGRATION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-PHASE-B5-INTEGRATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B5-INTEGRATION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-PHASE-B5-INTEGRATION-001",
+      "ok": true,
+      "detail": "8e60a2eab57edf8bf9554086e801892fa536dac3"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-PHASE-B5-INTEGRATION-001",
+      "ok": true,
+      "detail": "df66a8f788a167cfdec8138b372f46ce91c1be3b27e05e0b728e5d1a08343bd9"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-PHASE-B5-INTERRUPTED-WIP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B5-INTERRUPTED-WIP-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-PHASE-B5-INTERRUPTED-WIP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B5-INTERRUPTED-WIP-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-PHASE-B5-INTERRUPTED-WIP-001",
+      "ok": true,
+      "detail": "3706400747599b97bab1e3b6c555e7ac1c9867ca"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-PHASE-B5-INTERRUPTED-WIP-001",
+      "ok": true,
+      "detail": "0f487482eac075b18fb57b631ca93af51e05b546275a2966cd02c0598a1e5d5f"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-PHASE-B5-NON-EXECUTION-REGRESSION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B5-NON-EXECUTION-REGRESSION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-PHASE-B5-NON-EXECUTION-REGRESSION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B5-NON-EXECUTION-REGRESSION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-PHASE-B5-NON-EXECUTION-REGRESSION-001",
+      "ok": true,
+      "detail": "fa413db41009010d33d87bdc123afc47ebdb4a23"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-PHASE-B5-NON-EXECUTION-REGRESSION-001",
+      "ok": true,
+      "detail": "8879089ecad91c20fbca418c37801f73b1c8fe98b18bb6559d9e4c5c86fc2108"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-PHASE-B5-RUN-FENCING-COMPAT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B5-RUN-FENCING-COMPAT-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-PHASE-B5-RUN-FENCING-COMPAT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B5-RUN-FENCING-COMPAT-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-PHASE-B5-RUN-FENCING-COMPAT-001",
+      "ok": true,
+      "detail": "47224b3e88e1102432524c0b9285c94e6bd1bdcb"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-PHASE-B5-RUN-FENCING-COMPAT-001",
+      "ok": true,
+      "detail": "404b3b110d18a93523a8d0b3824533623e19334c7d7942ce84cdb438bda0f8ef"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-PHASE-B5-RUNTIME-STATUS-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B5-RUNTIME-STATUS-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-PHASE-B5-RUNTIME-STATUS-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B5-RUNTIME-STATUS-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-PHASE-B5-RUNTIME-STATUS-001",
+      "ok": true,
+      "detail": "d70496c0f26084d97606c6fbed9aa2d55a97d779"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-PHASE-B5-RUNTIME-STATUS-001",
+      "ok": true,
+      "detail": "e576f16463138f10f77e6d45ad55cf8d1c26c69d15cac77660bc37dd2fc5f00a"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-PHASE-B5-SECURITY-BLOCKER-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B5-SECURITY-BLOCKER-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-PHASE-B5-SECURITY-BLOCKER-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B5-SECURITY-BLOCKER-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-PHASE-B5-SECURITY-BLOCKER-001",
+      "ok": true,
+      "detail": "fc152f310e75db9206cd78ed0376e612d8f642aa"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-PHASE-B5-SECURITY-BLOCKER-001",
+      "ok": true,
+      "detail": "b11e8e9cca866230e34f7f6ac3297959abfa7c77806372889894e2a5109ef588"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-PHASE-B5-SYNTAX-RECOVERY-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B5-SYNTAX-RECOVERY-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-PHASE-B5-SYNTAX-RECOVERY-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B5-SYNTAX-RECOVERY-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-PHASE-B5-SYNTAX-RECOVERY-001",
+      "ok": true,
+      "detail": "4a4d858eb93af8d50ea6d95e54411a5803b0e7ee"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-PHASE-B5-SYNTAX-RECOVERY-001",
+      "ok": true,
+      "detail": "e47603302291c5a1fdfbd2e3632a133f6ca77783836c2cc684803c3b017cc5f3"
+    },
+    {
+      "id": "CHECKPOINT_DIR:INTERPRETER-ADAPTER-PHASE-B5-WIRING-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B5-WIRING-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:INTERPRETER-ADAPTER-PHASE-B5-WIRING-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\INTERPRETER-ADAPTER-PHASE-B5-WIRING-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:INTERPRETER-ADAPTER-PHASE-B5-WIRING-001",
+      "ok": true,
+      "detail": "602f7bdca21f329ff466f86ec3abaf0ef79862ab"
+    },
+    {
+      "id": "PATCH:INTERPRETER-ADAPTER-PHASE-B5-WIRING-001",
+      "ok": true,
+      "detail": "915567d953c75710769622f3f900537b824987090d59b7d57e2b3f6b5e3d1c5a"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-API-RISK-REGISTRATION-VERIFY-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-RISK-REGISTRATION-VERIFY-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-API-RISK-REGISTRATION-VERIFY-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-RISK-REGISTRATION-VERIFY-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-API-RISK-REGISTRATION-VERIFY-001",
+      "ok": true,
+      "detail": "957b53661f99329893569a79a374b7a10b46678d"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-API-RISK-REGISTRATION-VERIFY-001",
+      "ok": true,
+      "detail": "dd5eca6cf05a912a52ebabe10833c72bc4db9e6134312dd8e19a0c8c8796de4c"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-001",
+      "ok": true,
+      "detail": "0aa2f70c8dab4b80c80e78009d7058575279d845"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-001",
+      "ok": true,
+      "detail": "2b4ae44df9332670b721b2d14a6d11e4fcc551bde89f1ad607b6001775edb7f7"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-002",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-002\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-002",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-002\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-002",
+      "ok": true,
+      "detail": "0618b838c0b85fe62339b5270ecf74255810b21c"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-002",
+      "ok": true,
+      "detail": "bb866e2cb6cc4dca917e267f0170c8b98b0eaf1f079fb8c501fa9ebe8326ea94"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-API-STEP5-CONTEXT-UNTRUSTED-CALLER-BYPASS-WIP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-CONTEXT-UNTRUSTED-CALLER-BYPASS-WIP-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-API-STEP5-CONTEXT-UNTRUSTED-CALLER-BYPASS-WIP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-CONTEXT-UNTRUSTED-CALLER-BYPASS-WIP-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-API-STEP5-CONTEXT-UNTRUSTED-CALLER-BYPASS-WIP-001",
+      "ok": true,
+      "detail": "36d8bb70dd39ae182de6c74efacceb70a8692740"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-API-STEP5-CONTEXT-UNTRUSTED-CALLER-BYPASS-WIP-001",
+      "ok": true,
+      "detail": "3954113bb7a7b001ced55c632f88117f13394aa35ffae16d0f83b5a6ee5684af"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-API-STEP5-INTERRUPTED-WIP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-INTERRUPTED-WIP-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-API-STEP5-INTERRUPTED-WIP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-INTERRUPTED-WIP-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-API-STEP5-INTERRUPTED-WIP-001",
+      "ok": true,
+      "detail": "b7fe5238281432afad1c5f9d8e9e1aa53336a9c9"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-API-STEP5-INTERRUPTED-WIP-001",
+      "ok": true,
+      "detail": "85c72312935226786c705f5ae48ab2f94c750d0b208eacd1685c96d3b93ae2a5"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-API-STEP5-SERVER-FACT-PRESERVATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-SERVER-FACT-PRESERVATION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-API-STEP5-SERVER-FACT-PRESERVATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-SERVER-FACT-PRESERVATION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-API-STEP5-SERVER-FACT-PRESERVATION-001",
+      "ok": true,
+      "detail": "58df1f714fcc13311b6c7b98145e239d61449fba"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-API-STEP5-SERVER-FACT-PRESERVATION-001",
+      "ok": true,
+      "detail": "3f169482985567dd5e8fa0aff5507358f53fff134c34668592c4be6bb24dad8c"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-API-STEP5-UI-STATUS-SEPARATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-UI-STATUS-SEPARATION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-API-STEP5-UI-STATUS-SEPARATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-UI-STATUS-SEPARATION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-API-STEP5-UI-STATUS-SEPARATION-001",
+      "ok": true,
+      "detail": "8e111bb4531fe0fdd7ae219963c02e1deb88ca06"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-API-STEP5-UI-STATUS-SEPARATION-001",
+      "ok": true,
+      "detail": "f3f212cfeae0857f966278b1ceb29f0e8adc27bcd4089c7e7b1a794ad07708c0"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-API-STEP5-UI-WRITABLE-DTO-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-UI-WRITABLE-DTO-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-API-STEP5-UI-WRITABLE-DTO-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-UI-WRITABLE-DTO-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-API-STEP5-UI-WRITABLE-DTO-001",
+      "ok": true,
+      "detail": "2bc72b9044dde9787cd8c75b5bbb80a14271da4c"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-API-STEP5-UI-WRITABLE-DTO-001",
+      "ok": true,
+      "detail": "6d6fd109de86d22e80427f43bf18f4d8677fffb3d211c1008dd2e006f97c1ebc"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-API-STEP5-UI-WRITABLE-DTO-OVERBROAD-PATH-WIP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-UI-WRITABLE-DTO-OVERBROAD-PATH-WIP-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-API-STEP5-UI-WRITABLE-DTO-OVERBROAD-PATH-WIP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-UI-WRITABLE-DTO-OVERBROAD-PATH-WIP-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-API-STEP5-UI-WRITABLE-DTO-OVERBROAD-PATH-WIP-001",
+      "ok": true,
+      "detail": "35a2b4a4cf77e90a476883d829d0b3003f77b41b"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-API-STEP5-UI-WRITABLE-DTO-OVERBROAD-PATH-WIP-001",
+      "ok": true,
+      "detail": "4bf058592539e6ee0e7706fddbdc2ff7d1f3e6834c6b8fe5b27eaf4ddfcd747e"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-API-STEP5E-AUTHORITATIVE-INDEX-PRECONDITION-STOP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5E-AUTHORITATIVE-INDEX-PRECONDITION-STOP-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-API-STEP5E-AUTHORITATIVE-INDEX-PRECONDITION-STOP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5E-AUTHORITATIVE-INDEX-PRECONDITION-STOP-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-API-STEP5E-AUTHORITATIVE-INDEX-PRECONDITION-STOP-001",
+      "ok": true,
+      "detail": "e0001f15dc6a390d33270e4e638d072b1c9fa22b"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-API-STEP5E-AUTHORITATIVE-INDEX-PRECONDITION-STOP-001",
+      "ok": true,
+      "detail": "190b5e624ffb7dc918f2874402ac47523b4efd05e8428b26a577b74c6a96a8fd"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-API-STEP6-PRECONDITION-STOP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP6-PRECONDITION-STOP-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-API-STEP6-PRECONDITION-STOP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP6-PRECONDITION-STOP-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-API-STEP6-PRECONDITION-STOP-001",
+      "ok": true,
+      "detail": "22622652ce64470e77a745067a55ac29ab54b245"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-API-STEP6-PRECONDITION-STOP-001",
+      "ok": true,
+      "detail": "62b7348a7d17e1842994c12f0be3e3be0a474a93498abf0c0107cddcc8153dcf"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-API-STEP7-PRECONDITION-STOP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP7-PRECONDITION-STOP-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-API-STEP7-PRECONDITION-STOP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP7-PRECONDITION-STOP-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-API-STEP7-PRECONDITION-STOP-001",
+      "ok": true,
+      "detail": "6f9ec98925cfd53af370bc13158ec1313364ff46"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-API-STEP7-PRECONDITION-STOP-001",
+      "ok": true,
+      "detail": "3be1af055857bb6512db5f3bba8be8905495aa51374613e4aa2cf0f0b792e0a5"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-API-STEP7-PRECONDITION-STOP-002",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP7-PRECONDITION-STOP-002\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-API-STEP7-PRECONDITION-STOP-002",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP7-PRECONDITION-STOP-002\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-API-STEP7-PRECONDITION-STOP-002",
+      "ok": true,
+      "detail": "3b4ef3629a9ca200b7e8fc4b27a5709de331f101"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-API-STEP7-PRECONDITION-STOP-002",
+      "ok": true,
+      "detail": "0ec6cc6daab348eef52dfc762959c8b495a5d1d6d7444fafed088b030b529211"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-API-STEP8-AUTHORITATIVE-RECONCILIATION-STOP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP8-AUTHORITATIVE-RECONCILIATION-STOP-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-API-STEP8-AUTHORITATIVE-RECONCILIATION-STOP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP8-AUTHORITATIVE-RECONCILIATION-STOP-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-API-STEP8-AUTHORITATIVE-RECONCILIATION-STOP-001",
+      "ok": true,
+      "detail": "14f083fd26364eaab7c7d6a6d2b9d906f031d2db"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-API-STEP8-AUTHORITATIVE-RECONCILIATION-STOP-001",
+      "ok": true,
+      "detail": "fec7697f1628497be2cb599171d2b3390073f05737a9804009d4e72643c6d97b"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-API-TRUSTED-FIELD-REJECTION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-TRUSTED-FIELD-REJECTION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-API-TRUSTED-FIELD-REJECTION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-TRUSTED-FIELD-REJECTION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-API-TRUSTED-FIELD-REJECTION-001",
+      "ok": true,
+      "detail": "e63507734abe7f38035fc368352fcb4b857e064a"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-API-TRUSTED-FIELD-REJECTION-001",
+      "ok": true,
+      "detail": "dac5a1980ce46179b28c4e673c8129380aefd59824f442c4a8629ba128aba077"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-AUDIT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-AUDIT-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-AUDIT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-AUDIT-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-AUDIT-001",
+      "ok": true,
+      "detail": "01510e497a5087816b00c99cc41e5d03bd619df2"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-AUDIT-001",
+      "ok": true,
+      "detail": "3f4a8bdb113caa794e951ebac79ca2853bb7b0c858b7120abf78d15098a5c250"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-FIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-FIX-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-FIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-FIX-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-FIX-001",
+      "ok": true,
+      "detail": "a4f2872ff776fdd715a63e15ccd3e343d5a7fb4a"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-FIX-001",
+      "ok": true,
+      "detail": "ef0fe38874e58f350c0787a8ff19e2e8085b7de29e07faa4c407768f74b1dcb8"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-MATRIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-MATRIX-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-MATRIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-MATRIX-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-MATRIX-001",
+      "ok": true,
+      "detail": "52476f1758b5fe10cbdd7e368ccc48876f652603"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-CONTEXT-TRUST-BOUNDARY-MATRIX-001",
+      "ok": true,
+      "detail": "55940a9beddd3bdeec64aab4e9e1704fe9c18d6e97b5fbaf498ea9b1dc83d8b7"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-ISOLATED-VERIFICATION-SEPARATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-ISOLATED-VERIFICATION-SEPARATION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-ISOLATED-VERIFICATION-SEPARATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-ISOLATED-VERIFICATION-SEPARATION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-ISOLATED-VERIFICATION-SEPARATION-001",
+      "ok": true,
+      "detail": "8273b7b4a15f73753fb796d2de187aabd5fb3a88"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-ISOLATED-VERIFICATION-SEPARATION-001",
+      "ok": true,
+      "detail": "0474bc4b60538c362cec7e91c1f11438bff1e478a2d08e10fa19fade069ab598"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-TRUST-PATH-BIDIRECTIONAL-MATRIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-TRUST-PATH-BIDIRECTIONAL-MATRIX-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-TRUST-PATH-BIDIRECTIONAL-MATRIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-TRUST-PATH-BIDIRECTIONAL-MATRIX-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-TRUST-PATH-BIDIRECTIONAL-MATRIX-001",
+      "ok": true,
+      "detail": "4288ba02ad176799f3e5f3977d5f43f9be35315e"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-TRUST-PATH-BIDIRECTIONAL-MATRIX-001",
+      "ok": true,
+      "detail": "784e1f1c67a515be92cb8058e7c3a69ffc1596fd4fd55ac4d02757394036a12e"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-TRUST-PATH-MATCHING-AUDIT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-TRUST-PATH-MATCHING-AUDIT-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-TRUST-PATH-MATCHING-AUDIT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-TRUST-PATH-MATCHING-AUDIT-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-TRUST-PATH-MATCHING-AUDIT-001",
+      "ok": true,
+      "detail": "f0945a37c4a2e15dbdf0b5e128d0d71576d5ffab"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-TRUST-PATH-MATCHING-AUDIT-001",
+      "ok": true,
+      "detail": "dd5f8353a95d547b8bb2cf43bd7735eca392dd23b80c0a35040f56be7ef17097"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-TRUST-PATH-MATCHING-FIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-TRUST-PATH-MATCHING-FIX-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-TRUST-PATH-MATCHING-FIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-TRUST-PATH-MATCHING-FIX-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-TRUST-PATH-MATCHING-FIX-001",
+      "ok": true,
+      "detail": "2da2aaf01eac8f8aa514e0bddc804308684fc41e"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-TRUST-PATH-MATCHING-FIX-001",
+      "ok": true,
+      "detail": "9f061d719204a3c4eb9f0f34787da30fc2075b1dfb195008118c769802b3af2a"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-TRUST-PATH-REJECTION-BASELINE-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-TRUST-PATH-REJECTION-BASELINE-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-TRUST-PATH-REJECTION-BASELINE-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-TRUST-PATH-REJECTION-BASELINE-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-TRUST-PATH-REJECTION-BASELINE-001",
+      "ok": true,
+      "detail": "2996b9b1f4d004667724b00e0a1597aecbafcb45"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-TRUST-PATH-REJECTION-BASELINE-001",
+      "ok": true,
+      "detail": "c0067afa9718244c8e2b497bde11d9c4968a653f976ffc8ea084f0f657e6f936"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-VERIFIED-CANONICAL-DERIVATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-VERIFIED-CANONICAL-DERIVATION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-VERIFIED-CANONICAL-DERIVATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-VERIFIED-CANONICAL-DERIVATION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-VERIFIED-CANONICAL-DERIVATION-001",
+      "ok": true,
+      "detail": "0708a497b967065b669e6621608a412f9b9529e3"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-VERIFIED-CANONICAL-DERIVATION-001",
+      "ok": true,
+      "detail": "c8bf83cf4c077b1b4fd2edac2fccd86034f55a8a0004dff0e71f5316d937b32e"
+    },
+    {
+      "id": "CHECKPOINT_DIR:LEGACY-RUN-VERIFIED-TRUST-BOUNDARY-AUDIT-CORRECTION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-VERIFIED-TRUST-BOUNDARY-AUDIT-CORRECTION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:LEGACY-RUN-VERIFIED-TRUST-BOUNDARY-AUDIT-CORRECTION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-VERIFIED-TRUST-BOUNDARY-AUDIT-CORRECTION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:LEGACY-RUN-VERIFIED-TRUST-BOUNDARY-AUDIT-CORRECTION-001",
+      "ok": true,
+      "detail": "0368a093531c31792e766543affd2e08d19255cf"
+    },
+    {
+      "id": "PATCH:LEGACY-RUN-VERIFIED-TRUST-BOUNDARY-AUDIT-CORRECTION-001",
+      "ok": true,
+      "detail": "1efa67c9e272d57267e6b3567c6f81ffb59155996dedd8224225e070be79bd5b"
+    },
+    {
+      "id": "CHECKPOINT_DIR:NON-EXECUTION-MESSAGE-IDEMPOTENCY-ATOMIC-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\NON-EXECUTION-MESSAGE-IDEMPOTENCY-ATOMIC-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:NON-EXECUTION-MESSAGE-IDEMPOTENCY-ATOMIC-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\NON-EXECUTION-MESSAGE-IDEMPOTENCY-ATOMIC-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:NON-EXECUTION-MESSAGE-IDEMPOTENCY-ATOMIC-001",
+      "ok": true,
+      "detail": "87db9d73c2805271205fc827ffa8b759b8ceddd1"
+    },
+    {
+      "id": "PATCH:NON-EXECUTION-MESSAGE-IDEMPOTENCY-ATOMIC-001",
+      "ok": true,
+      "detail": "5decac0d7ad606da2c405534f1375fd5a8dcb98d970d6f7e5d9abe89176f0553"
+    },
+    {
+      "id": "CHECKPOINT_DIR:NON-EXECUTION-MESSAGE-IDEMPOTENCY-GATE-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\NON-EXECUTION-MESSAGE-IDEMPOTENCY-GATE-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:NON-EXECUTION-MESSAGE-IDEMPOTENCY-GATE-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\NON-EXECUTION-MESSAGE-IDEMPOTENCY-GATE-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:NON-EXECUTION-MESSAGE-IDEMPOTENCY-GATE-001",
+      "ok": true,
+      "detail": "b6f00857f2f270bfaa5fe0af5143a69e7805a4f7"
+    },
+    {
+      "id": "PATCH:NON-EXECUTION-MESSAGE-IDEMPOTENCY-GATE-001",
+      "ok": true,
+      "detail": "4a3b2eaa51ce6133d467ab7f828e03a936613c77251a4f82db532fbe89fe0b94"
+    },
+    {
+      "id": "CHECKPOINT_DIR:NON-EXECUTION-MESSAGE-IDEMPOTENCY-INVESTIGATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\NON-EXECUTION-MESSAGE-IDEMPOTENCY-INVESTIGATION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:NON-EXECUTION-MESSAGE-IDEMPOTENCY-INVESTIGATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\NON-EXECUTION-MESSAGE-IDEMPOTENCY-INVESTIGATION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:NON-EXECUTION-MESSAGE-IDEMPOTENCY-INVESTIGATION-001",
+      "ok": true,
+      "detail": "da99d031173c0f99528580199c84b91959d2ea8b"
+    },
+    {
+      "id": "PATCH:NON-EXECUTION-MESSAGE-IDEMPOTENCY-INVESTIGATION-001",
+      "ok": true,
+      "detail": "2e2c0f827458f91d2c129fb204850b0d6e8eb0ac19675a1e7acb7cd832b6a97d"
+    },
+    {
+      "id": "CHECKPOINT_DIR:PRODUCT-DEFINITION-CONSOLIDATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\PRODUCT-DEFINITION-CONSOLIDATION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:PRODUCT-DEFINITION-CONSOLIDATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\PRODUCT-DEFINITION-CONSOLIDATION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:PRODUCT-DEFINITION-CONSOLIDATION-001",
+      "ok": true,
+      "detail": "7249188bb2fedb84d74fa6f4f7fa3f7e645b2add"
+    },
+    {
+      "id": "PATCH:PRODUCT-DEFINITION-CONSOLIDATION-001",
+      "ok": true,
+      "detail": "10366a749ee8cb1c6da615a01e58abac12b689660daf6ffc4fcc88d6a2d021ca"
+    },
+    {
+      "id": "CHECKPOINT_DIR:RUN-FENCING-001-FINAL",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-001-FINAL\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:RUN-FENCING-001-FINAL",
+      "ok": true,
+      "detail": {
+        "directoryName": "RUN-FENCING-001-FINAL",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-001-FINAL\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:RUN-FENCING-BASELINE-CORRECTION",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-BASELINE-CORRECTION\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:RUN-FENCING-BASELINE-CORRECTION",
+      "ok": true,
+      "detail": {
+        "directoryName": "RUN-FENCING-BASELINE-CORRECTION",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-BASELINE-CORRECTION\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:RUN-FENCING-D0-1A-REAL-FILE",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-D0-1A-REAL-FILE\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:RUN-FENCING-D0-1A-REAL-FILE",
+      "ok": true,
+      "detail": {
+        "directoryName": "RUN-FENCING-D0-1A-REAL-FILE",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-D0-1A-REAL-FILE\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:RUN-FENCING-FOCUSED-15",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-FOCUSED-15\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:RUN-FENCING-FOCUSED-15",
+      "ok": true,
+      "detail": {
+        "directoryName": "RUN-FENCING-FOCUSED-15",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-FOCUSED-15\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:RUN-FENCING-MANDATORY-FIXTURE",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-MANDATORY-FIXTURE\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:RUN-FENCING-MANDATORY-FIXTURE",
+      "ok": true,
+      "detail": {
+        "directoryName": "RUN-FENCING-MANDATORY-FIXTURE",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-MANDATORY-FIXTURE\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:RUN-FENCING-PHASE-A",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-PHASE-A\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:RUN-FENCING-PHASE-A",
+      "ok": true,
+      "detail": {
+        "directoryName": "RUN-FENCING-PHASE-A",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-PHASE-A\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:RUN-FENCING-PHASE-B",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-PHASE-B\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:RUN-FENCING-PHASE-B",
+      "ok": true,
+      "detail": {
+        "directoryName": "RUN-FENCING-PHASE-B",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-PHASE-B\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:RUN-FENCING-PHASE-C",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-PHASE-C\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:RUN-FENCING-PHASE-C",
+      "ok": true,
+      "detail": {
+        "directoryName": "RUN-FENCING-PHASE-C",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-PHASE-C\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:RUN-FENCING-PHASE-D",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-PHASE-D\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:RUN-FENCING-PHASE-D",
+      "ok": true,
+      "detail": {
+        "directoryName": "RUN-FENCING-PHASE-D",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-PHASE-D\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:RUN-FENCING-PHASE-E",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-PHASE-E\\manifest.json"
+    },
+    {
+      "id": "LEGACY_UNREADABLE_EXPLICIT:RUN-FENCING-PHASE-E",
+      "ok": true,
+      "detail": {
+        "directoryName": "RUN-FENCING-PHASE-E",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\RUN-FENCING-PHASE-E\\manifest.json",
+        "manifestReadable": false,
+        "checkpointCommit": null,
+        "commitExists": false,
+        "commitIsAncestorOfGeneratedHead": false,
+        "gateStatus": null,
+        "saveStatus": null,
+        "patchPath": null,
+        "patchExists": false,
+        "manifestPatchSha256": null,
+        "actualPatchSha256": null,
+        "patchHashMatch": false
+      }
+    },
+    {
+      "id": "CHECKPOINT_DIR:STEP5-TO-STEP8-AUTHORITATIVE-INDEX-WIP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\STEP5-TO-STEP8-AUTHORITATIVE-INDEX-WIP-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:STEP5-TO-STEP8-AUTHORITATIVE-INDEX-WIP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\STEP5-TO-STEP8-AUTHORITATIVE-INDEX-WIP-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:STEP5-TO-STEP8-AUTHORITATIVE-INDEX-WIP-001",
+      "ok": true,
+      "detail": "00514e50e447d395c14e21166337cfb8c7f678ce"
+    },
+    {
+      "id": "PATCH:STEP5-TO-STEP8-AUTHORITATIVE-INDEX-WIP-001",
+      "ok": true,
+      "detail": "f4a9eb166dca1151e19974e00b58878bebd35cef893a252747895bb6c8228714"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TASK-LIFECYCLE-ALL-SAMPLES-AUDIT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-ALL-SAMPLES-AUDIT-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TASK-LIFECYCLE-ALL-SAMPLES-AUDIT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-ALL-SAMPLES-AUDIT-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TASK-LIFECYCLE-ALL-SAMPLES-AUDIT-001",
+      "ok": true,
+      "detail": "fe862d967a3c17a3801a59fc339ba81f8b8303fd"
+    },
+    {
+      "id": "PATCH:TASK-LIFECYCLE-ALL-SAMPLES-AUDIT-001",
+      "ok": true,
+      "detail": "c36a8a3bbfaa296c3f7ea33f9a48da40819bf683f31effc30a99ac9dd6a9f4c8"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TASK-LIFECYCLE-CONTRACT-MIGRATION-PLAN-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-CONTRACT-MIGRATION-PLAN-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TASK-LIFECYCLE-CONTRACT-MIGRATION-PLAN-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-CONTRACT-MIGRATION-PLAN-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TASK-LIFECYCLE-CONTRACT-MIGRATION-PLAN-001",
+      "ok": true,
+      "detail": "eb0e0747739042b94994a37c1f36b2a145cbe8b2"
+    },
+    {
+      "id": "PATCH:TASK-LIFECYCLE-CONTRACT-MIGRATION-PLAN-001",
+      "ok": true,
+      "detail": "044f226adf55cae7d73bf17fae2d9a386bdb2883fdc6f34f5f2acc330c8dc3b6"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TASK-LIFECYCLE-CONTRACT-QUESTION-EVIDENCE-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-CONTRACT-QUESTION-EVIDENCE-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TASK-LIFECYCLE-CONTRACT-QUESTION-EVIDENCE-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-CONTRACT-QUESTION-EVIDENCE-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TASK-LIFECYCLE-CONTRACT-QUESTION-EVIDENCE-001",
+      "ok": true,
+      "detail": "16dc1dda5090c3b4ff1a7ac6d0268faf4310f082"
+    },
+    {
+      "id": "PATCH:TASK-LIFECYCLE-CONTRACT-QUESTION-EVIDENCE-001",
+      "ok": true,
+      "detail": "1a3d7aa1fc15f18eb244c079f62fed569b246a5f86ea303828911d1479adea22"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TASK-LIFECYCLE-CONTRACT-REAL-BUSINESS-TASK-001-WIP",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-CONTRACT-REAL-BUSINESS-TASK-001-WIP\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TASK-LIFECYCLE-CONTRACT-REAL-BUSINESS-TASK-001-WIP",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-CONTRACT-REAL-BUSINESS-TASK-001-WIP\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TASK-LIFECYCLE-CONTRACT-REAL-BUSINESS-TASK-001-WIP",
+      "ok": true,
+      "detail": "b207b93c3edc2bc9caddc413db8106b8f28bb2d9"
+    },
+    {
+      "id": "PATCH:TASK-LIFECYCLE-CONTRACT-REAL-BUSINESS-TASK-001-WIP",
+      "ok": true,
+      "detail": "b5b5efb4cc611761a781a4b6098d8be5d86e507b9f77334f46ec29f95b412f00"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TASK-LIFECYCLE-CQ-PRODUCT-REVIEW-INPUT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-CQ-PRODUCT-REVIEW-INPUT-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TASK-LIFECYCLE-CQ-PRODUCT-REVIEW-INPUT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-CQ-PRODUCT-REVIEW-INPUT-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TASK-LIFECYCLE-CQ-PRODUCT-REVIEW-INPUT-001",
+      "ok": true,
+      "detail": "e0d86283d692c4d471f03240919a2ee3cd26cb4d"
+    },
+    {
+      "id": "PATCH:TASK-LIFECYCLE-CQ-PRODUCT-REVIEW-INPUT-001",
+      "ok": true,
+      "detail": "bde33067bea631d1174580f0dff5497bf602db0f5bb3ca54737b68952bf96965"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TASK-LIFECYCLE-M1-CQ001-CLARIFY-CONTRACT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ001-CLARIFY-CONTRACT-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TASK-LIFECYCLE-M1-CQ001-CLARIFY-CONTRACT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ001-CLARIFY-CONTRACT-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TASK-LIFECYCLE-M1-CQ001-CLARIFY-CONTRACT-001",
+      "ok": true,
+      "detail": "650c4ad88278d38f9455326d6ad44f57905946b0"
+    },
+    {
+      "id": "PATCH:TASK-LIFECYCLE-M1-CQ001-CLARIFY-CONTRACT-001",
+      "ok": true,
+      "detail": "570d258720664af8de550957e32e77401deb3e0671e75aa6f75f80b5220e2725"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TASK-LIFECYCLE-M1-CQ001-CLARIFY-CONTRACT-001-WIP",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ001-CLARIFY-CONTRACT-001-WIP\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TASK-LIFECYCLE-M1-CQ001-CLARIFY-CONTRACT-001-WIP",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ001-CLARIFY-CONTRACT-001-WIP\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TASK-LIFECYCLE-M1-CQ001-CLARIFY-CONTRACT-001-WIP",
+      "ok": true,
+      "detail": "e613d0ef622844f641b61b3370d7ff72b14126bb"
+    },
+    {
+      "id": "PATCH:TASK-LIFECYCLE-M1-CQ001-CLARIFY-CONTRACT-001-WIP",
+      "ok": true,
+      "detail": "77a260b2431995117e0a7a22289528d90793280d359fe49ba80424e1ccef9ffb"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TASK-LIFECYCLE-M1-CQ002-IMPACT-REGRESSION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ002-IMPACT-REGRESSION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TASK-LIFECYCLE-M1-CQ002-IMPACT-REGRESSION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ002-IMPACT-REGRESSION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TASK-LIFECYCLE-M1-CQ002-IMPACT-REGRESSION-001",
+      "ok": true,
+      "detail": "30afd0ae493929d8de3dd8ec8111c9e0cc60109f"
+    },
+    {
+      "id": "PATCH:TASK-LIFECYCLE-M1-CQ002-IMPACT-REGRESSION-001",
+      "ok": true,
+      "detail": "d8a8ecf869f3e97ebf9597b6acc53f6eb9aa26815788bc4f42c7ef00d344da4d"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TASK-LIFECYCLE-M1-CQ002-INTERPRETER-CORRECTION-SUCCESS-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ002-INTERPRETER-CORRECTION-SUCCESS-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TASK-LIFECYCLE-M1-CQ002-INTERPRETER-CORRECTION-SUCCESS-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ002-INTERPRETER-CORRECTION-SUCCESS-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TASK-LIFECYCLE-M1-CQ002-INTERPRETER-CORRECTION-SUCCESS-001",
+      "ok": true,
+      "detail": "78d27d45f7634d1cb73f8dbcd84d6e362fb5964a"
+    },
+    {
+      "id": "PATCH:TASK-LIFECYCLE-M1-CQ002-INTERPRETER-CORRECTION-SUCCESS-001",
+      "ok": true,
+      "detail": "f763ac83e39050fc2c5711af67a5bde3fb4fddaea5c933d2b1c4ef0bab75df2a"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TASK-LIFECYCLE-M1-CQ003-HISTORICAL-ASSERTION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ003-HISTORICAL-ASSERTION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TASK-LIFECYCLE-M1-CQ003-HISTORICAL-ASSERTION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ003-HISTORICAL-ASSERTION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TASK-LIFECYCLE-M1-CQ003-HISTORICAL-ASSERTION-001",
+      "ok": true,
+      "detail": "89eb347dccff9e7e4a756da04304c03f1a604a48"
+    },
+    {
+      "id": "PATCH:TASK-LIFECYCLE-M1-CQ003-HISTORICAL-ASSERTION-001",
+      "ok": true,
+      "detail": "25e6ca3aa6c75f5f2abff72b796586ff3aa127ff51c776dcac31dcfcdd3e527c"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TASK-LIFECYCLE-M1-CQ003-IMPACT-REGRESSION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ003-IMPACT-REGRESSION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TASK-LIFECYCLE-M1-CQ003-IMPACT-REGRESSION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ003-IMPACT-REGRESSION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TASK-LIFECYCLE-M1-CQ003-IMPACT-REGRESSION-001",
+      "ok": true,
+      "detail": "fb5b7050fe34f3667ba14900811b6ca8bca7dcfc"
+    },
+    {
+      "id": "PATCH:TASK-LIFECYCLE-M1-CQ003-IMPACT-REGRESSION-001",
+      "ok": true,
+      "detail": "b60a9bda67c562253d5ea6bc4d8f49a5d5a1484ed3348b0e241ba54eed29cf86"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TASK-LIFECYCLE-M1-CQ003A-INTERPRETER-FAILURE-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ003A-INTERPRETER-FAILURE-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TASK-LIFECYCLE-M1-CQ003A-INTERPRETER-FAILURE-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ003A-INTERPRETER-FAILURE-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TASK-LIFECYCLE-M1-CQ003A-INTERPRETER-FAILURE-001",
+      "ok": true,
+      "detail": "b70f68479af0f2aa4d5c0d693a71cf313425d494"
+    },
+    {
+      "id": "PATCH:TASK-LIFECYCLE-M1-CQ003A-INTERPRETER-FAILURE-001",
+      "ok": true,
+      "detail": "a1834d60eb6ddbc4ba3ee594c0dea4cc246eb83f9b15fafbd56c97639e7e4af0"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TASK-LIFECYCLE-M1-CQ003B-DOCUMENTATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ003B-DOCUMENTATION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TASK-LIFECYCLE-M1-CQ003B-DOCUMENTATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ003B-DOCUMENTATION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TASK-LIFECYCLE-M1-CQ003B-DOCUMENTATION-001",
+      "ok": true,
+      "detail": "d402570788714365c928187a2126a4ca0d8f4e9f"
+    },
+    {
+      "id": "PATCH:TASK-LIFECYCLE-M1-CQ003B-DOCUMENTATION-001",
+      "ok": true,
+      "detail": "fb5c87161b2e8dcbd18dc708d9a4a13af25f6fc8eeb51ed1917d8dd557636b5d"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REACHABILITY-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REACHABILITY-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REACHABILITY-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REACHABILITY-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REACHABILITY-001",
+      "ok": true,
+      "detail": "f39692bf33291edc1b34811e196bf307c81276b2"
+    },
+    {
+      "id": "PATCH:TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REACHABILITY-001",
+      "ok": true,
+      "detail": "9c451c6bd1f6645c08b2b663835cf3799a3c687a855e159bb28f71ff3303ad41"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REPLAY-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REPLAY-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REPLAY-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REPLAY-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REPLAY-001",
+      "ok": true,
+      "detail": "db32657fd25d55bcb30f5d088b4ec477dee30fad"
+    },
+    {
+      "id": "PATCH:TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REPLAY-001",
+      "ok": true,
+      "detail": "9ff7453c0444896132b196cc5ee296bbbe888c2afde0fb30885ce1d6a6632560"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REPLAY-001-WIP",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REPLAY-001-WIP\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REPLAY-001-WIP",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REPLAY-001-WIP\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REPLAY-001-WIP",
+      "ok": true,
+      "detail": "52d18fab5e12b6b09a5d8752a71127a7f12150f2"
+    },
+    {
+      "id": "PATCH:TASK-LIFECYCLE-M1-CQ003B-EXECUTION-FAILURE-REPLAY-001-WIP",
+      "ok": true,
+      "detail": "0c850c223c25c99d2be7a300ec2691e7ee64850c29da9276d67936d5bc5d003f"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TASK-LIFECYCLE-M1-CQ003B-FEASIBILITY-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ003B-FEASIBILITY-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TASK-LIFECYCLE-M1-CQ003B-FEASIBILITY-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TASK-LIFECYCLE-M1-CQ003B-FEASIBILITY-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TASK-LIFECYCLE-M1-CQ003B-FEASIBILITY-001",
+      "ok": true,
+      "detail": "68acc3b0643a170aefb33738b4ec60e1aed6c399"
+    },
+    {
+      "id": "PATCH:TASK-LIFECYCLE-M1-CQ003B-FEASIBILITY-001",
+      "ok": true,
+      "detail": "23473250a2ab42ac7633e388752109e479598aa7ad1dc59da084a6276ff2849d"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TERMINAL-REPLAY-DERIVATION-AUDIT-002",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TERMINAL-REPLAY-DERIVATION-AUDIT-002\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TERMINAL-REPLAY-DERIVATION-AUDIT-002",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TERMINAL-REPLAY-DERIVATION-AUDIT-002\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TERMINAL-REPLAY-DERIVATION-AUDIT-002",
+      "ok": true,
+      "detail": "9adcb8463df585071cfb200243e76fb2586ef81c"
+    },
+    {
+      "id": "PATCH:TERMINAL-REPLAY-DERIVATION-AUDIT-002",
+      "ok": true,
+      "detail": "a52132dc57b17e15e899d0b2d214a9c748a7915153d5154f60b0d5d6393b4f49"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TERMINAL-REPLAY-VERIFICATION-AUDIT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TERMINAL-REPLAY-VERIFICATION-AUDIT-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TERMINAL-REPLAY-VERIFICATION-AUDIT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TERMINAL-REPLAY-VERIFICATION-AUDIT-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TERMINAL-REPLAY-VERIFICATION-AUDIT-001",
+      "ok": true,
+      "detail": "26869632656d20d78a33cf23c86304c750ac31fb"
+    },
+    {
+      "id": "PATCH:TERMINAL-REPLAY-VERIFICATION-AUDIT-001",
+      "ok": true,
+      "detail": "6288d2a309c8ed02d488ed451d5c18eed01c0a8d189784fbbab5e8c1097376b3"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TERMINAL-TASK-REPLAY-STATE-MATRIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TERMINAL-TASK-REPLAY-STATE-MATRIX-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TERMINAL-TASK-REPLAY-STATE-MATRIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TERMINAL-TASK-REPLAY-STATE-MATRIX-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TERMINAL-TASK-REPLAY-STATE-MATRIX-001",
+      "ok": true,
+      "detail": "eb4aa93475e1c050eedc3d04a7aa20fc72d7ef82"
+    },
+    {
+      "id": "PATCH:TERMINAL-TASK-REPLAY-STATE-MATRIX-001",
+      "ok": true,
+      "detail": "ff9d0f0bd2c793e54c55d3393966cefc24d0643a5726f4ee23858655a204e288"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TERMINAL-TASK-REPLAY-VERIFICATION-CLASSIFICATION-FIX-002",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TERMINAL-TASK-REPLAY-VERIFICATION-CLASSIFICATION-FIX-002\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TERMINAL-TASK-REPLAY-VERIFICATION-CLASSIFICATION-FIX-002",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TERMINAL-TASK-REPLAY-VERIFICATION-CLASSIFICATION-FIX-002\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TERMINAL-TASK-REPLAY-VERIFICATION-CLASSIFICATION-FIX-002",
+      "ok": true,
+      "detail": "78c54c20c941443dba2407e728a7c006886ec980"
+    },
+    {
+      "id": "PATCH:TERMINAL-TASK-REPLAY-VERIFICATION-CLASSIFICATION-FIX-002",
+      "ok": true,
+      "detail": "9d002bc397ed078c2494a94e3916ae83fb84a8f39c6988e485285f7a53ef5ae2"
+    },
+    {
+      "id": "CHECKPOINT_DIR:TERMINAL-TASK-REPLAY-VERIFICATION-IMPACT-REGRESSION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TERMINAL-TASK-REPLAY-VERIFICATION-IMPACT-REGRESSION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:TERMINAL-TASK-REPLAY-VERIFICATION-IMPACT-REGRESSION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\TERMINAL-TASK-REPLAY-VERIFICATION-IMPACT-REGRESSION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:TERMINAL-TASK-REPLAY-VERIFICATION-IMPACT-REGRESSION-001",
+      "ok": true,
+      "detail": "b9cfaac917f27cfebac7d0acb2c7e6c3a85b8c80"
+    },
+    {
+      "id": "PATCH:TERMINAL-TASK-REPLAY-VERIFICATION-IMPACT-REGRESSION-001",
+      "ok": true,
+      "detail": "a8d8cdd9ebcff6427dacc0f770b6e0f92dd9a8dd09747d1486d6ff0d1f71fc21"
+    },
+    {
+      "id": "CHECKPOINT_DIR:UI-STATUS-SEPARATION-AUDIT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\UI-STATUS-SEPARATION-AUDIT-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:UI-STATUS-SEPARATION-AUDIT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\UI-STATUS-SEPARATION-AUDIT-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:UI-STATUS-SEPARATION-AUDIT-001",
+      "ok": true,
+      "detail": "ac38fe0465c4e9823655285cf12f311ff18f12f1"
+    },
+    {
+      "id": "PATCH:UI-STATUS-SEPARATION-AUDIT-001",
+      "ok": true,
+      "detail": "accffcfb71942832300f58e5d766f14343f1b5c79935b98068505a621e569c00"
+    },
+    {
+      "id": "CHECKPOINT_DIR:UI-STATUS-SEPARATION-FIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\UI-STATUS-SEPARATION-FIX-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:UI-STATUS-SEPARATION-FIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\UI-STATUS-SEPARATION-FIX-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:UI-STATUS-SEPARATION-FIX-001",
+      "ok": true,
+      "detail": "655eb86ddb5b4158be06d30ac6cdd4870acf0e79"
+    },
+    {
+      "id": "PATCH:UI-STATUS-SEPARATION-FIX-001",
+      "ok": true,
+      "detail": "f3e82d0c67acbd54483266c714bc835527de5c4f2f9d2acb73ee8741e9ae3d29"
+    },
+    {
+      "id": "CHECKPOINT_DIR:UI-STATUS-SEPARATION-MATRIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\UI-STATUS-SEPARATION-MATRIX-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:UI-STATUS-SEPARATION-MATRIX-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\UI-STATUS-SEPARATION-MATRIX-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:UI-STATUS-SEPARATION-MATRIX-001",
+      "ok": true,
+      "detail": "aa6f3dedc4a6f7b648166d944da36b1731db501d"
+    },
+    {
+      "id": "PATCH:UI-STATUS-SEPARATION-MATRIX-001",
+      "ok": true,
+      "detail": "d3c01a8cbf2dddfa1e3cf7b139bbcc01d4a15db3663a2a7b0b2f30b6fe480775"
+    },
+    {
+      "id": "CHECKPOINT_DIR:VERIFIED-SEMANTICS-CONSUMER-MIGRATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\VERIFIED-SEMANTICS-CONSUMER-MIGRATION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:VERIFIED-SEMANTICS-CONSUMER-MIGRATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\VERIFIED-SEMANTICS-CONSUMER-MIGRATION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:VERIFIED-SEMANTICS-CONSUMER-MIGRATION-001",
+      "ok": true,
+      "detail": "58daf6a2438eb24204f3a9d50f6cf356d694d2d5"
+    },
+    {
+      "id": "PATCH:VERIFIED-SEMANTICS-CONSUMER-MIGRATION-001",
+      "ok": true,
+      "detail": "b432e4bee37604d3ff357fe3ba592c08c549be1dccfca80883758d44a632d340"
+    },
+    {
+      "id": "CHECKPOINT_DIR:VERIFIED-SEMANTICS-GLOBAL-CONTRACT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\VERIFIED-SEMANTICS-GLOBAL-CONTRACT-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:VERIFIED-SEMANTICS-GLOBAL-CONTRACT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\VERIFIED-SEMANTICS-GLOBAL-CONTRACT-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:VERIFIED-SEMANTICS-GLOBAL-CONTRACT-001",
+      "ok": true,
+      "detail": "8ac2fde3086f75d6946d0c5a778d113ee1be1310"
+    },
+    {
+      "id": "PATCH:VERIFIED-SEMANTICS-GLOBAL-CONTRACT-001",
+      "ok": true,
+      "detail": "613a684c48f929fc8b8681ca5b3960aecf26b1bbb0183d5b8e72d79bdb9517a1"
+    },
+    {
+      "id": "CHECKPOINT_DIR:VERIFIED-SEMANTICS-LEGACY-EXECUTION-MIGRATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\VERIFIED-SEMANTICS-LEGACY-EXECUTION-MIGRATION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:VERIFIED-SEMANTICS-LEGACY-EXECUTION-MIGRATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\VERIFIED-SEMANTICS-LEGACY-EXECUTION-MIGRATION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:VERIFIED-SEMANTICS-LEGACY-EXECUTION-MIGRATION-001",
+      "ok": true,
+      "detail": "70bd3d0cbdf5a4650d7a45704bb7f1a11910c9dd"
+    },
+    {
+      "id": "PATCH:VERIFIED-SEMANTICS-LEGACY-EXECUTION-MIGRATION-001",
+      "ok": true,
+      "detail": "e10a3560a24b87fccce7bab42682740e8c778a52f978e5b6308e5b7713362979"
+    },
+    {
+      "id": "CHECKPOINT_DIR:VERIFIED-SEMANTICS-NON-EXECUTION-MIGRATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\VERIFIED-SEMANTICS-NON-EXECUTION-MIGRATION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:VERIFIED-SEMANTICS-NON-EXECUTION-MIGRATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\VERIFIED-SEMANTICS-NON-EXECUTION-MIGRATION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:VERIFIED-SEMANTICS-NON-EXECUTION-MIGRATION-001",
+      "ok": true,
+      "detail": "e97d787ecf482b972b5987255f7e47e5c8ed437e"
+    },
+    {
+      "id": "PATCH:VERIFIED-SEMANTICS-NON-EXECUTION-MIGRATION-001",
+      "ok": true,
+      "detail": "cbdeafe202abd4667b9a4a00134026684227abb9cbd7a434f6532119d5f59c46"
+    },
+    {
+      "id": "CHECKPOINT_DIR:VERIFIED-SEMANTICS-TRUSTED-DERIVATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\VERIFIED-SEMANTICS-TRUSTED-DERIVATION-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:VERIFIED-SEMANTICS-TRUSTED-DERIVATION-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\VERIFIED-SEMANTICS-TRUSTED-DERIVATION-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:VERIFIED-SEMANTICS-TRUSTED-DERIVATION-001",
+      "ok": true,
+      "detail": "bea4ddaf6997a0f24d55396fafc789c7c2089cb0"
+    },
+    {
+      "id": "PATCH:VERIFIED-SEMANTICS-TRUSTED-DERIVATION-001",
+      "ok": true,
+      "detail": "8c7520dfeca2dc3189c6d98b532a607071d2d8970b8064832facd88922899193"
+    },
+    {
+      "id": "CHECKPOINT_DIR:VERIFIED-SEMANTICS-UNIFICATION-AUDIT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\VERIFIED-SEMANTICS-UNIFICATION-AUDIT-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:VERIFIED-SEMANTICS-UNIFICATION-AUDIT-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\VERIFIED-SEMANTICS-UNIFICATION-AUDIT-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:VERIFIED-SEMANTICS-UNIFICATION-AUDIT-001",
+      "ok": true,
+      "detail": "16abc9842461e5343e72e3d987ac92919c5eecc0"
+    },
+    {
+      "id": "PATCH:VERIFIED-SEMANTICS-UNIFICATION-AUDIT-001",
+      "ok": true,
+      "detail": "f72fdd68a75699b7eded146d4bbed54a2e3c1c19e2c5ce6cc4d7cbc5682fc4fb"
+    },
+    {
+      "id": "CHECKPOINT_DIR:VERIFIED-SEMANTICS-UNIFICATION-FOURTH-RISK-WIP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\VERIFIED-SEMANTICS-UNIFICATION-FOURTH-RISK-WIP-001\\manifest.json"
+    },
+    {
+      "id": "MANIFEST:VERIFIED-SEMANTICS-UNIFICATION-FOURTH-RISK-WIP-001",
+      "ok": true,
+      "detail": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\VERIFIED-SEMANTICS-UNIFICATION-FOURTH-RISK-WIP-001\\manifest.json"
+    },
+    {
+      "id": "COMMIT:VERIFIED-SEMANTICS-UNIFICATION-FOURTH-RISK-WIP-001",
+      "ok": true,
+      "detail": "80b538b36ed1ec282477e2e8d2276cceb14c4d68"
+    },
+    {
+      "id": "PATCH:VERIFIED-SEMANTICS-UNIFICATION-FOURTH-RISK-WIP-001",
+      "ok": true,
+      "detail": "a1f25a5567f3303c3e27c943be5b533b9eb69cfb3a81f8de69a27826709972df"
+    },
+    {
+      "id": "STEP_STATUS_ENUM:STEP5-A",
+      "ok": true,
+      "detail": "PRESENT_AND_VERIFIED"
+    },
+    {
+      "id": "PRESENT_HAS_CHECKPOINT:STEP5-A",
+      "ok": true,
+      "detail": "LEGACY-RUN-API-STEP5-SERVER-FACT-PRESERVATION-001"
+    },
+    {
+      "id": "STEP_STATUS_ENUM:STEP5-B",
+      "ok": true,
+      "detail": "PRESENT_AND_VERIFIED"
+    },
+    {
+      "id": "PRESENT_HAS_CHECKPOINT:STEP5-B",
+      "ok": true,
+      "detail": "LEGACY-RUN-API-STEP5-UI-WRITABLE-DTO-001"
+    },
+    {
+      "id": "STEP_STATUS_ENUM:STEP5-C",
+      "ok": true,
+      "detail": "PRESENT_AND_VERIFIED"
+    },
+    {
+      "id": "PRESENT_HAS_CHECKPOINT:STEP5-C",
+      "ok": true,
+      "detail": "LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-002"
+    },
+    {
+      "id": "STEP_STATUS_ENUM:STEP5-D",
+      "ok": true,
+      "detail": "PRESENT_AND_VERIFIED"
+    },
+    {
+      "id": "PRESENT_HAS_CHECKPOINT:STEP5-D",
+      "ok": true,
+      "detail": "LEGACY-RUN-API-STEP5-UI-STATUS-SEPARATION-001"
+    },
+    {
+      "id": "STEP_STATUS_ENUM:STEP5-E",
+      "ok": true,
+      "detail": "ACTUALLY_MISSING"
+    },
+    {
+      "id": "MISSING_HAS_NO_CHECKPOINT:STEP5-E",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "id": "STEP_STATUS_ENUM:STEP6",
+      "ok": true,
+      "detail": "ACTUALLY_MISSING"
+    },
+    {
+      "id": "MISSING_HAS_NO_CHECKPOINT:STEP6",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "id": "STEP_STATUS_ENUM:STEP7",
+      "ok": true,
+      "detail": "ACTUALLY_MISSING"
+    },
+    {
+      "id": "MISSING_HAS_NO_CHECKPOINT:STEP7",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "id": "FINDINGS_STATUS:STEP5-E",
+      "ok": true,
+      "detail": "ACTUALLY_MISSING / ACTUALLY_MISSING"
+    },
+    {
+      "id": "FINDINGS_STATUS:STEP6",
+      "ok": true,
+      "detail": "ACTUALLY_MISSING / ACTUALLY_MISSING"
+    },
+    {
+      "id": "FINDINGS_STATUS:STEP7",
+      "ok": true,
+      "detail": "ACTUALLY_MISSING / ACTUALLY_MISSING"
+    },
+    {
+      "id": "PRESENT_LIST",
+      "ok": true,
+      "detail": [
+        "STEP5-A",
+        "STEP5-B",
+        "STEP5-C",
+        "STEP5-D"
+      ]
+    },
+    {
+      "id": "MISSING_LIST",
+      "ok": true,
+      "detail": [
+        "STEP5-E",
+        "STEP6",
+        "STEP7"
+      ]
+    },
+    {
+      "id": "COMPLETION_RATIO",
+      "ok": true,
+      "detail": {
+        "presentAndVerified": [
+          "STEP5-A",
+          "STEP5-B",
+          "STEP5-C",
+          "STEP5-D"
+        ],
+        "presentNoCheckpoint": [],
+        "namingDrift": [],
+        "actuallyMissing": [
+          "STEP5-E",
+          "STEP6",
+          "STEP7"
+        ],
+        "verifiedFunctionalItems": 4,
+        "totalRequiredFunctionalItems": 7,
+        "completionRatio": "4/7",
+        "step8Eligible": false,
+        "step8": "NOT_STARTED"
+      }
+    },
+    {
+      "id": "STEP8_NOT_ELIGIBLE",
+      "ok": true,
+      "detail": {
+        "remaining": {
+          "presentAndVerified": [
+            "STEP5-A",
+            "STEP5-B",
+            "STEP5-C",
+            "STEP5-D"
+          ],
+          "presentNoCheckpoint": [],
+          "namingDrift": [],
+          "actuallyMissing": [
+            "STEP5-E",
+            "STEP6",
+            "STEP7"
+          ],
+          "verifiedFunctionalItems": 4,
+          "totalRequiredFunctionalItems": 7,
+          "completionRatio": "4/7",
+          "step8Eligible": false,
+          "step8": "NOT_STARTED"
+        },
+        "status": {
+          "step8": "NOT_STARTED",
+          "fourthRiskStatus": "OPEN",
+          "originalThreeHighRisks": "OPEN",
+          "deployment": "NOT_DEPLOYED",
+          "overallSecurityStatus": "BLOCKED",
+          "parentWorkPackageStatus": "BLOCKED_BY_FOURTH_RISK_REMEDIATION_IN_PROGRESS",
+          "authoritativeIndex": "COMPLETED_VALIDATED"
+        }
+      }
+    },
+    {
+      "id": "RISK_OPEN",
+      "ok": true,
+      "detail": "OPEN"
+    }
+  ],
+  "markdownConsistencyChecks": [
+    {
+      "id": "MARKDOWN_STATUS:STEP5-E",
+      "ok": true,
+      "detail": "ACTUALLY_MISSING / ACTUALLY_MISSING"
+    },
+    {
+      "id": "MARKDOWN_STATUS:STEP6",
+      "ok": true,
+      "detail": "ACTUALLY_MISSING / ACTUALLY_MISSING"
+    },
+    {
+      "id": "MARKDOWN_STATUS:STEP7",
+      "ok": true,
+      "detail": "ACTUALLY_MISSING / ACTUALLY_MISSING"
+    }
+  ],
+  "remainingWorkConsistencyChecks": [
+    {
+      "id": "REMAINING_MISSING:STEP5-E",
+      "ok": true,
+      "detail": "\n\n- STEP5-E：必须真实补做传播边界专项、审计、矩阵、报告和正式Checkpoint。\n- STEP6：必须真实迁移三个旧测试，建立历史断言存档、完备性专项和正式Checkpoint。\n- STEP7：必须真实完成十二项专项及三个旧测试的强制接线、防伪、完整全绿证据和正式Checkpoint。\n"
+    },
+    {
+      "id": "REMAINING_PRESENT:STEP5-E",
+      "ok": true,
+      "detail": "\n\n- STEP5-A\n- STEP5-B\n- STEP5-C（002有效；001保持INVALIDATED）\n- STEP5-D\n"
+    },
+    {
+      "id": "REMAINING_MISSING:STEP6",
+      "ok": true,
+      "detail": "\n\n- STEP5-E：必须真实补做传播边界专项、审计、矩阵、报告和正式Checkpoint。\n- STEP6：必须真实迁移三个旧测试，建立历史断言存档、完备性专项和正式Checkpoint。\n- STEP7：必须真实完成十二项专项及三个旧测试的强制接线、防伪、完整全绿证据和正式Checkpoint。\n"
+    },
+    {
+      "id": "REMAINING_PRESENT:STEP6",
+      "ok": true,
+      "detail": "\n\n- STEP5-A\n- STEP5-B\n- STEP5-C（002有效；001保持INVALIDATED）\n- STEP5-D\n"
+    },
+    {
+      "id": "REMAINING_MISSING:STEP7",
+      "ok": true,
+      "detail": "\n\n- STEP5-E：必须真实补做传播边界专项、审计、矩阵、报告和正式Checkpoint。\n- STEP6：必须真实迁移三个旧测试，建立历史断言存档、完备性专项和正式Checkpoint。\n- STEP7：必须真实完成十二项专项及三个旧测试的强制接线、防伪、完整全绿证据和正式Checkpoint。\n"
+    },
+    {
+      "id": "REMAINING_PRESENT:STEP7",
+      "ok": true,
+      "detail": "\n\n- STEP5-A\n- STEP5-B\n- STEP5-C（002有效；001保持INVALIDATED）\n- STEP5-D\n"
+    }
+  ],
+  "step6ContractChecks": [
+    {
+      "id": "MEMORY_OLD_LEGAL_SAMPLE",
+      "ok": true,
+      "detail": {
+        "memoryVerifiedTrue": [
+          90
+        ],
+        "memoryExpects201": [
+          93
+        ]
+      }
+    },
+    {
+      "id": "VERIFICATION_ISOLATED_TRUE",
+      "ok": true,
+      "detail": [
+        109
+      ]
+    },
+    {
+      "id": "NO_FORBIDDEN_REJECTION_ASSERTION",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "id": "STEP6_STATUS_FROM_CONTRACT",
+      "ok": true,
+      "detail": "ACTUALLY_MISSING"
+    },
+    {
+      "id": "STEP6_FINDINGS_COUNTS",
+      "ok": true,
+      "detail": {
+        "functionalId": "STEP6",
+        "machineStatus": "ACTUALLY_MISSING",
+        "decisionReason": "The three actual legacy tests remain on the old contract. verify-memories submits verified:true plus verificationResult and expects HTTP 201; verify-verification-layer expects isolated verification to set verified=true; verify-tasks-runs only checks field presence and lacks rejection/binding/fail-closed coverage. Archive and completeness artifacts are absent after full search.",
+        "filesChecked": [
+          "scripts/verify-memories.mjs",
+          "scripts/verify-verification-layer.mjs",
+          "scripts/verify-tasks-runs.mjs"
+        ],
+        "filesFound": [
+          "scripts/verify-memories.mjs",
+          "scripts/verify-verification-layer.mjs",
+          "scripts/verify-tasks-runs.mjs"
+        ],
+        "filesMissing": [
+          "verification/VERIFIED-SEMANTICS-UNIFICATION-001/legacy-run-api-test-audit.md",
+          "verification/VERIFIED-SEMANTICS-UNIFICATION-001/legacy-run-api-test-audit.json",
+          "verification/VERIFIED-SEMANTICS-UNIFICATION-001/historical-assertions/LEGACY-WORKBENCH-RUN-API.md",
+          "scripts/verify-legacy-run-api-archive-completeness-001.mjs"
+        ],
+        "equivalentFilesSearched": {
+          "patterns": [
+            "*archive*completeness*",
+            "*historical*assertion*",
+            "*legacy*run*api*"
+          ],
+          "completeEquivalentFound": false
+        },
+        "checkpointCandidates": [],
+        "selectedCheckpoint": null,
+        "checkpointGateStatus": null,
+        "checkpointCommit": null,
+        "commitIsAncestor": false,
+        "patchPath": null,
+        "patchExists": false,
+        "patchSha256Expected": null,
+        "patchSha256Actual": null,
+        "patchHashMatch": false,
+        "testSemantics": {
+          "verify-memories.mjs": {
+            "verifiedTrue": [
+              90
+            ],
+            "verificationResult": [
+              91
+            ],
+            "expects201": [
+              65,
+              73,
+              93,
+              111,
+              126
+            ],
+            "forbidden": [],
+            "acceptedFalse": [],
+            "businessFalse": [],
+            "runEvidenceValidated": []
+          },
+          "verify-verification-layer.mjs": {
+            "verifiedTrue": [
+              109
+            ],
+            "verifiedFalse": [
+              121,
+              148
+            ],
+            "runEvidenceValidated": [],
+            "forbidden": [],
+            "businessFalse": [],
+            "successFinal": [],
+            "verifierPass": []
+          },
+          "verify-tasks-runs.mjs": {
+            "fieldVerified": [
+              111
+            ],
+            "fieldVerificationResult": [
+              112
+            ],
+            "forbidden": [],
+            "isolatedSeparation": [],
+            "historicalFailClosed": [],
+            "completeBinding": []
+          }
+        },
+        "mandatoryGateBinding": null,
+        "antiFraudEvidence": null,
+        "fullGateEvidence": null,
+        "jsonEvidencePath": "steps.step6",
+        "recommendedAction": "FUNCTIONAL_REMEDIATION_STEP6",
+        "verifiedTrueOccurrences": 2,
+        "verifiedTrueAttackFixtureCount": 0,
+        "verifiedTrueLegacyContractCount": 2,
+        "clientSuppliedTrustFieldForbiddenOccurrences": 0,
+        "businessVerifiedFalseOccurrences": 0,
+        "runEvidenceValidatedOccurrences": 0,
+        "assertsBusinessVerifiedTrue": true,
+        "assertsBusinessVerifiedFalse": false
+      }
+    }
+  ],
+  "step7MandatoryGraphChecks": [
+    {
+      "id": "SPECIALIST_EXISTS:scripts/verify-run-api-verified-injection-rejection-001.mjs",
+      "ok": true,
+      "detail": "scripts/verify-run-api-verified-injection-rejection-001.mjs"
+    },
+    {
+      "id": "SPECIALIST_BINDING:scripts/verify-run-api-verified-injection-rejection-001.mjs",
+      "ok": true,
+      "detail": {
+        "indexed": false,
+        "isDirect": false,
+        "isTransitive": false
+      }
+    },
+    {
+      "id": "SPECIALIST_EXISTS:scripts/verify-data-import-verified-injection-rejection-001.mjs",
+      "ok": true,
+      "detail": "scripts/verify-data-import-verified-injection-rejection-001.mjs"
+    },
+    {
+      "id": "SPECIALIST_BINDING:scripts/verify-data-import-verified-injection-rejection-001.mjs",
+      "ok": true,
+      "detail": {
+        "indexed": false,
+        "isDirect": false,
+        "isTransitive": false
+      }
+    },
+    {
+      "id": "SPECIALIST_EXISTS:scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs",
+      "ok": true,
+      "detail": "scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs"
+    },
+    {
+      "id": "SPECIALIST_BINDING:scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs",
+      "ok": true,
+      "detail": {
+        "indexed": false,
+        "isDirect": false,
+        "isTransitive": false
+      }
+    },
+    {
+      "id": "SPECIALIST_EXISTS:scripts/verify-isolated-run-verification-not-business-verified-001.mjs",
+      "ok": true,
+      "detail": "scripts/verify-isolated-run-verification-not-business-verified-001.mjs"
+    },
+    {
+      "id": "SPECIALIST_BINDING:scripts/verify-isolated-run-verification-not-business-verified-001.mjs",
+      "ok": true,
+      "detail": {
+        "indexed": false,
+        "isDirect": false,
+        "isTransitive": false
+      }
+    },
+    {
+      "id": "SPECIALIST_EXISTS:scripts/verify-server-owned-run-fact-preservation-001.mjs",
+      "ok": true,
+      "detail": "scripts/verify-server-owned-run-fact-preservation-001.mjs"
+    },
+    {
+      "id": "SPECIALIST_BINDING:scripts/verify-server-owned-run-fact-preservation-001.mjs",
+      "ok": true,
+      "detail": {
+        "indexed": false,
+        "isDirect": false,
+        "isTransitive": false
+      }
+    },
+    {
+      "id": "SPECIALIST_EXISTS:scripts/verify-ui-writable-dto-001.mjs",
+      "ok": true,
+      "detail": "scripts/verify-ui-writable-dto-001.mjs"
+    },
+    {
+      "id": "SPECIALIST_BINDING:scripts/verify-ui-writable-dto-001.mjs",
+      "ok": true,
+      "detail": {
+        "indexed": false,
+        "isDirect": false,
+        "isTransitive": false
+      }
+    },
+    {
+      "id": "SPECIALIST_EXISTS:scripts/verify-run-trust-path-rejection-baseline-001.mjs",
+      "ok": true,
+      "detail": "scripts/verify-run-trust-path-rejection-baseline-001.mjs"
+    },
+    {
+      "id": "SPECIALIST_BINDING:scripts/verify-run-trust-path-rejection-baseline-001.mjs",
+      "ok": true,
+      "detail": {
+        "indexed": false,
+        "isDirect": false,
+        "isTransitive": false
+      }
+    },
+    {
+      "id": "SPECIALIST_EXISTS:scripts/verify-trust-field-protocol-path-matching-001.mjs",
+      "ok": true,
+      "detail": "scripts/verify-trust-field-protocol-path-matching-001.mjs"
+    },
+    {
+      "id": "SPECIALIST_BINDING:scripts/verify-trust-field-protocol-path-matching-001.mjs",
+      "ok": true,
+      "detail": {
+        "indexed": false,
+        "isDirect": false,
+        "isTransitive": false
+      }
+    },
+    {
+      "id": "SPECIALIST_EXISTS:scripts/verify-workbench-context-verified-trust-boundary-001.mjs",
+      "ok": true,
+      "detail": "scripts/verify-workbench-context-verified-trust-boundary-001.mjs"
+    },
+    {
+      "id": "SPECIALIST_BINDING:scripts/verify-workbench-context-verified-trust-boundary-001.mjs",
+      "ok": true,
+      "detail": {
+        "indexed": false,
+        "isDirect": false,
+        "isTransitive": false
+      }
+    },
+    {
+      "id": "SPECIALIST_EXISTS:scripts/verify-agent-context-injection-rejection-001.mjs",
+      "ok": true,
+      "detail": "scripts/verify-agent-context-injection-rejection-001.mjs"
+    },
+    {
+      "id": "SPECIALIST_BINDING:scripts/verify-agent-context-injection-rejection-001.mjs",
+      "ok": true,
+      "detail": {
+        "indexed": false,
+        "isDirect": false,
+        "isTransitive": false
+      }
+    },
+    {
+      "id": "SPECIALIST_EXISTS:scripts/verify-ui-run-status-verification-separation-001.mjs",
+      "ok": true,
+      "detail": "scripts/verify-ui-run-status-verification-separation-001.mjs"
+    },
+    {
+      "id": "SPECIALIST_BINDING:scripts/verify-ui-run-status-verification-separation-001.mjs",
+      "ok": true,
+      "detail": {
+        "indexed": false,
+        "isDirect": false,
+        "isTransitive": false
+      }
+    },
+    {
+      "id": "SPECIALIST_EXISTS:scripts/verify-verified-assignment-invariant-001.mjs",
+      "ok": true,
+      "detail": "scripts/verify-verified-assignment-invariant-001.mjs"
+    },
+    {
+      "id": "SPECIALIST_BINDING:scripts/verify-verified-assignment-invariant-001.mjs",
+      "ok": true,
+      "detail": {
+        "indexed": false,
+        "isDirect": false,
+        "isTransitive": false
+      }
+    },
+    {
+      "id": "TARGET_COUNT",
+      "ok": true,
+      "detail": 12
+    },
+    {
+      "id": "DIRECT_COUNT",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "id": "TRANSITIVE_COUNT",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "id": "EFFECTIVE_COUNT",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "id": "STEP7_STATUS_FROM_GRAPH",
+      "ok": true,
+      "detail": "ACTUALLY_MISSING"
+    },
+    {
+      "id": "LEGACY_NOT_MANDATORY:scripts/verify-memories.mjs",
+      "ok": true,
+      "detail": {
+        "directLegacy": false,
+        "transitiveLegacy": false
+      }
+    },
+    {
+      "id": "LEGACY_NOT_MANDATORY:scripts/verify-verification-layer.mjs",
+      "ok": true,
+      "detail": {
+        "directLegacy": false,
+        "transitiveLegacy": false
+      }
+    },
+    {
+      "id": "LEGACY_NOT_MANDATORY:scripts/verify-tasks-runs.mjs",
+      "ok": true,
+      "detail": {
+        "directLegacy": false,
+        "transitiveLegacy": false
+      }
+    },
+    {
+      "id": "ANTIFRAUD_ABSENT",
+      "ok": true,
+      "detail": false
+    },
+    {
+      "id": "FULL_GATES_EVIDENCE_ABSENT",
+      "ok": true,
+      "detail": false
+    }
+  ],
+  "invalidatedCheckpointChecks": [
+    {
+      "id": "INVALIDATED_STATUS",
+      "ok": true,
+      "detail": "INVALIDATED_BY_NEW_RISK"
+    },
+    {
+      "id": "INVALIDATED_NOT_EFFECTIVE",
+      "ok": true,
+      "detail": {
+        "effective": "LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-002",
+        "invalidated": "LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-001"
+      }
+    },
+    {
+      "id": "SUPERSEDES_CONFIRMED",
+      "ok": true,
+      "detail": {
+        "effective": "LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-002",
+        "invalidated": "LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-001",
+        "confirmed": true
+      }
+    }
+  ]
+}

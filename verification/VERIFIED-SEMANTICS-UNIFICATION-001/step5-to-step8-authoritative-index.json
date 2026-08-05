@@ -2429,7 +2429,15 @@
         "fileGlobMatches": [],
         "checkpointDirectoryMatches": []
       },
-      "eligibleAsStep8Precondition": false
+      "eligibleAsStep8Precondition": false,
+      "statusReconciledAt": "2026-08-05T13:29:15+08:00",
+      "statusReconciledFromHead": "c6abaa8d94f7e645a6e53bbc61f83565e610649b",
+      "statusEvidenceSource": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/authoritative-index-consistency-reconciliation-findings.json",
+      "statusEvidenceHash": "a292cb54ec9ff43bdae0406041de754b2abba7d3ca0ed9befd31d05c8736eea9",
+      "previousStatus": "ACTUALLY_MISSING",
+      "previousStatusReason": "Original machine index state; later human summary contradicted it without machine-bound evidence.",
+      "correctedStatus": "ACTUALLY_MISSING",
+      "correctionReason": "Full repository filename/content search, checkpoint-manifest search and fourth-risk Git changed-file review found no propagation-boundary specialist, matrix/report, or effective checkpoint. Generic delivery/idempotency gates do not constitute verified propagation coverage."
     },
     "step6": {
       "functionalId": "STEP6",
@@ -2488,7 +2496,15 @@
         "archiveCompletenessMatches": [],
         "historicalAssertionArchiveMatches": []
       },
-      "eligibleAsStep8Precondition": false
+      "eligibleAsStep8Precondition": false,
+      "statusReconciledAt": "2026-08-05T13:29:15+08:00",
+      "statusReconciledFromHead": "c6abaa8d94f7e645a6e53bbc61f83565e610649b",
+      "statusEvidenceSource": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/authoritative-index-consistency-reconciliation-findings.json",
+      "statusEvidenceHash": "a292cb54ec9ff43bdae0406041de754b2abba7d3ca0ed9befd31d05c8736eea9",
+      "previousStatus": "ACTUALLY_MISSING",
+      "previousStatusReason": "Original machine index state; later human summary contradicted it without machine-bound evidence.",
+      "correctedStatus": "ACTUALLY_MISSING",
+      "correctionReason": "The three actual legacy tests remain on the old contract. verify-memories submits verified:true plus verificationResult and expects HTTP 201; verify-verification-layer expects isolated verification to set verified=true; verify-tasks-runs only checks field presence and lacks rejection/binding/fail-closed coverage. Archive and completeness artifacts are absent after full search."
     },
     "step7": {
       "functionalId": "STEP7",
@@ -2626,7 +2642,15 @@
           "exists": false
         }
       ],
-      "eligibleAsStep8Precondition": false
+      "eligibleAsStep8Precondition": false,
+      "statusReconciledAt": "2026-08-05T13:29:15+08:00",
+      "statusReconciledFromHead": "c6abaa8d94f7e645a6e53bbc61f83565e610649b",
+      "statusEvidenceSource": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/authoritative-index-consistency-reconciliation-findings.json",
+      "statusEvidenceHash": "a292cb54ec9ff43bdae0406041de754b2abba7d3ca0ed9befd31d05c8736eea9",
+      "previousStatus": "ACTUALLY_MISSING",
+      "previousStatusReason": "Original machine index state; later human summary contradicted it without machine-bound evidence.",
+      "correctedStatus": "ACTUALLY_MISSING",
+      "correctionReason": "Mandatory entry is fail-fast, but none of the indexed twelve specialists is directly or transitively invoked by its actual execution graph; the three legacy tests are package scripts only and not mandatory. No antifraud or complete-gates evidence/checkpoint was found."
     }
   },
   "mandatoryGateSpecialists": [
@@ -2766,8 +2790,45 @@
   "validator": {
     "path": "scripts/verify-authoritative-index-consistency-001.mjs",
     "lastExitCode": 0,
-    "lastValidatedAt": "2026-08-05T12:50:12+08:00",
+    "lastValidatedAt": "2026-08-05T13:29:15+08:00",
     "checkCount": 740,
-    "failureCount": 0
+    "failureCount": 0,
+    "semanticConsistencyRequired": true,
+    "lastChecks": 523,
+    "lastFailures": [],
+    "semanticConsistencyChecks": true,
+    "markdownConsistencyChecks": true,
+    "remainingWorkConsistencyChecks": true,
+    "step6ContractChecks": true,
+    "step7MandatoryGraphChecks": true,
+    "invalidatedCheckpointChecks": true
+  },
+  "remainingWork": {
+    "presentAndVerified": [
+      "STEP5-A",
+      "STEP5-B",
+      "STEP5-C",
+      "STEP5-D"
+    ],
+    "presentNoCheckpoint": [],
+    "namingDrift": [],
+    "actuallyMissing": [
+      "STEP5-E",
+      "STEP6",
+      "STEP7"
+    ],
+    "verifiedFunctionalItems": 4,
+    "totalRequiredFunctionalItems": 7,
+    "completionRatio": "4/7",
+    "step8Eligible": false,
+    "step8": "NOT_STARTED"
+  },
+  "statusReconciliation": {
+    "checkpoint": "AUTHORITATIVE-INDEX-CONSISTENCY-RECONCILIATION-001",
+    "findingsPath": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/authoritative-index-consistency-reconciliation-findings.json",
+    "findingsHash": "a292cb54ec9ff43bdae0406041de754b2abba7d3ca0ed9befd31d05c8736eea9",
+    "reconciledAt": "2026-08-05T13:29:15+08:00",
+    "fromHead": "c6abaa8d94f7e645a6e53bbc61f83565e610649b",
+    "indexJsonMarkdownReportConsistent": true
   }
 }

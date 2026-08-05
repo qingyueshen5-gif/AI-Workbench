@@ -1,6 +1,6 @@
 # Step5至Step8机器权威索引
 
-生成基线：`e0001f15dc6a390d33270e4e638d072b1c9fa22b`；生成时权威远端：`e0001f15dc6a390d33270e4e638d072b1c9fa22b`。
+状态一致化时间：`2026-08-05T13:29:15+08:00`；机器证据：`verification/VERIFIED-SEMANTICS-UNIFICATION-001/authoritative-index-consistency-reconciliation-findings.json`；证据SHA-256：`a292cb54ec9ff43bdae0406041de754b2abba7d3ca0ed9befd31d05c8736eea9`。
 
 ## 机器判定
 
@@ -14,15 +14,19 @@
 | STEP6 · 旧测试迁移与历史断言存档 | `ACTUALLY_MISSING` | `NONE` | `NONE` |
 | STEP7 · Mandatory Gates强制接线、完整运行与防伪 | `ACTUALLY_MISSING` | `NONE` | `NONE` |
 
-## 决定性结果
+## 一致化裁决
 
-- Step5-C旧版保持`INVALIDATED_BY_NEW_RISK`，由002版明确取代。
-- Step5-E专用传播脚本、审计、矩阵、报告和正式Checkpoint均不存在。
-- Step6三个旧测试中仍存在`verified:true`提交或`verified===true`旧契约断言，且历史断言存档与完备性专项不存在。
-- Step7当前Mandatory Gates未接入十二项专项或三个旧测试，专用接线、防伪与正式收口证据不存在。
+- STEP5-E：全目录、Git和Checkpoint复核仍未找到完整传播专项、审计、矩阵、报告或有效Checkpoint。
+- STEP6：旧测试中的`verified:true`属于仍期待接受/读回的旧合法契约样本，不是422攻击Fixture；存档及完备性专项缺失。
+- STEP7：十二项专项有效Mandatory=`0/12`；三个旧测试均非Mandatory；防伪、完整门禁全绿及正式Checkpoint证据缺失。
+- JSON、本文和remaining-work统一使用上述状态。后续人读摘要不得覆盖机器索引。
 
-完整Checkpoint逐项盘点、Patch SHA和脚本语法结果见JSON。
+## 完成与启动条件
 
-## 状态约束
+- verifiedFunctionalItems=4
+- totalRequiredFunctionalItems=7
+- completionRatio=4/7
+- step8Eligible=false
+- step8=NOT_STARTED
 
-第四类风险保持OPEN；原三项HIGH保持OPEN；未开始Step8；未部署。
+第四类风险及原三项HIGH保持OPEN；未部署。

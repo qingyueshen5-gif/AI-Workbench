@@ -1,0 +1,437 @@
+{
+  "schemaVersion": "1.0",
+  "generatedAt": "2026-08-05T13:29:15+08:00",
+  "sourceHead": "c6abaa8d94f7e645a6e53bbc61f83565e610649b",
+  "evidencePriority": [
+    "current filesystem and Git",
+    "current machine commands",
+    "index JSON cross-check",
+    "human-readable files"
+  ],
+  "functionalItems": {
+    "STEP5-E": {
+      "functionalId": "STEP5-E",
+      "machineStatus": "ACTUALLY_MISSING",
+      "decisionReason": "Full repository filename/content search, checkpoint-manifest search and fourth-risk Git changed-file review found no propagation-boundary specialist, matrix/report, or effective checkpoint. Generic delivery/idempotency gates do not constitute verified propagation coverage.",
+      "filesChecked": [
+        "scripts/",
+        "verification/",
+        "server.mjs",
+        "shared/",
+        "src/",
+        "agents/"
+      ],
+      "filesFound": [],
+      "filesMissing": [
+        "scripts/verify-verified-propagation-boundary-001.mjs",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-audit.json",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-audit.md",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-matrix.json",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-report.md"
+      ],
+      "equivalentFilesSearched": {
+        "keywords": [
+          "verified propagation",
+          "propagation boundary",
+          "bare verified",
+          "delivery success",
+          "gateway success",
+          "runEvidenceValidated",
+          "executionCompleted",
+          "handled",
+          "rendered",
+          "policyApplied",
+          "Delivery Fence",
+          "NO_DIRECT_VERIFIED_CONSUMPTION"
+        ],
+        "matches": []
+      },
+      "checkpointCandidates": [],
+      "selectedCheckpoint": null,
+      "checkpointGateStatus": null,
+      "checkpointCommit": null,
+      "commitIsAncestor": false,
+      "patchPath": null,
+      "patchExists": false,
+      "patchSha256Expected": null,
+      "patchSha256Actual": null,
+      "patchHashMatch": false,
+      "testSemantics": "No equivalent A-F propagation specialist found.",
+      "mandatoryGateBinding": null,
+      "antiFraudEvidence": null,
+      "fullGateEvidence": null,
+      "jsonEvidencePath": "steps.step5E",
+      "recommendedAction": "FUNCTIONAL_REMEDIATION_STEP5_E"
+    },
+    "STEP6": {
+      "functionalId": "STEP6",
+      "machineStatus": "ACTUALLY_MISSING",
+      "decisionReason": "The three actual legacy tests remain on the old contract. verify-memories submits verified:true plus verificationResult and expects HTTP 201; verify-verification-layer expects isolated verification to set verified=true; verify-tasks-runs only checks field presence and lacks rejection/binding/fail-closed coverage. Archive and completeness artifacts are absent after full search.",
+      "filesChecked": [
+        "scripts/verify-memories.mjs",
+        "scripts/verify-verification-layer.mjs",
+        "scripts/verify-tasks-runs.mjs"
+      ],
+      "filesFound": [
+        "scripts/verify-memories.mjs",
+        "scripts/verify-verification-layer.mjs",
+        "scripts/verify-tasks-runs.mjs"
+      ],
+      "filesMissing": [
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/legacy-run-api-test-audit.md",
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/legacy-run-api-test-audit.json",
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/historical-assertions/LEGACY-WORKBENCH-RUN-API.md",
+        "scripts/verify-legacy-run-api-archive-completeness-001.mjs"
+      ],
+      "equivalentFilesSearched": {
+        "patterns": [
+          "*archive*completeness*",
+          "*historical*assertion*",
+          "*legacy*run*api*"
+        ],
+        "completeEquivalentFound": false
+      },
+      "checkpointCandidates": [],
+      "selectedCheckpoint": null,
+      "checkpointGateStatus": null,
+      "checkpointCommit": null,
+      "commitIsAncestor": false,
+      "patchPath": null,
+      "patchExists": false,
+      "patchSha256Expected": null,
+      "patchSha256Actual": null,
+      "patchHashMatch": false,
+      "testSemantics": {
+        "verify-memories.mjs": {
+          "verifiedTrue": [
+            90
+          ],
+          "verificationResult": [
+            91
+          ],
+          "expects201": [
+            65,
+            73,
+            93,
+            111,
+            126
+          ],
+          "forbidden": [],
+          "acceptedFalse": [],
+          "businessFalse": [],
+          "runEvidenceValidated": []
+        },
+        "verify-verification-layer.mjs": {
+          "verifiedTrue": [
+            109
+          ],
+          "verifiedFalse": [
+            121,
+            148
+          ],
+          "runEvidenceValidated": [],
+          "forbidden": [],
+          "businessFalse": [],
+          "successFinal": [],
+          "verifierPass": []
+        },
+        "verify-tasks-runs.mjs": {
+          "fieldVerified": [
+            111
+          ],
+          "fieldVerificationResult": [
+            112
+          ],
+          "forbidden": [],
+          "isolatedSeparation": [],
+          "historicalFailClosed": [],
+          "completeBinding": []
+        }
+      },
+      "mandatoryGateBinding": null,
+      "antiFraudEvidence": null,
+      "fullGateEvidence": null,
+      "jsonEvidencePath": "steps.step6",
+      "recommendedAction": "FUNCTIONAL_REMEDIATION_STEP6",
+      "verifiedTrueOccurrences": 2,
+      "verifiedTrueAttackFixtureCount": 0,
+      "verifiedTrueLegacyContractCount": 2,
+      "clientSuppliedTrustFieldForbiddenOccurrences": 0,
+      "businessVerifiedFalseOccurrences": 0,
+      "runEvidenceValidatedOccurrences": 0,
+      "assertsBusinessVerifiedTrue": true,
+      "assertsBusinessVerifiedFalse": false
+    },
+    "STEP7": {
+      "functionalId": "STEP7",
+      "machineStatus": "ACTUALLY_MISSING",
+      "decisionReason": "Mandatory entry is fail-fast, but none of the indexed twelve specialists is directly or transitively invoked by its actual execution graph; the three legacy tests are package scripts only and not mandatory. No antifraud or complete-gates evidence/checkpoint was found.",
+      "filesChecked": [
+        "package.json",
+        "scripts/verify-mandatory-gates-001.mjs",
+        "scripts/verify.mjs"
+      ],
+      "filesFound": [
+        "package.json",
+        "scripts/verify-mandatory-gates-001.mjs",
+        "scripts/verify.mjs",
+        "scripts/verify-run-api-verified-injection-rejection-001.mjs",
+        "scripts/verify-data-import-verified-injection-rejection-001.mjs",
+        "scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs",
+        "scripts/verify-isolated-run-verification-not-business-verified-001.mjs",
+        "scripts/verify-server-owned-run-fact-preservation-001.mjs",
+        "scripts/verify-ui-writable-dto-001.mjs",
+        "scripts/verify-run-trust-path-rejection-baseline-001.mjs",
+        "scripts/verify-trust-field-protocol-path-matching-001.mjs",
+        "scripts/verify-workbench-context-verified-trust-boundary-001.mjs",
+        "scripts/verify-agent-context-injection-rejection-001.mjs",
+        "scripts/verify-ui-run-status-verification-separation-001.mjs",
+        "scripts/verify-verified-assignment-invariant-001.mjs"
+      ],
+      "filesMissing": [
+        "mandatory-gates antifraud JSON/Markdown",
+        "wiring completeness evidence",
+        "Step7 effective checkpoint",
+        "complete mandatory-gates run evidence"
+      ],
+      "equivalentFilesSearched": {
+        "keywords": [
+          "mandatory gates antifraud",
+          "anti-fraud",
+          "forced failure",
+          "isolated copy",
+          "gate turns red",
+          "exitCode=1",
+          "wiring completeness"
+        ],
+        "matches": []
+      },
+      "checkpointCandidates": [],
+      "selectedCheckpoint": null,
+      "checkpointGateStatus": null,
+      "checkpointCommit": null,
+      "commitIsAncestor": false,
+      "patchPath": null,
+      "patchExists": false,
+      "patchSha256Expected": null,
+      "patchSha256Actual": null,
+      "patchHashMatch": false,
+      "testSemantics": null,
+      "mandatoryGateBinding": {
+        "entry": "scripts/verify-mandatory-gates-001.mjs",
+        "packageEntry": "npm run verify",
+        "failFast": true,
+        "ignoresExitCode": false,
+        "warningOnlyItems": false,
+        "specialists": [
+          {
+            "actualPath": "scripts/verify-run-api-verified-injection-rejection-001.mjs",
+            "exists": true,
+            "nodeCheckExitCode": 0,
+            "directMandatory": false,
+            "transitiveMandatory": false,
+            "mandatoryPath": [
+              "scripts/verify-mandatory-gates-001.mjs"
+            ],
+            "optional": false,
+            "warningOnly": false,
+            "duplicate": false,
+            "notWired": true
+          },
+          {
+            "actualPath": "scripts/verify-data-import-verified-injection-rejection-001.mjs",
+            "exists": true,
+            "nodeCheckExitCode": 0,
+            "directMandatory": false,
+            "transitiveMandatory": false,
+            "mandatoryPath": [
+              "scripts/verify-mandatory-gates-001.mjs"
+            ],
+            "optional": false,
+            "warningOnly": false,
+            "duplicate": false,
+            "notWired": true
+          },
+          {
+            "actualPath": "scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs",
+            "exists": true,
+            "nodeCheckExitCode": 0,
+            "directMandatory": false,
+            "transitiveMandatory": false,
+            "mandatoryPath": [
+              "scripts/verify-mandatory-gates-001.mjs"
+            ],
+            "optional": false,
+            "warningOnly": false,
+            "duplicate": false,
+            "notWired": true
+          },
+          {
+            "actualPath": "scripts/verify-isolated-run-verification-not-business-verified-001.mjs",
+            "exists": true,
+            "nodeCheckExitCode": 0,
+            "directMandatory": false,
+            "transitiveMandatory": false,
+            "mandatoryPath": [
+              "scripts/verify-mandatory-gates-001.mjs"
+            ],
+            "optional": false,
+            "warningOnly": false,
+            "duplicate": false,
+            "notWired": true
+          },
+          {
+            "actualPath": "scripts/verify-server-owned-run-fact-preservation-001.mjs",
+            "exists": true,
+            "nodeCheckExitCode": 0,
+            "directMandatory": false,
+            "transitiveMandatory": false,
+            "mandatoryPath": [
+              "scripts/verify-mandatory-gates-001.mjs"
+            ],
+            "optional": false,
+            "warningOnly": false,
+            "duplicate": false,
+            "notWired": true
+          },
+          {
+            "actualPath": "scripts/verify-ui-writable-dto-001.mjs",
+            "exists": true,
+            "nodeCheckExitCode": 0,
+            "directMandatory": false,
+            "transitiveMandatory": false,
+            "mandatoryPath": [
+              "scripts/verify-mandatory-gates-001.mjs"
+            ],
+            "optional": false,
+            "warningOnly": false,
+            "duplicate": false,
+            "notWired": true
+          },
+          {
+            "actualPath": "scripts/verify-run-trust-path-rejection-baseline-001.mjs",
+            "exists": true,
+            "nodeCheckExitCode": 0,
+            "directMandatory": false,
+            "transitiveMandatory": false,
+            "mandatoryPath": [
+              "scripts/verify-mandatory-gates-001.mjs"
+            ],
+            "optional": false,
+            "warningOnly": false,
+            "duplicate": false,
+            "notWired": true
+          },
+          {
+            "actualPath": "scripts/verify-trust-field-protocol-path-matching-001.mjs",
+            "exists": true,
+            "nodeCheckExitCode": 0,
+            "directMandatory": false,
+            "transitiveMandatory": false,
+            "mandatoryPath": [
+              "scripts/verify-mandatory-gates-001.mjs"
+            ],
+            "optional": false,
+            "warningOnly": false,
+            "duplicate": false,
+            "notWired": true
+          },
+          {
+            "actualPath": "scripts/verify-workbench-context-verified-trust-boundary-001.mjs",
+            "exists": true,
+            "nodeCheckExitCode": 0,
+            "directMandatory": false,
+            "transitiveMandatory": false,
+            "mandatoryPath": [
+              "scripts/verify-mandatory-gates-001.mjs"
+            ],
+            "optional": false,
+            "warningOnly": false,
+            "duplicate": false,
+            "notWired": true
+          },
+          {
+            "actualPath": "scripts/verify-agent-context-injection-rejection-001.mjs",
+            "exists": true,
+            "nodeCheckExitCode": 0,
+            "directMandatory": false,
+            "transitiveMandatory": false,
+            "mandatoryPath": [
+              "scripts/verify-mandatory-gates-001.mjs"
+            ],
+            "optional": false,
+            "warningOnly": false,
+            "duplicate": false,
+            "notWired": true
+          },
+          {
+            "actualPath": "scripts/verify-ui-run-status-verification-separation-001.mjs",
+            "exists": true,
+            "nodeCheckExitCode": 0,
+            "directMandatory": false,
+            "transitiveMandatory": false,
+            "mandatoryPath": [
+              "scripts/verify-mandatory-gates-001.mjs"
+            ],
+            "optional": false,
+            "warningOnly": false,
+            "duplicate": false,
+            "notWired": true
+          },
+          {
+            "actualPath": "scripts/verify-verified-assignment-invariant-001.mjs",
+            "exists": true,
+            "nodeCheckExitCode": 0,
+            "directMandatory": false,
+            "transitiveMandatory": false,
+            "mandatoryPath": [
+              "scripts/verify-mandatory-gates-001.mjs"
+            ],
+            "optional": false,
+            "warningOnly": false,
+            "duplicate": false,
+            "notWired": true
+          }
+        ],
+        "legacyTests": [
+          {
+            "path": "scripts/verify-memories.mjs",
+            "classification": "NOT_MANDATORY"
+          },
+          {
+            "path": "scripts/verify-verification-layer.mjs",
+            "classification": "NOT_MANDATORY"
+          },
+          {
+            "path": "scripts/verify-tasks-runs.mjs",
+            "classification": "NOT_MANDATORY"
+          }
+        ]
+      },
+      "antiFraudEvidence": {
+        "present": false
+      },
+      "fullGateEvidence": {
+        "present": false
+      },
+      "jsonEvidencePath": "steps.step7",
+      "recommendedAction": "FUNCTIONAL_REMEDIATION_STEP7",
+      "targetCount": 12,
+      "directMandatoryCount": 0,
+      "transitiveMandatoryCount": 0,
+      "effectiveMandatoryCount": 0,
+      "missingMandatoryCount": 12,
+      "optionalCount": 0,
+      "antiFraudEvidencePresent": false,
+      "fullGatesEvidencePresent": false
+    }
+  },
+  "machineStatuses": {
+    "STEP5-E": "ACTUALLY_MISSING",
+    "STEP6": "ACTUALLY_MISSING",
+    "STEP7": "ACTUALLY_MISSING"
+  },
+  "functionalRemediationPerformed": false,
+  "step8Started": false,
+  "statusEvidenceHash": "a292cb54ec9ff43bdae0406041de754b2abba7d3ca0ed9befd31d05c8736eea9"
+}
