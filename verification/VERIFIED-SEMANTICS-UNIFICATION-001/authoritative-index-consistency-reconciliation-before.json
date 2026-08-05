@@ -1,0 +1,285 @@
+{
+  "schemaVersion": "1.0",
+  "sourceHead": "2246ce91ef03d9d462f348ec094d9494256a6a20",
+  "sourceRemote": "2246ce91ef03d9d462f348ec094d9494256a6a20",
+  "sourceCheckpoint": "STEP5-TO-STEP8-AUTHORITATIVE-INDEX-001",
+  "sourceCheckpointCommit": "2246ce91ef03d9d462f348ec094d9494256a6a20",
+  "step5EOriginalJson": {
+    "functionalId": "STEP5-E",
+    "title": "Gateway / Delivery传播边界",
+    "machineStatus": "ACTUALLY_MISSING",
+    "checkpoint": null,
+    "files": [
+      {
+        "path": "scripts/verify-verified-propagation-boundary-001.mjs",
+        "exists": false
+      },
+      {
+        "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-audit.json",
+        "exists": false
+      },
+      {
+        "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-audit.md",
+        "exists": false
+      },
+      {
+        "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-matrix.json",
+        "exists": false
+      },
+      {
+        "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-report.md",
+        "exists": false
+      }
+    ],
+    "scripts": [
+      {
+        "path": "scripts/verify-verified-propagation-boundary-001.mjs",
+        "exists": false,
+        "nodeCheckExitCode": null
+      }
+    ],
+    "absenceSearch": {
+      "fileGlobMatches": [],
+      "checkpointDirectoryMatches": []
+    },
+    "eligibleAsStep8Precondition": false
+  },
+  "step6OriginalJson": {
+    "functionalId": "STEP6",
+    "title": "旧测试迁移与历史断言存档",
+    "machineStatus": "ACTUALLY_MISSING",
+    "checkpoint": null,
+    "legacyTests": [
+      {
+        "path": "scripts/verify-memories.mjs",
+        "exists": true,
+        "nodeCheckExitCode": 0,
+        "submitsVerifiedTrue": true,
+        "assertsVerifiedTrue": false,
+        "mentionsForbidden422": false,
+        "mentionsBusinessVerifiedFalse": false
+      },
+      {
+        "path": "scripts/verify-verification-layer.mjs",
+        "exists": true,
+        "nodeCheckExitCode": 0,
+        "submitsVerifiedTrue": false,
+        "assertsVerifiedTrue": true,
+        "mentionsForbidden422": false,
+        "mentionsBusinessVerifiedFalse": true
+      },
+      {
+        "path": "scripts/verify-tasks-runs.mjs",
+        "exists": true,
+        "nodeCheckExitCode": 0,
+        "submitsVerifiedTrue": false,
+        "assertsVerifiedTrue": false,
+        "mentionsForbidden422": false,
+        "mentionsBusinessVerifiedFalse": false
+      }
+    ],
+    "requiredFiles": [
+      {
+        "path": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/legacy-run-api-test-audit.md",
+        "exists": false
+      },
+      {
+        "path": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/legacy-run-api-test-audit.json",
+        "exists": false
+      },
+      {
+        "path": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/historical-assertions/LEGACY-WORKBENCH-RUN-API.md",
+        "exists": false
+      }
+    ],
+    "archiveCompletenessSuite": {
+      "path": "scripts/verify-legacy-run-api-archive-completeness-001.mjs",
+      "exists": false,
+      "nodeCheckExitCode": null
+    },
+    "absenceSearch": {
+      "archiveCompletenessMatches": [],
+      "historicalAssertionArchiveMatches": []
+    },
+    "eligibleAsStep8Precondition": false
+  },
+  "step7OriginalJson": {
+    "functionalId": "STEP7",
+    "title": "Mandatory Gates强制接线、完整运行与防伪",
+    "machineStatus": "ACTUALLY_MISSING",
+    "checkpoint": null,
+    "mandatoryGateEntry": "scripts/verify-mandatory-gates-001.mjs",
+    "mandatoryGateEntryExists": true,
+    "mandatoryGateScripts": [
+      "scripts/scan-git-destructive-bypasses.mjs",
+      "scripts/verify-authorization-boundary-001.mjs",
+      "scripts/verify-checkpoint-protection-001.mjs",
+      "scripts/verify-execution-protocol-checkpoint.mjs",
+      "scripts/verify-external-skill-drift-001.mjs",
+      "scripts/verify-feishu-delivery-idempotency-001.mjs",
+      "scripts/verify-gateway-runtime-business-boundary.mjs",
+      "scripts/verify-gateway-runtime-switch.mjs",
+      "scripts/verify-ipc-acceptance-recovery-001.mjs",
+      "scripts/verify-ipc-closed-loop.mjs",
+      "scripts/verify-minimal-progress-protocol.mjs",
+      "scripts/verify-provider-control-001.mjs",
+      "scripts/verify-run-lease-001.mjs",
+      "scripts/verify-run-recovery-001.mjs",
+      "scripts/verify-runtime-cancellation-gate.mjs",
+      "scripts/verify-save-decoupled-from-gate-001.mjs",
+      "scripts/verify-task-atomicity-001.mjs",
+      "scripts/verify-task-lifecycle-001.mjs",
+      "scripts/verify-v1-critical-high-gates.mjs",
+      "scripts/verify.mjs"
+    ],
+    "specialists": [
+      {
+        "path": "scripts/verify-run-api-verified-injection-rejection-001.mjs",
+        "exists": true,
+        "nodeCheckExitCode": 0,
+        "wiredIntoMandatoryGates": false
+      },
+      {
+        "path": "scripts/verify-data-import-verified-injection-rejection-001.mjs",
+        "exists": true,
+        "nodeCheckExitCode": 0,
+        "wiredIntoMandatoryGates": false
+      },
+      {
+        "path": "scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs",
+        "exists": true,
+        "nodeCheckExitCode": 0,
+        "wiredIntoMandatoryGates": false
+      },
+      {
+        "path": "scripts/verify-isolated-run-verification-not-business-verified-001.mjs",
+        "exists": true,
+        "nodeCheckExitCode": 0,
+        "wiredIntoMandatoryGates": false
+      },
+      {
+        "path": "scripts/verify-server-owned-run-fact-preservation-001.mjs",
+        "exists": true,
+        "nodeCheckExitCode": 0,
+        "wiredIntoMandatoryGates": false
+      },
+      {
+        "path": "scripts/verify-ui-writable-dto-001.mjs",
+        "exists": true,
+        "nodeCheckExitCode": 0,
+        "wiredIntoMandatoryGates": false
+      },
+      {
+        "path": "scripts/verify-run-trust-path-rejection-baseline-001.mjs",
+        "exists": true,
+        "nodeCheckExitCode": 0,
+        "wiredIntoMandatoryGates": false
+      },
+      {
+        "path": "scripts/verify-trust-field-protocol-path-matching-001.mjs",
+        "exists": true,
+        "nodeCheckExitCode": 0,
+        "wiredIntoMandatoryGates": false
+      },
+      {
+        "path": "scripts/verify-workbench-context-verified-trust-boundary-001.mjs",
+        "exists": true,
+        "nodeCheckExitCode": 0,
+        "wiredIntoMandatoryGates": false
+      },
+      {
+        "path": "scripts/verify-agent-context-injection-rejection-001.mjs",
+        "exists": true,
+        "nodeCheckExitCode": 0,
+        "wiredIntoMandatoryGates": false
+      },
+      {
+        "path": "scripts/verify-ui-run-status-verification-separation-001.mjs",
+        "exists": true,
+        "nodeCheckExitCode": 0,
+        "wiredIntoMandatoryGates": false
+      },
+      {
+        "path": "scripts/verify-verified-assignment-invariant-001.mjs",
+        "exists": true,
+        "nodeCheckExitCode": 0,
+        "wiredIntoMandatoryGates": false
+      }
+    ],
+    "allTwelveWired": false,
+    "legacyTestsWired": [
+      {
+        "path": "scripts/verify-memories.mjs",
+        "wiredIntoMandatoryGates": false
+      },
+      {
+        "path": "scripts/verify-verification-layer.mjs",
+        "wiredIntoMandatoryGates": false
+      },
+      {
+        "path": "scripts/verify-tasks-runs.mjs",
+        "wiredIntoMandatoryGates": false
+      }
+    ],
+    "requiredEvidence": [
+      {
+        "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/gates-wiring-audit.json",
+        "exists": false
+      },
+      {
+        "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/gates-wiring-audit.md",
+        "exists": false
+      },
+      {
+        "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/mandatory-gates-antifraud.json",
+        "exists": false
+      },
+      {
+        "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/mandatory-gates-antifraud.md",
+        "exists": false
+      }
+    ],
+    "eligibleAsStep8Precondition": false
+  },
+  "markdownClaims": {
+    "STEP5-E": "ACTUALLY_MISSING",
+    "STEP6": "ACTUALLY_MISSING",
+    "STEP7": "ACTUALLY_MISSING",
+    "sourceText": "# Step5至Step8机器权威索引\n\n生成基线：`e0001f15dc6a390d33270e4e638d072b1c9fa22b`；生成时权威远端：`e0001f15dc6a390d33270e4e638d072b1c9fa22b`。\n\n## 机器判定\n\n| 功能项 | 判定 | 有效Checkpoint | Commit |\n|---|---|---|---|\n| STEP5-A · 服务端可信事实保留 | `PRESENT_AND_VERIFIED` | `LEGACY-RUN-API-STEP5-SERVER-FACT-PRESERVATION-001` | `58df1f714fcc13311b6c7b98145e239d61449fba` |\n| STEP5-B · UI可写DTO与精确路径匹配 | `PRESENT_AND_VERIFIED` | `LEGACY-RUN-API-STEP5-UI-WRITABLE-DTO-001` | `2bc72b9044dde9787cd8c75b5bbb80a14271da4c` |\n| STEP5-C · Context信任边界 | `PRESENT_AND_VERIFIED` | `LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-002` | `0618b838c0b85fe62339b5270ecf74255810b21c` |\n| STEP5-D · UI执行状态与可信验收状态分离 | `PRESENT_AND_VERIFIED` | `LEGACY-RUN-API-STEP5-UI-STATUS-SEPARATION-001` | `8e111bb4531fe0fdd7ae219963c02e1deb88ca06` |\n| STEP5-E · Gateway / Delivery传播边界 | `ACTUALLY_MISSING` | `NONE` | `NONE` |\n| STEP6 · 旧测试迁移与历史断言存档 | `ACTUALLY_MISSING` | `NONE` | `NONE` |\n| STEP7 · Mandatory Gates强制接线、完整运行与防伪 | `ACTUALLY_MISSING` | `NONE` | `NONE` |\n\n## 决定性结果\n\n- Step5-C旧版保持`INVALIDATED_BY_NEW_RISK`，由002版明确取代。\n- Step5-E专用传播脚本、审计、矩阵、报告和正式Checkpoint均不存在。\n- Step6三个旧测试中仍存在`verified:true`提交或`verified===true`旧契约断言，且历史断言存档与完备性专项不存在。\n- Step7当前Mandatory Gates未接入十二项专项或三个旧测试，专用接线、防伪与正式收口证据不存在。\n\n完整Checkpoint逐项盘点、Patch SHA和脚本语法结果见JSON。\n\n## 状态约束\n\n第四类风险保持OPEN；原三项HIGH保持OPEN；未开始Step8；未部署。\n"
+  },
+  "remainingWorkClaims": {
+    "STEP5-E": "ACTUALLY_MISSING",
+    "STEP6": "ACTUALLY_MISSING",
+    "STEP7": "ACTUALLY_MISSING",
+    "sourceText": "# 真实剩余工作（机器索引）\n\n## PRESENT_AND_VERIFIED\n\n- STEP5-A\n- STEP5-B\n- STEP5-C（有效002版本；001保持INVALIDATED）\n- STEP5-D\n\n## PRESENT_NO_CHECKPOINT\n\n- 无\n\n## ACTUALLY_MISSING\n\n- STEP5-E：Gateway / Delivery传播边界专项、证据与正式Checkpoint。\n- STEP6：三个旧测试迁移、历史断言存档、完备性专项与正式Checkpoint。\n- STEP7：十二项专项及三个旧测试的Mandatory Gates强制接线、完整门禁、防伪与正式Checkpoint。\n\n本清单不推进风险状态，不开始Step8。\n"
+  },
+  "summaryClaims": {
+    "checkpointManifest": {
+      "STEP5-A": "PRESENT_AND_VERIFIED",
+      "STEP5-B": "PRESENT_AND_VERIFIED",
+      "STEP5-C": "PRESENT_AND_VERIFIED",
+      "STEP5-D": "PRESENT_AND_VERIFIED",
+      "STEP5-E": "ACTUALLY_MISSING",
+      "STEP6": "ACTUALLY_MISSING",
+      "STEP7": "ACTUALLY_MISSING"
+    },
+    "historicalReportConflict": "A prior human-facing summary/transmission later claimed PRESENT_AND_VERIFIED for STEP5-E/STEP6/STEP7 without machine-bound evidence."
+  },
+  "previousValidator": {
+    "checks": 740,
+    "failures": 0,
+    "exitCode": 0
+  },
+  "contradictions": [
+    {
+      "id": "HUMAN_SUMMARY_VS_JSON_MD_REMAINING",
+      "machineBoundMaterials": "ACTUALLY_MISSING for STEP5-E, STEP6, STEP7",
+      "conflictingHumanClaim": "PRESENT_AND_VERIFIED",
+      "resolutionRule": "retest current filesystem, Git, checkpoint and execution graph; human summary is non-authoritative"
+    },
+    {
+      "id": "VALIDATOR_EXPECTED_STATUS_HARDCODED",
+      "detail": "The prior validator hard-coded expectedStatuses and did not independently cross-check Markdown, remaining-work, Step6 line-level semantics, Step7 direct/transitive graph, or reconciliation findings."
+    }
+  ]
+}
