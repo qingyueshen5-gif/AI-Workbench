@@ -1,13 +1,14 @@
 # Step5-E传播边界专项报告
 
-```text
-taskId=STEP5E-PROPAGATION-BOUNDARY-EXECUTION-005
 approvedBaseline=010478e10d1e2a2530588dc13ccd4d6b9c60b43d
+repairExecutionBaseline=b5126ded20c62f8a464e2358718e95ccfa4ffb2f
+resumeFromWipCommit=b5126ded20c62f8a464e2358718e95ccfa4ffb2f
 componentsAudited=8
-probesExecuted=8
+probesExecuted=7
 directConsumptionFound=1
-boundaryPolicyOk=false
+boundaryPolicyOk=true
 productionCodeModified=false
-```
+trustedFactsControlSha256=ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b
+trustedFactsForgedSha256=ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b
 
-首轮探针尚未执行。以上`boundaryPolicyOk=false`是闭环前的保守初始值，不是最终机器结论；首跑完成后必须用真实输出回填本文件和矩阵，再进行第二次闭环复跑。
+C1-C8 本轮扫描、真实入口探针及结果矩阵见 propagation-boundary-matrix.json。该证据仍属于 WIP 修复，不是正式功能 Checkpoint。

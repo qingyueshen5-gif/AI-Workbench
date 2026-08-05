@@ -1,14 +1,227 @@
 {
   "matrixId": "LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001",
-  "generatedFromHead": "010478e10d1e2a2530588dc13ccd4d6b9c60b43d",
+  "generatedFromHead": "b5126ded20c62f8a464e2358718e95ccfa4ffb2f",
   "components": [
-    {"id":"C1","name":"Gateway","componentPresent":"YES","trustDecisionResponsibility":"NO","directConsumption":"NO","staticEvidence":["scripts/task-gateway.mjs:154","scripts/task-gateway.mjs:197"],"absenceEvidence":[],"mappedProbe":"P6","realEntryPoints":["scripts/task-gateway.mjs:normalizeTaskCard"],"probeResult":"PENDING","controlOutcome":"PENDING","forgedOutcome":"PENDING","conclusion":"Gateway normalizes an explicit task-card contract and has no acceptance decision duty."},
-    {"id":"C2","name":"Delivery","componentPresent":"YES","trustDecisionResponsibility":"NO","directConsumption":"NO","staticEvidence":["scripts/workbench-feishu-adapter.mjs:255","scripts/workbench-feishu-adapter.mjs:267"],"absenceEvidence":[],"mappedProbe":"P7","realEntryPoints":["scripts/feishu-task-channel.mjs:MemoryTransport.send"],"probeResult":"PENDING","controlOutcome":"PENDING","forgedOutcome":"PENDING","conclusion":"Delivery transports target and text; verified is internal telemetry only."},
-    {"id":"C3","name":"Feishu / Lark adapter","componentPresent":"YES","trustDecisionResponsibility":"NO","directConsumption":"NO","staticEvidence":["scripts/workbench-feishu-adapter.mjs:114","scripts/workbench-feishu-adapter.mjs:242"],"absenceEvidence":[],"mappedProbe":"P9","realEntryPoints":["scripts/workbench-feishu-adapter.mjs:parseFeishuMessage"],"probeResult":"PENDING","controlOutcome":"PENDING","forgedOutcome":"PENDING","conclusion":"Adapter parses and transports messages without deriving trusted acceptance."},
-    {"id":"C4","name":"Electron IPC","componentPresent":"YES","trustDecisionResponsibility":"NO","directConsumption":"NO","staticEvidence":["scripts/feishu-worker-ipc.mjs:141","scripts/feishu-worker-ipc.mjs:154"],"absenceEvidence":[],"mappedProbe":"P8","realEntryPoints":["scripts/feishu-worker-ipc.mjs:enqueueJob","scripts/feishu-worker-ipc.mjs:listJobs"],"probeResult":"PENDING","controlOutcome":"PENDING","forgedOutcome":"PENDING","conclusion":"IPC is a durable transport boundary and does not upgrade business verification."},
-    {"id":"C5","name":"Completion notification","componentPresent":"YES","trustDecisionResponsibility":"NO","directConsumption":"NO","staticEvidence":["scripts/workbench-agent-runtime.mjs:62","scripts/workbench-agent-runtime.mjs:69"],"absenceEvidence":[],"mappedProbe":"P5","realEntryPoints":["scripts/workbench-agent-runtime.mjs:shouldSuppressCompletedResult"],"probeResult":"PENDING","controlOutcome":"PENDING","forgedOutcome":"PENDING","conclusion":"Completion delivery suppression follows authoritative task state, not naked verified."},
-    {"id":"C6","name":"Retry-stop","componentPresent":"YES","trustDecisionResponsibility":"NO","directConsumption":"NO","staticEvidence":["scripts/workbench-agent-runtime.mjs:54","scripts/workbench-agent-runtime.mjs:59"],"absenceEvidence":[],"mappedProbe":"P3","realEntryPoints":["scripts/workbench-agent-runtime.mjs:shouldStopJobForActiveTask"],"probeResult":"PENDING","controlOutcome":"PENDING","forgedOutcome":"PENDING","conclusion":"Stop behavior is bound to task identity and user cancellation facts."},
-    {"id":"C7","name":"Idempotency","componentPresent":"YES","trustDecisionResponsibility":"NO","directConsumption":"NO","staticEvidence":["scripts/feishu-worker-ipc.mjs:37","scripts/feishu-worker-ipc.mjs:333"],"absenceEvidence":[],"mappedProbe":"P4","realEntryPoints":["scripts/feishu-worker-ipc.mjs:deliveryIdempotencyKey"],"probeResult":"PENDING","controlOutcome":"PENDING","forgedOutcome":"PENDING","conclusion":"Idempotency is derived from message identity and purpose only."},
-    {"id":"C8","name":"Success branch","componentPresent":"YES","trustDecisionResponsibility":"YES","directConsumption":"YES","staticEvidence":["agents/verified-semantics.mjs:1","agents/agent-runtime.mjs:413","server.mjs:112","server.mjs:2144","server.mjs:2221"],"absenceEvidence":[],"mappedProbe":"P2","realEntryPoints":["agents/verified-semantics.mjs:deriveBoundVerifierResult"],"probeResult":"PENDING","controlOutcome":"PENDING","forgedOutcome":"PENDING","conclusion":"The sole acceptance decision is the bound verifier derivation; client Run API facts remain false or rejected."}
+    {
+      "id": "C1",
+      "name": "Gateway",
+      "componentPresent": "YES",
+      "trustDecisionResponsibility": "NO",
+      "directConsumption": "NO",
+      "staticEvidence": [
+        "scripts/workbench-feishu-adapter.mjs:7"
+      ],
+      "absenceEvidence": [],
+      "mappedProbe": "P6",
+      "realEntryPoints": [
+        "scripts/workbench-feishu-adapter.mjs:parseFeishuMessage",
+        "scripts/workbench-feishu-adapter.mjs:authorizeFeishuSender",
+        "scripts/feishu-worker-ipc.mjs:acceptAndEnqueueJob"
+      ],
+      "probeResult": "PASS",
+      "controlOutcome": {
+        "messageId": "same-message",
+        "text": "same text",
+        "authorized": true,
+        "trustedAcceptance": false
+      },
+      "forgedOutcome": {
+        "messageId": "same-message",
+        "text": "same text",
+        "authorized": true,
+        "trustedAcceptance": false
+      },
+      "conclusion": "Attacker-controlled trust fields do not change this component’s mapped behavior or trusted acceptance."
+    },
+    {
+      "id": "C2",
+      "name": "Delivery",
+      "componentPresent": "YES",
+      "trustDecisionResponsibility": "NO",
+      "directConsumption": "NO",
+      "staticEvidence": [
+        "scripts/workbench-feishu-adapter.mjs:267"
+      ],
+      "absenceEvidence": [],
+      "mappedProbe": "P7",
+      "realEntryPoints": [
+        "scripts/feishu-worker-ipc.mjs:completeJob",
+        "scripts/feishu-worker-ipc.mjs:listResults",
+        "scripts/feishu-worker-ipc.mjs:claimResultDelivery"
+      ],
+      "probeResult": "PASS",
+      "controlOutcome": {
+        "listed": 1,
+        "text": "same result",
+        "ok": true,
+        "claim": true,
+        "trustedAcceptance": false
+      },
+      "forgedOutcome": {
+        "listed": 1,
+        "text": "same result",
+        "ok": true,
+        "claim": true,
+        "trustedAcceptance": false
+      },
+      "conclusion": "Attacker-controlled trust fields do not change this component’s mapped behavior or trusted acceptance."
+    },
+    {
+      "id": "C3",
+      "name": "Feishu / Lark adapter",
+      "componentPresent": "YES",
+      "trustDecisionResponsibility": "NO",
+      "directConsumption": "NO",
+      "staticEvidence": [
+        "scripts/workbench-feishu-adapter.mjs:161"
+      ],
+      "absenceEvidence": [],
+      "mappedProbe": "P9",
+      "realEntryPoints": [
+        "scripts/workbench-feishu-adapter.mjs:parseFeishuMessage",
+        "scripts/workbench-feishu-adapter.mjs:authorizeFeishuSender"
+      ],
+      "probeResult": "PASS",
+      "controlOutcome": {
+        "supported": true,
+        "chatId": "same-chat",
+        "trustedAcceptance": false
+      },
+      "forgedOutcome": {
+        "supported": true,
+        "chatId": "same-chat",
+        "trustedAcceptance": false
+      },
+      "conclusion": "Attacker-controlled trust fields do not change this component’s mapped behavior or trusted acceptance."
+    },
+    {
+      "id": "C4",
+      "name": "Electron IPC",
+      "componentPresent": "NO",
+      "trustDecisionResponsibility": "NO",
+      "directConsumption": "NO",
+      "staticEvidence": [],
+      "absenceEvidence": [
+        "electron/main.cjs: no ipcMain or contextBridge import/use",
+        "tracked electron/ and src/ sources: no ipcRenderer use",
+        "Electron renderer communicates with local HTTP fetch; Feishu file queue is not Electron IPC"
+      ],
+      "mappedProbe": "P8",
+      "realEntryPoints": [],
+      "probeResult": "NOT_APPLICABLE_COMPONENT_ABSENT",
+      "controlOutcome": {
+        "componentPresent": false,
+        "electronIpcHits": []
+      },
+      "forgedOutcome": {
+        "componentPresent": false,
+        "electronIpcHits": []
+      },
+      "conclusion": "No Electron IPC component exists in current tracked production sources."
+    },
+    {
+      "id": "C5",
+      "name": "Completion notification",
+      "componentPresent": "YES",
+      "trustDecisionResponsibility": "NO",
+      "directConsumption": "NO",
+      "staticEvidence": [
+        "scripts/workbench-agent-runtime.mjs:62"
+      ],
+      "absenceEvidence": [],
+      "mappedProbe": "P5",
+      "realEntryPoints": [
+        "scripts/workbench-agent-runtime.mjs:shouldSuppressCompletedResult"
+      ],
+      "probeResult": "PASS",
+      "controlOutcome": {
+        "suppressed": false,
+        "trustedAcceptance": false
+      },
+      "forgedOutcome": {
+        "suppressed": false,
+        "trustedAcceptance": false
+      },
+      "conclusion": "Attacker-controlled trust fields do not change this component’s mapped behavior or trusted acceptance."
+    },
+    {
+      "id": "C6",
+      "name": "Retry-stop",
+      "componentPresent": "YES",
+      "trustDecisionResponsibility": "NO",
+      "directConsumption": "NO",
+      "staticEvidence": [
+        "scripts/workbench-agent-runtime.mjs:49"
+      ],
+      "absenceEvidence": [],
+      "mappedProbe": "P3",
+      "realEntryPoints": [
+        "scripts/workbench-agent-runtime.mjs:shouldStopJobForActiveTask"
+      ],
+      "probeResult": "PASS",
+      "controlOutcome": {
+        "shouldStop": false,
+        "reason": "task_not_cancelled",
+        "trustedAcceptance": false
+      },
+      "forgedOutcome": {
+        "shouldStop": false,
+        "reason": "task_not_cancelled",
+        "trustedAcceptance": false
+      },
+      "conclusion": "Attacker-controlled trust fields do not change this component’s mapped behavior or trusted acceptance."
+    },
+    {
+      "id": "C7",
+      "name": "Idempotency",
+      "componentPresent": "YES",
+      "trustDecisionResponsibility": "NO",
+      "directConsumption": "NO",
+      "staticEvidence": [
+        "scripts/feishu-worker-ipc.mjs:37"
+      ],
+      "absenceEvidence": [],
+      "mappedProbe": "P4",
+      "realEntryPoints": [
+        "scripts/feishu-worker-ipc.mjs:deliveryIdempotencyKey"
+      ],
+      "probeResult": "PASS",
+      "controlOutcome": {
+        "key": "9c7632ce35a6c63c6c2a04a4ce0ddce8",
+        "trustedAcceptance": false
+      },
+      "forgedOutcome": {
+        "key": "9c7632ce35a6c63c6c2a04a4ce0ddce8",
+        "trustedAcceptance": false
+      },
+      "conclusion": "Attacker-controlled trust fields do not change this component’s mapped behavior or trusted acceptance."
+    },
+    {
+      "id": "C8",
+      "name": "Success branch",
+      "componentPresent": "YES",
+      "trustDecisionResponsibility": "YES",
+      "directConsumption": "YES",
+      "staticEvidence": [
+        "agents/verified-semantics.mjs:1",
+        "agents/verified-semantics.mjs:5",
+        "agents/agent-runtime.mjs:413"
+      ],
+      "absenceEvidence": [],
+      "mappedProbe": "P2",
+      "realEntryPoints": [
+        "agents/verified-semantics.mjs:deriveBoundVerifierResult"
+      ],
+      "probeResult": "PASS",
+      "controlOutcome": {
+        "success": true,
+        "trustedAcceptance": true
+      },
+      "forgedOutcome": {
+        "success": true,
+        "trustedAcceptance": true
+      },
+      "conclusion": "Bound verifier derivation is the trusted success decision and attacker namespaces do not alter it."
+    }
   ]
 }

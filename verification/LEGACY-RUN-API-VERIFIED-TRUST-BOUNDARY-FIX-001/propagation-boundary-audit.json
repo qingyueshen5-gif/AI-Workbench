@@ -1,6 +1,6 @@
 {
   "auditId": "LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001",
-  "generatedFromHead": "010478e10d1e2a2530588dc13ccd4d6b9c60b43d",
+  "generatedFromHead": "b5126ded20c62f8a464e2358718e95ccfa4ffb2f",
   "scannedTokens": [
     "verified",
     "isVerified",
@@ -12,21 +12,41 @@
     "gateStatus"
   ],
   "findings": [
-    {"component":"C1","file":"scripts/task-gateway.mjs","line":154,"snippetSummary":"Gateway task-card normalization constructs a fixed server-owned task shape and does not copy trust-looking top-level input fields.","directConsumption":"NO","classification":"TRANSPORT_ONLY"},
-    {"component":"C2","file":"scripts/workbench-feishu-adapter.mjs","line":267,"snippetSummary":"Delivery event logging copies result.verified only into an internal event record; reply text and delivery success use text/ok, not verified.","directConsumption":"NO","classification":"TRANSPORT_ONLY"},
-    {"component":"C3","file":"scripts/workbench-feishu-adapter.mjs","line":114,"snippetSummary":"Feishu message parser projects only message identity, type, visible text, sender, chat and attachments.","directConsumption":"NO","classification":"TRANSPORT_ONLY"},
-    {"component":"C4","file":"scripts/feishu-worker-ipc.mjs","line":154,"snippetSummary":"IPC enqueue persists the job envelope as transport data; downstream trusted acceptance is not derived here.","directConsumption":"NO","classification":"TRANSPORT_ONLY"},
-    {"component":"C5","file":"scripts/workbench-agent-runtime.mjs","line":62,"snippetSummary":"Completion-result suppression is decided from authoritative task terminal state and finalResult presence, not incoming verified fields.","directConsumption":"NO","classification":"TRANSPORT_ONLY"},
-    {"component":"C6","file":"scripts/workbench-agent-runtime.mjs","line":54,"snippetSummary":"Retry/stop decision is bound to taskId, originalMessageId, currentState=cancelled and cancelledByUser=true.","directConsumption":"NO","classification":"TRANSPORT_ONLY"},
-    {"component":"C7","file":"scripts/feishu-worker-ipc.mjs","line":37,"snippetSummary":"Delivery idempotency key is derived only from purpose and messageId.","directConsumption":"NO","classification":"TRANSPORT_ONLY"},
-    {"component":"C8","file":"agents/verified-semantics.mjs","line":1,"snippetSummary":"Success trust is derived by the single bound verifier rule over task/run/verification/finalResult/finalEvidence identity.","directConsumption":"YES","classification":"TRUST_DECISION"},
-    {"component":"C8","file":"agents/verified-semantics.mjs","line":5,"snippetSummary":"The trusted derivation requires finalResult.verified=true but only together with all server-owned binding conditions.","directConsumption":"YES","classification":"TRUST_DECISION"},
-    {"component":"C8","file":"agents/agent-runtime.mjs","line":413,"snippetSummary":"AgentRuntime calls deriveBoundVerifierResult before emitting a trusted final result.","directConsumption":"YES","classification":"TRUST_DECISION"},
-    {"component":"C8","file":"server.mjs","line":112,"snippetSummary":"Legacy server-owned fact preservation recomputes verified through deriveBoundVerifierResult.","directConsumption":"YES","classification":"TRUST_DECISION"},
-    {"component":"C8","file":"server.mjs","line":2144,"snippetSummary":"POST /api/runs rejects client-supplied trust fields and creates business verified=false.","directConsumption":"NO","classification":"TRUST_DECISION"},
-    {"component":"C8","file":"server.mjs","line":2221,"snippetSummary":"Isolated evidence verification records runEvidenceValidated while business verified remains false.","directConsumption":"NO","classification":"TRUST_DECISION"},
-    {"component":"OUT_OF_SCOPE","file":"src/lib/run-status-view.js","line":8,"snippetSummary":"UI view consumes server-projected verification status for display; Step5-D already owns this boundary.","directConsumption":"YES","classification":"OUT_OF_SCOPE"}
+    {
+      "component": "C2",
+      "file": "scripts/workbench-feishu-adapter.mjs",
+      "line": 267,
+      "snippetSummary": "Delivery serializes verified into internal telemetry without using it as the delivery gate.",
+      "directConsumption": "NO",
+      "classification": "TRANSPORT_ONLY"
+    },
+    {
+      "component": "C8",
+      "file": "agents/verified-semantics.mjs",
+      "line": 1,
+      "snippetSummary": "Trusted success is derived by the bound verifier entry.",
+      "directConsumption": "YES",
+      "classification": "TRUST_DECISION"
+    },
+    {
+      "component": "C8",
+      "file": "agents/verified-semantics.mjs",
+      "line": 5,
+      "snippetSummary": "Bound derivation requires the server-owned finalResult verified candidate together with all identity and evidence bindings.",
+      "directConsumption": "YES",
+      "classification": "TRUST_DECISION"
+    },
+    {
+      "component": "C8",
+      "file": "agents/agent-runtime.mjs",
+      "line": 413,
+      "snippetSummary": "AgentRuntime calls the shared bound verifier derivation before finalization.",
+      "directConsumption": "YES",
+      "classification": "TRUST_DECISION"
+    }
   ],
-  "componentsWithDirectConsumption": ["C8"],
+  "componentsWithDirectConsumption": [
+    "C8"
+  ],
   "productionCodeModified": false
 }
