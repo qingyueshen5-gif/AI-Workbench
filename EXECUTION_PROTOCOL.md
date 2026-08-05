@@ -92,6 +92,15 @@ mock 只能证明机制可运行，不能证明生产可用；本地成功不能
 
 普通新对话先读 `AI-Workbench-Handoff.md`、`NEXT_STEP.md`，再读任务相关权威文件和证据。Handoff 只承载自动生成的最小快照和索引，不保存独有事实。
 
+### CHECKPOINT-REFERENCE-BY-AUTHORITATIVE-INDEX
+
+1. 后续引用 Step5 至 Step8 的既有成果，只能读取 `verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5-to-step8-authoritative-index.json`。
+2. 只有 `scripts/verify-authoritative-index-consistency-001.mjs` 对当前索引真实运行且 `validatorExitCode=0` 时，索引才可作为正式预检依据。
+3. 聊天内容、历史人读报告、产品负责人或模型的记忆、以及历史指令中手写的 Checkpoint 名称均不得作为权威成果名称。
+4. 正式预检必须从索引读取实际 Checkpoint、Commit、Patch、SHA-256、文件和专项名称；指令名称与索引不一致时记录引用漂移，不直接判定功能缺失。
+5. 索引不存在、不可解析、HEAD或远端绑定不一致时，不得继续 Step8；应重新执行同一权威索引生成任务并覆盖更新同一路径，不得创建下一层对账索引。
+6. 索引更新必须绑定当时真实 HEAD 和 `git ls-remote`结果，并保留旧 Checkpoint、Manifest、Patch及 INVALIDATED 历史，不得静默改写。
+
 修改当前状态或权威文档后，必须运行：
 
 ```text
