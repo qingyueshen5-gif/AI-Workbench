@@ -11,8 +11,8 @@
   "functionalItems": {
     "STEP5-E": {
       "functionalId": "STEP5-E",
-      "machineStatus": "ACTUALLY_MISSING",
-      "decisionReason": "Full repository filename/content search, checkpoint-manifest search and fourth-risk Git changed-file review found no propagation-boundary specialist, matrix/report, or effective checkpoint. Generic delivery/idempotency gates do not constitute verified propagation coverage.",
+      "machineStatus": "PRESENT_AND_VERIFIED",
+      "decisionReason": "Propagation-boundary specialist, audit, matrix, formal closeout and effective checkpoint are present and machine-validated.",
       "filesChecked": [
         "scripts/",
         "verification/",
@@ -21,14 +21,14 @@
         "src/",
         "agents/"
       ],
-      "filesFound": [],
-      "filesMissing": [
+      "filesFound": [
         "scripts/verify-verified-propagation-boundary-001.mjs",
         "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-audit.json",
         "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-audit.md",
         "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-matrix.json",
         "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-report.md"
       ],
+      "filesMissing": [],
       "equivalentFilesSearched": {
         "keywords": [
           "verified propagation",
@@ -46,22 +46,24 @@
         ],
         "matches": []
       },
-      "checkpointCandidates": [],
-      "selectedCheckpoint": null,
-      "checkpointGateStatus": null,
-      "checkpointCommit": null,
-      "commitIsAncestor": false,
-      "patchPath": null,
-      "patchExists": false,
-      "patchSha256Expected": null,
-      "patchSha256Actual": null,
-      "patchHashMatch": false,
-      "testSemantics": "No equivalent A-F propagation specialist found.",
+      "checkpointCandidates": [
+        "LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001"
+      ],
+      "selectedCheckpoint": "LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001",
+      "checkpointGateStatus": "GATE_PASSED",
+      "checkpointCommit": "2e6a79eb67bb796163926f9f074cd0651d8fc236",
+      "commitIsAncestor": true,
+      "patchPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001\\LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001-2e6a79eb67bb.patch",
+      "patchExists": true,
+      "patchSha256Expected": "a92c33ec3f50a8c9e81db4c0a748dd5b6ac5adf5ad7babc10b6fff717efd7211",
+      "patchSha256Actual": "a92c33ec3f50a8c9e81db4c0a748dd5b6ac5adf5ad7babc10b6fff717efd7211",
+      "patchHashMatch": true,
+      "testSemantics": "Propagation-boundary specialist passed with boundaryPolicyOk=true and failures=[] in isolated canonical-HEAD validation.",
       "mandatoryGateBinding": null,
       "antiFraudEvidence": null,
       "fullGateEvidence": null,
       "jsonEvidencePath": "steps.step5E",
-      "recommendedAction": "FUNCTIONAL_REMEDIATION_STEP5_E"
+      "recommendedAction": "PRESENT_AND_VERIFIED"
     },
     "STEP6": {
       "functionalId": "STEP6",
@@ -427,7 +429,7 @@
     }
   },
   "machineStatuses": {
-    "STEP5-E": "ACTUALLY_MISSING",
+    "STEP5-E": "PRESENT_AND_VERIFIED",
     "STEP6": "ACTUALLY_MISSING",
     "STEP7": "ACTUALLY_MISSING"
   },

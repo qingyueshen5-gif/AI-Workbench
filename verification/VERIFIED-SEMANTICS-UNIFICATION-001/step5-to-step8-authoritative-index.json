@@ -2394,50 +2394,53 @@
     "step5E": {
       "functionalId": "STEP5-E",
       "title": "Gateway / Delivery传播边界",
-      "machineStatus": "ACTUALLY_MISSING",
-      "checkpoint": null,
+      "machineStatus": "PRESENT_AND_VERIFIED",
+      "checkpoint": {
+        "name": "LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001\\manifest.json",
+        "commit": "2e6a79eb67bb796163926f9f074cd0651d8fc236",
+        "commitExists": true,
+        "commitIsAncestorOfGeneratedHead": true,
+        "saveStatus": "SAVED",
+        "gateStatus": "GATE_PASSED",
+        "effectiveGateStatus": "GATE_PASSED",
+        "patchPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001\\LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001-2e6a79eb67bb.patch",
+        "manifestPatchSha256": "a92c33ec3f50a8c9e81db4c0a748dd5b6ac5adf5ad7babc10b6fff717efd7211",
+        "actualPatchSha256": "a92c33ec3f50a8c9e81db4c0a748dd5b6ac5adf5ad7babc10b6fff717efd7211",
+        "patchExists": true,
+        "patchHashMatch": true,
+        "supersedes": null
+      },
       "files": [
         {
           "path": "scripts/verify-verified-propagation-boundary-001.mjs",
-          "exists": false
+          "exists": true
         },
         {
           "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-audit.json",
-          "exists": false
+          "exists": true
         },
         {
           "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-audit.md",
-          "exists": false
+          "exists": true
         },
         {
           "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-matrix.json",
-          "exists": false
+          "exists": true
         },
         {
           "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-report.md",
-          "exists": false
+          "exists": true
         }
       ],
       "scripts": [
         {
           "path": "scripts/verify-verified-propagation-boundary-001.mjs",
-          "exists": false,
-          "nodeCheckExitCode": null
+          "exists": true,
+          "nodeCheckExitCode": 0
         }
       ],
-      "absenceSearch": {
-        "fileGlobMatches": [],
-        "checkpointDirectoryMatches": []
-      },
-      "eligibleAsStep8Precondition": false,
-      "statusReconciledAt": "2026-08-05T13:29:15+08:00",
-      "statusReconciledFromHead": "c6abaa8d94f7e645a6e53bbc61f83565e610649b",
-      "statusEvidenceSource": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/authoritative-index-consistency-reconciliation-findings.json",
-      "statusEvidenceHash": "a292cb54ec9ff43bdae0406041de754b2abba7d3ca0ed9befd31d05c8736eea9",
-      "previousStatus": "ACTUALLY_MISSING",
-      "previousStatusReason": "Original machine index state; later human summary contradicted it without machine-bound evidence.",
-      "correctedStatus": "ACTUALLY_MISSING",
-      "correctionReason": "Full repository filename/content search, checkpoint-manifest search and fourth-risk Git changed-file review found no propagation-boundary specialist, matrix/report, or effective checkpoint. Generic delivery/idempotency gates do not constitute verified propagation coverage."
+      "eligibleAsStep8Precondition": true
     },
     "step6": {
       "functionalId": "STEP6",
@@ -2808,18 +2811,18 @@
       "STEP5-A",
       "STEP5-B",
       "STEP5-C",
-      "STEP5-D"
+      "STEP5-D",
+      "STEP5-E"
     ],
     "presentNoCheckpoint": [],
     "namingDrift": [],
     "actuallyMissing": [
-      "STEP5-E",
       "STEP6",
       "STEP7"
     ],
-    "verifiedFunctionalItems": 4,
+    "verifiedFunctionalItems": 5,
     "totalRequiredFunctionalItems": 7,
-    "completionRatio": "4/7",
+    "completionRatio": "5/7",
     "step8Eligible": false,
     "step8": "NOT_STARTED"
   },
