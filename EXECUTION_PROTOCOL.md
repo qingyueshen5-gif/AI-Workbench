@@ -195,3 +195,13 @@ Preflight 失败必须 fail closed：不点击生成，不调用付费模型，�
 - `completionRatio` 必须由参与完成度计算的实际 Step 状态动态计算，不得硬编码 `4/7` 或 `5/7`。
 - Phase B 必须读取 `verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5e-phaseb-contract.json`，不得自行推导 allowlist、字段路径、拓扑或 Commit 数。
 - 即使 Step5-E 完成，`fourthRiskStatus=OPEN`、`deployment=NOT_DEPLOYED`；Step6、Step7、Step8 不得自动提升。
+
+## EXEC-GUARD-SOLIDIFICATION-001
+
+所有会创建 Commit 的执行轮必须统一调用仓库执行守卫：Commit 前运行 `npm.cmd run exec:preflight -- <精确预期参数>`；Commit 后、进入下一 Gate 前运行 `npm.cmd run exec:postcommit -- <精确 HEAD、parent、branch、remote、allowlist>`；最终报告前运行 `npm.cmd run exec:report`。
+
+- `preflight` 只读，不得修改 index、工作树、refs、Git 配置或远端。
+- `postcommit` 只允许写真实 index，且仅可执行 `git read-tree HEAD` 和 `git update-index --refresh`；writer 使用临时 index 时，父进程必须再次运行 `postcommit`。
+- Windows 子进程必须使用原生 `cwd`、参数数组和 `shell=false`，禁止 shell `cd` 或依赖 MSYS 路径。
+- index 同步不得改变 EOL、编码或任何工作树原始字节；同步前后必须逐文件校验 SHA-256。
+- guard 首个失败必须立即停止；guard 不替代任务自身的业务验证器、测试、build 或 Checkpoint，也不得用于放宽 Push 门禁。
