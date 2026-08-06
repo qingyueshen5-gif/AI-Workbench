@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "2.0.0",
+  "stepId": "STEP5-E",
+  "topology": "TOPOLOGY_A_TWO_COMMITS",
+  "formalCommit": {
+    "additionalCommitCount": 1,
+    "requiredChangedFiles": [
+      "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5e-propagation-boundary-closeout.json",
+      "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5e-propagation-boundary-closeout.md"
+    ],
+    "forbiddenChangedFiles": [
+      "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5-to-step8-authoritative-index.json",
+      "EXECUTION_PROTOCOL.md",
+      "scripts/verify-authoritative-index-consistency-001.mjs",
+      "package.json",
+      "tests/verify-authoritative-index-consistency-001.test.mjs"
+    ]
+  },
+  "indexCommit": {
+    "additionalCommitCount": 1,
+    "requiredChangedFiles": [
+      "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5-to-step8-authoritative-index.json"
+    ],
+    "allowedOptionalChangedFiles": [
+      "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5-to-step8-authoritative-index.md",
+      "AI_WORKBENCH_TASK_HANDOFF.md"
+    ],
+    "forbiddenChangedFiles": [
+      "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5e-propagation-boundary-closeout.json",
+      "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5e-propagation-boundary-closeout.md",
+      "EXECUTION_PROTOCOL.md",
+      "scripts/**",
+      "tests/**",
+      "package.json"
+    ]
+  },
+  "checkpoints": {
+    "formalCheckpointName": "LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001",
+    "indexCheckpointName": "AUTHORITATIVE-INDEX-UPDATE-STEP5E-001",
+    "formalCheckpointRequired": true,
+    "indexCheckpointRequired": true
+  },
+  "indexBindings": {
+    "stepObjectPointer": "/steps/step5E",
+    "statusPointer": "/steps/step5E/machineStatus",
+    "checkpointPointer": "/steps/step5E/checkpoint",
+    "filesPointer": "/steps/step5E/files",
+    "completionRatioPointer": "/remainingWork/completionRatio",
+    "overallSecurityStatusPointer": "/statusConstraints/overallSecurityStatus",
+    "fourthRiskStatusPointer": "/statusConstraints/fourthRiskStatus",
+    "deploymentPointer": "/statusConstraints/deployment",
+    "checkpointObjectFields": [
+      "name",
+      "manifestPath",
+      "commit",
+      "commitExists",
+      "commitIsAncestorOfGeneratedHead",
+      "saveStatus",
+      "gateStatus",
+      "effectiveGateStatus",
+      "patchPath",
+      "manifestPatchSha256",
+      "actualPatchSha256",
+      "patchExists",
+      "patchHashMatch",
+      "supersedes"
+    ],
+    "evidencePointer": null,
+    "finalAcceptancePointer": null,
+    "finalAcceptanceLocation": "CHECKPOINT_MANIFEST_ONLY",
+    "verifiedStatusEnum": "PRESENT_AND_VERIFIED",
+    "currentStatusEnum": "ACTUALLY_MISSING"
+  },
+  "finalState": {
+    "step5EStatus": "PRESENT_AND_VERIFIED",
+    "fourthRiskStatus": "OPEN",
+    "deployment": "NOT_DEPLOYED",
+    "expectedAdditionalCommitCount": 2
+  }
+}

@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ai-workbench.step5e-propagation-boundary-closeout/v1",
+  "title": "Step5-E Propagation Boundary Closeout",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "stepId",
+    "checkpointName",
+    "evidenceCommit",
+    "evidenceTree",
+    "originalRootBaseline",
+    "repositoryPath",
+    "branch",
+    "evidenceFiles",
+    "gates",
+    "boundaryPolicy",
+    "completedItems",
+    "remainingItems",
+    "fourthRiskStatus",
+    "finalAcceptance",
+    "deployment",
+    "createdAtHead",
+    "generatedAtUtc"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "stepId": {
+      "const": "STEP5-E"
+    },
+    "checkpointName": {
+      "const": "LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001"
+    },
+    "evidenceCommit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "evidenceTree": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "originalRootBaseline": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "repositoryPath": {
+      "type": "string",
+      "minLength": 1
+    },
+    "branch": {
+      "const": "candidate/interpreter-adapter-v1-work"
+    },
+    "evidenceFiles": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "sha256",
+          "role"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "role": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "specialist",
+        "focusedRegression",
+        "build"
+      ],
+      "properties": {
+        "specialist": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "command",
+            "exitCode",
+            "passed"
+          ],
+          "properties": {
+            "command": {
+              "type": "string",
+              "minLength": 1
+            },
+            "exitCode": {
+              "type": "integer"
+            },
+            "passed": {
+              "type": "boolean"
+            },
+            "structuredResult": {
+              "type": "object"
+            }
+          }
+        },
+        "focusedRegression": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "command",
+            "exitCode",
+            "passed"
+          ],
+          "properties": {
+            "command": {
+              "type": "string",
+              "minLength": 1
+            },
+            "exitCode": {
+              "type": "integer"
+            },
+            "passed": {
+              "type": "boolean"
+            },
+            "structuredResult": {
+              "type": "object"
+            }
+          }
+        },
+        "build": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "command",
+            "exitCode",
+            "passed"
+          ],
+          "properties": {
+            "command": {
+              "type": "string",
+              "minLength": 1
+            },
+            "exitCode": {
+              "type": "integer"
+            },
+            "passed": {
+              "type": "boolean"
+            },
+            "structuredResult": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "boundaryPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ok",
+        "failures"
+      ],
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "failures": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "completedItems": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "remainingItems": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "fourthRiskStatus": {
+      "const": "OPEN"
+    },
+    "finalAcceptance": {
+      "const": false
+    },
+    "deployment": {
+      "const": "NOT_DEPLOYED"
+    },
+    "createdAtHead": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "generatedAtUtc": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

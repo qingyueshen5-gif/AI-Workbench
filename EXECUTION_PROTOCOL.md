@@ -184,3 +184,14 @@ npm.cmd run verify:docs-consistency
 Preflight 失败必须 fail closed：不点击生成，不调用付费模型，不创建员工或群，不切换未知价格 Provider；必须报告失败层、证据、草稿、费用和最小恢复建议。
 
 安全复测最多一次：先通过非付费健康检查，再生成唯一 request ID，只提交一次，冻结重复点击并等待明确结果；成功时核对对象与计数增量，失败时保存完整 cause 并停止。
+
+## STEP5E-CLOSEOUT-CONTRACT-V2
+
+- `approvedTopology=TOPOLOGY_A_TWO_COMMITS`。Step5-E 正式收口固定使用 `formalCommit -> indexCommit`，不得合并为单 Commit。
+- `formalCommit` 的 tracked 修改集合必须恰好为 `verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5e-propagation-boundary-closeout.json` 与 `verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5e-propagation-boundary-closeout.md`，并通过正式 Checkpoint writer 创建 `LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001`；不得修改权威索引、协议、脚本、测试、门禁或生产代码。
+- `indexCommit` 必须是 `formalCommit` 的直接子提交，必须更新 `verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5-to-step8-authoritative-index.json`，并创建独立索引 Checkpoint `AUTHORITATIVE-INDEX-UPDATE-STEP5E-001`；不得二次修改 Closeout 文件。
+- Step5-E 的 `/steps/step5E/checkpoint` 对象必须逐字段复制当前已验证 Step5-A 至 Step5-D 的共同 Checkpoint 字段集合。不得向索引新增 `evidence` 或等价字段。
+- 不得向权威索引新增 `finalAcceptance` 字段；`finalAcceptance` 仅从正式 Checkpoint Manifest 读取且必须为 `false`。
+- `completionRatio` 必须由参与完成度计算的实际 Step 状态动态计算，不得硬编码 `4/7` 或 `5/7`。
+- Phase B 必须读取 `verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5e-phaseb-contract.json`，不得自行推导 allowlist、字段路径、拓扑或 Commit 数。
+- 即使 Step5-E 完成，`fourthRiskStatus=OPEN`、`deployment=NOT_DEPLOYED`；Step6、Step7、Step8 不得自动提升。
