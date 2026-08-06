@@ -205,3 +205,7 @@ Preflight 失败必须 fail closed：不点击生成，不调用付费模型，�
 - Windows 子进程必须使用原生 `cwd`、参数数组和 `shell=false`，禁止 shell `cd` 或依赖 MSYS 路径。
 - index 同步不得改变 EOL、编码或任何工作树原始字节；同步前后必须逐文件校验 SHA-256。
 - guard 首个失败必须立即停止；guard 不替代任务自身的业务验证器、测试、build 或 Checkpoint，也不得用于放宽 Push 门禁。
+
+## STEP6-LEGACY-RUN-API-MIGRATION-CONTRACT-001
+
+Step6 产品施工前必须运行 `npm.cmd run verify:step6-contract`，并使用合同 `STEP6-LEGACY-RUN-API-MIGRATION-CONTRACT-001`。施工必须遵守两项已批准产品决策、七文件产品 allowlist、产品 Commit 与索引 Commit 分离的两 Commit 拓扑，以及 `STEP6-LEGACY-RUN-API-ARCHIVE-001` 和 `AUTHORITATIVE-INDEX-UPDATE-STEP6-001` 两个正式 Checkpoint。不得提前进入 Step7 或 Step8。每个 Commit 前必须运行 `exec:preflight`，writer 后必须由父进程运行 `exec:postcommit`，Push 后必须验证 ahead/behind=`0/0`。本合同启用不等于 Step6 完成。

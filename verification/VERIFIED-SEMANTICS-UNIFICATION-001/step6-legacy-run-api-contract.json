@@ -1,0 +1,303 @@
+{
+  "schemaVersion": "ai-workbench.step6-legacy-run-api-contract/v1",
+  "contractId": "STEP6-LEGACY-RUN-API-MIGRATION-CONTRACT-001",
+  "contractStatus": "ENABLED_FOR_FUTURE_CONSTRUCTION",
+  "baselineHead": "28d7e9ed4b0fdba3fdee9d94149fe72f67312fe4",
+  "authoritySources": [
+    {
+      "path": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5-to-step8-authoritative-index.json",
+      "sha256": "ca6e9f818a9051073faa2bc8f05d526453c238fbf98f6a7bfe07f6319be07d7d",
+      "relevantLocation": "/steps/step6 and /remainingWork",
+      "authorityRole": "machine status and required artifacts"
+    },
+    {
+      "path": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5-to-step8-authoritative-index.md",
+      "sha256": "2bda052d6e8e926dc9a0ae8b07809914539685a8239a2940e0e7ee9dcde256ed",
+      "relevantLocation": "lines 14,20-21,24-32",
+      "authorityRole": "human-readable synchronized authority"
+    },
+    {
+      "path": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5-to-step8-real-remaining-work.md",
+      "sha256": "19e3f7e880d0c34815dc4427f81f953dec63ec17ef70a3f1c0492355e2c7ff22",
+      "relevantLocation": "lines 19-35",
+      "authorityRole": "remaining work and sequence"
+    },
+    {
+      "path": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/authoritative-index-consistency-reconciliation-findings.json",
+      "sha256": "a68b96d587d78737efbaa86b3ae13d281b0b8bf493d7fa15cb5698e1277398ac",
+      "relevantLocation": "/functionalItems/STEP6",
+      "authorityRole": "machine reconciliation evidence"
+    }
+  ],
+  "productDecisions": {
+    "STEP6-TRUST-SEMANTICS-001": "ISOLATED_VERIFICATION_EVIDENCE_ONLY_NO_BUSINESS_VERIFIED_PROMOTION",
+    "STEP6-ARCHIVE-UNIVERSE-001": "ASSERTION_LEVEL_UNIVERSE_WITHIN_THREE_AUTHORIZED_LEGACY_TESTS"
+  },
+  "legacyTests": [
+    {
+      "path": "scripts/verify-memories.mjs",
+      "sha256": "3aec6c6bdd56859b1ea75a18403b55996607ecc1a60b45bdb720e71210f7f822",
+      "encoding": "UTF-8 without BOM",
+      "eol": "CRLF",
+      "role": "legacy client trust claim sample"
+    },
+    {
+      "path": "scripts/verify-verification-layer.mjs",
+      "sha256": "010b278bfc57e1cd00728137a976a7d773d9e3e74420d6cd18d20764bde92d78",
+      "encoding": "UTF-8 without BOM",
+      "eol": "CRLF",
+      "role": "legacy isolated verification promotion and fail-closed samples"
+    },
+    {
+      "path": "scripts/verify-tasks-runs.mjs",
+      "sha256": "2e77d90be5e7d0a32a61fafeadc786e7046892ed67a0d312f89f0804cc30460e",
+      "encoding": "UTF-8 without BOM",
+      "eol": "CRLF",
+      "role": "task/run shape and linkage sample"
+    }
+  ],
+  "archiveUniverse": {
+    "scopeDecision": "ASSERTION_LEVEL_UNIVERSE_WITHIN_THREE_AUTHORIZED_LEGACY_TESTS",
+    "expectedCount": 5,
+    "entries": [
+      {
+        "assertionId": "S6-MEM-A001",
+        "sourcePath": "scripts/verify-memories.mjs",
+        "sourceLineStart": 83,
+        "sourceLineEnd": 93,
+        "containingFunction": "main",
+        "sourceFileSha256": "3aec6c6bdd56859b1ea75a18403b55996607ecc1a60b45bdb720e71210f7f822",
+        "normalizedAssertionSha256": "ab04c60fe2f273deaaf02b90f1c33bbdb47a08312ab16873d7ad752c62538895",
+        "semanticCategory": "HISTORICAL_CLIENT_TRUST_PROMOTION",
+        "historicalOnly": true,
+        "mustRemainActive": false,
+        "migrationRequirement": "Replace old HTTP-201/client trust success expectation with clientClaimCanPromoteBusinessVerified=false without choosing a fixed transport status.",
+        "archiveRequirement": "Archive original client verified:true and verificationResult.ok=true success contract exactly once.",
+        "evidenceSummary": "Client submits verified:true and verificationResult.ok=true and old test expects run creation HTTP 201."
+      },
+      {
+        "assertionId": "S6-VL-A001",
+        "sourcePath": "scripts/verify-verification-layer.mjs",
+        "sourceLineStart": 84,
+        "sourceLineEnd": 109,
+        "containingFunction": "main/createRunScenario",
+        "sourceFileSha256": "010b278bfc57e1cd00728137a976a7d773d9e3e74420d6cd18d20764bde92d78",
+        "normalizedAssertionSha256": "4692c37b21acd6003ff4a04b46c76cd4042bd52ede9dd7ed54f993888cbb39de",
+        "semanticCategory": "HISTORICAL_ISOLATED_TO_BUSINESS_PROMOTION",
+        "historicalOnly": true,
+        "mustRemainActive": false,
+        "migrationRequirement": "Record isolatedVerificationPassed=true in test evidence and prove it does not promote business verified=true.",
+        "archiveRequirement": "Archive the isolated verification to business verified promotion assertion exactly once.",
+        "evidenceSummary": "Successful isolated verification currently asserts afterVerify.verified === true."
+      },
+      {
+        "assertionId": "S6-VL-A002",
+        "sourcePath": "scripts/verify-verification-layer.mjs",
+        "sourceLineStart": 111,
+        "sourceLineEnd": 121,
+        "containingFunction": "main/createRunScenario",
+        "sourceFileSha256": "010b278bfc57e1cd00728137a976a7d773d9e3e74420d6cd18d20764bde92d78",
+        "normalizedAssertionSha256": "c8760ffa3940af4119ae633e9dad40c6c149c18dc6ee10cbed8a9357fde033b9",
+        "semanticCategory": "CURRENT_FAIL_CLOSED_MISSING_EVIDENCE",
+        "historicalOnly": false,
+        "mustRemainActive": true,
+        "migrationRequirement": "Preserve missing_evidence reason and business verified=false with no input weakening.",
+        "archiveRequirement": "ACTIVE_MIGRATED; do not place in historical archive.",
+        "evidenceSummary": "Missing evidence fails verification with missing_evidence and verified=false."
+      },
+      {
+        "assertionId": "S6-VL-A003",
+        "sourcePath": "scripts/verify-verification-layer.mjs",
+        "sourceLineStart": 123,
+        "sourceLineEnd": 148,
+        "containingFunction": "main/createRunScenario",
+        "sourceFileSha256": "010b278bfc57e1cd00728137a976a7d773d9e3e74420d6cd18d20764bde92d78",
+        "normalizedAssertionSha256": "d567fccfcbbe34be9ef7c6010946c9ffa73744b92c5adb41b9ca86332bbc7cf6",
+        "semanticCategory": "CURRENT_FAIL_CLOSED_EXECUTION_FAILURE",
+        "historicalOnly": false,
+        "mustRemainActive": true,
+        "migrationRequirement": "Preserve execution_failed reason and business verified=false with no input weakening.",
+        "archiveRequirement": "ACTIVE_MIGRATED; do not place in historical archive.",
+        "evidenceSummary": "Execution failure fails verification with execution_failed and verified=false."
+      },
+      {
+        "assertionId": "S6-TR-A001",
+        "sourcePath": "scripts/verify-tasks-runs.mjs",
+        "sourceLineStart": 63,
+        "sourceLineEnd": 118,
+        "containingFunction": "main",
+        "sourceFileSha256": "2e77d90be5e7d0a32a61fafeadc786e7046892ed67a0d312f89f0804cc30460e",
+        "normalizedAssertionSha256": "4c13bff57be67fb6d2d587444dfad85cab8e5b1af2a9dfb729d34a6232922ab4",
+        "semanticCategory": "CURRENT_SHAPE_OR_LINKAGE_ASSERTION",
+        "historicalOnly": false,
+        "mustRemainActive": true,
+        "migrationRequirement": "Preserve task/run linkage and verified/verificationResult shape checks; add no automatic trust promotion assertion.",
+        "archiveRequirement": "ACTIVE_MIGRATED; do not place in historical archive.",
+        "evidenceSummary": "Checks task/run association and presence of verified and verificationResult fields."
+      }
+    ],
+    "deduplicationKey": "sourcePath + normalizedAssertionSha256",
+    "duplicateCount": 0,
+    "unclassifiedCount": 0,
+    "allowedCategories": [
+      "HISTORICAL_CLIENT_TRUST_PROMOTION",
+      "HISTORICAL_ISOLATED_TO_BUSINESS_PROMOTION",
+      "CURRENT_FAIL_CLOSED_MISSING_EVIDENCE",
+      "CURRENT_FAIL_CLOSED_EXECUTION_FAILURE",
+      "CURRENT_SHAPE_OR_LINKAGE_ASSERTION",
+      "CURRENT_NO_TRUST_PROMOTION_ASSERTION"
+    ],
+    "completionRule": [
+      "all assertionIds appear exactly once in audit JSON",
+      "Markdown audit maps one-to-one with JSON",
+      "each assertion is exactly ACTIVE_MIGRATED or HISTORICAL_ARCHIVED",
+      "historical entries appear exactly once in historical Markdown",
+      "active entries bind migrated script locations",
+      "no unknown or duplicate assertionIds",
+      "all L1-L3 audited",
+      "A1-A4 exist",
+      "archive validator exitCode=0",
+      "formal checkpoint binds product commit"
+    ]
+  },
+  "artifactContracts": {
+    "requiredArtifacts": [
+      "verification/VERIFIED-SEMANTICS-UNIFICATION-001/legacy-run-api-test-audit.json",
+      "verification/VERIFIED-SEMANTICS-UNIFICATION-001/legacy-run-api-test-audit.md",
+      "verification/VERIFIED-SEMANTICS-UNIFICATION-001/historical-assertions/LEGACY-WORKBENCH-RUN-API.md",
+      "scripts/verify-legacy-run-api-archive-completeness-001.mjs"
+    ],
+    "required": true,
+    "schemas": {
+      "A1": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step6-legacy-run-api-test-audit.schema.json",
+      "A2": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step6-legacy-run-api-test-audit.template.md",
+      "A3": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step6-historical-assertions.template.md",
+      "executionReport": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step6-execution-report.schema.json"
+    }
+  },
+  "migrationRules": {
+    "verify-memories": [
+      "archive client verified:true and verificationResult.ok=true old success contract",
+      "prove clientClaimCanPromoteBusinessVerified=false",
+      "do not require HTTP 201",
+      "do not convert client claims into trusted server evidence"
+    ],
+    "verify-verification-layer": [
+      "remove isolated verification to business verified=true promotion assertion",
+      "record isolatedVerificationPassed=true only in test evidence",
+      "preserve missing_evidence verified=false",
+      "preserve execution_failed verified=false"
+    ],
+    "verify-tasks-runs": [
+      "preserve task/run linkage",
+      "preserve verified and verificationResult shape",
+      "add no automatic trust promotion assertion",
+      "do not wire Mandatory Gates in Step6"
+    ]
+  },
+  "allowlists": {
+    "requiredChangedFiles": [
+      "scripts/verify-memories.mjs",
+      "scripts/verify-verification-layer.mjs",
+      "scripts/verify-tasks-runs.mjs",
+      "verification/VERIFIED-SEMANTICS-UNIFICATION-001/legacy-run-api-test-audit.json",
+      "verification/VERIFIED-SEMANTICS-UNIFICATION-001/legacy-run-api-test-audit.md",
+      "verification/VERIFIED-SEMANTICS-UNIFICATION-001/historical-assertions/LEGACY-WORKBENCH-RUN-API.md",
+      "scripts/verify-legacy-run-api-archive-completeness-001.mjs"
+    ],
+    "allowedOptionalChangedFiles": [],
+    "prohibitedClasses": [
+      "package.json",
+      "EXECUTION_PROTOCOL.md",
+      "Step7 files",
+      "Step8 files",
+      "authoritative index files",
+      "production code",
+      "contract enablement C1-C11"
+    ]
+  },
+  "validators": {
+    "contract": "npm.cmd run verify:step6-contract",
+    "archive": "npm.cmd run verify:step6-legacy-run-api-archive",
+    "archiveExecutable": "node scripts/verify-legacy-run-api-archive-completeness-001.mjs",
+    "successRequirements": {
+      "ok": true,
+      "archiveUniverseExpectedCount": 5,
+      "archiveUniversePresentCount": 5,
+      "missingAssertionIds": [],
+      "duplicateAssertionIds": [],
+      "unknownAssertionIds": [],
+      "allLegacyFilesAudited": true,
+      "allHistoricalAssertionsArchived": true,
+      "allActiveAssertionsMapped": true,
+      "failClosedAssertionsPreserved": true,
+      "trustPromotionAssertionsRemoved": true,
+      "step7FilesUntouched": true,
+      "step8FilesUntouched": true
+    }
+  },
+  "checkpointTopology": {
+    "topology": "TOPOLOGY_B_TWO_COMMITS_AFTER_CONTRACT_ENABLEMENT",
+    "productCommit": {
+      "parent": "CONTRACT_ENABLEMENT_COMMIT",
+      "changedFiles": [
+        "scripts/verify-memories.mjs",
+        "scripts/verify-verification-layer.mjs",
+        "scripts/verify-tasks-runs.mjs",
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/legacy-run-api-test-audit.json",
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/legacy-run-api-test-audit.md",
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/historical-assertions/LEGACY-WORKBENCH-RUN-API.md",
+        "scripts/verify-legacy-run-api-archive-completeness-001.mjs"
+      ],
+      "checkpoint": "STEP6-LEGACY-RUN-API-ARCHIVE-001"
+    },
+    "indexCommit": {
+      "parent": "PRODUCT_COMMIT",
+      "expectedMinimumFiles": [
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5-to-step8-authoritative-index.json",
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5-to-step8-authoritative-index.md",
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5-to-step8-real-remaining-work.md",
+        "verification/VERIFIED-SEMANTICS-UNIFICATION-001/authoritative-index-consistency-reconciliation-findings.json"
+      ],
+      "checkpoint": "AUTHORITATIVE-INDEX-UPDATE-STEP6-001"
+    },
+    "maximumProductCommits": 2,
+    "mergeProductAndIndexCommit": false
+  },
+  "reportContract": {
+    "schemaPath": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step6-execution-report.schema.json"
+  },
+  "step7Boundary": [
+    "no Mandatory Gate wiring",
+    "no twelve-specialist work",
+    "no antifraud or complete-gate evidence"
+  ],
+  "step8Boundary": [
+    "no full regression",
+    "no risk closure",
+    "no finalAcceptance=true",
+    "no deployment change"
+  ],
+  "securityInvariants": [
+    "client claims cannot promote business verified",
+    "isolated verification evidence cannot promote business verified",
+    "missing evidence remains fail closed",
+    "execution or verification failure remains fail closed",
+    "no production model field isolatedVerificationPassed"
+  ],
+  "currentStateAfterEnablement": {
+    "step6Status": "ACTUALLY_MISSING",
+    "completionRatio": "5/7",
+    "step6ConstructionStarted": false,
+    "step7Started": false,
+    "step8Started": false,
+    "fourthRiskStatus": "OPEN",
+    "finalAcceptance": false,
+    "deployment": "NOT_DEPLOYED"
+  },
+  "intermediateProductState": "PRODUCT_PRESENT_INDEX_NOT_SYNCHRONIZED",
+  "finalProductState": {
+    "step6Status": "PRESENT_AND_VERIFIED",
+    "completionRatio": "6/7"
+  }
+}

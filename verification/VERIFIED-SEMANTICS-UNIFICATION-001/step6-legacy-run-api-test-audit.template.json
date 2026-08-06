@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "ai-workbench.step6-legacy-run-api-test-audit/v1",
+  "taskId": "<FUTURE_STEP6_TASK_ID>",
+  "baselineHead": "<FUTURE_PRODUCT_START_HEAD>",
+  "productDecisionIds": [
+    "STEP6-TRUST-SEMANTICS-001",
+    "STEP6-ARCHIVE-UNIVERSE-001"
+  ],
+  "sourceFiles": [
+    "scripts/verify-memories.mjs",
+    "scripts/verify-verification-layer.mjs",
+    "scripts/verify-tasks-runs.mjs"
+  ],
+  "archiveUniverseExpectedCount": 5,
+  "archiveUniversePresentCount": 0,
+  "entries": [],
+  "duplicates": [],
+  "unknownEntries": [],
+  "missingEntries": [
+    "S6-MEM-A001",
+    "S6-VL-A001",
+    "S6-VL-A002",
+    "S6-VL-A003",
+    "S6-TR-A001"
+  ],
+  "summary": {
+    "status": "NOT_STARTED",
+    "note": "Template only; no future SHA, line, commit, checkpoint, or PASS is asserted."
+  },
+  "checkpointExpectation": {
+    "checkpoint": "STEP6-LEGACY-RUN-API-ARCHIVE-001",
+    "status": "NOT_CREATED"
+  }
+}

@@ -65,7 +65,9 @@
     "exec:preflight": "node scripts/exec-guard.mjs preflight",
     "exec:postcommit": "node scripts/exec-guard.mjs postcommit",
     "exec:report": "node scripts/exec-guard.mjs report",
-    "test:exec-guard": "node --test tests/exec-guard.test.mjs"
+    "test:exec-guard": "node --test tests/exec-guard.test.mjs",
+    "verify:step6-contract": "node scripts/verify-step6-legacy-run-api-contract-001.mjs",
+    "test:step6-contract-validator": "node --test tests/verify-step6-legacy-run-api-contract-001.test.mjs"
   },
   "dependencies": {
     "@larksuiteoapi/node-sdk": "^1.71.1",

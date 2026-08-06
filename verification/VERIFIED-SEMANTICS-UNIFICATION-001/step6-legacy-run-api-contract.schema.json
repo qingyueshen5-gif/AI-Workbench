@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ai-workbench.step6-legacy-run-api-contract.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "contractId",
+    "contractStatus",
+    "baselineHead",
+    "authoritySources",
+    "productDecisions",
+    "legacyTests",
+    "archiveUniverse",
+    "artifactContracts",
+    "migrationRules",
+    "allowlists",
+    "validators",
+    "checkpointTopology",
+    "reportContract",
+    "step7Boundary",
+    "step8Boundary",
+    "securityInvariants",
+    "currentStateAfterEnablement",
+    "intermediateProductState",
+    "finalProductState"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "contractId": {
+      "type": "string"
+    },
+    "contractStatus": {
+      "type": "string"
+    },
+    "baselineHead": {
+      "type": "string"
+    },
+    "authoritySources": {
+      "type": "array",
+      "minItems": 4
+    },
+    "productDecisions": {
+      "type": "object"
+    },
+    "legacyTests": {
+      "type": "array",
+      "minItems": 3
+    },
+    "archiveUniverse": {
+      "type": "object",
+      "required": [
+        "scopeDecision",
+        "expectedCount",
+        "entries",
+        "deduplicationKey",
+        "duplicateCount",
+        "unclassifiedCount",
+        "allowedCategories",
+        "completionRule"
+      ],
+      "properties": {
+        "scopeDecision": {
+          "type": "string"
+        },
+        "expectedCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "entries": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "assertionId",
+              "sourcePath",
+              "containingFunction",
+              "sourceFileSha256",
+              "normalizedAssertionSha256",
+              "semanticCategory",
+              "migrationRequirement",
+              "archiveRequirement",
+              "evidenceSummary",
+              "sourceLineStart",
+              "sourceLineEnd",
+              "historicalOnly",
+              "mustRemainActive"
+            ],
+            "properties": {
+              "assertionId": {
+                "type": "string"
+              },
+              "sourcePath": {
+                "type": "string"
+              },
+              "containingFunction": {
+                "type": "string"
+              },
+              "sourceFileSha256": {
+                "type": "string"
+              },
+              "normalizedAssertionSha256": {
+                "type": "string"
+              },
+              "semanticCategory": {
+                "type": "string"
+              },
+              "migrationRequirement": {
+                "type": "string"
+              },
+              "archiveRequirement": {
+                "type": "string"
+              },
+              "evidenceSummary": {
+                "type": "string"
+              },
+              "sourceLineStart": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "sourceLineEnd": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "historicalOnly": {
+                "type": "boolean"
+              },
+              "mustRemainActive": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "deduplicationKey": {
+          "type": "string"
+        },
+        "duplicateCount": {
+          "type": "integer",
+          "const": 0
+        },
+        "unclassifiedCount": {
+          "type": "integer",
+          "const": 0
+        },
+        "allowedCategories": {
+          "type": "array"
+        },
+        "completionRule": {
+          "type": "array"
+        }
+      }
+    },
+    "artifactContracts": {
+      "type": "object"
+    },
+    "migrationRules": {
+      "type": "object"
+    },
+    "allowlists": {
+      "type": "object"
+    },
+    "validators": {
+      "type": "object"
+    },
+    "checkpointTopology": {
+      "type": "object"
+    },
+    "reportContract": {
+      "type": "object"
+    },
+    "step7Boundary": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "step8Boundary": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "securityInvariants": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "currentStateAfterEnablement": {
+      "type": "object"
+    },
+    "intermediateProductState": {
+      "type": "string",
+      "const": "PRODUCT_PRESENT_INDEX_NOT_SYNCHRONIZED"
+    },
+    "finalProductState": {
+      "type": "object"
+    }
+  }
+}

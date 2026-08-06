@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ai-workbench.step6-legacy-run-api-test-audit.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "taskId",
+    "baselineHead",
+    "productDecisionIds",
+    "sourceFiles",
+    "archiveUniverseExpectedCount",
+    "archiveUniversePresentCount",
+    "entries",
+    "duplicates",
+    "unknownEntries",
+    "missingEntries",
+    "summary",
+    "checkpointExpectation"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "taskId": {
+      "type": "string"
+    },
+    "baselineHead": {
+      "type": "string"
+    },
+    "productDecisionIds": {
+      "type": "array"
+    },
+    "sourceFiles": {
+      "type": "array"
+    },
+    "archiveUniverseExpectedCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "archiveUniversePresentCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "assertionId",
+          "source",
+          "originalSemantics",
+          "classification",
+          "historicalReason",
+          "migrationAction",
+          "replacementAssertion",
+          "activeOrArchived",
+          "preservesFailClosed",
+          "trustPromotionAllowed",
+          "evidence"
+        ],
+        "properties": {
+          "assertionId": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "originalSemantics": {
+            "type": "string"
+          },
+          "classification": {
+            "type": "string"
+          },
+          "historicalReason": {
+            "type": "string"
+          },
+          "migrationAction": {
+            "type": "string"
+          },
+          "replacementAssertion": {
+            "type": "string"
+          },
+          "activeOrArchived": {
+            "type": "string"
+          },
+          "preservesFailClosed": {
+            "type": "boolean"
+          },
+          "trustPromotionAllowed": {
+            "type": "boolean",
+            "const": false
+          },
+          "evidence": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "duplicates": {
+      "type": "array"
+    },
+    "unknownEntries": {
+      "type": "array"
+    },
+    "missingEntries": {
+      "type": "array"
+    },
+    "summary": {
+      "type": "object"
+    },
+    "checkpointExpectation": {
+      "type": "object"
+    }
+  }
+}
