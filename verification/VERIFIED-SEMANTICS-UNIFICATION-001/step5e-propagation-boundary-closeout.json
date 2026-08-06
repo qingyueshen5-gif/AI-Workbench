@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "1.0.0",
+  "stepId": "STEP5-E",
+  "checkpointName": "LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001",
+  "evidenceCommit": "518b51723cb5afe2f4a6a2fc24de6677a583ad72",
+  "evidenceTree": "ddfeceffe7ae44a75209adc4cbc01006cf09762b",
+  "originalRootBaseline": "010478e10d1e2a2530588dc13ccd4d6b9c60b43d",
+  "repositoryPath": "D:\\AI-Workbench-canonical\\interpreter-adapter-001",
+  "branch": "candidate/interpreter-adapter-v1-work",
+  "evidenceFiles": [
+    {
+      "path": "scripts/verify-verified-propagation-boundary-001.mjs",
+      "sha256": "5d87ca025788d5be993a761648243e1fa79b59a59cc5f29bdec6d3cfcea78b38",
+      "role": "specialist"
+    },
+    {
+      "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-audit.json",
+      "sha256": "3dae39dc37af82d9645c05fa0040367ed934761b5ba06dcf2aab99d75230ce8b",
+      "role": "audit-json"
+    },
+    {
+      "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-audit.md",
+      "sha256": "7c0979478b7a418e536591b2ca84a41b10afdb938f50e778ef066e35d70b72f8",
+      "role": "audit-markdown"
+    },
+    {
+      "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-matrix.json",
+      "sha256": "cf58aba6f5d1efe877eba3bad93fdcb3a6766a696e96cb400300a0741e3ac20b",
+      "role": "component-matrix"
+    },
+    {
+      "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/propagation-boundary-report.md",
+      "sha256": "1c685f66e1acb62dce449c462d7d494288cd89352c70f3de2f210d72b0c2b127",
+      "role": "specialist-report"
+    }
+  ],
+  "gates": {
+    "specialist": {
+      "command": "node .\\scripts\\verify-verified-propagation-boundary-001.mjs (isolated native Windows cwd)",
+      "exitCode": 0,
+      "passed": true,
+      "structuredResult": {
+        "ok": true,
+        "boundaryPolicyOk": true,
+        "failures": [],
+        "runtimeHead": "c8da08ad0d813f17977dffacf0fc5e8a799c187c",
+        "evidenceWritePhase": "COMPLETE_FIRST_RUN"
+      }
+    },
+    "focusedRegression": {
+      "command": "npm.cmd run test:authoritative-index-validator",
+      "exitCode": 0,
+      "passed": true,
+      "structuredResult": {
+        "tests": 10,
+        "passed": 10,
+        "failed": 0
+      }
+    },
+    "build": {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "passed": true
+    }
+  },
+  "boundaryPolicy": {
+    "ok": true,
+    "failures": []
+  },
+  "completedItems": [
+    "Step5-E propagation-boundary audit and component matrix completed",
+    "Isolated production-entry specialist passed without substantive evidence divergence",
+    "Formal closeout evidence prepared for checkpoint save"
+  ],
+  "remainingItems": [
+    "Step6 legacy test migration awaits explicit approval",
+    "Step7 mandatory-gate wiring and anti-fraud evidence remain incomplete",
+    "Step8 full regression and risk closure remain not started",
+    "Fourth risk remains OPEN and deployment remains NOT_DEPLOYED"
+  ],
+  "fourthRiskStatus": "OPEN",
+  "finalAcceptance": false,
+  "deployment": "NOT_DEPLOYED",
+  "createdAtHead": "c8da08ad0d813f17977dffacf0fc5e8a799c187c",
+  "generatedAtUtc": "2026-08-06T10:57:23Z"
+}
