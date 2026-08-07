@@ -5,62 +5,64 @@
   "openState": "OPEN",
   "closedState": "RESOLVED",
   "decision": "RESOLVED",
-  "runnerHead": "33298c2efb974c951fa320b09214b70c4d2677cd",
+  "runnerHead": "f352fbde8511b4c37f5f11110398871b0203d4dc",
+  "evidenceGeneratedAt": "2026-08-07T17:18:29.884Z",
+  "step7ValidatorSHA256": "4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2",
   "conditions": [
     {
       "condition": "all required attack-matrix cases fresh PASS",
       "satisfied": true,
-      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
     },
     {
       "condition": "35 mandatory gates fresh PASS",
       "satisfied": true,
-      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
     },
     {
       "condition": "full-impact regression has no first failure",
       "satisfied": true,
-      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
     },
     {
       "condition": "all required source SHA-256 values recorded",
       "satisfied": true,
-      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
     },
     {
       "condition": "client and imported verified values fail closed",
       "satisfied": true,
-      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
     },
     {
       "condition": "isolated verification cannot promote business verified",
       "satisfied": true,
-      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
     },
     {
       "condition": "Context Agent UI Gateway and Delivery boundaries preserve only trusted derivation",
       "satisfied": true,
-      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
     },
     {
       "condition": "legacy tests execute under the migrated trust contract",
       "satisfied": true,
-      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
     },
     {
       "condition": "Step8 anti-fraud validation passes",
       "satisfied": true,
-      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
     },
     {
       "condition": "finalAcceptance remains false",
       "satisfied": true,
-      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
     },
     {
       "condition": "deployment remains NOT_DEPLOYED",
       "satisfied": true,
-      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
     }
   ],
   "inScope": [
