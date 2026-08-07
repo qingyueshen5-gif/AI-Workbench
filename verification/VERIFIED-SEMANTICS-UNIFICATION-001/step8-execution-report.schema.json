@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ai-workbench.step8-execution-report.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "contractId", "startHEAD", "finalHEAD", "contractValidationPassed",
+    "requiredRegressionCount", "completedRegressionCount", "requiredAttackCount", "completedAttackCount",
+    "requiredGateCount", "allRequiredGatesStarted", "allRequiredGatesCompleted", "missingGateCount",
+    "duplicateGateCount", "skippedGateCount", "firstFailure", "regressions", "attackMatrix",
+    "antifraud", "fourthRiskStatus", "fourthRiskDecision", "productLandingBlockers",
+    "step8Status", "completionRatio", "finalAcceptance", "deployment", "productCommit",
+    "productCheckpoint", "indexCommit", "indexCheckpoint", "pushPerformed", "convergenceZeroZero",
+    "finalStatus", "failureClassification"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "ai-workbench.step8-execution-report/v1"},
+    "contractId": {"const": "STEP8-FULL-IMPACT-REGRESSION-MACHINE-CONTRACT-001"},
+    "startHEAD": {"type": "string"}, "finalHEAD": {"type": "string"},
+    "contractValidationPassed": {"type": "boolean"},
+    "requiredRegressionCount": {"type": "integer"}, "completedRegressionCount": {"type": "integer"},
+    "requiredAttackCount": {"type": "integer"}, "completedAttackCount": {"type": "integer"},
+    "requiredGateCount": {"const": 35}, "allRequiredGatesStarted": {"type": "boolean"},
+    "allRequiredGatesCompleted": {"type": "boolean"}, "missingGateCount": {"type": "integer"},
+    "duplicateGateCount": {"type": "integer"}, "skippedGateCount": {"type": "integer"},
+    "firstFailure": {}, "regressions": {"type": "array"}, "attackMatrix": {"type": "array"},
+    "antifraud": {"type": "object"}, "fourthRiskStatus": {"enum": ["OPEN", "RESOLVED"]},
+    "fourthRiskDecision": {"type": "object"}, "productLandingBlockers": {"type": "array"},
+    "step8Status": {"enum": ["NOT_STARTED", "PRESENT_AND_VERIFIED"]},
+    "completionRatio": {"const": "7/7"}, "finalAcceptance": {"const": false},
+    "deployment": {"const": "NOT_DEPLOYED"}, "productCommit": {}, "productCheckpoint": {},
+    "indexCommit": {}, "indexCheckpoint": {}, "pushPerformed": {"type": "boolean"},
+    "convergenceZeroZero": {"type": "boolean"}, "finalStatus": {"type": "string"},
+    "failureClassification": {}
+  }
+}

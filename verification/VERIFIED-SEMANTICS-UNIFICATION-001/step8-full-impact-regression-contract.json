@@ -1,0 +1,185 @@
+{
+  "schemaVersion": "ai-workbench.step8-full-impact-regression-contract/v1",
+  "contractId": "STEP8-FULL-IMPACT-REGRESSION-MACHINE-CONTRACT-001",
+  "contractStatus": "ENABLED_FOR_PACKAGE_A",
+  "baselineHead": "0d01db8f39ce2507a1868aea9fcf8b1761a777e9",
+  "step8FormalName": "LEGACY-RUN-API-STEP8-FULL-IMPACT-REGRESSION-AND-FOURTH-RISK-CLOSEOUT-001",
+  "step8Purpose": "Fresh full-impact regression of verified semantics and machine closeout of the independent legacy Workbench verified trust-boundary risk without promoting product acceptance or deployment.",
+  "authoritySources": [
+    "EXECUTION_PROTOCOL.md",
+    "CURRENT_STATUS.md",
+    "AI_WORKBENCH_TASK_HANDOFF.md",
+    "verification/VERIFIED-SEMANTICS-UNIFICATION-001/fourth-risk-late-audit.md",
+    "verification/VERIFIED-SEMANTICS-UNIFICATION-001/audit-correction.json",
+    "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5-to-step8-authoritative-index.json",
+    "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5-to-step8-real-remaining-work.md",
+    "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step7-mandatory-gates-contract.json"
+  ],
+  "step8EntryConditions": {
+    "head": "0d01db8f39ce2507a1868aea9fcf8b1761a777e9",
+    "step5": "PRESENT_AND_VERIFIED",
+    "step6": "PRESENT_AND_VERIFIED",
+    "step7": "PRESENT_AND_VERIFIED",
+    "completionRatio": "7/7",
+    "step8Eligible": true,
+    "step8": "NOT_STARTED",
+    "fourthRiskStatus": "OPEN",
+    "finalAcceptance": false,
+    "deployment": "NOT_DEPLOYED",
+    "repositoryMustBeClean": true
+  },
+  "step8RequiredRegression": [
+    {"name": "Step7 Mandatory Gates 35", "script": "scripts/verify-mandatory-gates-001.mjs", "argv": []},
+    {"name": "Step7 Contract Validator", "script": "scripts/verify-step7-mandatory-gates-contract-001.mjs", "argv": []},
+    {"name": "Step7 Contract Tests", "script": "tests/verify-step7-mandatory-gates-contract-001.test.mjs", "argv": ["--test"]},
+    {"name": "Step7 Wiring Validator", "script": "scripts/verify-step7-mandatory-gates-wiring-001.mjs", "argv": []},
+    {"name": "Step7 Wiring Tests", "script": "tests/verify-step7-mandatory-gates-wiring-001.test.mjs", "argv": ["--test"]},
+    {"name": "Authoritative Index Validator", "script": "scripts/verify-authoritative-index-consistency-001.mjs", "argv": ["--json"]},
+    {"name": "Authoritative Index Tests", "script": "tests/verify-authoritative-index-consistency-001.test.mjs", "argv": ["--test"]},
+    {"name": "Exec Guard Tests", "script": "tests/exec-guard.test.mjs", "argv": ["--test"]},
+    {"name": "Build", "command": "npm.cmd", "argv": ["run", "build"]},
+    {"name": "Existing Product Regression", "script": "scripts/verify.mjs", "argv": []},
+    {"name": "Verified Propagation Boundary", "script": "scripts/verify-verified-propagation-boundary-001.mjs", "argv": []},
+    {"name": "Gateway Business Boundary", "script": "scripts/verify-gateway-runtime-business-boundary.mjs", "argv": []}
+  ],
+  "step8RequiredAttackMatrix": [
+    {"name": "Run API verified injection", "script": "scripts/verify-run-api-verified-injection-rejection-001.mjs"},
+    {"name": "Data Import verified injection", "script": "scripts/verify-data-import-verified-injection-rejection-001.mjs"},
+    {"name": "Legacy persisted verified claim", "script": "scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs"},
+    {"name": "Isolated verification", "script": "scripts/verify-isolated-run-verification-not-business-verified-001.mjs"},
+    {"name": "Server-owned run facts", "script": "scripts/verify-server-owned-run-fact-preservation-001.mjs"},
+    {"name": "UI writable DTO", "script": "scripts/verify-ui-writable-dto-001.mjs"},
+    {"name": "Run trust path", "script": "scripts/verify-run-trust-path-rejection-baseline-001.mjs"},
+    {"name": "Protocol trust field", "script": "scripts/verify-trust-field-protocol-path-matching-001.mjs"},
+    {"name": "Workbench context", "script": "scripts/verify-workbench-context-verified-trust-boundary-001.mjs"},
+    {"name": "Agent context", "script": "scripts/verify-agent-context-injection-rejection-001.mjs"},
+    {"name": "UI verification separation", "script": "scripts/verify-ui-run-status-verification-separation-001.mjs"},
+    {"name": "Verified assignment invariant", "script": "scripts/verify-verified-assignment-invariant-001.mjs"},
+    {"name": "Gateway business boundary", "script": "scripts/verify-gateway-runtime-business-boundary.mjs"},
+    {"name": "Delivery and trust propagation boundary", "script": "scripts/verify-verified-propagation-boundary-001.mjs"}
+  ],
+  "step8RequiredMandatoryGates": {
+    "requiredGateCount": 35,
+    "existingMandatoryGateCount": 20,
+    "specialistGateCount": 12,
+    "legacyGateCount": 3,
+    "executionMode": "SEQUENTIAL",
+    "failureMode": "FAIL_FAST",
+    "allRequiredGatesStarted": true,
+    "allRequiredGatesCompleted": true,
+    "missingGateCount": 0,
+    "duplicateGateCount": 0,
+    "skippedGateCount": 0,
+    "firstFailure": null
+  },
+  "step8EvidenceRequirements": [
+    "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step8-full-impact-regression.json",
+    "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step8-full-impact-regression.md",
+    "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step8-fourth-risk-closeout.json",
+    "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step8-fourth-risk-closeout.md",
+    "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step8-attack-matrix-antifraud.json"
+  ],
+  "fourthRiskScope": {
+    "riskName": "LEGACY_WORKBENCH_RUN_VERIFIED_TRUST_BOUNDARY_BYPASS",
+    "riskClassification": "HIGH_INDEPENDENT_FOURTH_RISK",
+    "definition": "An external caller, imported or persisted legacy data, isolated Run verification, UI whole-data writeback, Workbench context, Gateway or Delivery propagation must not submit, preserve or promote business verified without authoritative Task, Run, revision, real Verifier PASS and successful Final identity binding.",
+    "inScope": [
+      "POST /api/runs verified injection",
+      "PUT /api/data and Data Import verified injection",
+      "legacy persisted bare verified claims",
+      "isolated Run verification promotion",
+      "server-owned Run fact preservation",
+      "UI writable DTO exclusion",
+      "trust-field protocol path matching",
+      "Workbench context projection",
+      "Agent context injection rejection",
+      "UI execution and verification separation",
+      "Gateway and Delivery verified propagation"
+    ],
+    "outOfScopeProductLandingBlockers": [
+      "PROGRESS_AND_FINAL_SHARE_FEISHU_UUID_NAMESPACE",
+      "STALE_ACCEPTED_ORPHAN_HAS_NO_TERMINAL_FAIL_CLOSED_STATE",
+      "GATEWAY_RUNTIME_COMMIT_BOUNDING_NOT_VERIFIED",
+      "DUAL_RUNTIME_AUTHORITY_UNRESOLVED",
+      "DESKTOP_CANONICAL_RUNTIME_BINDING_MISSING",
+      "PRODUCTION_EQUIVALENT_FEISHU_E2E_MISSING",
+      "HUMAN_ACCEPTANCE_MISSING"
+    ]
+  },
+  "fourthRiskOpenState": "OPEN",
+  "fourthRiskClosedState": "RESOLVED",
+  "fourthRiskCloseConditions": [
+    "all required attack-matrix cases fresh PASS",
+    "35 mandatory gates fresh PASS",
+    "full-impact regression has no first failure",
+    "all required source SHA-256 values recorded",
+    "client and imported verified values fail closed",
+    "isolated verification cannot promote business verified",
+    "Context Agent UI Gateway and Delivery boundaries preserve only trusted derivation",
+    "legacy tests execute under the migrated trust contract",
+    "Step8 anti-fraud validation passes",
+    "finalAcceptance remains false",
+    "deployment remains NOT_DEPLOYED"
+  ],
+  "finalAcceptanceRelationship": {
+    "step8PassDoesNotImplyFinalAcceptance": true,
+    "fourthRiskResolvedDoesNotImplyProductionReady": true,
+    "productionEquivalentE2EMissingRequiresFalse": true,
+    "humanAcceptanceMissingRequiresFalse": true,
+    "requiredValueAfterPackageA": false
+  },
+  "deploymentRelationship": {
+    "step8PassDoesNotDeploy": true,
+    "deploymentApprovalMissingRequiresNotDeployed": true,
+    "productLandingBlockersPreventDeployment": true,
+    "requiredValueAfterPackageA": "NOT_DEPLOYED"
+  },
+  "productLandingBlockers": [
+    {"id": "DUAL_RUNTIME_AUTHORITY_UNRESOLVED", "status": "OPEN", "productState": "BLOCKED"},
+    {"id": "DESKTOP_CANONICAL_RUNTIME_BINDING_MISSING", "status": "OPEN", "productState": "false"},
+    {"id": "PROGRESS_AND_FINAL_SHARE_FEISHU_UUID_NAMESPACE", "status": "OPEN", "productState": "productionProgressFinalExactlyOnce=BLOCKED"},
+    {"id": "STALE_ACCEPTED_ORPHAN_HAS_NO_TERMINAL_FAIL_CLOSED_STATE", "status": "OPEN", "productState": "acceptedRecovery=PARTIAL"},
+    {"id": "GATEWAY_RUNTIME_COMMIT_BOUNDING_NOT_VERIFIED", "status": "OPEN", "productState": "productionConfiguration=BLOCKED"},
+    {"id": "PRODUCTION_EQUIVALENT_FEISHU_E2E_MISSING", "status": "MISSING", "productState": "finalAcceptance=false"},
+    {"id": "REAL_FEISHU_SMOKE_MISSING", "status": "MISSING", "productState": "deployment=NOT_DEPLOYED"},
+    {"id": "MOBILE_REAL_DEVICE_ACCEPTANCE_MISSING", "status": "MISSING", "productState": "finalAcceptance=false"},
+    {"id": "HUMAN_ACCEPTANCE_MISSING", "status": "MISSING", "productState": "finalAcceptance=false"}
+  ],
+  "prohibitedProductChanges": [
+    "server.mjs Desktop canonical runtime implementation",
+    "scripts/workbench-feishu-adapter.mjs Progress Final UUID",
+    "scripts/feishu-worker-ipc.mjs stale accepted orphan",
+    "scripts/start-fixed-feishu-gateway.mjs deployment binding",
+    "scripts/feishu-task-channel.mjs legacy channel",
+    "src/main.jsx",
+    "production deployment configuration"
+  ],
+  "validators": {
+    "contractExecutable": "node scripts/verify-step8-full-impact-regression-contract-001.mjs",
+    "contractTestCommand": "node --test tests/verify-step8-full-impact-regression-contract-001.test.mjs",
+    "regressionExecutable": "node scripts/run-step8-full-impact-regression-001.mjs"
+  },
+  "checkpointTopology": {
+    "topology": "CONTRACT_THEN_PRODUCT_THEN_INDEX",
+    "contractCommit": {"subject": "Step8: enable full impact regression machine contract", "checkpoint": "STEP8-FULL-IMPACT-REGRESSION-CONTRACT-ENABLEMENT-001"},
+    "productCommit": {"subject": "Step8: complete full impact regression and fourth risk closeout", "checkpoint": "LEGACY-RUN-API-STEP8-FULL-IMPACT-REGRESSION-AND-FOURTH-RISK-CLOSEOUT-001"},
+    "indexCommit": {"subject": "Step8: update authoritative index after formal closeout", "checkpoint": "AUTHORITATIVE-INDEX-UPDATE-STEP8-001"}
+  },
+  "successState": {
+    "step8": "PRESENT_AND_VERIFIED",
+    "completionRatio": "7/7",
+    "fourthRiskStatus": "RESOLVED",
+    "finalAcceptance": false,
+    "deployment": "NOT_DEPLOYED",
+    "productReady": false,
+    "productionReady": false
+  },
+  "currentStateAfterEnablement": {
+    "step8": "NOT_STARTED",
+    "step8Started": false,
+    "completionRatio": "7/7",
+    "fourthRiskStatus": "OPEN",
+    "finalAcceptance": false,
+    "deployment": "NOT_DEPLOYED"
+  }
+}
