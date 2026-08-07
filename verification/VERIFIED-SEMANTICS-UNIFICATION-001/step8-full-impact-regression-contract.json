@@ -37,7 +37,7 @@
     {"name": "Authoritative Index Validator", "script": "scripts/verify-authoritative-index-consistency-001.mjs", "argv": ["--json"]},
     {"name": "Authoritative Index Tests", "script": "tests/verify-authoritative-index-consistency-001.test.mjs", "argv": ["--test"]},
     {"name": "Exec Guard Tests", "script": "tests/exec-guard.test.mjs", "argv": ["--test"]},
-    {"name": "Build", "command": "npm.cmd", "argv": ["run", "build"]},
+    {"name": "Build", "npmScript": "build", "source": "package.json"},
     {"name": "Existing Product Regression", "script": "scripts/verify.mjs", "argv": []},
     {"name": "Verified Propagation Boundary", "script": "scripts/verify-verified-propagation-boundary-001.mjs", "argv": []},
     {"name": "Gateway Business Boundary", "script": "scripts/verify-gateway-runtime-business-boundary.mjs", "argv": []}
