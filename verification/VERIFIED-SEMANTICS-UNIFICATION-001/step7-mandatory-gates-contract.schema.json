@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ai-workbench.step7-mandatory-gates-contract.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "contractId",
+    "contractStatus",
+    "baselineHead",
+    "authoritySources",
+    "executionGraph",
+    "specialists",
+    "legacyTests",
+    "productAllowlist",
+    "prohibitedChanges",
+    "requiredEvidence",
+    "validators",
+    "checkpointTopology",
+    "successState",
+    "nonPromotionInvariants",
+    "currentStateAfterEnablement"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "contractId": {
+      "type": "string"
+    },
+    "contractStatus": {
+      "type": "string"
+    },
+    "baselineHead": {
+      "type": "string"
+    },
+    "authoritySources": {
+      "type": "array"
+    },
+    "executionGraph": {
+      "type": "object"
+    },
+    "specialists": {
+      "type": "array"
+    },
+    "legacyTests": {
+      "type": "array"
+    },
+    "productAllowlist": {
+      "type": "array"
+    },
+    "prohibitedChanges": {
+      "type": "array"
+    },
+    "requiredEvidence": {
+      "type": "array"
+    },
+    "validators": {
+      "type": "object"
+    },
+    "checkpointTopology": {
+      "type": "object"
+    },
+    "successState": {
+      "type": "object"
+    },
+    "nonPromotionInvariants": {
+      "type": "array"
+    },
+    "currentStateAfterEnablement": {
+      "type": "object"
+    }
+  }
+}

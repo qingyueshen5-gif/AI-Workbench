@@ -209,3 +209,7 @@ Preflight 失败必须 fail closed：不点击生成，不调用付费模型，�
 ## STEP6-LEGACY-RUN-API-MIGRATION-CONTRACT-001
 
 Step6 产品施工前必须运行 `npm.cmd run verify:step6-contract`，并使用合同 `STEP6-LEGACY-RUN-API-MIGRATION-CONTRACT-001`。施工必须遵守两项已批准产品决策、七文件产品 allowlist、产品 Commit 与索引 Commit 分离的两 Commit 拓扑，以及 `STEP6-LEGACY-RUN-API-ARCHIVE-001` 和 `AUTHORITATIVE-INDEX-UPDATE-STEP6-001` 两个正式 Checkpoint。不得提前进入 Step7 或 Step8。每个 Commit 前必须运行 `exec:preflight`，writer 后必须由父进程运行 `exec:postcommit`，Push 后必须验证 ahead/behind=`0/0`。本合同启用不等于 Step6 完成。
+
+## STEP7-MANDATORY-GATES-MACHINE-CONTRACT-001
+
+Step7 必须使用 `verification/VERIFIED-SEMANTICS-UNIFICATION-001/step7-mandatory-gates-contract.json`，并先运行 `npm.cmd run verify:step7-contract`。施工固定为 Contract Enablement、Product Wiring / Antifraud、Authoritative Index Transition 三个原子阶段；任一真实首失败立即停止。Product 阶段保留既有20项门并强制接入12项专项与3个旧测试，形成至少35项顺序、fail-fast、不可跳过的真实执行图；不得修改12项专项或3个旧测试源文件。Step7 完成只允许将 Step7 更新为 `PRESENT_AND_VERIFIED`、完成度更新为 `7/7`并令`step8Eligible=true`；不得自动开始Step8、关闭fourthRisk、设置`finalAcceptance=true`或部署。

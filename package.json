@@ -68,7 +68,9 @@
     "test:exec-guard": "node --test tests/exec-guard.test.mjs",
     "verify:step6-contract": "node scripts/verify-step6-legacy-run-api-contract-001.mjs",
     "verify:step6-legacy-run-api-archive": "node scripts/verify-legacy-run-api-archive-completeness-001.mjs",
-    "test:step6-contract-validator": "node --test tests/verify-step6-legacy-run-api-contract-001.test.mjs"
+    "test:step6-contract-validator": "node --test tests/verify-step6-legacy-run-api-contract-001.test.mjs",
+    "verify:step7-contract": "node scripts/verify-step7-mandatory-gates-contract-001.mjs",
+    "test:step7-contract-validator": "node --test tests/verify-step7-mandatory-gates-contract-001.test.mjs"
   },
   "dependencies": {
     "@larksuiteoapi/node-sdk": "^1.71.1",

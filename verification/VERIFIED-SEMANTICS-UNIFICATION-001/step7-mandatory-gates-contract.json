@@ -1,0 +1,134 @@
+{
+  "schemaVersion": "ai-workbench.step7-mandatory-gates-contract/v1",
+  "contractId": "STEP7-MANDATORY-GATES-MACHINE-CONTRACT-001",
+  "contractStatus": "ENABLED_FOR_SINGLE_CONSTRUCTION_PACKAGE",
+  "baselineHead": "d377a423ade575051c9b3e7ebe3394819b16b7e5",
+  "authoritySources": [
+    "EXECUTION_PROTOCOL.md",
+    "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5-to-step8-authoritative-index.json",
+    "verification/VERIFIED-SEMANTICS-UNIFICATION-001/step5-to-step8-real-remaining-work.md",
+    "scripts/verify-mandatory-gates-001.mjs"
+  ],
+  "executionGraph": {
+    "existingMandatoryGateCount": 20,
+    "specialistRequiredCount": 12,
+    "legacyRequiredCount": 3,
+    "minimumMandatoryExecutionGraphCount": 35,
+    "specialistDirectOrTransitiveWiredCountRequired": 12,
+    "legacyTestWiredCountRequired": 3,
+    "duplicateGateCountRequired": 0,
+    "missingGateCountRequired": 0,
+    "skippedGateCountRequired": 0,
+    "executionMode": "SEQUENTIAL",
+    "failureMode": "FAIL_FAST"
+  },
+  "specialists": [
+    "scripts/verify-run-api-verified-injection-rejection-001.mjs",
+    "scripts/verify-data-import-verified-injection-rejection-001.mjs",
+    "scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs",
+    "scripts/verify-isolated-run-verification-not-business-verified-001.mjs",
+    "scripts/verify-server-owned-run-fact-preservation-001.mjs",
+    "scripts/verify-ui-writable-dto-001.mjs",
+    "scripts/verify-run-trust-path-rejection-baseline-001.mjs",
+    "scripts/verify-trust-field-protocol-path-matching-001.mjs",
+    "scripts/verify-workbench-context-verified-trust-boundary-001.mjs",
+    "scripts/verify-agent-context-injection-rejection-001.mjs",
+    "scripts/verify-ui-run-status-verification-separation-001.mjs",
+    "scripts/verify-verified-assignment-invariant-001.mjs"
+  ],
+  "legacyTests": [
+    "scripts/verify-memories.mjs",
+    "scripts/verify-verification-layer.mjs",
+    "scripts/verify-tasks-runs.mjs"
+  ],
+  "productAllowlist": [
+    "scripts/verify-mandatory-gates-001.mjs",
+    "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/gates-wiring-audit.json",
+    "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/gates-wiring-audit.md",
+    "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/mandatory-gates-antifraud.json",
+    "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/mandatory-gates-antifraud.md",
+    "scripts/verify-step7-mandatory-gates-wiring-001.mjs",
+    "tests/verify-step7-mandatory-gates-wiring-001.test.mjs"
+  ],
+  "prohibitedChanges": [
+    "scripts/verify-run-api-verified-injection-rejection-001.mjs",
+    "scripts/verify-data-import-verified-injection-rejection-001.mjs",
+    "scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs",
+    "scripts/verify-isolated-run-verification-not-business-verified-001.mjs",
+    "scripts/verify-server-owned-run-fact-preservation-001.mjs",
+    "scripts/verify-ui-writable-dto-001.mjs",
+    "scripts/verify-run-trust-path-rejection-baseline-001.mjs",
+    "scripts/verify-trust-field-protocol-path-matching-001.mjs",
+    "scripts/verify-workbench-context-verified-trust-boundary-001.mjs",
+    "scripts/verify-agent-context-injection-rejection-001.mjs",
+    "scripts/verify-ui-run-status-verification-separation-001.mjs",
+    "scripts/verify-verified-assignment-invariant-001.mjs",
+    "scripts/verify-memories.mjs",
+    "scripts/verify-verification-layer.mjs",
+    "scripts/verify-tasks-runs.mjs",
+    "server.mjs",
+    "src/main.jsx",
+    "src/styles.css",
+    "scripts/workbench-feishu-adapter.mjs",
+    "scripts/workbench-agent-runtime.mjs",
+    "scripts/feishu-worker-ipc.mjs",
+    "Step8 files",
+    "deployment files"
+  ],
+  "requiredEvidence": [
+    "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/gates-wiring-audit.json",
+    "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/gates-wiring-audit.md",
+    "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/mandatory-gates-antifraud.json",
+    "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/mandatory-gates-antifraud.md"
+  ],
+  "validators": {
+    "contractCommand": "npm.cmd run verify:step7-contract",
+    "contractExecutable": "node scripts/verify-step7-mandatory-gates-contract-001.mjs",
+    "contractTestCommand": "npm.cmd run test:step7-contract-validator",
+    "wiringExecutable": "node scripts/verify-step7-mandatory-gates-wiring-001.mjs",
+    "mandatoryExecutable": "node scripts/verify-mandatory-gates-001.mjs"
+  },
+  "checkpointTopology": {
+    "topology": "THREE_ATOMIC_PHASES",
+    "contractCommit": {
+      "subject": "Step7: enable mandatory gates machine contract",
+      "checkpoint": "STEP7-MANDATORY-GATES-CONTRACT-ENABLEMENT-001"
+    },
+    "productCommit": {
+      "subject": "Step7: wire verified trust gates into mandatory execution",
+      "checkpoint": "LEGACY-RUN-API-STEP7-MANDATORY-GATES-WIRING-001"
+    },
+    "indexCommit": {
+      "subject": "Step7: update authoritative index after formal closeout",
+      "checkpoint": "AUTHORITATIVE-INDEX-UPDATE-STEP7-001"
+    }
+  },
+  "successState": {
+    "step7": "PRESENT_AND_VERIFIED",
+    "verifiedFunctionalItems": 7,
+    "totalRequiredFunctionalItems": 7,
+    "completionRatio": "7/7",
+    "step8Eligible": true,
+    "step8": "NOT_STARTED",
+    "step8Started": false,
+    "fourthRiskStatus": "OPEN",
+    "finalAcceptance": false,
+    "deployment": "NOT_DEPLOYED"
+  },
+  "nonPromotionInvariants": [
+    "Step7 completion cannot start Step8",
+    "Step7 completion cannot close fourthRiskStatus",
+    "Step7 completion cannot set finalAcceptance=true",
+    "Step7 completion cannot deploy"
+  ],
+  "currentStateAfterEnablement": {
+    "step6": "PRESENT_AND_VERIFIED",
+    "step7": "ACTUALLY_MISSING",
+    "completionRatio": "6/7",
+    "step8": "NOT_STARTED",
+    "step8Started": false,
+    "fourthRiskStatus": "OPEN",
+    "finalAcceptance": false,
+    "deployment": "NOT_DEPLOYED"
+  }
+}
