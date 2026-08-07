@@ -1,6 +1,6 @@
 # Step5至Step8机器权威索引
 
-状态同步时间：`2026-08-07T22:52:21+08:00`；机器证据：`verification/VERIFIED-SEMANTICS-UNIFICATION-001/authoritative-index-consistency-reconciliation-findings.json`；状态证据SHA-256：`c2b98b552f2bb89698b8e07c8efd3518befbcbcc0c858f98729f5369fa989de2`。
+状态同步时间：`2026-08-08T00:55:00+08:00`；Step8正式回归证据：`step8-full-impact-regression.json`；第四风险裁决：`step8-fourth-risk-closeout.json`。
 
 ## 机器判定
 
@@ -13,20 +13,27 @@
 | STEP5-E · Gateway / Delivery传播边界 | `PRESENT_AND_VERIFIED` | `LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001` | `2e6a79eb67bb796163926f9f074cd0651d8fc236` |
 | STEP6 · 旧测试迁移与历史断言存档 | `PRESENT_AND_VERIFIED` | `STEP6-LEGACY-RUN-API-ARCHIVE-001` | `e8e96d71c663095b9d4296ff91cf5eb906f9e8ae` |
 | STEP7 · Mandatory Gates强制接线、完整运行与防伪 | `PRESENT_AND_VERIFIED` | `LEGACY-RUN-API-STEP7-MANDATORY-GATES-WIRING-001` | `beac3630597ad428a644bd8cdcd25684e555a01f` |
+| STEP8 · Full Impact Regression与第四风险关闭 | `PRESENT_AND_VERIFIED` | `LEGACY-RUN-API-STEP8-FULL-IMPACT-REGRESSION-AND-FOURTH-RISK-CLOSEOUT-001` | `2dec9ed8802748876b33ab823d6abe98565a93e4` |
 
-## 一致化裁决
+## Step8机器裁决
 
-- STEP6：三个授权旧测试已迁移；客户端信任字段被拒绝；隔离验证、shape与linkage均不能提升business verified；缺证据与执行失败继续fail-closed。
-- STEP7：十二项specialist和三个legacy测试已直接强制接线；Gate 1→35完整真实运行全部exitCode=0；wiring/antifraud四份证据存在；Product Checkpoint已保存并通过。
-- JSON、本文和remaining-work统一使用上述状态。后续人读摘要不得覆盖机器索引。
+- requiredRegressionCount=12；completedRegressionCount=12。
+- requiredAttackCount=14；completedAttackCount=14。
+- Mandatory Gates=35/35；firstFailure=NONE。
+- fourthRiskStatus=RESOLVED。
+- completionRatio继续为`7/7`；Step8不计入七个功能项分母。
+- finalAcceptance=false；deployment=NOT_DEPLOYED。
 
-## 完成与启动条件
+## 产品落地阻断
 
-- verifiedFunctionalItems=7
-- totalRequiredFunctionalItems=7
-- completionRatio=7/7
-- step8Eligible=true
-- step8=NOT_STARTED
-- step8Started=false
+以下仍保持OPEN/MISSING，不属于Package A第四风险关闭：
 
-第四类风险及原三项HIGH保持OPEN；finalAcceptance=false；deployment=NOT_DEPLOYED。
+- `PROGRESS_AND_FINAL_SHARE_FEISHU_UUID_NAMESPACE`
+- `STALE_ACCEPTED_ORPHAN_HAS_NO_TERMINAL_FAIL_CLOSED_STATE`
+- `GATEWAY_RUNTIME_COMMIT_BOUNDING_NOT_VERIFIED`
+- `DUAL_RUNTIME_AUTHORITY_UNRESOLVED`
+- `DESKTOP_CANONICAL_RUNTIME_BINDING_MISSING`
+- `PRODUCTION_EQUIVALENT_FEISHU_E2E_MISSING`
+- `HUMAN_ACCEPTANCE_MISSING`
+
+因此Package A成功不代表PRODUCT_READY、PRODUCTION_READY或FINAL_ACCEPTED。

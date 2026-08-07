@@ -68,7 +68,8 @@ function run(options) {
     check('semanticConsistencyChecks','STEP5E_FILES_EXIST',Array.isArray(step5E.files)&&step5E.files.length>0&&step5E.files.every(x=>x.exists===true),step5E.files);
   }
   check('semanticConsistencyChecks','INDEX_NO_STEP5E_EVIDENCE',!Object.prototype.hasOwnProperty.call(step5E||{},'evidence'),step5E);
-  check('semanticConsistencyChecks','INDEX_NO_FINAL_ACCEPTANCE',!Object.prototype.hasOwnProperty.call(index,'finalAcceptance')&&!Object.prototype.hasOwnProperty.call(index.statusConstraints||{},'finalAcceptance'),index.statusConstraints);
+  check('semanticConsistencyChecks','INDEX_NO_TOP_LEVEL_FINAL_ACCEPTANCE',!Object.prototype.hasOwnProperty.call(index,'finalAcceptance'),index.finalAcceptance);
+  check('semanticConsistencyChecks','STATUS_FINAL_ACCEPTANCE_EXPLICIT_FALSE',index.statusConstraints?.finalAcceptance===false,index.statusConstraints?.finalAcceptance);
   for(const id of ['STEP5-E','STEP6','STEP7']){
     check('markdownConsistencyChecks',`MARKDOWN_STATUS:${id}`,tableStatus(markdown,id)===actualStatuses[id],`${tableStatus(markdown,id)} / ${actualStatuses[id]}`);
     const missing=remaining.match(/## ACTUALLY_MISSING([\s\S]*?)(?:\n## |$)/)?.[1]||'',present=remaining.match(/## PRESENT_AND_VERIFIED([\s\S]*?)(?:\n## |$)/)?.[1]||'';
@@ -117,8 +118,11 @@ function run(options) {
   check('semanticConsistencyChecks','PRESENT_LIST',JSON.stringify(index.remainingWork?.presentAndVerified)===JSON.stringify(presentAndVerified),index.remainingWork?.presentAndVerified);
   check('semanticConsistencyChecks','MISSING_LIST',JSON.stringify(index.remainingWork?.actuallyMissing)===JSON.stringify(actuallyMissing),index.remainingWork?.actuallyMissing);
   check('semanticConsistencyChecks','COMPLETION_RATIO',index.remainingWork?.verifiedFunctionalItems===verifiedItemCount&&index.remainingWork?.totalRequiredFunctionalItems===totalItemCount&&declaredCompletionRatio===computedCompletionRatio,{declaredCompletionRatio,computedCompletionRatio,verifiedItemCount,totalItemCount});
-  check('semanticConsistencyChecks','STEP8_ELIGIBILITY_MATCHES_COMPLETION',index.remainingWork?.step8Eligible===(verifiedItemCount===totalItemCount)&&index.statusConstraints?.step8==='NOT_STARTED',{remaining:index.remainingWork,status:index.statusConstraints});
-  check('semanticConsistencyChecks','RISK_OPEN',index.statusConstraints?.fourthRiskStatus==='OPEN',index.statusConstraints?.fourthRiskStatus);
+  check('semanticConsistencyChecks','STEP8_ELIGIBILITY_MATCHES_COMPLETION',index.remainingWork?.step8Eligible===(verifiedItemCount===totalItemCount)&&['NOT_STARTED','PRESENT_AND_VERIFIED'].includes(index.statusConstraints?.step8)&&index.remainingWork?.step8===index.statusConstraints?.step8,{remaining:index.remainingWork,status:index.statusConstraints});
+  const step8Verified=index.statusConstraints?.step8==='PRESENT_AND_VERIFIED';
+  check('semanticConsistencyChecks','STEP8_FORMAL_CLOSEOUT',!step8Verified||(index.statusConstraints?.fourthRiskStatus==='RESOLVED'&&index.statusConstraints?.finalAcceptance===false&&index.statusConstraints?.deployment==='NOT_DEPLOYED'&&index.statusConstraints?.productLandingBlockers==='OPEN'),index.statusConstraints);
+  check('semanticConsistencyChecks','RISK_LEGAL_STATE',['OPEN','RESOLVED'].includes(index.statusConstraints?.fourthRiskStatus),index.statusConstraints?.fourthRiskStatus);
+  check('semanticConsistencyChecks','FINAL_ACCEPTANCE_FALSE',index.statusConstraints?.finalAcceptance===false,index.statusConstraints?.finalAcceptance);
   check('semanticConsistencyChecks','DEPLOYMENT_NOT_DEPLOYED',index.statusConstraints?.deployment==='NOT_DEPLOYED',index.statusConstraints?.deployment);
   return {ok:failures.length===0,module:'AUTHORITATIVE-INDEX-CONSISTENCY-001',indexPath,checkpointRoot,contractPath,runtimeHead:head,generatedFromHead:index.generatedFromHead,checks:checks.length,declaredCompletionRatio,computedCompletionRatio,verifiedItemCount,totalItemCount,failures,...groups};
 }

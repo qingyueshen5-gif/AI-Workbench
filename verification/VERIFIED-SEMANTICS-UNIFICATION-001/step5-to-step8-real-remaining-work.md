@@ -9,18 +9,7 @@
 - STEP5-E
 - STEP6
 - STEP7
-
-## PRESENT_NO_CHECKPOINT
-
-- 无
-
-## NAMING_DRIFT
-
-- 无
-
-## ACTUALLY_MISSING
-
-- 无
+- STEP8（Full Impact Regression与第四风险机器关闭）
 
 ## 机器完成度与Step8
 
@@ -28,10 +17,22 @@
 - totalRequiredFunctionalItems=7
 - completionRatio=7/7
 - step8Eligible=true
-- step8=NOT_STARTED
-- step8Started=false
-- fourthRiskStatus=OPEN
+- step8=PRESENT_AND_VERIFIED
+- step8Started=true
+- fourthRiskStatus=RESOLVED
 - finalAcceptance=false
 - deployment=NOT_DEPLOYED
 
-机器证据：`authoritative-index-consistency-reconciliation-findings.json`。本清单仅确认Step7完成与Step8具备前置资格，不启动Step8、不关闭风险、不进行部署。
+## Package A之后仍未完成
+
+- `DUAL_RUNTIME_AUTHORITY_UNRESOLVED`
+- `DESKTOP_CANONICAL_RUNTIME_BINDING_MISSING`
+- `PROGRESS_AND_FINAL_SHARE_FEISHU_UUID_NAMESPACE`
+- `STALE_ACCEPTED_ORPHAN_HAS_NO_TERMINAL_FAIL_CLOSED_STATE`
+- `GATEWAY_RUNTIME_COMMIT_BOUNDING_NOT_VERIFIED`
+- `PRODUCTION_EQUIVALENT_FEISHU_E2E_MISSING`
+- `REAL_FEISHU_SMOKE_MISSING`
+- `MOBILE_REAL_DEVICE_ACCEPTANCE_MISSING`
+- `HUMAN_ACCEPTANCE_MISSING`
+
+下一安全任务为Package B Runtime Authority Unification，须另行批准。Package A不启动产品落地、不进行真人验收、不进行部署。
