@@ -1,0 +1,366 @@
+{
+  "schemaVersion": "ai-workbench.step8-attack-matrix-antifraud/v1",
+  "contractId": "STEP8-FULL-IMPACT-REGRESSION-MACHINE-CONTRACT-001",
+  "runnerHead": "33298c2efb974c951fa320b09214b70c4d2677cd",
+  "requiredAttackCount": 14,
+  "completedAttackCount": 14,
+  "attacks": [
+    {
+      "name": "Run API verified injection",
+      "script": "scripts/verify-run-api-verified-injection-rejection-001.mjs",
+      "argv": [
+        "scripts/verify-run-api-verified-injection-rejection-001.mjs"
+      ],
+      "start": "2026-08-07T16:52:39.830Z",
+      "end": "2026-08-07T16:52:40.200Z",
+      "exitCode": 0,
+      "sourceSHA256": "adc072eebae07d847f69c8502dcc689fd8c8e023ca825f9983621026361d386e",
+      "assertionSummary": {
+        "configuredName": "Run API verified injection",
+        "source": "scripts/verify-run-api-verified-injection-rejection-001.mjs",
+        "outputTail": [
+          "{\"ok\":true,\"module\":\"RUN-API-VERIFIED-INJECTION-REJECTION-001\",\"httpStatus\":422,\"errorCode\":\"CLIENT_SUPPLIED_TRUST_FIELD_FORBIDDEN\",\"runCreates\":0}"
+        ]
+      },
+      "stdout": "{\"ok\":true,\"module\":\"RUN-API-VERIFIED-INJECTION-REJECTION-001\",\"httpStatus\":422,\"errorCode\":\"CLIENT_SUPPLIED_TRUST_FIELD_FORBIDDEN\",\"runCreates\":0}\n",
+      "stderr": ""
+    },
+    {
+      "name": "Data Import verified injection",
+      "script": "scripts/verify-data-import-verified-injection-rejection-001.mjs",
+      "argv": [
+        "scripts/verify-data-import-verified-injection-rejection-001.mjs"
+      ],
+      "start": "2026-08-07T16:52:40.200Z",
+      "end": "2026-08-07T16:52:40.519Z",
+      "exitCode": 0,
+      "sourceSHA256": "38720d6f9f6542138b3f06d60f6c4e988338b4f0100254d9d7586979106ae98e",
+      "assertionSummary": {
+        "configuredName": "Data Import verified injection",
+        "source": "scripts/verify-data-import-verified-injection-rejection-001.mjs",
+        "outputTail": [
+          "{\"ok\":true,\"module\":\"DATA-IMPORT-VERIFIED-INJECTION-REJECTION-001\",\"atomicReject\":true,\"beforeHash\":\"0d8c1289f30c8c12c5d0fbdf2d0caf1fd14083b524c769b309b5a17325d0a35a\",\"afterHash\":\"0d8c1289f30c8c12c5d0fbdf2d0caf1fd14083b524c769b309b5a17325d0a35a\"}"
+        ]
+      },
+      "stdout": "{\"ok\":true,\"module\":\"DATA-IMPORT-VERIFIED-INJECTION-REJECTION-001\",\"atomicReject\":true,\"beforeHash\":\"0d8c1289f30c8c12c5d0fbdf2d0caf1fd14083b524c769b309b5a17325d0a35a\",\"afterHash\":\"0d8c1289f30c8c12c5d0fbdf2d0caf1fd14083b524c769b309b5a17325d0a35a\"}\n",
+      "stderr": ""
+    },
+    {
+      "name": "Legacy persisted verified claim",
+      "script": "scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs",
+      "argv": [
+        "scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs"
+      ],
+      "start": "2026-08-07T16:52:40.520Z",
+      "end": "2026-08-07T16:52:40.803Z",
+      "exitCode": 0,
+      "sourceSHA256": "8afab6b4cae7d3d91522c6c4929fb8d8c565e2a5bf017b68453e85ee68800809",
+      "assertionSummary": {
+        "configuredName": "Legacy persisted verified claim",
+        "source": "scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs",
+        "outputTail": [
+          "{\"ok\":true,\"module\":\"LEGACY-PERSISTED-VERIFIED-CLAIM-FAIL-CLOSED-001\",\"legacyClaimCount\":1,\"trustedVerifiedCount\":0,\"untrustedClaimsFailClosed\":1,\"contextClaimsRemoved\":1,\"recordsMutated\":0,\"recordsQuarantined\":0}"
+        ]
+      },
+      "stdout": "{\"ok\":true,\"module\":\"LEGACY-PERSISTED-VERIFIED-CLAIM-FAIL-CLOSED-001\",\"legacyClaimCount\":1,\"trustedVerifiedCount\":0,\"untrustedClaimsFailClosed\":1,\"contextClaimsRemoved\":1,\"recordsMutated\":0,\"recordsQuarantined\":0}\n",
+      "stderr": ""
+    },
+    {
+      "name": "Isolated verification",
+      "script": "scripts/verify-isolated-run-verification-not-business-verified-001.mjs",
+      "argv": [
+        "scripts/verify-isolated-run-verification-not-business-verified-001.mjs"
+      ],
+      "start": "2026-08-07T16:52:40.804Z",
+      "end": "2026-08-07T16:52:41.088Z",
+      "exitCode": 0,
+      "sourceSHA256": "4c05072eddfb067cf07a5bd852f50a521e7ce6d0ad14733959cab24d89274497",
+      "assertionSummary": {
+        "configuredName": "Isolated verification",
+        "source": "scripts/verify-isolated-run-verification-not-business-verified-001.mjs",
+        "outputTail": [
+          "{\"ok\":true,\"module\":\"ISOLATED-RUN-VERIFICATION-NOT-BUSINESS-VERIFIED-001\",\"runEvidenceValidated\":true,\"businessVerified\":false,\"verified\":false,\"successfulFinalCreated\":false,\"formalVerifierPassCreated\":false}"
+        ]
+      },
+      "stdout": "{\"ok\":true,\"module\":\"ISOLATED-RUN-VERIFICATION-NOT-BUSINESS-VERIFIED-001\",\"runEvidenceValidated\":true,\"businessVerified\":false,\"verified\":false,\"successfulFinalCreated\":false,\"formalVerifierPassCreated\":false}\n",
+      "stderr": ""
+    },
+    {
+      "name": "Server-owned run facts",
+      "script": "scripts/verify-server-owned-run-fact-preservation-001.mjs",
+      "argv": [
+        "scripts/verify-server-owned-run-fact-preservation-001.mjs"
+      ],
+      "start": "2026-08-07T16:52:41.088Z",
+      "end": "2026-08-07T16:52:41.442Z",
+      "exitCode": 0,
+      "sourceSHA256": "32368c1ac9d9b46e29ae54af87664a30fcaa69abd7124b67a2c1760ad5d2e396",
+      "assertionSummary": {
+        "configuredName": "Server-owned run facts",
+        "source": "scripts/verify-server-owned-run-fact-preservation-001.mjs",
+        "outputTail": [
+          "    \"I\": \"PASS\",",
+          "    \"J\": {",
+          "      \"result\": \"PASS\",",
+          "      \"beforeHash\": \"8d2359cf02290490b53d0ff3382d8d87ff98cc4cd1d908e4cb542e1433071584\",",
+          "      \"afterHash\": \"8d2359cf02290490b53d0ff3382d8d87ff98cc4cd1d908e4cb542e1433071584\"",
+          "    }",
+          "  }",
+          "}"
+        ]
+      },
+      "stdout": "{\n  \"ok\": true,\n  \"module\": \"SERVER-OWNED-RUN-FACT-PRESERVATION-001\",\n  \"identityFields\": [\n    \"id\",\n    \"taskId\",\n    \"taskRevision\",\n    \"agentId\"\n  ],\n  \"directBareVerifiedCopy\": false,\n  \"verifiedRecomputed\": true,\n  \"scenarios\": {\n    \"A\": \"PASS\",\n    \"B\": \"PASS\",\n    \"C\": \"PASS\",\n    \"D\": \"PASS\",\n    \"E\": \"PASS\",\n    \"F\": \"PASS\",\n    \"G\": \"PASS\",\n    \"H\": \"PASS\",\n    \"I\": \"PASS\",\n    \"J\": {\n      \"result\": \"PASS\",\n      \"beforeHash\": \"8d2359cf02290490b53d0ff3382d8d87ff98cc4cd1d908e4cb542e1433071584\",\n      \"afterHash\": \"8d2359cf02290490b53d0ff3382d8d87ff98cc4cd1d908e4cb542e1433071584\"\n    }\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "name": "UI writable DTO",
+      "script": "scripts/verify-ui-writable-dto-001.mjs",
+      "argv": [
+        "scripts/verify-ui-writable-dto-001.mjs"
+      ],
+      "start": "2026-08-07T16:52:41.442Z",
+      "end": "2026-08-07T16:52:41.740Z",
+      "exitCode": 0,
+      "sourceSHA256": "28493bff6424d6b96da27dbdfdd659af9660ebd39981670af85cf1d2fd3ea442",
+      "assertionSummary": {
+        "configuredName": "UI writable DTO",
+        "source": "scripts/verify-ui-writable-dto-001.mjs",
+        "outputTail": [
+          "    \"F\": {",
+          "      \"result\": \"PASS\",",
+          "      \"httpStatus\": 422,",
+          "      \"writeCount\": 0",
+          "    },",
+          "    \"G\": \"PASS\"",
+          "  }",
+          "}"
+        ]
+      },
+      "stdout": "{\n  \"ok\": true,\n  \"module\": \"UI-WRITABLE-DTO-001\",\n  \"productionImport\": \"src/lib/writable-data-dto.js\",\n  \"globalFieldNameDeletion\": false,\n  \"scenarios\": {\n    \"E\": {\n      \"result\": \"PASS\",\n      \"missing\": [],\n      \"extra\": [],\n      \"classificationErrors\": []\n    },\n    \"A\": \"PASS\",\n    \"B\": \"PASS\",\n    \"C\": \"PASS\",\n    \"D\": \"PASS\",\n    \"H\": \"PASS\",\n    \"I\": \"PASS\",\n    \"J\": \"PASS\",\n    \"F\": {\n      \"result\": \"PASS\",\n      \"httpStatus\": 422,\n      \"writeCount\": 0\n    },\n    \"G\": \"PASS\"\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "name": "Run trust path",
+      "script": "scripts/verify-run-trust-path-rejection-baseline-001.mjs",
+      "argv": [
+        "scripts/verify-run-trust-path-rejection-baseline-001.mjs"
+      ],
+      "start": "2026-08-07T16:52:41.741Z",
+      "end": "2026-08-07T16:52:42.225Z",
+      "exitCode": 0,
+      "sourceSHA256": "fe346f395cb3b7faea0ff6a0e66f2bbe079296b195e302a5e9ecd995d93d5ce4",
+      "assertionSummary": {
+        "configuredName": "Run trust path",
+        "source": "scripts/verify-run-trust-path-rejection-baseline-001.mjs",
+        "outputTail": [
+          "        \"trustedTask\"",
+          "      ]",
+          "    }",
+          "  ],",
+          "  \"acceptedCases\": [],",
+          "  \"atomicityHashBefore\": \"cf4ac85c42692244281fa624b703d2a1685e45191d6b1b48bc6709e0d0f614e5\",",
+          "  \"atomicityHashAfter\": \"cf4ac85c42692244281fa624b703d2a1685e45191d6b1b48bc6709e0d0f614e5\"",
+          "}"
+        ]
+      },
+      "stdout": "{\n  \"ok\": true,\n  \"module\": \"RUN-TRUST-PATH-REJECTION-BASELINE-001\",\n  \"rejectedCases\": [\n    {\n      \"name\": \"verified-true\",\n      \"offendingPaths\": [\n        \"verified\"\n      ]\n    },\n    {\n      \"name\": \"verified-string\",\n      \"offendingPaths\": [\n        \"verified\"\n      ]\n    },\n    {\n      \"name\": \"verified-number\",\n      \"offendingPaths\": [\n        \"verified\"\n      ]\n    },\n    {\n      \"name\": \"verified-object\",\n      \"offendingPaths\": [\n        \"verified\"\n      ]\n    },\n    {\n      \"name\": \"verified-false\",\n      \"offendingPaths\": [\n        \"verified\"\n      ]\n    },\n    {\n      \"name\": \"verified-null\",\n      \"offendingPaths\": [\n        \"verified\"\n      ]\n    },\n    {\n      \"name\": \"verified-empty-array\",\n      \"offendingPaths\": [\n        \"verified\"\n      ]\n    },\n    {\n      \"name\": \"verification\",\n      \"offendingPaths\": [\n        \"verification\"\n      ]\n    },\n    {\n      \"name\": \"verification-passed\",\n      \"offendingPaths\": [\n        \"verification\"\n      ]\n    },\n    {\n      \"name\": \"verificationPassed\",\n      \"offendingPaths\": [\n        \"verificationPassed\"\n      ]\n    },\n    {\n      \"name\": \"verificationResult\",\n      \"offendingPaths\": [\n        \"verificationResult\"\n      ]\n    },\n    {\n      \"name\": \"finalEvidence\",\n      \"offendingPaths\": [\n        \"finalEvidence\"\n      ]\n    },\n    {\n      \"name\": \"finalResult-verified\",\n      \"offendingPaths\": [\n        \"finalResult.verified\"\n      ]\n    },\n    {\n      \"name\": \"verifierId\",\n      \"offendingPaths\": [\n        \"verifierId\"\n      ]\n    },\n    {\n      \"name\": \"verifiedAt\",\n      \"offendingPaths\": [\n        \"verifiedAt\"\n      ]\n    },\n    {\n      \"name\": \"runEvidenceValidated\",\n      \"offendingPaths\": [\n        \"runEvidenceValidated\"\n      ]\n    },\n    {\n      \"name\": \"legacyVerifiedClaimObserved\",\n      \"offendingPaths\": [\n        \"legacyVerifiedClaimObserved\"\n      ]\n    },\n    {\n      \"name\": \"trustedTask\",\n      \"offendingPaths\": [\n        \"trustedTask\"\n      ]\n    }\n  ],\n  \"acceptedCases\": [],\n  \"atomicityHashBefore\": \"cf4ac85c42692244281fa624b703d2a1685e45191d6b1b48bc6709e0d0f614e5\",\n  \"atomicityHashAfter\": \"cf4ac85c42692244281fa624b703d2a1685e45191d6b1b48bc6709e0d0f614e5\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "name": "Protocol trust field",
+      "script": "scripts/verify-trust-field-protocol-path-matching-001.mjs",
+      "argv": [
+        "scripts/verify-trust-field-protocol-path-matching-001.mjs"
+      ],
+      "start": "2026-08-07T16:52:42.226Z",
+      "end": "2026-08-07T16:52:42.832Z",
+      "exitCode": 0,
+      "sourceSHA256": "af10b6c8076da1b1e0bc893eeb736208333e7d871f833c53e4b4b599aa0964ea",
+      "assertionSummary": {
+        "configuredName": "Protocol trust field",
+        "source": "scripts/verify-trust-field-protocol-path-matching-001.mjs",
+        "outputTail": [
+          "    \"extraRules\": [],",
+          "    \"matchModeMismatches\": [],",
+          "    \"scopeMismatches\": [],",
+          "    \"opaqueBoundaryMismatches\": []",
+          "  },",
+          "  \"hashBefore\": \"cf4ac85c42692244281fa624b703d2a1685e45191d6b1b48bc6709e0d0f614e5\",",
+          "  \"hashAfterRejected\": \"cf4ac85c42692244281fa624b703d2a1685e45191d6b1b48bc6709e0d0f614e5\"",
+          "}"
+        ]
+      },
+      "stdout": "{\n  \"ok\": true,\n  \"module\": \"TRUST-FIELD-PROTOCOL-PATH-MATCHING-001\",\n  \"rejectionMatrix\": 11,\n  \"opaqueAcceptanceMatrix\": 5,\n  \"runShapeMisidentification\": false,\n  \"offendingPathsAccurate\": true,\n  \"policyConsistency\": {\n    \"missingRules\": [],\n    \"extraRules\": [],\n    \"matchModeMismatches\": [],\n    \"scopeMismatches\": [],\n    \"opaqueBoundaryMismatches\": []\n  },\n  \"hashBefore\": \"cf4ac85c42692244281fa624b703d2a1685e45191d6b1b48bc6709e0d0f614e5\",\n  \"hashAfterRejected\": \"cf4ac85c42692244281fa624b703d2a1685e45191d6b1b48bc6709e0d0f614e5\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "name": "Workbench context",
+      "script": "scripts/verify-workbench-context-verified-trust-boundary-001.mjs",
+      "argv": [
+        "scripts/verify-workbench-context-verified-trust-boundary-001.mjs"
+      ],
+      "start": "2026-08-07T16:52:42.833Z",
+      "end": "2026-08-07T16:52:42.925Z",
+      "exitCode": 0,
+      "sourceSHA256": "d65645cdfc69da88a284b2a44f7a9c2c8727b314b7b70a0833a7a2716f0b7c7a",
+      "assertionSummary": {
+        "configuredName": "Workbench context",
+        "source": "scripts/verify-workbench-context-verified-trust-boundary-001.mjs",
+        "outputTail": [
+          "    \"G\": \"PASS\",",
+          "    \"H\": \"PASS\",",
+          "    \"I\": \"PASS\",",
+          "    \"J\": \"PASS\",",
+          "    \"K\": \"PASS\",",
+          "    \"L\": \"PASS\"",
+          "  }",
+          "}"
+        ]
+      },
+      "stdout": "{\n  \"ok\": true,\n  \"module\": \"WORKBENCH-CONTEXT-VERIFIED-TRUST-BOUNDARY-001\",\n  \"thirdFieldRuleCount\": 0,\n  \"thirdVerifiedDerivationCount\": 0,\n  \"scenarios\": {\n    \"A\": \"PASS\",\n    \"B\": \"PASS\",\n    \"C\": \"PASS\",\n    \"D\": \"PASS\",\n    \"E\": \"PASS\",\n    \"F\": \"PASS\",\n    \"G\": \"PASS\",\n    \"H\": \"PASS\",\n    \"I\": \"PASS\",\n    \"J\": \"PASS\",\n    \"K\": \"PASS\",\n    \"L\": \"PASS\"\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "name": "Agent context",
+      "script": "scripts/verify-agent-context-injection-rejection-001.mjs",
+      "argv": [
+        "scripts/verify-agent-context-injection-rejection-001.mjs"
+      ],
+      "start": "2026-08-07T16:52:42.926Z",
+      "end": "2026-08-07T16:52:44.088Z",
+      "exitCode": 0,
+      "sourceSHA256": "d0cf1fc1a34d4fc9f9429658f85840dbaa0b91b1a3a83a9cdb3f5a9565941a11",
+      "assertionSummary": {
+        "configuredName": "Agent context",
+        "source": "scripts/verify-agent-context-injection-rejection-001.mjs",
+        "outputTail": [
+          "    \"H\": \"PASS\",",
+          "    \"I\": \"PASS\",",
+          "    \"J\": \"PASS\",",
+          "    \"K\": \"PASS\",",
+          "    \"L\": \"PASS\",",
+          "    \"M\": \"PASS\"",
+          "  }",
+          "}"
+        ]
+      },
+      "stdout": "{\n  \"ok\": true,\n  \"module\": \"AGENT-CONTEXT-INJECTION-REJECTION-001\",\n  \"agentCallsOnRejected\": 0,\n  \"providerCallsOnRejected\": 0,\n  \"runCreatesOnRejected\": 0,\n  \"taskCreatesOnRejected\": 0,\n  \"hashBefore\": \"6b1014c5df4a36faf01e6d03e37c71aa5085f135e7cdea5765c7b9a52cf760ce\",\n  \"hashAfterRejected\": \"6b1014c5df4a36faf01e6d03e37c71aa5085f135e7cdea5765c7b9a52cf760ce\",\n  \"normalContextHash\": \"15ca3f8d3707431b390c01056c6985ab02133884ebf880d0f4ef59e45be1d7fa\",\n  \"scenarios\": {\n    \"A\": \"PASS\",\n    \"B\": \"PASS\",\n    \"C\": \"PASS\",\n    \"D\": \"PASS\",\n    \"E\": \"PASS\",\n    \"F\": \"PASS\",\n    \"G\": \"PASS\",\n    \"H\": \"PASS\",\n    \"I\": \"PASS\",\n    \"J\": \"PASS\",\n    \"K\": \"PASS\",\n    \"L\": \"PASS\",\n    \"M\": \"PASS\"\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "name": "UI verification separation",
+      "script": "scripts/verify-ui-run-status-verification-separation-001.mjs",
+      "argv": [
+        "scripts/verify-ui-run-status-verification-separation-001.mjs"
+      ],
+      "start": "2026-08-07T16:52:44.088Z",
+      "end": "2026-08-07T16:52:44.158Z",
+      "exitCode": 0,
+      "sourceSHA256": "11a4c39cb53ad5248520b0dc086832d12d3a221923bbfe4f9d75eeb0b428a5e3",
+      "assertionSummary": {
+        "configuredName": "UI verification separation",
+        "source": "scripts/verify-ui-run-status-verification-separation-001.mjs",
+        "outputTail": [
+          "    \"G\": \"PASS\",",
+          "    \"H\": \"PASS\",",
+          "    \"I\": \"PASS\",",
+          "    \"J\": \"PASS\",",
+          "    \"K\": \"PASS\",",
+          "    \"L\": \"PASS\"",
+          "  }",
+          "}"
+        ]
+      },
+      "stdout": "{\n  \"ok\": true,\n  \"module\": \"UI-RUN-STATUS-VERIFICATION-SEPARATION-001\",\n  \"productionImport\": \"src/lib/run-status-view.js\",\n  \"scenarios\": {\n    \"A\": \"PASS\",\n    \"B\": \"PASS\",\n    \"C\": \"PASS\",\n    \"D\": \"PASS\",\n    \"E\": \"PASS\",\n    \"F\": \"PASS\",\n    \"G\": \"PASS\",\n    \"H\": \"PASS\",\n    \"I\": \"PASS\",\n    \"J\": \"PASS\",\n    \"K\": \"PASS\",\n    \"L\": \"PASS\"\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "name": "Verified assignment invariant",
+      "script": "scripts/verify-verified-assignment-invariant-001.mjs",
+      "argv": [
+        "scripts/verify-verified-assignment-invariant-001.mjs"
+      ],
+      "start": "2026-08-07T16:52:44.159Z",
+      "end": "2026-08-07T16:52:44.244Z",
+      "exitCode": 0,
+      "sourceSHA256": "242f65803c18323aee91c9f45aeca45f8486557172580e4be4ee91530d4a6685",
+      "assertionSummary": {
+        "configuredName": "Verified assignment invariant",
+        "source": "scripts/verify-verified-assignment-invariant-001.mjs",
+        "outputTail": [
+          "{\"ok\":true,\"module\":\"VERIFIED-ASSIGNMENT-INVARIANT-001\",\"productionFiles\":30,\"verifiedTrueAssignments\":[{\"file\":\"agents/agent-runtime.mjs\",\"line\":411,\"text\":\"const candidateFinalResult = { messageId: job.messageId, text, provider, providerSessionId: '', toolUsed, verified: true, verification: verificationRecord, interpretation, schedulerStatus: capabilityPlan.status, capabilityResults: results, classification, taskId: task.taskId, runId: started.identity.runId, taskRevision: started.identity.taskRevision, metrics: { readFileCalls: read ? 1 : 0, codexCalls: 0 } };\"}],\"permittedTrustedCandidateAssignments\":1,\"forbiddenAssignments\":0,\"failOpenConsumers\":0}"
+        ]
+      },
+      "stdout": "{\"ok\":true,\"module\":\"VERIFIED-ASSIGNMENT-INVARIANT-001\",\"productionFiles\":30,\"verifiedTrueAssignments\":[{\"file\":\"agents/agent-runtime.mjs\",\"line\":411,\"text\":\"const candidateFinalResult = { messageId: job.messageId, text, provider, providerSessionId: '', toolUsed, verified: true, verification: verificationRecord, interpretation, schedulerStatus: capabilityPlan.status, capabilityResults: results, classification, taskId: task.taskId, runId: started.identity.runId, taskRevision: started.identity.taskRevision, metrics: { readFileCalls: read ? 1 : 0, codexCalls: 0 } };\"}],\"permittedTrustedCandidateAssignments\":1,\"forbiddenAssignments\":0,\"failOpenConsumers\":0}\n",
+      "stderr": ""
+    },
+    {
+      "name": "Gateway business boundary",
+      "script": "scripts/verify-gateway-runtime-business-boundary.mjs",
+      "argv": [
+        "scripts/verify-gateway-runtime-business-boundary.mjs"
+      ],
+      "start": "2026-08-07T16:52:44.244Z",
+      "end": "2026-08-07T16:52:44.650Z",
+      "exitCode": 0,
+      "sourceSHA256": "090396bc50022497bfafdc0a947aefdafd0a6ea59894b581c21609b32d534b16",
+      "assertionSummary": {
+        "configuredName": "Gateway business boundary",
+        "source": "scripts/verify-gateway-runtime-business-boundary.mjs",
+        "outputTail": [
+          "  \"totalGatewayBoundaryScenarios\": 8,",
+          "  \"staleScenariosMigrated\": 4,",
+          "  \"unchangedValidScenarios\": 4,",
+          "  \"remainingStaleScenarios\": 0,",
+          "  \"terminalTasksDoNotBlock\": true,",
+          "  \"runtimeSwitchUsesNewLogicWithoutGatewayRestart\": true,",
+          "  \"exactlyOnceContract\": \"one source message -> one Gateway Job -> one Runtime handle -> one Result\"",
+          "}"
+        ]
+      },
+      "stdout": "{\n  \"ok\": true,\n  \"gatewayImportsBusiness\": false,\n  \"gatewayAlwaysEnqueues\": true,\n  \"runtimeOwnsTaskLifecycle\": true,\n  \"realJobEntry\": \"AgentRuntime.handle\",\n  \"cases\": [\n    {\n      \"name\": \"read\",\n      \"classification\": {\n        \"relationToActiveTask\": \"new_task\",\n        \"action\": \"read\",\n        \"target\": \"C:\\\\Users\\\\qingy\\\\AppData\\\\Local\\\\Temp\\\\aiw-entry-DHbp58\\\\NEXT_STEP.md\",\n        \"constraints\": [],\n        \"kind\": \"new_task\",\n        \"reason\": \"no_target_task\"\n      },\n      \"interpretationSource\": \"interpreter-adapter-v1\",\n      \"provider\": \"local-tool-executor\",\n      \"toolUsed\": \"file.read\"\n    },\n    {\n      \"name\": \"continue\",\n      \"classification\": {\n        \"kind\": \"non_execution\",\n        \"decision\": \"respond\",\n        \"originalMessageId\": \"continue\",\n        \"renderer\": \"deterministic-v1\",\n        \"missingFields\": [],\n        \"questions\": [],\n        \"recognizedIntents\": [\n          \"non_execution_conversation\"\n        ],\n        \"riskSignals\": [],\n        \"executionStarted\": false,\n        \"createdAt\": \"2026-08-07T14:37:48.210Z\"\n      },\n      \"provider\": \"deterministic-response-renderer\",\n      \"toolUsed\": \"\"\n    },\n    {\n      \"name\": \"pause\",\n      \"classification\": {\n        \"action\": \"\",\n        \"target\": \"\",\n        \"constraints\": [],\n        \"kind\": \"pause\",\n        \"relationToActiveTask\": \"pause\",\n        \"reason\": \"explicit_task_control\"\n      },\n      \"controlKind\": \"pause\",\n      \"provider\": \"ai-workbench\",\n      \"toolUsed\": \"\"\n    },\n    {\n      \"name\": \"cancel\",\n      \"classification\": {\n        \"action\": \"\",\n        \"target\": \"\",\n        \"constraints\": [],\n        \"kind\": \"cancel\",\n        \"relationToActiveTask\": \"cancel\",\n        \"reason\": \"explicit_task_control\"\n      },\n      \"controlKind\": \"cancel\",\n      \"provider\": \"ai-workbench\",\n      \"toolUsed\": \"\"\n    },\n    {\n      \"name\": \"progress\",\n      \"classification\": {\n        \"action\": \"\",\n        \"target\": \"\",\n        \"constraints\": [],\n        \"kind\": \"progress\",\n        \"relationToActiveTask\": \"progress\",\n        \"reason\": \"explicit_progress_reference\"\n      },\n      \"controlKind\": \"progress\",\n      \"provider\": \"ai-workbench\",\n      \"toolUsed\": \"\"\n    },\n    {\n      \"name\": \"fresh-failed\",\n      \"classification\": {\n        \"relationToActiveTask\": \"new_task\",\n        \"action\": \"read\",\n        \"target\": \"C:\\\\Users\\\\qingy\\\\AppData\\\\Local\\\\Temp\\\\aiw-entry-DHbp58\\\\NEXT_STEP.md\",\n        \"constraints\": [],\n        \"kind\": \"new_task\",\n        \"reason\": \"no_target_task\"\n      },\n      \"interpretationSource\": \"interpreter-adapter-v1\",\n      \"provider\": \"local-tool-executor\",\n      \"toolUsed\": \"file.read\"\n    },\n    {\n      \"name\": \"fresh-cancelled\",\n      \"classification\": {\n        \"relationToActiveTask\": \"new_task\",\n        \"action\": \"read\",\n        \"target\": \"C:\\\\Users\\\\qingy\\\\AppData\\\\Local\\\\Temp\\\\aiw-entry-DHbp58\\\\NEXT_STEP.md\",\n        \"constraints\": [],\n        \"kind\": \"new_task\",\n        \"reason\": \"no_target_task\"\n      },\n      \"interpretationSource\": \"interpreter-adapter-v1\",\n      \"provider\": \"local-tool-executor\",\n      \"toolUsed\": \"file.read\"\n    },\n    {\n      \"name\": \"fresh-completed\",\n      \"classification\": {\n        \"relationToActiveTask\": \"new_task\",\n        \"action\": \"read\",\n        \"target\": \"C:\\\\Users\\\\qingy\\\\AppData\\\\Local\\\\Temp\\\\aiw-entry-DHbp58\\\\NEXT_STEP.md\",\n        \"constraints\": [],\n        \"kind\": \"new_task\",\n        \"reason\": \"no_target_task\"\n      },\n      \"interpretationSource\": \"interpreter-adapter-v1\",\n      \"provider\": \"local-tool-executor\",\n      \"toolUsed\": \"file.read\"\n    }\n  ],\n  \"totalGatewayBoundaryScenarios\": 8,\n  \"staleScenariosMigrated\": 4,\n  \"unchangedValidScenarios\": 4,\n  \"remainingStaleScenarios\": 0,\n  \"terminalTasksDoNotBlock\": true,\n  \"runtimeSwitchUsesNewLogicWithoutGatewayRestart\": true,\n  \"exactlyOnceContract\": \"one source message -> one Gateway Job -> one Runtime handle -> one Result\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "name": "Delivery and trust propagation boundary",
+      "script": "scripts/verify-verified-propagation-boundary-001.mjs",
+      "argv": [
+        "scripts/verify-verified-propagation-boundary-001.mjs"
+      ],
+      "start": "2026-08-07T16:52:44.650Z",
+      "end": "2026-08-07T16:52:44.985Z",
+      "exitCode": 0,
+      "sourceSHA256": "dda1be5eb962681d7358fa0a67f6108f644ffffd52c50cf8906677ec5859fa66",
+      "assertionSummary": {
+        "configuredName": "Delivery and trust propagation boundary",
+        "source": "scripts/verify-verified-propagation-boundary-001.mjs",
+        "outputTail": [
+          "{\"ok\":true,\"auditIntegrityOk\":true,\"reportIntegrityOk\":true,\"boundaryPolicyOk\":true,\"staticChecks\":11,\"probeChecks\":8,\"closureChecks\":4,\"checks\":23,\"failures\":[],\"runtimeHead\":\"33298c2efb974c951fa320b09214b70c4d2677cd\",\"evidenceWritePhase\":\"COMPLETE_CLOSURE\",\"trustedFactsControlSha256\":\"ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b\",\"trustedFactsForgedSha256\":\"ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b\",\"probeResults\":{\"C1\":{\"control\":{\"messageId\":\"same-message\",\"text\":\"same text\",\"authorized\":true,\"trustedAcceptance\":false},\"forged\":{\"messageId\":\"same-message\",\"text\":\"same text\",\"authorized\":true,\"trustedAcceptance\":false}},\"C3\":{\"control\":{\"supported\":true,\"chatId\":\"same-chat\",\"trustedAcceptance\":false},\"forged\":{\"supported\":true,\"chatId\":\"same-chat\",\"trustedAcceptance\":false}},\"C2\":{\"control\":{\"listed\":1,\"text\":\"same result\",\"ok\":true,\"claim\":true,\"trustedAcceptance\":false},\"forged\":{\"listed\":1,\"text\":\"same result\",\"ok\":true,\"claim\":true,\"trustedAcceptance\":false}},\"C4\":{\"control\":{\"componentPresent\":false,\"electronIpcHits\":[]},\"forged\":{\"componentPresent\":false,\"electronIpcHits\":[]}},\"C5\":{\"control\":{\"suppressed\":false,\"trustedAcceptance\":false},\"forged\":{\"suppressed\":false,\"trustedAcceptance\":false}},\"C6\":{\"control\":{\"shouldStop\":false,\"reason\":\"task_not_cancelled\",\"trustedAcceptance\":false},\"forged\":{\"shouldStop\":false,\"reason\":\"task_not_cancelled\",\"trustedAcceptance\":false}},\"C7\":{\"control\":{\"key\":\"9c7632ce35a6c63c6c2a04a4ce0ddce8\",\"trustedAcceptance\":false},\"forged\":{\"key\":\"9c7632ce35a6c63c6c2a04a4ce0ddce8\",\"trustedAcceptance\":false}},\"C8\":{\"control\":{\"success\":true,\"trustedAcceptance\":true},\"forged\":{\"success\":true,\"trustedAcceptance\":true}}}}"
+        ]
+      },
+      "stdout": "{\"ok\":true,\"auditIntegrityOk\":true,\"reportIntegrityOk\":true,\"boundaryPolicyOk\":true,\"staticChecks\":11,\"probeChecks\":8,\"closureChecks\":4,\"checks\":23,\"failures\":[],\"runtimeHead\":\"33298c2efb974c951fa320b09214b70c4d2677cd\",\"evidenceWritePhase\":\"COMPLETE_CLOSURE\",\"trustedFactsControlSha256\":\"ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b\",\"trustedFactsForgedSha256\":\"ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b\",\"probeResults\":{\"C1\":{\"control\":{\"messageId\":\"same-message\",\"text\":\"same text\",\"authorized\":true,\"trustedAcceptance\":false},\"forged\":{\"messageId\":\"same-message\",\"text\":\"same text\",\"authorized\":true,\"trustedAcceptance\":false}},\"C3\":{\"control\":{\"supported\":true,\"chatId\":\"same-chat\",\"trustedAcceptance\":false},\"forged\":{\"supported\":true,\"chatId\":\"same-chat\",\"trustedAcceptance\":false}},\"C2\":{\"control\":{\"listed\":1,\"text\":\"same result\",\"ok\":true,\"claim\":true,\"trustedAcceptance\":false},\"forged\":{\"listed\":1,\"text\":\"same result\",\"ok\":true,\"claim\":true,\"trustedAcceptance\":false}},\"C4\":{\"control\":{\"componentPresent\":false,\"electronIpcHits\":[]},\"forged\":{\"componentPresent\":false,\"electronIpcHits\":[]}},\"C5\":{\"control\":{\"suppressed\":false,\"trustedAcceptance\":false},\"forged\":{\"suppressed\":false,\"trustedAcceptance\":false}},\"C6\":{\"control\":{\"shouldStop\":false,\"reason\":\"task_not_cancelled\",\"trustedAcceptance\":false},\"forged\":{\"shouldStop\":false,\"reason\":\"task_not_cancelled\",\"trustedAcceptance\":false}},\"C7\":{\"control\":{\"key\":\"9c7632ce35a6c63c6c2a04a4ce0ddce8\",\"trustedAcceptance\":false},\"forged\":{\"key\":\"9c7632ce35a6c63c6c2a04a4ce0ddce8\",\"trustedAcceptance\":false}},\"C8\":{\"control\":{\"success\":true,\"trustedAcceptance\":true},\"forged\":{\"success\":true,\"trustedAcceptance\":true}}}}\n",
+      "stderr": ""
+    }
+  ],
+  "antifraud": {
+    "stringPresentOnly": false,
+    "packageScriptOnly": false,
+    "commented": false,
+    "disabled": false,
+    "mockOnlySubstitution": false,
+    "envSkip": false,
+    "failureSwallowing": false,
+    "duplicateNameMasking": false,
+    "historicalPassReuse": false,
+    "allExecuted": true,
+    "sourceScan": {
+      "disabledPattern": false,
+      "failureSwallowPattern": false
+    },
+    "uniqueRegressionNames": true,
+    "uniqueAttackNames": true,
+    "allSourceHashesPresent": true,
+    "allExitCodesZero": true
+  },
+  "result": "PASS"
+}

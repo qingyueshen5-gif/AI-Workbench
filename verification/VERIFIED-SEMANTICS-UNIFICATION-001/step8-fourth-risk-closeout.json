@@ -1,0 +1,138 @@
+{
+  "schemaVersion": "ai-workbench.step8-fourth-risk-closeout/v1",
+  "contractId": "STEP8-FULL-IMPACT-REGRESSION-MACHINE-CONTRACT-001",
+  "riskName": "LEGACY_WORKBENCH_RUN_VERIFIED_TRUST_BOUNDARY_BYPASS",
+  "openState": "OPEN",
+  "closedState": "RESOLVED",
+  "decision": "RESOLVED",
+  "runnerHead": "33298c2efb974c951fa320b09214b70c4d2677cd",
+  "conditions": [
+    {
+      "condition": "all required attack-matrix cases fresh PASS",
+      "satisfied": true,
+      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+    },
+    {
+      "condition": "35 mandatory gates fresh PASS",
+      "satisfied": true,
+      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+    },
+    {
+      "condition": "full-impact regression has no first failure",
+      "satisfied": true,
+      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+    },
+    {
+      "condition": "all required source SHA-256 values recorded",
+      "satisfied": true,
+      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+    },
+    {
+      "condition": "client and imported verified values fail closed",
+      "satisfied": true,
+      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+    },
+    {
+      "condition": "isolated verification cannot promote business verified",
+      "satisfied": true,
+      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+    },
+    {
+      "condition": "Context Agent UI Gateway and Delivery boundaries preserve only trusted derivation",
+      "satisfied": true,
+      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+    },
+    {
+      "condition": "legacy tests execute under the migrated trust contract",
+      "satisfied": true,
+      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+    },
+    {
+      "condition": "Step8 anti-fraud validation passes",
+      "satisfied": true,
+      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+    },
+    {
+      "condition": "finalAcceptance remains false",
+      "satisfied": true,
+      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+    },
+    {
+      "condition": "deployment remains NOT_DEPLOYED",
+      "satisfied": true,
+      "evidence": "fresh regression/attack matrix at runnerHead 33298c2efb974c951fa320b09214b70c4d2677cd"
+    }
+  ],
+  "inScope": [
+    "POST /api/runs verified injection",
+    "PUT /api/data and Data Import verified injection",
+    "legacy persisted bare verified claims",
+    "isolated Run verification promotion",
+    "server-owned Run fact preservation",
+    "UI writable DTO exclusion",
+    "trust-field protocol path matching",
+    "Workbench context projection",
+    "Agent context injection rejection",
+    "UI execution and verification separation",
+    "Gateway and Delivery verified propagation"
+  ],
+  "outOfScopeProductLandingBlockers": [
+    "PROGRESS_AND_FINAL_SHARE_FEISHU_UUID_NAMESPACE",
+    "STALE_ACCEPTED_ORPHAN_HAS_NO_TERMINAL_FAIL_CLOSED_STATE",
+    "GATEWAY_RUNTIME_COMMIT_BOUNDING_NOT_VERIFIED",
+    "DUAL_RUNTIME_AUTHORITY_UNRESOLVED",
+    "DESKTOP_CANONICAL_RUNTIME_BINDING_MISSING",
+    "PRODUCTION_EQUIVALENT_FEISHU_E2E_MISSING",
+    "HUMAN_ACCEPTANCE_MISSING"
+  ],
+  "productLandingBlockers": [
+    {
+      "id": "DUAL_RUNTIME_AUTHORITY_UNRESOLVED",
+      "status": "OPEN",
+      "productState": "BLOCKED"
+    },
+    {
+      "id": "DESKTOP_CANONICAL_RUNTIME_BINDING_MISSING",
+      "status": "OPEN",
+      "productState": "false"
+    },
+    {
+      "id": "PROGRESS_AND_FINAL_SHARE_FEISHU_UUID_NAMESPACE",
+      "status": "OPEN",
+      "productState": "productionProgressFinalExactlyOnce=BLOCKED"
+    },
+    {
+      "id": "STALE_ACCEPTED_ORPHAN_HAS_NO_TERMINAL_FAIL_CLOSED_STATE",
+      "status": "OPEN",
+      "productState": "acceptedRecovery=PARTIAL"
+    },
+    {
+      "id": "GATEWAY_RUNTIME_COMMIT_BOUNDING_NOT_VERIFIED",
+      "status": "OPEN",
+      "productState": "productionConfiguration=BLOCKED"
+    },
+    {
+      "id": "PRODUCTION_EQUIVALENT_FEISHU_E2E_MISSING",
+      "status": "MISSING",
+      "productState": "finalAcceptance=false"
+    },
+    {
+      "id": "REAL_FEISHU_SMOKE_MISSING",
+      "status": "MISSING",
+      "productState": "deployment=NOT_DEPLOYED"
+    },
+    {
+      "id": "MOBILE_REAL_DEVICE_ACCEPTANCE_MISSING",
+      "status": "MISSING",
+      "productState": "finalAcceptance=false"
+    },
+    {
+      "id": "HUMAN_ACCEPTANCE_MISSING",
+      "status": "MISSING",
+      "productState": "finalAcceptance=false"
+    }
+  ],
+  "finalAcceptance": false,
+  "deployment": "NOT_DEPLOYED",
+  "productionReady": false
+}
