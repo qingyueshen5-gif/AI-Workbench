@@ -67,6 +67,7 @@
     "exec:report": "node scripts/exec-guard.mjs report",
     "test:exec-guard": "node --test tests/exec-guard.test.mjs",
     "verify:step6-contract": "node scripts/verify-step6-legacy-run-api-contract-001.mjs",
+    "verify:step6-legacy-run-api-archive": "node scripts/verify-legacy-run-api-archive-completeness-001.mjs",
     "test:step6-contract-validator": "node --test tests/verify-step6-legacy-run-api-contract-001.test.mjs"
   },
   "dependencies": {
