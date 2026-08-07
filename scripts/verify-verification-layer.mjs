@@ -13,6 +13,7 @@ const server = spawn(process.execPath, ['server.mjs'], {
 });
 
 let output = '';
+let cookie = '';
 server.stdout.on('data', (chunk) => {
   output += chunk;
 });
@@ -25,25 +26,44 @@ function wait(ms) {
 }
 
 async function request(path, method = 'GET', payload) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (cookie) headers.Cookie = cookie;
   const response = await fetch(`${baseUrl}${path}`, {
     method,
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: payload ? JSON.stringify(payload) : undefined
   });
   const body = await response.json();
   return { response, body };
 }
 
-async function waitForServer() {
-  for (let attempt = 0; attempt < 50; attempt += 1) {
-    try {
-      const { response } = await request('/api/data');
-      if (response.ok) return;
-    } catch {
-      await wait(100);
-    }
+async function establishAuthenticatedSession() {
+  const response = await fetch(`${baseUrl}/`);
+  const setCookie = response.headers.get('set-cookie');
+  await response.text();
+  cookie = String(setCookie || '').split(';')[0];
+  if (!cookie.startsWith('aiw_session=')) {
+    throw new Error('Authenticated session cookie aiw_session was not issued');
   }
-  throw new Error(`API server did not start.\n${output}`);
+}
+
+async function waitForServer() {
+  const deadline = Date.now() + 15_000;
+  let lastError = null;
+  while (Date.now() < deadline) {
+    if (server.exitCode !== null) {
+      throw new Error(`API server exited before readiness (exitCode=${server.exitCode}).\n${output}`);
+    }
+    try {
+      const { response } = await request('/api/readiness');
+      if (response.ok) return;
+      lastError = new Error(`readiness endpoint returned HTTP ${response.status}`);
+    } catch (error) {
+      lastError = error;
+    }
+    await wait(100);
+  }
+  throw new Error(`API server did not become ready within 15000ms. Last error: ${lastError?.message || 'none'}\n${output}`);
 }
 
 function assert(condition, message) {
@@ -77,6 +97,7 @@ async function createRunScenario(name, runPayload) {
 
 async function main() {
   await waitForServer();
+  await establishAuthenticatedSession();
 
   const rules = await request('/api/verification-rules');
   assert(rules.response.ok && Array.isArray(rules.body.rules), 'Verification rules endpoint failed');
@@ -105,8 +126,15 @@ async function main() {
       durationMs: 1234
     }
   });
-  assert(success.verification.ok === true, 'Success scenario should verify');
-  assert(success.afterVerify.verified === true, 'Success scenario should set verified=true');
+  assert(success.verification.ok === true, 'Success scenario should produce isolated verification evidence');
+  assert(success.verification.businessVerified === false, 'Isolated verification must not claim business verification');
+  assert(success.verification.runEvidenceValidated === true, 'Successful isolated verification should validate run evidence');
+  assert(success.afterVerify.runEvidenceValidated === true, 'Validated evidence should be recorded separately');
+  assert(success.afterVerify.verified === false, 'Isolated verification must not promote business verified=true');
+  const isolatedVerificationPassed = success.verification.ok === true;
+  const isolatedVerificationCanPromoteBusinessVerified = success.afterVerify.verified === true;
+  assert(isolatedVerificationPassed === true, 'Isolated verification evidence should be explicit');
+  assert(isolatedVerificationCanPromoteBusinessVerified === false, 'Isolated evidence cannot promote business verification');
 
   const fakeDone = await createRunScenario('假完成场景：员工说做完但没有证据', {
     output: {
@@ -151,6 +179,8 @@ async function main() {
     rules: rules.body.rules,
     scenarios: {
       success,
+      isolatedVerificationPassed,
+      isolatedVerificationCanPromoteBusinessVerified,
       fakeDone,
       executionFailed
     }

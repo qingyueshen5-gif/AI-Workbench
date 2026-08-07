@@ -13,6 +13,7 @@ const server = spawn(process.execPath, ['server.mjs'], {
 });
 
 let output = '';
+let cookie = '';
 server.stdout.on('data', (chunk) => {
   output += chunk;
 });
@@ -25,25 +26,44 @@ function wait(ms) {
 }
 
 async function request(path, method = 'GET', payload) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (cookie) headers.Cookie = cookie;
   const response = await fetch(`${baseUrl}${path}`, {
     method,
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: payload ? JSON.stringify(payload) : undefined
   });
   const body = await response.json();
   return { response, body };
 }
 
-async function waitForServer() {
-  for (let attempt = 0; attempt < 50; attempt += 1) {
-    try {
-      const { response } = await request('/api/data');
-      if (response.ok) return;
-    } catch {
-      await wait(100);
-    }
+async function establishAuthenticatedSession() {
+  const response = await fetch(`${baseUrl}/`);
+  const setCookie = response.headers.get('set-cookie');
+  await response.text();
+  cookie = String(setCookie || '').split(';')[0];
+  if (!cookie.startsWith('aiw_session=')) {
+    throw new Error('Authenticated session cookie aiw_session was not issued');
   }
-  throw new Error(`API server did not start.\n${output}`);
+}
+
+async function waitForServer() {
+  const deadline = Date.now() + 15_000;
+  let lastError = null;
+  while (Date.now() < deadline) {
+    if (server.exitCode !== null) {
+      throw new Error(`API server exited before readiness (exitCode=${server.exitCode}).\n${output}`);
+    }
+    try {
+      const { response } = await request('/api/readiness');
+      if (response.ok) return;
+      lastError = new Error(`readiness endpoint returned HTTP ${response.status}`);
+    } catch (error) {
+      lastError = error;
+    }
+    await wait(100);
+  }
+  throw new Error(`API server did not become ready within 15000ms. Last error: ${lastError?.message || 'none'}\n${output}`);
 }
 
 function assert(condition, message) {
@@ -52,6 +72,7 @@ function assert(condition, message) {
 
 async function main() {
   await waitForServer();
+  await establishAuthenticatedSession();
 
   const suffix = new Date().toISOString();
   const preference = await request('/api/memories', 'POST', {
@@ -80,18 +101,34 @@ async function main() {
   assert(includedPreference, 'Task context did not include the written user preference');
   assert(context.body.task_context.policy.agentCanWriteMainMemory === false, 'Context policy should forbid agent memory writes');
 
+  const rejectedClientTrust = await request('/api/runs', 'POST', {
+    taskId: task.id,
+    agentId: 'hermes',
+    status: 'done',
+    input: { task_context_id: context.body.task_context.id },
+    output: { summary: '客户端自报可信字段不得形成业务验证。' },
+    evidence: { checkedBy: 'verify-memories' },
+    verified: true,
+    verificationResult: { ok: true }
+  });
+  assert(rejectedClientTrust.response.status === 422, 'Client-supplied trust fields must be rejected');
+  assert(rejectedClientTrust.body.errorCode === 'CLIENT_SUPPLIED_TRUST_FIELD_FORBIDDEN', 'Trust rejection error code mismatch');
+  assert(rejectedClientTrust.body.serverOwnedField === true, 'Trust fields must remain server-owned');
+
   const runCreated = await request('/api/runs', 'POST', {
     taskId: task.id,
     agentId: 'hermes',
     status: 'done',
     input: { task_context_id: context.body.task_context.id },
-    output: { summary: 'Hermes 建议记录一个已验证的文件读取方案。' },
-    evidence: { checkedBy: 'verify-memories' },
-    verified: true,
-    verificationResult: { ok: true }
+    output: { summary: 'Hermes 建议记录一个文件读取方案。' },
+    evidence: { checkedBy: 'verify-memories' }
   });
   assert(runCreated.response.status === 201, `Run create failed: ${runCreated.body.error || runCreated.response.status}`);
   const run = runCreated.body.run;
+  assert(run.verified === false, 'A newly created run must remain business verified=false');
+  assert(run.verificationResult === null, 'Client input must not manufacture a verification result');
+  const clientClaimCanPromoteBusinessVerified = run.verified === true;
+  assert(clientClaimCanPromoteBusinessVerified === false, 'Client claims must not promote business verified');
 
   const suggested = await request(`/api/runs/${encodeURIComponent(run.id)}/memory-suggestions`, 'POST', {
     memory_suggestions: [
@@ -140,6 +177,9 @@ async function main() {
     task_context_contains_preference: includedPreference,
     task_context_policy: context.body.task_context.policy,
     agent_memory_suggestion_recorded_only: suggestion,
+    client_trust_claim_rejected: rejectedClientTrust.body,
+    clientClaimCanPromoteBusinessVerified,
+    created_run_business_verified: run.verified,
     main_memory_before_workbench_approval: alreadyWritten,
     workbench_approved_memory: writtenMemory,
     suggestion_status_after_approval: storedSuggestion

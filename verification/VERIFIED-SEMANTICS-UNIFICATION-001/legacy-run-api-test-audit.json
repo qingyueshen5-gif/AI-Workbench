@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "ai-workbench.step6-legacy-run-api-test-audit/v1",
+  "taskId": "STEP6-LEGACY-RUN-API-PRODUCT-MIGRATION-001",
+  "baselineHead": "9830a8efb1f66b6acd019296c4c699057f0de242",
+  "productDecisionIds": [
+    "STEP6-TRUST-SEMANTICS-001",
+    "STEP6-ARCHIVE-UNIVERSE-001"
+  ],
+  "sourceFiles": [
+    "scripts/verify-memories.mjs",
+    "scripts/verify-verification-layer.mjs",
+    "scripts/verify-tasks-runs.mjs"
+  ],
+  "archiveUniverseExpectedCount": 5,
+  "archiveUniversePresentCount": 5,
+  "entries": [
+    {
+      "assertionId": "S6-MEM-A001",
+      "source": "scripts/verify-memories.mjs",
+      "originalSemantics": "Client-supplied verified=true and verificationResult.ok=true were accepted as a successful Run creation contract.",
+      "classification": "HISTORICAL_CLIENT_TRUST_PROMOTION",
+      "historicalReason": "Client input cannot be trusted server evidence.",
+      "migrationAction": "HISTORICAL_ARCHIVED_AND_REPLACED",
+      "replacementAssertion": "POST /api/runs rejects client-owned trust fields with CLIENT_SUPPLIED_TRUST_FIELD_FORBIDDEN; a legal Run remains verified=false and verificationResult=null.",
+      "activeOrArchived": "HISTORICAL_ARCHIVED",
+      "preservesFailClosed": true,
+      "trustPromotionAllowed": false,
+      "evidence": {
+        "runtimeTest": "node scripts/verify-memories.mjs",
+        "archived": true,
+        "executable": true,
+        "trustBoundary": "ISOLATED_VERIFICATION_EVIDENCE_ONLY_NO_BUSINESS_VERIFIED_PROMOTION"
+      }
+    },
+    {
+      "assertionId": "S6-VL-A001",
+      "source": "scripts/verify-verification-layer.mjs",
+      "originalSemantics": "Successful isolated verification promoted afterVerify.verified to true.",
+      "classification": "HISTORICAL_ISOLATED_TO_BUSINESS_PROMOTION",
+      "historicalReason": "Isolated evidence and business trust are distinct authorities.",
+      "migrationAction": "HISTORICAL_ARCHIVED_AND_REPLACED",
+      "replacementAssertion": "verification.ok and runEvidenceValidated may be true while businessVerified and run.verified remain false.",
+      "activeOrArchived": "HISTORICAL_ARCHIVED",
+      "preservesFailClosed": true,
+      "trustPromotionAllowed": false,
+      "evidence": {
+        "runtimeTest": "node scripts/verify-verification-layer.mjs",
+        "archived": true,
+        "executable": true,
+        "trustBoundary": "ISOLATED_VERIFICATION_EVIDENCE_ONLY_NO_BUSINESS_VERIFIED_PROMOTION"
+      }
+    },
+    {
+      "assertionId": "S6-VL-A002",
+      "source": "scripts/verify-verification-layer.mjs",
+      "originalSemantics": "Missing evidence fails verification with missing_evidence and verified=false.",
+      "classification": "CURRENT_FAIL_CLOSED_MISSING_EVIDENCE",
+      "historicalReason": "Not historical; retained as an active security assertion.",
+      "migrationAction": "ACTIVE_MIGRATED",
+      "replacementAssertion": "Missing evidence continues to produce missing_evidence and business verified=false.",
+      "activeOrArchived": "ACTIVE_MIGRATED",
+      "preservesFailClosed": true,
+      "trustPromotionAllowed": false,
+      "evidence": {
+        "runtimeTest": "node scripts/verify-verification-layer.mjs",
+        "archived": false,
+        "executable": true,
+        "trustBoundary": "FAIL_CLOSED_MISSING_EVIDENCE"
+      }
+    },
+    {
+      "assertionId": "S6-VL-A003",
+      "source": "scripts/verify-verification-layer.mjs",
+      "originalSemantics": "Execution failure fails verification with execution_failed and verified=false.",
+      "classification": "CURRENT_FAIL_CLOSED_EXECUTION_FAILURE",
+      "historicalReason": "Not historical; retained as an active security assertion.",
+      "migrationAction": "ACTIVE_MIGRATED",
+      "replacementAssertion": "Execution failure continues to produce execution_failed and business verified=false.",
+      "activeOrArchived": "ACTIVE_MIGRATED",
+      "preservesFailClosed": true,
+      "trustPromotionAllowed": false,
+      "evidence": {
+        "runtimeTest": "node scripts/verify-verification-layer.mjs",
+        "archived": false,
+        "executable": true,
+        "trustBoundary": "FAIL_CLOSED_EXECUTION_FAILURE"
+      }
+    },
+    {
+      "assertionId": "S6-TR-A001",
+      "source": "scripts/verify-tasks-runs.mjs",
+      "originalSemantics": "Task/run linkage and verified/verificationResult field presence were checked without an explicit no-promotion boundary.",
+      "classification": "CURRENT_SHAPE_OR_LINKAGE_ASSERTION",
+      "historicalReason": "The shape/linkage contract remains active but needs an explicit trust-boundary assertion.",
+      "migrationAction": "ACTIVE_MIGRATED",
+      "replacementAssertion": "Task/run linkage and field presence alone leave verified=false and verificationResult=null.",
+      "activeOrArchived": "ACTIVE_MIGRATED",
+      "preservesFailClosed": true,
+      "trustPromotionAllowed": false,
+      "evidence": {
+        "runtimeTest": "node scripts/verify-tasks-runs.mjs",
+        "archived": false,
+        "executable": true,
+        "trustBoundary": "SHAPE_OR_LINKAGE_NOT_SUFFICIENT_FOR_TRUST"
+      }
+    }
+  ],
+  "duplicates": [],
+  "unknownEntries": [],
+  "missingEntries": [],
+  "summary": {
+    "status": "PRESENT_AND_VERIFIED",
+    "expectedCount": 5,
+    "duplicateCount": 0,
+    "unclassifiedCount": 0,
+    "historicalArchivedCount": 2,
+    "activeMigratedCount": 3,
+    "trustPromotionAllowed": false
+  },
+  "checkpointExpectation": {
+    "checkpoint": "STEP6-LEGACY-RUN-API-ARCHIVE-001",
+    "status": "TO_BE_BOUND_BY_FOCUSED_CHECKPOINT_WRITER"
+  }
+}

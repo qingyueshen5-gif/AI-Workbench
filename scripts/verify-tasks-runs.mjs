@@ -13,6 +13,7 @@ const server = spawn(process.execPath, ['server.mjs'], {
 });
 
 let output = '';
+let cookie = '';
 server.stdout.on('data', (chunk) => {
   output += chunk;
 });
@@ -25,25 +26,44 @@ function wait(ms) {
 }
 
 async function request(path, method = 'GET', payload) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (cookie) headers.Cookie = cookie;
   const response = await fetch(`${baseUrl}${path}`, {
     method,
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: payload ? JSON.stringify(payload) : undefined
   });
   const body = await response.json();
   return { response, body };
 }
 
-async function waitForServer() {
-  for (let attempt = 0; attempt < 50; attempt += 1) {
-    try {
-      const { response } = await request('/api/data');
-      if (response.ok) return;
-    } catch {
-      await wait(100);
-    }
+async function establishAuthenticatedSession() {
+  const response = await fetch(`${baseUrl}/`);
+  const setCookie = response.headers.get('set-cookie');
+  await response.text();
+  cookie = String(setCookie || '').split(';')[0];
+  if (!cookie.startsWith('aiw_session=')) {
+    throw new Error('Authenticated session cookie aiw_session was not issued');
   }
-  throw new Error(`API server did not start.\n${output}`);
+}
+
+async function waitForServer() {
+  const deadline = Date.now() + 15_000;
+  let lastError = null;
+  while (Date.now() < deadline) {
+    if (server.exitCode !== null) {
+      throw new Error(`API server exited before readiness (exitCode=${server.exitCode}).\n${output}`);
+    }
+    try {
+      const { response } = await request('/api/readiness');
+      if (response.ok) return;
+      lastError = new Error(`readiness endpoint returned HTTP ${response.status}`);
+    } catch (error) {
+      lastError = error;
+    }
+    await wait(100);
+  }
+  throw new Error(`API server did not become ready within 15000ms. Last error: ${lastError?.message || 'none'}\n${output}`);
 }
 
 function assert(condition, message) {
@@ -52,24 +72,33 @@ function assert(condition, message) {
 
 async function main() {
   await waitForServer();
+  await establishAuthenticatedSession();
 
   const content = `验证统一任务结构 ${new Date().toISOString()}`;
-  const chat = await request('/api/chat-message', 'POST', {
-    content,
-    conversationId: 'verify-task-run-conversation'
+  const taskCreated = await request('/api/tasks', 'POST', {
+    userGoal: content,
+    title: '验证统一任务结构',
+    assignedAgentId: 'hermes',
+    evidenceRequired: ['task_run_linkage']
   });
-  assert(chat.response.ok, `Chat request failed: ${chat.body.error || chat.response.status}`);
+  assert(taskCreated.response.status === 201, `Task create failed: ${taskCreated.body.error || taskCreated.response.status}`);
+  const createdTask = taskCreated.body.task;
 
-  const matchingTask = chat.body.data.tasks.find((task) => task.userGoal === content);
-  assert(matchingTask, 'Chat message did not create a task record');
+  const runCreated = await request('/api/runs', 'POST', {
+    taskId: createdTask.id,
+    agentId: createdTask.assignedAgentId,
+    status: 'pending',
+    input: { source: 'verify-tasks-runs' },
+    output: null,
+    evidence: {}
+  });
+  assert(runCreated.response.status === 201, `Run create failed: ${runCreated.body.error || runCreated.response.status}`);
+  const createdRun = runCreated.body.run;
 
-  const matchingRun = chat.body.data.runs.find((run) => run.taskId === matchingTask.id);
-  assert(matchingRun, 'Chat message did not create a run record');
-
-  const taskGet = await request(`/api/tasks/${encodeURIComponent(matchingTask.id)}`);
+  const taskGet = await request(`/api/tasks/${encodeURIComponent(createdTask.id)}`);
   assert(taskGet.response.ok, `GET task failed: ${taskGet.body.error || taskGet.response.status}`);
 
-  const runGet = await request(`/api/runs/${encodeURIComponent(matchingRun.id)}`);
+  const runGet = await request(`/api/runs/${encodeURIComponent(createdRun.id)}`);
   assert(runGet.response.ok, `GET run failed: ${runGet.body.error || runGet.response.status}`);
 
   const task = taskGet.body.task;
@@ -113,11 +142,24 @@ async function main() {
   ]) {
     assert(Object.prototype.hasOwnProperty.call(run, field), `Run is missing ${field}`);
   }
-  assert(run.taskId === task.id, 'Run taskId does not match task id');
-  assert(run.agentId === task.assignedAgentId, 'Run agentId does not match assigned agent');
+  const taskRunLinkageVerified = run.taskId === task.id && run.agentId === task.assignedAgentId;
+  assert(taskRunLinkageVerified, 'Task/run linkage is invalid');
   assert(run.durationMs >= 0, 'Run duration is missing');
+  const verifiedFieldIsFalse = run.verified === false;
+  const verificationResultIsNull = run.verificationResult === null;
+  assert(verifiedFieldIsFalse, 'Task/run linkage and field presence must not imply business verified');
+  assert(verificationResultIsNull, 'A linked run without trusted server evidence must have no verification result');
+  const shapeOrLinkageCanPromoteBusinessVerified = run.verified === true;
+  assert(shapeOrLinkageCanPromoteBusinessVerified === false, 'Shape or linkage alone cannot promote business verification');
 
-  console.log(JSON.stringify({ task, run }, null, 2));
+  console.log(JSON.stringify({
+    task,
+    run,
+    taskRunLinkageVerified,
+    verifiedFieldIsFalse,
+    verificationResultIsNull,
+    shapeOrLinkageCanPromoteBusinessVerified
+  }, null, 2));
 }
 
 try {
