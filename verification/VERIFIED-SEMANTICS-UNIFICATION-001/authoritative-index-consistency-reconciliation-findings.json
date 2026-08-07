@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
-  "generatedAt": "2026-08-07T19:24:00+08:00",
-  "sourceHead": "e8e96d71c663095b9d4296ff91cf5eb906f9e8ae",
+  "generatedAt": "2026-08-07T22:52:21+08:00",
+  "sourceHead": "beac3630597ad428a644bd8cdcd25684e555a01f",
   "evidencePriority": [
     "current filesystem and Git",
     "current machine commands",
@@ -147,12 +147,17 @@
     },
     "STEP7": {
       "functionalId": "STEP7",
-      "machineStatus": "ACTUALLY_MISSING",
-      "decisionReason": "Mandatory entry is fail-fast, but none of the indexed twelve specialists is directly or transitively invoked by its actual execution graph; the three legacy tests are package scripts only and not mandatory. No antifraud or complete-gates evidence/checkpoint was found.",
+      "machineStatus": "PRESENT_AND_VERIFIED",
+      "decisionReason": "Fresh Gate 1→35 execution completed 35/35 with all exit codes zero; twelve specialists and three legacy tests are directly mandatory; wiring and antifraud evidence are present; formal checkpoint is saved and gate-passed.",
       "filesChecked": [
         "package.json",
         "scripts/verify-mandatory-gates-001.mjs",
-        "scripts/verify.mjs"
+        "scripts/verify-step7-mandatory-gates-wiring-001.mjs",
+        "tests/verify-step7-mandatory-gates-wiring-001.test.mjs",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/gates-wiring-audit.json",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/gates-wiring-audit.md",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/mandatory-gates-antifraud.json",
+        "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/mandatory-gates-antifraud.md"
       ],
       "filesFound": [
         "package.json",
@@ -171,12 +176,7 @@
         "scripts/verify-ui-run-status-verification-separation-001.mjs",
         "scripts/verify-verified-assignment-invariant-001.mjs"
       ],
-      "filesMissing": [
-        "mandatory-gates antifraud JSON/Markdown",
-        "wiring completeness evidence",
-        "Step7 effective checkpoint",
-        "complete mandatory-gates run evidence"
-      ],
+      "filesMissing": [],
       "equivalentFilesSearched": {
         "keywords": [
           "mandatory gates antifraud",
@@ -189,17 +189,27 @@
         ],
         "matches": []
       },
-      "checkpointCandidates": [],
-      "selectedCheckpoint": null,
-      "checkpointGateStatus": null,
-      "checkpointCommit": null,
-      "commitIsAncestor": false,
-      "patchPath": null,
-      "patchExists": false,
-      "patchSha256Expected": null,
-      "patchSha256Actual": null,
-      "patchHashMatch": false,
-      "testSemantics": null,
+      "checkpointCandidates": [
+        "LEGACY-RUN-API-STEP7-MANDATORY-GATES-WIRING-001"
+      ],
+      "selectedCheckpoint": "LEGACY-RUN-API-STEP7-MANDATORY-GATES-WIRING-001",
+      "checkpointGateStatus": "GATE_PASSED",
+      "checkpointCommit": "beac3630597ad428a644bd8cdcd25684e555a01f",
+      "commitIsAncestor": true,
+      "patchPath": "C:\\Users\\qingy\\AppData\\Local\\Temp\\ai-workbench-step7-checkpoints\\LEGACY-RUN-API-STEP7-MANDATORY-GATES-WIRING-001-beac3630597a.patch",
+      "patchExists": true,
+      "patchSha256Expected": "49b6cb2edcb416060dda5329057cf52f6e876bebcb60b8f9c437e8ae06655bb6",
+      "patchSha256Actual": "49b6cb2edcb416060dda5329057cf52f6e876bebcb60b8f9c437e8ae06655bb6",
+      "patchHashMatch": true,
+      "testSemantics": {
+        "requiredGateCount": 35,
+        "allRequiredGatesStarted": true,
+        "allRequiredGatesCompleted": true,
+        "firstFailure": null,
+        "missingGateCount": 0,
+        "duplicateGateCount": 0,
+        "skippedGateCount": 0
+      },
       "mandatoryGateBinding": {
         "entry": "scripts/verify-mandatory-gates-001.mjs",
         "packageEntry": "npm run verify",
@@ -211,210 +221,226 @@
             "actualPath": "scripts/verify-run-api-verified-injection-rejection-001.mjs",
             "exists": true,
             "nodeCheckExitCode": 0,
-            "directMandatory": false,
+            "directMandatory": true,
             "transitiveMandatory": false,
             "mandatoryPath": [
-              "scripts/verify-mandatory-gates-001.mjs"
+              "scripts/verify-mandatory-gates-001.mjs",
+              "scripts/verify-run-api-verified-injection-rejection-001.mjs"
             ],
             "optional": false,
             "warningOnly": false,
             "duplicate": false,
-            "notWired": true
+            "notWired": false
           },
           {
             "actualPath": "scripts/verify-data-import-verified-injection-rejection-001.mjs",
             "exists": true,
             "nodeCheckExitCode": 0,
-            "directMandatory": false,
+            "directMandatory": true,
             "transitiveMandatory": false,
             "mandatoryPath": [
-              "scripts/verify-mandatory-gates-001.mjs"
+              "scripts/verify-mandatory-gates-001.mjs",
+              "scripts/verify-data-import-verified-injection-rejection-001.mjs"
             ],
             "optional": false,
             "warningOnly": false,
             "duplicate": false,
-            "notWired": true
+            "notWired": false
           },
           {
             "actualPath": "scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs",
             "exists": true,
             "nodeCheckExitCode": 0,
-            "directMandatory": false,
+            "directMandatory": true,
             "transitiveMandatory": false,
             "mandatoryPath": [
-              "scripts/verify-mandatory-gates-001.mjs"
+              "scripts/verify-mandatory-gates-001.mjs",
+              "scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs"
             ],
             "optional": false,
             "warningOnly": false,
             "duplicate": false,
-            "notWired": true
+            "notWired": false
           },
           {
             "actualPath": "scripts/verify-isolated-run-verification-not-business-verified-001.mjs",
             "exists": true,
             "nodeCheckExitCode": 0,
-            "directMandatory": false,
+            "directMandatory": true,
             "transitiveMandatory": false,
             "mandatoryPath": [
-              "scripts/verify-mandatory-gates-001.mjs"
+              "scripts/verify-mandatory-gates-001.mjs",
+              "scripts/verify-isolated-run-verification-not-business-verified-001.mjs"
             ],
             "optional": false,
             "warningOnly": false,
             "duplicate": false,
-            "notWired": true
+            "notWired": false
           },
           {
             "actualPath": "scripts/verify-server-owned-run-fact-preservation-001.mjs",
             "exists": true,
             "nodeCheckExitCode": 0,
-            "directMandatory": false,
+            "directMandatory": true,
             "transitiveMandatory": false,
             "mandatoryPath": [
-              "scripts/verify-mandatory-gates-001.mjs"
+              "scripts/verify-mandatory-gates-001.mjs",
+              "scripts/verify-server-owned-run-fact-preservation-001.mjs"
             ],
             "optional": false,
             "warningOnly": false,
             "duplicate": false,
-            "notWired": true
+            "notWired": false
           },
           {
             "actualPath": "scripts/verify-ui-writable-dto-001.mjs",
             "exists": true,
             "nodeCheckExitCode": 0,
-            "directMandatory": false,
+            "directMandatory": true,
             "transitiveMandatory": false,
             "mandatoryPath": [
-              "scripts/verify-mandatory-gates-001.mjs"
+              "scripts/verify-mandatory-gates-001.mjs",
+              "scripts/verify-ui-writable-dto-001.mjs"
             ],
             "optional": false,
             "warningOnly": false,
             "duplicate": false,
-            "notWired": true
+            "notWired": false
           },
           {
             "actualPath": "scripts/verify-run-trust-path-rejection-baseline-001.mjs",
             "exists": true,
             "nodeCheckExitCode": 0,
-            "directMandatory": false,
+            "directMandatory": true,
             "transitiveMandatory": false,
             "mandatoryPath": [
-              "scripts/verify-mandatory-gates-001.mjs"
+              "scripts/verify-mandatory-gates-001.mjs",
+              "scripts/verify-run-trust-path-rejection-baseline-001.mjs"
             ],
             "optional": false,
             "warningOnly": false,
             "duplicate": false,
-            "notWired": true
+            "notWired": false
           },
           {
             "actualPath": "scripts/verify-trust-field-protocol-path-matching-001.mjs",
             "exists": true,
             "nodeCheckExitCode": 0,
-            "directMandatory": false,
+            "directMandatory": true,
             "transitiveMandatory": false,
             "mandatoryPath": [
-              "scripts/verify-mandatory-gates-001.mjs"
+              "scripts/verify-mandatory-gates-001.mjs",
+              "scripts/verify-trust-field-protocol-path-matching-001.mjs"
             ],
             "optional": false,
             "warningOnly": false,
             "duplicate": false,
-            "notWired": true
+            "notWired": false
           },
           {
             "actualPath": "scripts/verify-workbench-context-verified-trust-boundary-001.mjs",
             "exists": true,
             "nodeCheckExitCode": 0,
-            "directMandatory": false,
+            "directMandatory": true,
             "transitiveMandatory": false,
             "mandatoryPath": [
-              "scripts/verify-mandatory-gates-001.mjs"
+              "scripts/verify-mandatory-gates-001.mjs",
+              "scripts/verify-workbench-context-verified-trust-boundary-001.mjs"
             ],
             "optional": false,
             "warningOnly": false,
             "duplicate": false,
-            "notWired": true
+            "notWired": false
           },
           {
             "actualPath": "scripts/verify-agent-context-injection-rejection-001.mjs",
             "exists": true,
             "nodeCheckExitCode": 0,
-            "directMandatory": false,
+            "directMandatory": true,
             "transitiveMandatory": false,
             "mandatoryPath": [
-              "scripts/verify-mandatory-gates-001.mjs"
+              "scripts/verify-mandatory-gates-001.mjs",
+              "scripts/verify-agent-context-injection-rejection-001.mjs"
             ],
             "optional": false,
             "warningOnly": false,
             "duplicate": false,
-            "notWired": true
+            "notWired": false
           },
           {
             "actualPath": "scripts/verify-ui-run-status-verification-separation-001.mjs",
             "exists": true,
             "nodeCheckExitCode": 0,
-            "directMandatory": false,
+            "directMandatory": true,
             "transitiveMandatory": false,
             "mandatoryPath": [
-              "scripts/verify-mandatory-gates-001.mjs"
+              "scripts/verify-mandatory-gates-001.mjs",
+              "scripts/verify-ui-run-status-verification-separation-001.mjs"
             ],
             "optional": false,
             "warningOnly": false,
             "duplicate": false,
-            "notWired": true
+            "notWired": false
           },
           {
             "actualPath": "scripts/verify-verified-assignment-invariant-001.mjs",
             "exists": true,
             "nodeCheckExitCode": 0,
-            "directMandatory": false,
+            "directMandatory": true,
             "transitiveMandatory": false,
             "mandatoryPath": [
-              "scripts/verify-mandatory-gates-001.mjs"
+              "scripts/verify-mandatory-gates-001.mjs",
+              "scripts/verify-verified-assignment-invariant-001.mjs"
             ],
             "optional": false,
             "warningOnly": false,
             "duplicate": false,
-            "notWired": true
+            "notWired": false
           }
         ],
         "legacyTests": [
           {
             "path": "scripts/verify-memories.mjs",
-            "classification": "NOT_MANDATORY"
+            "classification": "DIRECT_MANDATORY"
           },
           {
             "path": "scripts/verify-verification-layer.mjs",
-            "classification": "NOT_MANDATORY"
+            "classification": "DIRECT_MANDATORY"
           },
           {
             "path": "scripts/verify-tasks-runs.mjs",
-            "classification": "NOT_MANDATORY"
+            "classification": "DIRECT_MANDATORY"
           }
         ]
       },
       "antiFraudEvidence": {
-        "present": false
+        "present": true,
+        "json": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/mandatory-gates-antifraud.json",
+        "markdown": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/mandatory-gates-antifraud.md"
       },
       "fullGateEvidence": {
-        "present": false
+        "present": true,
+        "json": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/gates-wiring-audit.json",
+        "markdown": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/gates-wiring-audit.md"
       },
       "jsonEvidencePath": "steps.step7",
-      "recommendedAction": "FUNCTIONAL_REMEDIATION_STEP7",
+      "recommendedAction": "PRESENT_AND_VERIFIED",
       "targetCount": 12,
-      "directMandatoryCount": 0,
+      "directMandatoryCount": 12,
       "transitiveMandatoryCount": 0,
-      "effectiveMandatoryCount": 0,
-      "missingMandatoryCount": 12,
+      "effectiveMandatoryCount": 12,
+      "missingMandatoryCount": 0,
       "optionalCount": 0,
-      "antiFraudEvidencePresent": false,
-      "fullGatesEvidencePresent": false
+      "antiFraudEvidencePresent": true,
+      "fullGatesEvidencePresent": true
     }
   },
   "machineStatuses": {
     "STEP5-E": "PRESENT_AND_VERIFIED",
     "STEP6": "PRESENT_AND_VERIFIED",
-    "STEP7": "ACTUALLY_MISSING"
+    "STEP7": "PRESENT_AND_VERIFIED"
   },
   "functionalRemediationPerformed": true,
   "step8Started": false,
-  "statusEvidenceHash": "a292cb54ec9ff43bdae0406041de754b2abba7d3ca0ed9befd31d05c8736eea9"
+  "statusEvidenceHash": "c2b98b552f2bb89698b8e07c8efd3518befbcbcc0c858f98729f5369fa989de2"
 }

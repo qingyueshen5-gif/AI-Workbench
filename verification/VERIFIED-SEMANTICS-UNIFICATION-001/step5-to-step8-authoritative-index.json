@@ -1,8 +1,8 @@
 {
   "schemaVersion": "ai-workbench.step5-step8-authoritative-index/v1",
-  "generatedAt": "2026-08-07T19:24:00+08:00",
-  "generatedFromHead": "e8e96d71c663095b9d4296ff91cf5eb906f9e8ae",
-  "generatedFromRemote": "9830a8efb1f66b6acd019296c4c699057f0de242",
+  "generatedAt": "2026-08-07T22:52:21+08:00",
+  "generatedFromHead": "beac3630597ad428a644bd8cdcd25684e555a01f",
+  "generatedFromRemote": "d377a423ade575051c9b3e7ebe3394819b16b7e5",
   "branch": "candidate/interpreter-adapter-v1-work",
   "sourceOfTruth": [
     "checkpoint manifests",
@@ -21,14 +21,104 @@
     "authoritativeIndex": "COMPLETED_VALIDATED"
   },
   "checkpointInventorySummary": {
-    "checkpointDirectoryCount": 121,
-    "manifestReadableCount": 100,
-    "patchExistsCount": 100,
-    "patchHashMatchCount": 100,
+    "checkpointDirectoryCount": 138,
+    "manifestReadableCount": 117,
+    "patchExistsCount": 117,
+    "patchHashMatchCount": 117,
     "checkpointWithoutReadableManifestCount": 21,
     "checkpointWithMissingOrUnknownCommitCount": 21
   },
   "checkpointInventory": [
+    {
+      "directoryName": "AI-WORKBENCH-UNIFIED-TASK-HANDOFF-001",
+      "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\AI-WORKBENCH-UNIFIED-TASK-HANDOFF-001\\manifest.json",
+      "manifestReadable": true,
+      "checkpointCommit": "010478e10d1e2a2530588dc13ccd4d6b9c60b43d",
+      "commitExists": true,
+      "commitIsAncestorOfGeneratedHead": true,
+      "gateStatus": "GATE_PASSED",
+      "saveStatus": "SAVED",
+      "patchPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\AI-WORKBENCH-UNIFIED-TASK-HANDOFF-001\\AI-WORKBENCH-UNIFIED-TASK-HANDOFF-001-010478e10d1e.patch",
+      "patchExists": true,
+      "manifestPatchSha256": "cdd50ccd876e3fa153ad228548318d0d5e1316dd6aed7479339c1a6875ec8508",
+      "actualPatchSha256": "cdd50ccd876e3fa153ad228548318d0d5e1316dd6aed7479339c1a6875ec8508",
+      "patchHashMatch": true,
+      "effectiveGateStatus": null,
+      "supersedes": null,
+      "supersededBy": null
+    },
+    {
+      "directoryName": "AUTHORITATIVE-INDEX-CONSISTENCY-RECONCILIATION-001",
+      "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\AUTHORITATIVE-INDEX-CONSISTENCY-RECONCILIATION-001\\manifest.json",
+      "manifestReadable": true,
+      "checkpointCommit": "2b276f4bd9762ffb96057ef9e27bf0c146c19cb0",
+      "commitExists": true,
+      "commitIsAncestorOfGeneratedHead": true,
+      "gateStatus": "GATE_PASSED",
+      "saveStatus": "SAVED",
+      "patchPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\AUTHORITATIVE-INDEX-CONSISTENCY-RECONCILIATION-001\\AUTHORITATIVE-INDEX-CONSISTENCY-RECONCILIATION-001-2b276f4bd976.patch",
+      "patchExists": true,
+      "manifestPatchSha256": "b7d7f3406d5006cdf52c25886b5a657007be2b7538e96e631759550b124c43f0",
+      "actualPatchSha256": "b7d7f3406d5006cdf52c25886b5a657007be2b7538e96e631759550b124c43f0",
+      "patchHashMatch": true,
+      "effectiveGateStatus": null,
+      "supersedes": null,
+      "supersededBy": null
+    },
+    {
+      "directoryName": "AUTHORITATIVE-INDEX-CONSISTENCY-RECONCILIATION-AUDIT-001",
+      "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\AUTHORITATIVE-INDEX-CONSISTENCY-RECONCILIATION-AUDIT-001\\manifest.json",
+      "manifestReadable": true,
+      "checkpointCommit": "c6abaa8d94f7e645a6e53bbc61f83565e610649b",
+      "commitExists": true,
+      "commitIsAncestorOfGeneratedHead": true,
+      "gateStatus": "WIP_NOT_GATED",
+      "saveStatus": "SAVED",
+      "patchPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\AUTHORITATIVE-INDEX-CONSISTENCY-RECONCILIATION-AUDIT-001\\AUTHORITATIVE-INDEX-CONSISTENCY-RECONCILIATION-AUDIT-001-c6abaa8d94f7.patch",
+      "patchExists": true,
+      "manifestPatchSha256": "006dc8c2a14c53bb7ce1cb8bacfbf2f61e2ad0a6dbebe94f6689afdb8272b499",
+      "actualPatchSha256": "006dc8c2a14c53bb7ce1cb8bacfbf2f61e2ad0a6dbebe94f6689afdb8272b499",
+      "patchHashMatch": true,
+      "effectiveGateStatus": null,
+      "supersedes": null,
+      "supersededBy": null
+    },
+    {
+      "directoryName": "AUTHORITATIVE-INDEX-UPDATE-STEP5E-001",
+      "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\AUTHORITATIVE-INDEX-UPDATE-STEP5E-001\\manifest.json",
+      "manifestReadable": true,
+      "checkpointCommit": "7c3813754ddbd09c4546168945a371b0955d6dbc",
+      "commitExists": true,
+      "commitIsAncestorOfGeneratedHead": true,
+      "gateStatus": "GATE_PASSED",
+      "saveStatus": "SAVED",
+      "patchPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\AUTHORITATIVE-INDEX-UPDATE-STEP5E-001\\AUTHORITATIVE-INDEX-UPDATE-STEP5E-001-7c3813754ddb.patch",
+      "patchExists": true,
+      "manifestPatchSha256": "580ea95cb42b99ab2c3f9a1b2dca0f57b5dff9ef0590b2ade560a85c3dc7007e",
+      "actualPatchSha256": "580ea95cb42b99ab2c3f9a1b2dca0f57b5dff9ef0590b2ade560a85c3dc7007e",
+      "patchHashMatch": true,
+      "effectiveGateStatus": null,
+      "supersedes": null,
+      "supersededBy": null
+    },
+    {
+      "directoryName": "AUTHORITATIVE-INDEX-UPDATE-STEP6-001",
+      "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\AUTHORITATIVE-INDEX-UPDATE-STEP6-001\\manifest.json",
+      "manifestReadable": true,
+      "checkpointCommit": "d377a423ade575051c9b3e7ebe3394819b16b7e5",
+      "commitExists": true,
+      "commitIsAncestorOfGeneratedHead": true,
+      "gateStatus": "GATE_PASSED",
+      "saveStatus": "SAVED",
+      "patchPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\AUTHORITATIVE-INDEX-UPDATE-STEP6-001\\AUTHORITATIVE-INDEX-UPDATE-STEP6-001-d377a423ade5.patch",
+      "patchExists": true,
+      "manifestPatchSha256": "90bbcf9cef039d2ef0408d95079240dc63b386d14124fdc3f59479bc35605e7a",
+      "actualPatchSha256": "90bbcf9cef039d2ef0408d95079240dc63b386d14124fdc3f59479bc35605e7a",
+      "patchHashMatch": true,
+      "effectiveGateStatus": null,
+      "supersedes": null,
+      "supersededBy": null
+    },
     {
       "directoryName": "CHECKPOINT-MANIFEST-INTEGRITY-001",
       "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\CHECKPOINT-MANIFEST-INTEGRITY-001\\manifest.json",
@@ -340,6 +430,24 @@
       "manifestPatchSha256": null,
       "actualPatchSha256": null,
       "patchHashMatch": false
+    },
+    {
+      "directoryName": "EXEC-GUARD-SOLIDIFICATION-001",
+      "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\EXEC-GUARD-SOLIDIFICATION-001\\manifest.json",
+      "manifestReadable": true,
+      "checkpointCommit": "28d7e9ed4b0fdba3fdee9d94149fe72f67312fe4",
+      "commitExists": true,
+      "commitIsAncestorOfGeneratedHead": true,
+      "gateStatus": "GATE_PASSED",
+      "saveStatus": "SAVED",
+      "patchPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\EXEC-GUARD-SOLIDIFICATION-001\\EXEC-GUARD-SOLIDIFICATION-001-28d7e9ed4b0f.patch",
+      "patchExists": true,
+      "manifestPatchSha256": "af9dd4da26b8694b3c10bb0ccc633dcafa969995d17fd9220156f3231b1c3c97",
+      "actualPatchSha256": "af9dd4da26b8694b3c10bb0ccc633dcafa969995d17fd9220156f3231b1c3c97",
+      "patchHashMatch": true,
+      "effectiveGateStatus": null,
+      "supersedes": null,
+      "supersededBy": null
     },
     {
       "directoryName": "EXTERNAL-SKILL-GOVERNANCE-001",
@@ -969,6 +1077,60 @@
       "supersededBy": null
     },
     {
+      "directoryName": "LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001",
+      "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001\\manifest.json",
+      "manifestReadable": true,
+      "checkpointCommit": "2e6a79eb67bb796163926f9f074cd0651d8fc236",
+      "commitExists": true,
+      "commitIsAncestorOfGeneratedHead": true,
+      "gateStatus": "GATE_PASSED",
+      "saveStatus": "SAVED",
+      "patchPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001\\LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001-2e6a79eb67bb.patch",
+      "patchExists": true,
+      "manifestPatchSha256": "a92c33ec3f50a8c9e81db4c0a748dd5b6ac5adf5ad7babc10b6fff717efd7211",
+      "actualPatchSha256": "a92c33ec3f50a8c9e81db4c0a748dd5b6ac5adf5ad7babc10b6fff717efd7211",
+      "patchHashMatch": true,
+      "effectiveGateStatus": null,
+      "supersedes": null,
+      "supersededBy": null
+    },
+    {
+      "directoryName": "LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001-WIP",
+      "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001-WIP\\manifest.json",
+      "manifestReadable": true,
+      "checkpointCommit": "b5126ded20c62f8a464e2358718e95ccfa4ffb2f",
+      "commitExists": true,
+      "commitIsAncestorOfGeneratedHead": true,
+      "gateStatus": "WIP_NOT_GATED",
+      "saveStatus": "SAVED",
+      "patchPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001-WIP\\LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001-WIP-b5126ded20c6.patch",
+      "patchExists": true,
+      "manifestPatchSha256": "73baf1d0c5bfd0771d33dfdeb43daaef560067ebd223d1e6d534ccc0e93723de",
+      "actualPatchSha256": "73baf1d0c5bfd0771d33dfdeb43daaef560067ebd223d1e6d534ccc0e93723de",
+      "patchHashMatch": true,
+      "effectiveGateStatus": null,
+      "supersedes": null,
+      "supersededBy": null
+    },
+    {
+      "directoryName": "LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001-WIP-REPAIR-001",
+      "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001-WIP-REPAIR-001\\manifest.json",
+      "manifestReadable": true,
+      "checkpointCommit": "518b51723cb5afe2f4a6a2fc24de6677a583ad72",
+      "commitExists": true,
+      "commitIsAncestorOfGeneratedHead": true,
+      "gateStatus": "WIP_NOT_GATED",
+      "saveStatus": "SAVED",
+      "patchPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001-WIP-REPAIR-001\\LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001-WIP-REPAIR-001-518b51723cb5.patch",
+      "patchExists": true,
+      "manifestPatchSha256": "e3c70415d4c5fc2e2b50df92a3a1653b861f44b06ba45c3fd73d48e329fd075f",
+      "actualPatchSha256": "e3c70415d4c5fc2e2b50df92a3a1653b861f44b06ba45c3fd73d48e329fd075f",
+      "patchHashMatch": true,
+      "effectiveGateStatus": null,
+      "supersedes": null,
+      "supersededBy": null
+    },
+    {
       "directoryName": "LEGACY-RUN-API-STEP5-SERVER-FACT-PRESERVATION-001",
       "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP5-SERVER-FACT-PRESERVATION-001\\manifest.json",
       "manifestReadable": true,
@@ -1071,6 +1233,24 @@
       "patchExists": true,
       "manifestPatchSha256": "62b7348a7d17e1842994c12f0be3e3be0a474a93498abf0c0107cddcc8153dcf",
       "actualPatchSha256": "62b7348a7d17e1842994c12f0be3e3be0a474a93498abf0c0107cddcc8153dcf",
+      "patchHashMatch": true,
+      "effectiveGateStatus": null,
+      "supersedes": null,
+      "supersededBy": null
+    },
+    {
+      "directoryName": "LEGACY-RUN-API-STEP6-PRECONDITION-STOP-002",
+      "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP6-PRECONDITION-STOP-002\\manifest.json",
+      "manifestReadable": true,
+      "checkpointCommit": "17326b3de06a61de6cde42f9966f0f185fdf5c70",
+      "commitExists": true,
+      "commitIsAncestorOfGeneratedHead": true,
+      "gateStatus": "WIP_NOT_GATED",
+      "saveStatus": "SAVED",
+      "patchPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\LEGACY-RUN-API-STEP6-PRECONDITION-STOP-002\\LEGACY-RUN-API-STEP6-PRECONDITION-STOP-002-17326b3de06a.patch",
+      "patchExists": true,
+      "manifestPatchSha256": "6097cb93d49b7a2f22455c0b4b8439e47a89e4a50fdc9b8e9caa0f471d335632",
+      "actualPatchSha256": "6097cb93d49b7a2f22455c0b4b8439e47a89e4a50fdc9b8e9caa0f471d335632",
       "patchHashMatch": true,
       "effectiveGateStatus": null,
       "supersedes": null,
@@ -1551,6 +1731,24 @@
       "patchHashMatch": false
     },
     {
+      "directoryName": "STEP5-TO-STEP8-AUTHORITATIVE-INDEX-001",
+      "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\STEP5-TO-STEP8-AUTHORITATIVE-INDEX-001\\manifest.json",
+      "manifestReadable": true,
+      "checkpointCommit": "2246ce91ef03d9d462f348ec094d9494256a6a20",
+      "commitExists": true,
+      "commitIsAncestorOfGeneratedHead": true,
+      "gateStatus": "GATE_PASSED",
+      "saveStatus": "SAVED",
+      "patchPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\STEP5-TO-STEP8-AUTHORITATIVE-INDEX-001\\STEP5-TO-STEP8-AUTHORITATIVE-INDEX-001-2246ce91ef03.patch",
+      "patchExists": true,
+      "manifestPatchSha256": "68b587a04081062a23d43a0ea6d8d6ed24fa349bf461772c30fed4c577eb9ca4",
+      "actualPatchSha256": "68b587a04081062a23d43a0ea6d8d6ed24fa349bf461772c30fed4c577eb9ca4",
+      "patchHashMatch": true,
+      "effectiveGateStatus": null,
+      "supersedes": null,
+      "supersededBy": null
+    },
+    {
       "directoryName": "STEP5-TO-STEP8-AUTHORITATIVE-INDEX-WIP-001",
       "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\STEP5-TO-STEP8-AUTHORITATIVE-INDEX-WIP-001\\manifest.json",
       "manifestReadable": true,
@@ -1563,6 +1761,96 @@
       "patchExists": true,
       "manifestPatchSha256": "f4a9eb166dca1151e19974e00b58878bebd35cef893a252747895bb6c8228714",
       "actualPatchSha256": "f4a9eb166dca1151e19974e00b58878bebd35cef893a252747895bb6c8228714",
+      "patchHashMatch": true,
+      "effectiveGateStatus": null,
+      "supersedes": null,
+      "supersededBy": null
+    },
+    {
+      "directoryName": "STEP5E-CLOSEOUT-CONTRACT-ENABLEMENT-001",
+      "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\STEP5E-CLOSEOUT-CONTRACT-ENABLEMENT-001\\manifest.json",
+      "manifestReadable": true,
+      "checkpointCommit": "c8da08ad0d813f17977dffacf0fc5e8a799c187c",
+      "commitExists": true,
+      "commitIsAncestorOfGeneratedHead": true,
+      "gateStatus": "GATE_PASSED",
+      "saveStatus": "SAVED",
+      "patchPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\STEP5E-CLOSEOUT-CONTRACT-ENABLEMENT-001\\STEP5E-CLOSEOUT-CONTRACT-ENABLEMENT-001-c8da08ad0d81.patch",
+      "patchExists": true,
+      "manifestPatchSha256": "395dc2313c3d064de96ac76ded9e878445c71f422c426fcaf7f1fdb3ad11de07",
+      "actualPatchSha256": "395dc2313c3d064de96ac76ded9e878445c71f422c426fcaf7f1fdb3ad11de07",
+      "patchHashMatch": true,
+      "effectiveGateStatus": null,
+      "supersedes": null,
+      "supersededBy": null
+    },
+    {
+      "directoryName": "STEP6-LEGACY-RUN-API-ARCHIVE-001",
+      "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\STEP6-LEGACY-RUN-API-ARCHIVE-001\\manifest.json",
+      "manifestReadable": true,
+      "checkpointCommit": "e8e96d71c663095b9d4296ff91cf5eb906f9e8ae",
+      "commitExists": true,
+      "commitIsAncestorOfGeneratedHead": true,
+      "gateStatus": "GATE_PASSED",
+      "saveStatus": "SAVED",
+      "patchPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\STEP6-LEGACY-RUN-API-ARCHIVE-001\\STEP6-LEGACY-RUN-API-ARCHIVE-001-e8e96d71c663.patch",
+      "patchExists": true,
+      "manifestPatchSha256": "860a6acc3e612980fcc1629b421c113484bbb1065475a1d071ef69d12fab6050",
+      "actualPatchSha256": "860a6acc3e612980fcc1629b421c113484bbb1065475a1d071ef69d12fab6050",
+      "patchHashMatch": true,
+      "effectiveGateStatus": null,
+      "supersedes": null,
+      "supersededBy": null
+    },
+    {
+      "directoryName": "STEP6-LEGACY-RUN-API-CONTRACT-ARCHIVE-COMMAND-REPAIR-001",
+      "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\STEP6-LEGACY-RUN-API-CONTRACT-ARCHIVE-COMMAND-REPAIR-001\\manifest.json",
+      "manifestReadable": true,
+      "checkpointCommit": "9830a8efb1f66b6acd019296c4c699057f0de242",
+      "commitExists": true,
+      "commitIsAncestorOfGeneratedHead": true,
+      "gateStatus": "GATE_PASSED",
+      "saveStatus": "SAVED",
+      "patchPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\STEP6-LEGACY-RUN-API-CONTRACT-ARCHIVE-COMMAND-REPAIR-001\\STEP6-LEGACY-RUN-API-CONTRACT-ARCHIVE-COMMAND-REPAIR-001-9830a8efb1f6.patch",
+      "patchExists": true,
+      "manifestPatchSha256": "dfdc9331ba0ac46819c63fe64dfa1a3cf272ae761dfd41659d083db6c1d56da1",
+      "actualPatchSha256": "dfdc9331ba0ac46819c63fe64dfa1a3cf272ae761dfd41659d083db6c1d56da1",
+      "patchHashMatch": true,
+      "effectiveGateStatus": null,
+      "supersedes": null,
+      "supersededBy": null
+    },
+    {
+      "directoryName": "STEP6-LEGACY-RUN-API-CONTRACT-ENABLEMENT-001",
+      "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\STEP6-LEGACY-RUN-API-CONTRACT-ENABLEMENT-001\\manifest.json",
+      "manifestReadable": true,
+      "checkpointCommit": "ef2d4a2f515d19403aa0378cd0b98d095a1594bf",
+      "commitExists": true,
+      "commitIsAncestorOfGeneratedHead": true,
+      "gateStatus": "GATE_PASSED",
+      "saveStatus": "SAVED",
+      "patchPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\STEP6-LEGACY-RUN-API-CONTRACT-ENABLEMENT-001\\STEP6-LEGACY-RUN-API-CONTRACT-ENABLEMENT-001-ef2d4a2f515d.patch",
+      "patchExists": true,
+      "manifestPatchSha256": "3a98b0566b3100df6b617c4110f63c15dde4adebcee3051c456c3841f9d27105",
+      "actualPatchSha256": "3a98b0566b3100df6b617c4110f63c15dde4adebcee3051c456c3841f9d27105",
+      "patchHashMatch": true,
+      "effectiveGateStatus": null,
+      "supersedes": null,
+      "supersededBy": null
+    },
+    {
+      "directoryName": "STEP7-MANDATORY-GATES-CONTRACT-ENABLEMENT-001",
+      "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\STEP7-MANDATORY-GATES-CONTRACT-ENABLEMENT-001\\manifest.json",
+      "manifestReadable": true,
+      "checkpointCommit": "02364edacf78eb591167fb052059cc09c33e0e8b",
+      "commitExists": true,
+      "commitIsAncestorOfGeneratedHead": true,
+      "gateStatus": "GATE_PASSED",
+      "saveStatus": "SAVED",
+      "patchPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\STEP7-MANDATORY-GATES-CONTRACT-ENABLEMENT-001\\STEP7-MANDATORY-GATES-CONTRACT-ENABLEMENT-001-02364edacf78.patch",
+      "patchExists": true,
+      "manifestPatchSha256": "4cbb8f01e1414ccc53e76bf44354b6074be6ce3ff4c6906338ede2caec0b298b",
+      "actualPatchSha256": "4cbb8f01e1414ccc53e76bf44354b6074be6ce3ff4c6906338ede2caec0b298b",
       "patchHashMatch": true,
       "effectiveGateStatus": null,
       "supersedes": null,
@@ -2143,6 +2431,24 @@
       "effectiveGateStatus": null,
       "supersedes": null,
       "supersededBy": null
+    },
+    {
+      "directoryName": "LEGACY-RUN-API-STEP7-MANDATORY-GATES-WIRING-001",
+      "manifestPath": "C:\\Users\\qingy\\AppData\\Local\\Temp\\LEGACY-RUN-API-STEP7-MANDATORY-GATES-WIRING-001.manifest.json",
+      "manifestReadable": true,
+      "checkpointCommit": "beac3630597ad428a644bd8cdcd25684e555a01f",
+      "commitExists": true,
+      "commitIsAncestorOfGeneratedHead": true,
+      "gateStatus": "GATE_PASSED",
+      "saveStatus": "SAVED",
+      "patchPath": "C:\\Users\\qingy\\AppData\\Local\\Temp\\ai-workbench-step7-checkpoints\\LEGACY-RUN-API-STEP7-MANDATORY-GATES-WIRING-001-beac3630597a.patch",
+      "patchExists": true,
+      "manifestPatchSha256": "49b6cb2edcb416060dda5329057cf52f6e876bebcb60b8f9c437e8ae06655bb6",
+      "actualPatchSha256": "49b6cb2edcb416060dda5329057cf52f6e876bebcb60b8f9c437e8ae06655bb6",
+      "patchHashMatch": true,
+      "effectiveGateStatus": null,
+      "supersedes": null,
+      "supersededBy": null
     }
   ],
   "steps": {
@@ -2536,8 +2842,23 @@
     "step7": {
       "functionalId": "STEP7",
       "title": "Mandatory Gates强制接线、完整运行与防伪",
-      "machineStatus": "ACTUALLY_MISSING",
-      "checkpoint": null,
+      "machineStatus": "PRESENT_AND_VERIFIED",
+      "checkpoint": {
+        "name": "LEGACY-RUN-API-STEP7-MANDATORY-GATES-WIRING-001",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Local\\Temp\\LEGACY-RUN-API-STEP7-MANDATORY-GATES-WIRING-001.manifest.json",
+        "commit": "beac3630597ad428a644bd8cdcd25684e555a01f",
+        "commitExists": true,
+        "commitIsAncestorOfGeneratedHead": true,
+        "saveStatus": "SAVED",
+        "gateStatus": "GATE_PASSED",
+        "effectiveGateStatus": null,
+        "patchPath": "C:\\Users\\qingy\\AppData\\Local\\Temp\\ai-workbench-step7-checkpoints\\LEGACY-RUN-API-STEP7-MANDATORY-GATES-WIRING-001-beac3630597a.patch",
+        "manifestPatchSha256": "49b6cb2edcb416060dda5329057cf52f6e876bebcb60b8f9c437e8ae06655bb6",
+        "actualPatchSha256": "49b6cb2edcb416060dda5329057cf52f6e876bebcb60b8f9c437e8ae06655bb6",
+        "patchExists": true,
+        "patchHashMatch": true,
+        "supersedes": null
+      },
       "mandatoryGateEntry": "scripts/verify-mandatory-gates-001.mjs",
       "mandatoryGateEntryExists": true,
       "mandatoryGateScripts": [
@@ -2567,117 +2888,117 @@
           "path": "scripts/verify-run-api-verified-injection-rejection-001.mjs",
           "exists": true,
           "nodeCheckExitCode": 0,
-          "wiredIntoMandatoryGates": false
+          "wiredIntoMandatoryGates": true
         },
         {
           "path": "scripts/verify-data-import-verified-injection-rejection-001.mjs",
           "exists": true,
           "nodeCheckExitCode": 0,
-          "wiredIntoMandatoryGates": false
+          "wiredIntoMandatoryGates": true
         },
         {
           "path": "scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs",
           "exists": true,
           "nodeCheckExitCode": 0,
-          "wiredIntoMandatoryGates": false
+          "wiredIntoMandatoryGates": true
         },
         {
           "path": "scripts/verify-isolated-run-verification-not-business-verified-001.mjs",
           "exists": true,
           "nodeCheckExitCode": 0,
-          "wiredIntoMandatoryGates": false
+          "wiredIntoMandatoryGates": true
         },
         {
           "path": "scripts/verify-server-owned-run-fact-preservation-001.mjs",
           "exists": true,
           "nodeCheckExitCode": 0,
-          "wiredIntoMandatoryGates": false
+          "wiredIntoMandatoryGates": true
         },
         {
           "path": "scripts/verify-ui-writable-dto-001.mjs",
           "exists": true,
           "nodeCheckExitCode": 0,
-          "wiredIntoMandatoryGates": false
+          "wiredIntoMandatoryGates": true
         },
         {
           "path": "scripts/verify-run-trust-path-rejection-baseline-001.mjs",
           "exists": true,
           "nodeCheckExitCode": 0,
-          "wiredIntoMandatoryGates": false
+          "wiredIntoMandatoryGates": true
         },
         {
           "path": "scripts/verify-trust-field-protocol-path-matching-001.mjs",
           "exists": true,
           "nodeCheckExitCode": 0,
-          "wiredIntoMandatoryGates": false
+          "wiredIntoMandatoryGates": true
         },
         {
           "path": "scripts/verify-workbench-context-verified-trust-boundary-001.mjs",
           "exists": true,
           "nodeCheckExitCode": 0,
-          "wiredIntoMandatoryGates": false
+          "wiredIntoMandatoryGates": true
         },
         {
           "path": "scripts/verify-agent-context-injection-rejection-001.mjs",
           "exists": true,
           "nodeCheckExitCode": 0,
-          "wiredIntoMandatoryGates": false
+          "wiredIntoMandatoryGates": true
         },
         {
           "path": "scripts/verify-ui-run-status-verification-separation-001.mjs",
           "exists": true,
           "nodeCheckExitCode": 0,
-          "wiredIntoMandatoryGates": false
+          "wiredIntoMandatoryGates": true
         },
         {
           "path": "scripts/verify-verified-assignment-invariant-001.mjs",
           "exists": true,
           "nodeCheckExitCode": 0,
-          "wiredIntoMandatoryGates": false
+          "wiredIntoMandatoryGates": true
         }
       ],
-      "allTwelveWired": false,
+      "allTwelveWired": true,
       "legacyTestsWired": [
         {
           "path": "scripts/verify-memories.mjs",
-          "wiredIntoMandatoryGates": false
+          "wiredIntoMandatoryGates": true
         },
         {
           "path": "scripts/verify-verification-layer.mjs",
-          "wiredIntoMandatoryGates": false
+          "wiredIntoMandatoryGates": true
         },
         {
           "path": "scripts/verify-tasks-runs.mjs",
-          "wiredIntoMandatoryGates": false
+          "wiredIntoMandatoryGates": true
         }
       ],
       "requiredEvidence": [
         {
           "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/gates-wiring-audit.json",
-          "exists": false
+          "exists": true
         },
         {
           "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/gates-wiring-audit.md",
-          "exists": false
+          "exists": true
         },
         {
           "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/mandatory-gates-antifraud.json",
-          "exists": false
+          "exists": true
         },
         {
           "path": "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/mandatory-gates-antifraud.md",
-          "exists": false
+          "exists": true
         }
       ],
-      "eligibleAsStep8Precondition": false,
-      "statusReconciledAt": "2026-08-05T13:29:15+08:00",
-      "statusReconciledFromHead": "c6abaa8d94f7e645a6e53bbc61f83565e610649b",
+      "eligibleAsStep8Precondition": true,
+      "statusReconciledAt": "2026-08-07T22:52:21+08:00",
+      "statusReconciledFromHead": "beac3630597ad428a644bd8cdcd25684e555a01f",
       "statusEvidenceSource": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/authoritative-index-consistency-reconciliation-findings.json",
-      "statusEvidenceHash": "a292cb54ec9ff43bdae0406041de754b2abba7d3ca0ed9befd31d05c8736eea9",
+      "statusEvidenceHash": "c2b98b552f2bb89698b8e07c8efd3518befbcbcc0c858f98729f5369fa989de2",
       "previousStatus": "ACTUALLY_MISSING",
       "previousStatusReason": "Original machine index state; later human summary contradicted it without machine-bound evidence.",
-      "correctedStatus": "ACTUALLY_MISSING",
-      "correctionReason": "Mandatory entry is fail-fast, but none of the indexed twelve specialists is directly or transitively invoked by its actual execution graph; the three legacy tests are package scripts only and not mandatory. No antifraud or complete-gates evidence/checkpoint was found."
+      "correctedStatus": "PRESENT_AND_VERIFIED",
+      "correctionReason": "All 35 mandatory gates completed from Gate 1 with exitCode=0; all twelve specialists and three legacy tests are directly wired; wiring and antifraud evidence exists; formal Product Checkpoint is saved and gate-passed."
     }
   },
   "mandatoryGateSpecialists": [
@@ -2685,73 +3006,73 @@
       "path": "scripts/verify-run-api-verified-injection-rejection-001.mjs",
       "exists": true,
       "nodeCheckExitCode": 0,
-      "wiredIntoMandatoryGates": false
+      "wiredIntoMandatoryGates": true
     },
     {
       "path": "scripts/verify-data-import-verified-injection-rejection-001.mjs",
       "exists": true,
       "nodeCheckExitCode": 0,
-      "wiredIntoMandatoryGates": false
+      "wiredIntoMandatoryGates": true
     },
     {
       "path": "scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs",
       "exists": true,
       "nodeCheckExitCode": 0,
-      "wiredIntoMandatoryGates": false
+      "wiredIntoMandatoryGates": true
     },
     {
       "path": "scripts/verify-isolated-run-verification-not-business-verified-001.mjs",
       "exists": true,
       "nodeCheckExitCode": 0,
-      "wiredIntoMandatoryGates": false
+      "wiredIntoMandatoryGates": true
     },
     {
       "path": "scripts/verify-server-owned-run-fact-preservation-001.mjs",
       "exists": true,
       "nodeCheckExitCode": 0,
-      "wiredIntoMandatoryGates": false
+      "wiredIntoMandatoryGates": true
     },
     {
       "path": "scripts/verify-ui-writable-dto-001.mjs",
       "exists": true,
       "nodeCheckExitCode": 0,
-      "wiredIntoMandatoryGates": false
+      "wiredIntoMandatoryGates": true
     },
     {
       "path": "scripts/verify-run-trust-path-rejection-baseline-001.mjs",
       "exists": true,
       "nodeCheckExitCode": 0,
-      "wiredIntoMandatoryGates": false
+      "wiredIntoMandatoryGates": true
     },
     {
       "path": "scripts/verify-trust-field-protocol-path-matching-001.mjs",
       "exists": true,
       "nodeCheckExitCode": 0,
-      "wiredIntoMandatoryGates": false
+      "wiredIntoMandatoryGates": true
     },
     {
       "path": "scripts/verify-workbench-context-verified-trust-boundary-001.mjs",
       "exists": true,
       "nodeCheckExitCode": 0,
-      "wiredIntoMandatoryGates": false
+      "wiredIntoMandatoryGates": true
     },
     {
       "path": "scripts/verify-agent-context-injection-rejection-001.mjs",
       "exists": true,
       "nodeCheckExitCode": 0,
-      "wiredIntoMandatoryGates": false
+      "wiredIntoMandatoryGates": true
     },
     {
       "path": "scripts/verify-ui-run-status-verification-separation-001.mjs",
       "exists": true,
       "nodeCheckExitCode": 0,
-      "wiredIntoMandatoryGates": false
+      "wiredIntoMandatoryGates": true
     },
     {
       "path": "scripts/verify-verified-assignment-invariant-001.mjs",
       "exists": true,
       "nodeCheckExitCode": 0,
-      "wiredIntoMandatoryGates": false
+      "wiredIntoMandatoryGates": true
     }
   ],
   "legacyMigratedTests": [
@@ -2792,12 +3113,11 @@
     "STEP5-C",
     "STEP5-D",
     "STEP5-E",
-    "STEP6"
-  ],
-  "presentNoCheckpoint": [],
-  "actuallyMissing": [
+    "STEP6",
     "STEP7"
   ],
+  "presentNoCheckpoint": [],
+  "actuallyMissing": [],
   "invalidatedArtifacts": [
     {
       "checkpoint": "LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-001",
@@ -2835,17 +3155,16 @@
       "STEP5-C",
       "STEP5-D",
       "STEP5-E",
-      "STEP6"
+      "STEP6",
+      "STEP7"
     ],
     "presentNoCheckpoint": [],
     "namingDrift": [],
-    "actuallyMissing": [
-      "STEP7"
-    ],
-    "verifiedFunctionalItems": 6,
+    "actuallyMissing": [],
+    "verifiedFunctionalItems": 7,
     "totalRequiredFunctionalItems": 7,
-    "completionRatio": "6/7",
-    "step8Eligible": false,
+    "completionRatio": "7/7",
+    "step8Eligible": true,
     "step8": "NOT_STARTED"
   },
   "statusReconciliation": {
@@ -2854,6 +3173,7 @@
     "findingsHash": "4fb328582446554b4f01eeec629e443888c5c87fb8b9571c97d33fccf28b56c7",
     "reconciledAt": "2026-08-07T19:24:00+08:00",
     "fromHead": "e8e96d71c663095b9d4296ff91cf5eb906f9e8ae",
-    "indexJsonMarkdownReportConsistent": true
+    "indexJsonMarkdownReportConsistent": true,
+    "STEP7": "PRESENT_AND_VERIFIED"
   }
 }

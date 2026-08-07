@@ -8,6 +8,7 @@
 - STEP5-D
 - STEP5-E
 - STEP6
+- STEP7
 
 ## PRESENT_NO_CHECKPOINT
 
@@ -19,17 +20,18 @@
 
 ## ACTUALLY_MISSING
 
-- STEP7：必须真实完成十二项专项及三个旧测试的强制接线、防伪、完整全绿证据和正式Checkpoint。
+- 无
 
 ## 机器完成度与Step8
 
-- verifiedFunctionalItems=6
+- verifiedFunctionalItems=7
 - totalRequiredFunctionalItems=7
-- completionRatio=6/7
-- step8Eligible=false
+- completionRatio=7/7
+- step8Eligible=true
 - step8=NOT_STARTED
+- step8Started=false
 - fourthRiskStatus=OPEN
 - finalAcceptance=false
 - deployment=NOT_DEPLOYED
 
-机器证据：`authoritative-index-consistency-reconciliation-findings.json`。本清单不推进Step7、Step8或风险状态。
+机器证据：`authoritative-index-consistency-reconciliation-findings.json`。本清单仅确认Step7完成与Step8具备前置资格，不启动Step8、不关闭风险、不进行部署。
