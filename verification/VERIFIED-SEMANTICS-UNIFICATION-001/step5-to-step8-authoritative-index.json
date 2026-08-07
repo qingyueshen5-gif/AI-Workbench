@@ -1,8 +1,8 @@
 {
   "schemaVersion": "ai-workbench.step5-step8-authoritative-index/v1",
-  "generatedAt": "2026-08-05T12:50:12+08:00",
-  "generatedFromHead": "e0001f15dc6a390d33270e4e638d072b1c9fa22b",
-  "generatedFromRemote": "e0001f15dc6a390d33270e4e638d072b1c9fa22b",
+  "generatedAt": "2026-08-07T19:24:00+08:00",
+  "generatedFromHead": "e8e96d71c663095b9d4296ff91cf5eb906f9e8ae",
+  "generatedFromRemote": "9830a8efb1f66b6acd019296c4c699057f0de242",
   "branch": "candidate/interpreter-adapter-v1-work",
   "sourceOfTruth": [
     "checkpoint manifests",
@@ -2445,69 +2445,93 @@
     "step6": {
       "functionalId": "STEP6",
       "title": "旧测试迁移与历史断言存档",
-      "machineStatus": "ACTUALLY_MISSING",
-      "checkpoint": null,
+      "machineStatus": "PRESENT_AND_VERIFIED",
+      "checkpoint": {
+        "name": "STEP6-LEGACY-RUN-API-ARCHIVE-001",
+        "manifestPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\STEP6-LEGACY-RUN-API-ARCHIVE-001\\manifest.json",
+        "commit": "e8e96d71c663095b9d4296ff91cf5eb906f9e8ae",
+        "commitExists": true,
+        "commitIsAncestorOfGeneratedHead": true,
+        "saveStatus": "SAVED",
+        "gateStatus": "GATE_PASSED",
+        "effectiveGateStatus": "GATE_PASSED",
+        "patchPath": "C:\\Users\\qingy\\AppData\\Roaming\\ai-workbench\\checkpoints\\STEP6-LEGACY-RUN-API-ARCHIVE-001\\STEP6-LEGACY-RUN-API-ARCHIVE-001-e8e96d71c663.patch",
+        "manifestPatchSha256": "860a6acc3e612980fcc1629b421c113484bbb1065475a1d071ef69d12fab6050",
+        "actualPatchSha256": "860a6acc3e612980fcc1629b421c113484bbb1065475a1d071ef69d12fab6050",
+        "patchExists": true,
+        "patchHashMatch": true,
+        "supersedes": null
+      },
       "legacyTests": [
         {
           "path": "scripts/verify-memories.mjs",
           "exists": true,
           "nodeCheckExitCode": 0,
-          "submitsVerifiedTrue": true,
-          "assertsVerifiedTrue": false,
-          "mentionsForbidden422": false,
-          "mentionsBusinessVerifiedFalse": false
+          "clientTrustClaimRejected": true,
+          "mentionsForbidden422": true,
+          "mentionsBusinessVerifiedFalse": true
         },
         {
           "path": "scripts/verify-verification-layer.mjs",
           "exists": true,
           "nodeCheckExitCode": 0,
-          "submitsVerifiedTrue": false,
-          "assertsVerifiedTrue": true,
-          "mentionsForbidden422": false,
+          "isolatedVerificationPassed": true,
+          "isolatedVerificationCanPromoteBusinessVerified": false,
           "mentionsBusinessVerifiedFalse": true
         },
         {
           "path": "scripts/verify-tasks-runs.mjs",
           "exists": true,
           "nodeCheckExitCode": 0,
-          "submitsVerifiedTrue": false,
-          "assertsVerifiedTrue": false,
-          "mentionsForbidden422": false,
-          "mentionsBusinessVerifiedFalse": false
+          "taskRunLinkageVerified": true,
+          "verifiedFieldIsFalse": true,
+          "verificationResultIsNull": true,
+          "shapeOrLinkageCanPromoteBusinessVerified": false
         }
       ],
       "requiredFiles": [
         {
           "path": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/legacy-run-api-test-audit.md",
-          "exists": false
+          "exists": true
         },
         {
           "path": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/legacy-run-api-test-audit.json",
-          "exists": false
+          "exists": true
         },
         {
           "path": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/historical-assertions/LEGACY-WORKBENCH-RUN-API.md",
-          "exists": false
+          "exists": true
         }
       ],
       "archiveCompletenessSuite": {
         "path": "scripts/verify-legacy-run-api-archive-completeness-001.mjs",
-        "exists": false,
-        "nodeCheckExitCode": null
+        "exists": true,
+        "nodeCheckExitCode": 0
       },
       "absenceSearch": {
-        "archiveCompletenessMatches": [],
-        "historicalAssertionArchiveMatches": []
+        "archiveCompletenessMatches": [
+          "scripts/verify-legacy-run-api-archive-completeness-001.mjs"
+        ],
+        "historicalAssertionArchiveMatches": [
+          "verification/VERIFIED-SEMANTICS-UNIFICATION-001/historical-assertions/LEGACY-WORKBENCH-RUN-API.md"
+        ]
       },
-      "eligibleAsStep8Precondition": false,
-      "statusReconciledAt": "2026-08-05T13:29:15+08:00",
-      "statusReconciledFromHead": "c6abaa8d94f7e645a6e53bbc61f83565e610649b",
+      "eligibleAsStep8Precondition": true,
+      "statusReconciledAt": "2026-08-07T19:24:00+08:00",
+      "statusReconciledFromHead": "e8e96d71c663095b9d4296ff91cf5eb906f9e8ae",
       "statusEvidenceSource": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/authoritative-index-consistency-reconciliation-findings.json",
-      "statusEvidenceHash": "a292cb54ec9ff43bdae0406041de754b2abba7d3ca0ed9befd31d05c8736eea9",
+      "statusEvidenceHash": "4fb328582446554b4f01eeec629e443888c5c87fb8b9571c97d33fccf28b56c7",
       "previousStatus": "ACTUALLY_MISSING",
-      "previousStatusReason": "Original machine index state; later human summary contradicted it without machine-bound evidence.",
-      "correctedStatus": "ACTUALLY_MISSING",
-      "correctionReason": "The three actual legacy tests remain on the old contract. verify-memories submits verified:true plus verificationResult and expects HTTP 201; verify-verification-layer expects isolated verification to set verified=true; verify-tasks-runs only checks field presence and lacks rejection/binding/fail-closed coverage. Archive and completeness artifacts are absent after full search."
+      "previousStatusReason": "Product artifacts and formal checkpoint had not yet been synchronized into the authoritative index.",
+      "correctedStatus": "PRESENT_AND_VERIFIED",
+      "correctionReason": "The three authorized legacy tests are migrated to fail-closed verified semantics; the assertion-level archive contains exactly five classified assertions; the formal Product Checkpoint is saved and gate-passed.",
+      "archiveUniverse": {
+        "expectedCount": 5,
+        "presentCount": 5,
+        "duplicateCount": 0,
+        "unclassifiedCount": 0,
+        "trustPromotionAllowed": false
+      }
     },
     "step7": {
       "functionalId": "STEP7",
@@ -2735,45 +2759,43 @@
       "path": "scripts/verify-memories.mjs",
       "exists": true,
       "nodeCheckExitCode": 0,
-      "submitsVerifiedTrue": true,
-      "assertsVerifiedTrue": false,
-      "mentionsForbidden422": false,
-      "mentionsBusinessVerifiedFalse": false
+      "clientTrustClaimRejected": true,
+      "mentionsForbidden422": true,
+      "mentionsBusinessVerifiedFalse": true
     },
     {
       "path": "scripts/verify-verification-layer.mjs",
       "exists": true,
       "nodeCheckExitCode": 0,
-      "submitsVerifiedTrue": false,
-      "assertsVerifiedTrue": true,
-      "mentionsForbidden422": false,
+      "isolatedVerificationPassed": true,
+      "isolatedVerificationCanPromoteBusinessVerified": false,
       "mentionsBusinessVerifiedFalse": true
     },
     {
       "path": "scripts/verify-tasks-runs.mjs",
       "exists": true,
       "nodeCheckExitCode": 0,
-      "submitsVerifiedTrue": false,
-      "assertsVerifiedTrue": false,
-      "mentionsForbidden422": false,
-      "mentionsBusinessVerifiedFalse": false
+      "taskRunLinkageVerified": true,
+      "verifiedFieldIsFalse": true,
+      "verificationResultIsNull": true,
+      "shapeOrLinkageCanPromoteBusinessVerified": false
     }
   ],
   "archiveCompletenessSuite": {
     "path": "scripts/verify-legacy-run-api-archive-completeness-001.mjs",
-    "exists": false,
-    "nodeCheckExitCode": null
+    "exists": true,
+    "nodeCheckExitCode": 0
   },
   "presentAndVerified": [
     "STEP5-A",
     "STEP5-B",
     "STEP5-C",
-    "STEP5-D"
+    "STEP5-D",
+    "STEP5-E",
+    "STEP6"
   ],
   "presentNoCheckpoint": [],
   "actuallyMissing": [
-    "STEP5-E",
-    "STEP6",
     "STEP7"
   ],
   "invalidatedArtifacts": [
@@ -2793,7 +2815,7 @@
   "validator": {
     "path": "scripts/verify-authoritative-index-consistency-001.mjs",
     "lastExitCode": 0,
-    "lastValidatedAt": "2026-08-05T13:29:15+08:00",
+    "lastValidatedAt": "2026-08-07T19:24:00+08:00",
     "checkCount": 740,
     "failureCount": 0,
     "semanticConsistencyRequired": true,
@@ -2812,26 +2834,26 @@
       "STEP5-B",
       "STEP5-C",
       "STEP5-D",
-      "STEP5-E"
+      "STEP5-E",
+      "STEP6"
     ],
     "presentNoCheckpoint": [],
     "namingDrift": [],
     "actuallyMissing": [
-      "STEP6",
       "STEP7"
     ],
-    "verifiedFunctionalItems": 5,
+    "verifiedFunctionalItems": 6,
     "totalRequiredFunctionalItems": 7,
-    "completionRatio": "5/7",
+    "completionRatio": "6/7",
     "step8Eligible": false,
     "step8": "NOT_STARTED"
   },
   "statusReconciliation": {
     "checkpoint": "AUTHORITATIVE-INDEX-CONSISTENCY-RECONCILIATION-001",
     "findingsPath": "verification/VERIFIED-SEMANTICS-UNIFICATION-001/authoritative-index-consistency-reconciliation-findings.json",
-    "findingsHash": "a292cb54ec9ff43bdae0406041de754b2abba7d3ca0ed9befd31d05c8736eea9",
-    "reconciledAt": "2026-08-05T13:29:15+08:00",
-    "fromHead": "c6abaa8d94f7e645a6e53bbc61f83565e610649b",
+    "findingsHash": "4fb328582446554b4f01eeec629e443888c5c87fb8b9571c97d33fccf28b56c7",
+    "reconciledAt": "2026-08-07T19:24:00+08:00",
+    "fromHead": "e8e96d71c663095b9d4296ff91cf5eb906f9e8ae",
     "indexJsonMarkdownReportConsistent": true
   }
 }

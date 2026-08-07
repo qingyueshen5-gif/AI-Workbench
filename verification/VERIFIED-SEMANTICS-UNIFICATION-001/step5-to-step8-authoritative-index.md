@@ -1,6 +1,6 @@
 # Step5至Step8机器权威索引
 
-状态一致化时间：`2026-08-05T13:29:15+08:00`；机器证据：`verification/VERIFIED-SEMANTICS-UNIFICATION-001/authoritative-index-consistency-reconciliation-findings.json`；证据SHA-256：`a292cb54ec9ff43bdae0406041de754b2abba7d3ca0ed9befd31d05c8736eea9`。
+状态同步时间：`2026-08-07T19:24:00+08:00`；机器证据：`verification/VERIFIED-SEMANTICS-UNIFICATION-001/authoritative-index-consistency-reconciliation-findings.json`；证据SHA-256：`4fb328582446554b4f01eeec629e443888c5c87fb8b9571c97d33fccf28b56c7`。
 
 ## 机器判定
 
@@ -11,22 +11,22 @@
 | STEP5-C · Context信任边界 | `PRESENT_AND_VERIFIED` | `LEGACY-RUN-API-STEP5-CONTEXT-TRUST-BOUNDARY-002` | `0618b838c0b85fe62339b5270ecf74255810b21c` |
 | STEP5-D · UI执行状态与可信验收状态分离 | `PRESENT_AND_VERIFIED` | `LEGACY-RUN-API-STEP5-UI-STATUS-SEPARATION-001` | `8e111bb4531fe0fdd7ae219963c02e1deb88ca06` |
 | STEP5-E · Gateway / Delivery传播边界 | `PRESENT_AND_VERIFIED` | `LEGACY-RUN-API-STEP5-PROPAGATION-BOUNDARY-001` | `2e6a79eb67bb796163926f9f074cd0651d8fc236` |
-| STEP6 · 旧测试迁移与历史断言存档 | `ACTUALLY_MISSING` | `NONE` | `NONE` |
+| STEP6 · 旧测试迁移与历史断言存档 | `PRESENT_AND_VERIFIED` | `STEP6-LEGACY-RUN-API-ARCHIVE-001` | `e8e96d71c663095b9d4296ff91cf5eb906f9e8ae` |
 | STEP7 · Mandatory Gates强制接线、完整运行与防伪 | `ACTUALLY_MISSING` | `NONE` | `NONE` |
 
 ## 一致化裁决
 
-- STEP5-E：传播边界专项、审计、矩阵、正式Closeout及Checkpoint已完成并通过机器验证。
-- STEP6：旧测试中的`verified:true`属于仍期待接受/读回的旧合法契约样本，不是422攻击Fixture；存档及完备性专项缺失。
-- STEP7：十二项专项有效Mandatory=`0/12`；三个旧测试均非Mandatory；防伪、完整门禁全绿及正式Checkpoint证据缺失。
+- STEP6：三个授权旧测试已迁移；客户端信任字段被拒绝；隔离验证、shape与linkage均不能提升business verified；缺证据与执行失败继续fail-closed。
+- STEP6 Archive Universe：expectedCount=5、duplicateCount=0、unclassifiedCount=0；正式Product Checkpoint已绑定并通过。
+- STEP7：保持`ACTUALLY_MISSING`，不得因Step6完成而提前推进。
 - JSON、本文和remaining-work统一使用上述状态。后续人读摘要不得覆盖机器索引。
 
 ## 完成与启动条件
 
-- verifiedFunctionalItems=5
+- verifiedFunctionalItems=6
 - totalRequiredFunctionalItems=7
-- completionRatio=5/7
+- completionRatio=6/7
 - step8Eligible=false
 - step8=NOT_STARTED
 
-第四类风险及原三项HIGH保持OPEN；未部署。
+第四类风险及原三项HIGH保持OPEN；finalAcceptance=false；未部署。
