@@ -50,6 +50,58 @@
     "scripts/verify-step7-mandatory-gates-wiring-001.mjs",
     "tests/verify-step7-mandatory-gates-wiring-001.test.mjs"
   ],
+  "baseProductAllowlistCount": 7,
+  "approvedFailureRepairExtension": {
+    "extensionId": "STEP7-APPROVED-FIRST-FAILURE-REPAIRS-001",
+    "approvedFailureRepairExtensionCount": 4,
+    "approvedFailureRepairFiles": [
+      "scripts/verify-task-lifecycle-001.mjs",
+      "scripts/verify-runtime-cancellation-gate.mjs",
+      "scripts/verify-gateway-runtime-switch.mjs",
+      "scripts/verify-gateway-runtime-business-boundary.mjs"
+    ],
+    "repairs": [
+      {
+        "repairId": "R1_TASK_LIFECYCLE",
+        "failureGate": "Task Lifecycle",
+        "failureScript": "scripts/verify-task-lifecycle-001.mjs",
+        "failureOrigin": "TEST_CONTRACT_STALE_AFTER_INTENTIONAL_RUNTIME_CHANGE"
+      },
+      {
+        "repairId": "R2_CANCELLATION",
+        "failureGate": "Cancellation",
+        "failureScript": "scripts/verify-runtime-cancellation-gate.mjs",
+        "failureOrigin": "PRE_EXISTING_TEST_ISOLATION_DRIFT"
+      },
+      {
+        "repairId": "R3_RUNTIME_SWITCH",
+        "failureGate": "Runtime Switch",
+        "failureScript": "scripts/verify-gateway-runtime-switch.mjs",
+        "failureOrigin": "PRE_EXISTING_TEST_ISOLATION_DRIFT"
+      },
+      {
+        "repairId": "R4_GATEWAY_PURE_TRANSPORT",
+        "failureGate": "Gateway Pure Transport",
+        "failureScript": "scripts/verify-gateway-runtime-business-boundary.mjs",
+        "failureOrigin": "TEST_CONTRACT_STALE_AFTER_INTENTIONAL_RUNTIME_CHANGE"
+      }
+    ],
+    "authorizationMode": "EXACT_FILES_ONLY_NO_GLOB_NO_AUTOMATIC_EXTENSION"
+  },
+  "effectiveProductAllowlist": [
+    "scripts/verify-mandatory-gates-001.mjs",
+    "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/gates-wiring-audit.json",
+    "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/gates-wiring-audit.md",
+    "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/mandatory-gates-antifraud.json",
+    "verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001/mandatory-gates-antifraud.md",
+    "scripts/verify-step7-mandatory-gates-wiring-001.mjs",
+    "tests/verify-step7-mandatory-gates-wiring-001.test.mjs",
+    "scripts/verify-task-lifecycle-001.mjs",
+    "scripts/verify-runtime-cancellation-gate.mjs",
+    "scripts/verify-gateway-runtime-switch.mjs",
+    "scripts/verify-gateway-runtime-business-boundary.mjs"
+  ],
+  "effectiveProductAllowlistCount": 11,
   "prohibitedChanges": [
     "scripts/verify-run-api-verified-injection-rejection-001.mjs",
     "scripts/verify-data-import-verified-injection-rejection-001.mjs",

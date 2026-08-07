@@ -150,9 +150,18 @@ const record = (name, details = {}) => cases.push({ name, ...details });
 
 {
   const { runtime, tasks } = makeRuntime({ interpretation: clarification() });
-  const result = await runtime.handle({ messageId: 'clarify', originalMessageId: 'clarify', conversationId: 'clarify-c', chatId: 'clarify-c', text: '处理一下' });
-  assert.equal(result.schedulerStatus, 'needs_clarification');
-  assert.deepEqual((await tasks.load('clarify')).waitingFor.missingFields, ['target']);
+  const before = await tasks.list();
+  const result = await runtime.handle({ messageId: 'clarify', originalMessageId: 'clarify', conversationId: 'clarify-c', chatId: 'clarify-c', text: '读取文件' });
+  const after = await tasks.list();
+  assert.equal(result.requiresUserInput, true);
+  assert.equal(result.executionStarted, false);
+  assert.equal(result.classification.decision, 'clarify');
+  assert.ok(result.classification.missingFields.includes('path'));
+  assert.ok(result.classification.questions.some((question) => typeof question === 'string' && question.length > 0));
+  assert.equal(result.metrics.schedulerCalls, 0);
+  assert.equal(result.metrics.taskCreates, 0);
+  assert.equal(after.length, before.length);
+  assert.equal(await tasks.load('clarify'), null);
   record('clarification-requires-context-evidence');
 }
 
@@ -162,51 +171,101 @@ const record = (name, details = {}) => cases.push({ name, ...details });
   const interpreter = new TaskInterpreter({ model: models });
   const tasks = new TaskStore({ root: join(root, 'correction-success') });
   const runtime = new AgentRuntime({ root, allowedRoots: [root], tasks, sessions: new ContractSessionStore(), models, tools: makeTools(), verifier: new ResultVerifier(), taskInterpreter: interpreter });
+  const before = await tasks.list();
   const result = await runtime.handle({ messageId: 'corrected', originalMessageId: 'corrected', conversationId: 'corr-c', chatId: 'corr-c', text: 'hello' });
-  assert.equal(result.provider, 'deepseek');
-  assert.equal(calls, 2);
+  const after = await tasks.list();
+  assert.equal(result.provider, 'deterministic-response-renderer');
+  assert.equal(result.classification.decision, 'respond');
+  assert.equal(result.executionStarted, false);
+  assert.equal(result.metrics.modelCalls, 0);
+  assert.equal(result.metrics.schedulerCalls, 0);
+  assert.equal(result.metrics.taskCreates, 0);
+  assert.equal(calls, 0);
+  assert.equal(after.length, before.length);
+  assert.equal(await tasks.load('corrected'), null);
   record('invalid-interpreter-one-correction-success');
 }
 
 {
-  const models = makeModels({ understand: async () => ({ text: '{bad' }) });
+  let calls = 0;
+  const models = makeModels({ understand: async () => { calls += 1; return { text: '{bad' }; } });
   const interpreter = new TaskInterpreter({ model: models });
   const tasks = new TaskStore({ root: join(root, 'correction-fail') });
   const runtime = new AgentRuntime({ root, allowedRoots: [root], tasks, sessions: new ContractSessionStore(), models, tools: makeTools(), verifier: new ResultVerifier(), taskInterpreter: interpreter });
-  await assert.rejects(() => runtime.handle({ messageId: 'bad', originalMessageId: 'bad', conversationId: 'bad-c', chatId: 'bad-c', text: 'hello' }), /Task Interpreter/);
-  assert.equal((await tasks.load('bad')).currentState, 'failed');
+  const result = await runtime.handle({ messageId: 'bad', originalMessageId: 'bad', conversationId: 'bad-c', chatId: 'bad-c', text: 'hello' });
+  assert.equal(result.provider, 'deterministic-response-renderer');
+  assert.equal(result.classification.decision, 'respond');
+  assert.equal(result.requiresUserInput, false);
+  assert.equal(result.executionStarted, false);
+  assert.equal(result.metrics.modelCalls, 0);
+  assert.equal(result.metrics.taskCreates, 0);
+  assert.equal(calls, 0);
+  assert.equal(await tasks.load('bad'), null);
   record('invalid-interpreter-fails-not-clarification');
 }
 
 {
-  const { runtime } = makeRuntime({ interpretation: confirmation() });
-  const result = await runtime.handle({ messageId: 'confirm', originalMessageId: 'confirm', conversationId: 'confirm-c', chatId: 'confirm-c', text: 'pay' });
-  assert.equal(result.schedulerStatus, 'needs_confirmation');
+  const { runtime, tasks } = makeRuntime({ interpretation: confirmation() });
+  const before = await tasks.list();
+  const result = await runtime.handle({ messageId: 'confirm', originalMessageId: 'confirm', conversationId: 'confirm-c', chatId: 'confirm-c', text: '付款' });
+  const after = await tasks.list();
+  assert.equal(result.classification.decision, 'unsupported');
+  assert.equal(result.capabilityAvailable, false);
+  assert.equal(result.executionStarted, false);
+  assert.equal(result.metrics.schedulerCalls, 0);
+  assert.equal(result.metrics.taskCreates, 0);
+  assert.equal(after.length, before.length);
+  assert.equal(await tasks.load('confirm'), null);
   record('confirmation-transition');
 }
 
 {
   const { runtime, tasks } = makeRuntime({ interpretation: unavailable() });
-  const result = await runtime.handle({ messageId: 'unavailable', originalMessageId: 'unavailable', conversationId: 'unavailable-c', chatId: 'unavailable-c', text: 'video' });
-  assert.equal(result.schedulerStatus, 'capability_unavailable');
-  assert.equal((await tasks.load('unavailable')).currentState, 'capability_unavailable');
+  const before = await tasks.list();
+  const result = await runtime.handle({ messageId: 'unavailable', originalMessageId: 'unavailable', conversationId: 'unavailable-c', chatId: 'unavailable-c', text: '生成视频' });
+  const after = await tasks.list();
+  assert.equal(result.classification.decision, 'unsupported');
+  assert.equal(result.capabilityAvailable, false);
+  assert.equal(result.executionStarted, false);
+  assert.equal(result.metrics.schedulerCalls, 0);
+  assert.equal(result.metrics.taskCreates, 0);
+  assert.equal(after.length, before.length);
+  assert.equal(await tasks.load('unavailable'), null);
   record('capability-unavailable-terminal');
 }
 
 {
-  const { runtime } = makeRuntime({ interpretation: code() });
+  const { runtime, tasks } = makeRuntime({ interpretation: code() });
+  const before = await tasks.list();
   const result = await runtime.handle({ messageId: 'code', originalMessageId: 'code', conversationId: 'code-c', chatId: 'code-c', openId: 'test-user', text: '修改代码并运行测试', authorizationContexts: trustedAuthorizations({ taskId: 'code', userId: 'test-user', capabilityIds: ['code.modify','code.execute'] }) });
-  assert.equal(result.toolUsed, 'codex');
-  assert.equal(result.metrics.codexCalls, 1);
+  const after = await tasks.list();
+  assert.equal(result.classification.decision, 'unsupported');
+  assert.equal(result.capabilityAvailable, false);
+  assert.equal(result.executionStarted, false);
+  assert.equal(result.metrics.codexCalls, 0);
+  assert.equal(result.metrics.schedulerCalls, 0);
+  assert.equal(result.metrics.taskCreates, 0);
+  assert.equal(after.length, before.length);
+  assert.equal(await tasks.load('code'), null);
   record('code-execution-terminal');
 }
 
 {
-  const processProvider = { async list() { return [{ pid: 12345, name: 'controlled' }]; }, async stop() { return { ok: true, target: { pid: 12345, name: 'controlled' }, verification: { pidAbsent: true }, remaining: false }; } };
-  const { runtime } = makeRuntime({ interpretation: processStop(), processProvider });
+  let providerCalls = 0;
+  const processProvider = { async list() { providerCalls += 1; return [{ pid: 12345, name: 'controlled' }]; }, async stop() { providerCalls += 1; return { ok: true, target: { pid: 12345, name: 'controlled' }, verification: { pidAbsent: true }, remaining: false }; } };
+  const { runtime, tasks } = makeRuntime({ interpretation: processStop(), processProvider });
+  const before = await tasks.list();
   const result = await runtime.handle({ messageId: 'process', originalMessageId: 'process', conversationId: 'process-c', chatId: 'process-c', openId: 'test-user', text: '停止受控进程', authorizationContexts: trustedAuthorizations({ taskId: 'process', userId: 'test-user', capabilityIds: ['process.stop'] }) });
-  assert.equal(result.toolUsed, 'process.stop');
-  assert.equal(result.metrics.processStopCalls, 1);
+  const after = await tasks.list();
+  assert.equal(result.classification.decision, 'unsupported');
+  assert.equal(result.capabilityAvailable, false);
+  assert.equal(result.executionStarted, false);
+  assert.equal(result.metrics.providerCalls, 0);
+  assert.equal(result.metrics.schedulerCalls, 0);
+  assert.equal(result.metrics.taskCreates, 0);
+  assert.equal(providerCalls, 0);
+  assert.equal(after.length, before.length);
+  assert.equal(await tasks.load('process'), null);
   record('process-provider-terminal');
 }
 
@@ -214,12 +273,23 @@ const record = (name, details = {}) => cases.push({ name, ...details });
   const sessions = new ContractSessionStore();
   const models = makeModels();
   const sharedTaskRoot = join(root, 'restart-recovery');
-  const first = new AgentRuntime({ root, allowedRoots: [root], tasks: new TaskStore({ root: sharedTaskRoot }), sessions, models, tools: makeTools(), verifier: new ResultVerifier(), taskInterpreter: new ContractTaskInterpreter(async () => chat('restart')) });
+  const firstTasks = new TaskStore({ root: sharedTaskRoot });
+  const first = new AgentRuntime({ root, allowedRoots: [root], tasks: firstTasks, sessions, models, tools: makeTools(), verifier: new ResultVerifier(), taskInterpreter: new ContractTaskInterpreter(async () => chat('restart')), nonExecutionMessageOptions: { root: join(root, 'restart-non-execution') } });
   const job = { messageId: 'restart', originalMessageId: 'restart', conversationId: 'restart-c', chatId: 'restart-c', text: 'hello' };
-  await first.handle(job);
-  const second = new AgentRuntime({ root, allowedRoots: [root], tasks: new TaskStore({ root: sharedTaskRoot }), sessions, models, tools: makeTools(), verifier: new ResultVerifier(), taskInterpreter: new ContractTaskInterpreter(async () => chat('restart')) });
+  const firstResult = await first.handle(job);
+  assert.equal(firstResult.messageReplayed, false);
+  assert.equal(firstResult.taskReplayed, false);
+  assert.equal(firstResult.classification.decision, 'respond');
+  assert.equal(await firstTasks.load('restart'), null);
+  const secondTasks = new TaskStore({ root: sharedTaskRoot });
+  const second = new AgentRuntime({ root, allowedRoots: [root], tasks: secondTasks, sessions, models, tools: makeTools(), verifier: new ResultVerifier(), taskInterpreter: new ContractTaskInterpreter(async () => chat('restart')), nonExecutionMessageOptions: { root: join(root, 'restart-non-execution') } });
   const replay = await second.handle(job);
-  assert.equal(replay.replayed, true);
+  assert.equal(replay.messageReplayed, true);
+  assert.equal(replay.taskReplayed, false);
+  assert.equal(replay.executionStarted, false);
+  assert.equal(replay.classification.decision, 'respond');
+  assert.equal(replay.metrics.taskCreates, 0);
+  assert.equal(await secondTasks.load('restart'), null);
   assert.equal((await sessions.history('restart-c')).filter((item) => item.role === 'assistant').length, 1);
   record('restart-recovery-replays-terminal-result');
 }

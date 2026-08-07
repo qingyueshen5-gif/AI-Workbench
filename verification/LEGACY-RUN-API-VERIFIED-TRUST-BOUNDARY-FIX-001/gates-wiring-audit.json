@@ -1,0 +1,269 @@
+{
+  "schemaVersion": "ai-workbench.step7-gates-wiring-audit/v1",
+  "result": "PASS",
+  "generatedFromRealExecution": true,
+  "mandatoryCommand": "node scripts/verify-mandatory-gates-001.mjs",
+  "mandatoryExecutionExitCode": 0,
+  "requiredGateCount": 35,
+  "existingMandatoryGateCount": 20,
+  "specialistRequiredCount": 12,
+  "specialistWiredCount": 12,
+  "legacyRequiredCount": 3,
+  "legacyWiredCount": 3,
+  "missingGateCount": 0,
+  "duplicateGateCount": 0,
+  "skippedGateCount": 0,
+  "executionMode": "SEQUENTIAL",
+  "failureMode": "FAIL_FAST",
+  "allRequiredGatesStarted": true,
+  "allRequiredGatesCompleted": true,
+  "firstFailure": null,
+  "mandatorySourceSha256": "66e1cf74562fe34d50cfbbf5d7a7999570ab3d15430c9b6f758ce7a9c7e73bbe",
+  "gates": [
+    {
+      "gateNumber": 1,
+      "name": "Checkpoint Protection",
+      "script": "scripts/verify-checkpoint-protection-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "f408ea9f760682cf5198ad8ccb1d965e371e7f51baa6eb5c5b470275918640e7"
+    },
+    {
+      "gateNumber": 2,
+      "name": "Git Destructive Bypass Scan",
+      "script": "scripts/scan-git-destructive-bypasses.mjs",
+      "exitCode": 0,
+      "sourceSha256": "5dc71318f850e791475309bd088ccdb03064d3c90ca1a72176576f00b916f636"
+    },
+    {
+      "gateNumber": 3,
+      "name": "Execution Protocol Checkpoint Rules",
+      "script": "scripts/verify-execution-protocol-checkpoint.mjs",
+      "exitCode": 0,
+      "sourceSha256": "cd39a29cd6618f289542bb403d5e10928df3a026a0d77eb17e775f66dd900485"
+    },
+    {
+      "gateNumber": 4,
+      "name": "External Skill Drift",
+      "script": "scripts/verify-external-skill-drift-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "a6b77d54cb1c16a3ed29c27d7328919e6f7f7bf316fa562d5c02652d2b9cb4ec"
+    },
+    {
+      "gateNumber": 5,
+      "name": "Save Decoupled From Gate",
+      "script": "scripts/verify-save-decoupled-from-gate-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "dcd5d2f17b43a6bf22acc37df6be89d7d7b41fdf5435a5f1935704a5f61cdbac"
+    },
+    {
+      "gateNumber": 6,
+      "name": "Authorization Boundary",
+      "script": "scripts/verify-authorization-boundary-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "a9b4b2d6ab0738ae78e14c82f1e0e16c252b6ac87d6be600387b28335f971dab"
+    },
+    {
+      "gateNumber": 7,
+      "name": "Feishu Delivery Idempotency",
+      "script": "scripts/verify-feishu-delivery-idempotency-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "7645ed6edd57935d4651dc8a2861d73a4559bb571c97eb38d91a2406306fe089"
+    },
+    {
+      "gateNumber": 8,
+      "name": "IPC Acceptance Recovery",
+      "script": "scripts/verify-ipc-acceptance-recovery-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "ff356813de7b194a5d6f1c895da4d2e2e667b0ab0009f43b452bf76024210329"
+    },
+    {
+      "gateNumber": 9,
+      "name": "Run Lease",
+      "script": "scripts/verify-run-lease-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "9ab79f11042fe0ffce539752a57b8805914ae6cf8a2b3f987e37ea3b95ff66dc"
+    },
+    {
+      "gateNumber": 10,
+      "name": "Task Atomicity",
+      "script": "scripts/verify-task-atomicity-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "d5ce824bf7180e5d29d89af41d83a17a89fc29b5450d4d6b0f2f2abd6943b64a"
+    },
+    {
+      "gateNumber": 11,
+      "name": "Provider Control",
+      "script": "scripts/verify-provider-control-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "d191ea297de038de387853ed06652076679ed2b762f9ae757be2721153b35cd2"
+    },
+    {
+      "gateNumber": 12,
+      "name": "Run Recovery",
+      "script": "scripts/verify-run-recovery-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "3d35f509306009742a5b2c10b9babd958764769d70b21112f5ed763631c8c8cc"
+    },
+    {
+      "gateNumber": 13,
+      "name": "Task Lifecycle",
+      "script": "scripts/verify-task-lifecycle-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "ae34ed71d0cd035328c6b8fa9c54dfd28309e878e53ebf0efb47b991fb7d2fe1"
+    },
+    {
+      "gateNumber": 14,
+      "name": "Cancellation",
+      "script": "scripts/verify-runtime-cancellation-gate.mjs",
+      "exitCode": 0,
+      "sourceSha256": "129b753dda0f65576e492be8cf0b53e33e1e39e2237ab052ded702fb8958e3cf"
+    },
+    {
+      "gateNumber": 15,
+      "name": "Critical/High",
+      "script": "scripts/verify-v1-critical-high-gates.mjs",
+      "exitCode": 0,
+      "sourceSha256": "af7ec4823cdf99c675528108eacc812548bcbbafe5dc30e996761390374e2c11"
+    },
+    {
+      "gateNumber": 16,
+      "name": "IPC Closed Loop",
+      "script": "scripts/verify-ipc-closed-loop.mjs",
+      "exitCode": 0,
+      "sourceSha256": "94b94fe3e0dd27c4babf2465a88511f03c68e1892bd0d36ea4b7ac0f0ff93d4b"
+    },
+    {
+      "gateNumber": 17,
+      "name": "Progress",
+      "script": "scripts/verify-minimal-progress-protocol.mjs",
+      "exitCode": 0,
+      "sourceSha256": "e14aac04b5226403661ae1ea9a1e08100833327b3698b89d5978e05882a62ee7"
+    },
+    {
+      "gateNumber": 18,
+      "name": "Runtime Switch",
+      "script": "scripts/verify-gateway-runtime-switch.mjs",
+      "exitCode": 0,
+      "sourceSha256": "9058e2c197652041c1c941e43632226594a48a9730bd5662ddf9925046823272"
+    },
+    {
+      "gateNumber": 19,
+      "name": "Gateway Pure Transport",
+      "script": "scripts/verify-gateway-runtime-business-boundary.mjs",
+      "exitCode": 0,
+      "sourceSha256": "090396bc50022497bfafdc0a947aefdafd0a6ea59894b581c21609b32d534b16"
+    },
+    {
+      "gateNumber": 20,
+      "name": "Existing Product Regression",
+      "script": "scripts/verify.mjs",
+      "exitCode": 0,
+      "sourceSha256": "97abcb215b5e58c662cbf5801bdc730730a9fa3738299f1a41eb932586cca0db"
+    },
+    {
+      "gateNumber": 21,
+      "name": "Run API Verified Injection Rejection",
+      "script": "scripts/verify-run-api-verified-injection-rejection-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "adc072eebae07d847f69c8502dcc689fd8c8e023ca825f9983621026361d386e"
+    },
+    {
+      "gateNumber": 22,
+      "name": "Data Import Verified Injection Rejection",
+      "script": "scripts/verify-data-import-verified-injection-rejection-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "38720d6f9f6542138b3f06d60f6c4e988338b4f0100254d9d7586979106ae98e"
+    },
+    {
+      "gateNumber": 23,
+      "name": "Legacy Persisted Verified Claim Fail Closed",
+      "script": "scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "8afab6b4cae7d3d91522c6c4929fb8d8c565e2a5bf017b68453e85ee68800809"
+    },
+    {
+      "gateNumber": 24,
+      "name": "Isolated Verification Not Business Verified",
+      "script": "scripts/verify-isolated-run-verification-not-business-verified-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "4c05072eddfb067cf07a5bd852f50a521e7ce6d0ad14733959cab24d89274497"
+    },
+    {
+      "gateNumber": 25,
+      "name": "Server Owned Run Fact Preservation",
+      "script": "scripts/verify-server-owned-run-fact-preservation-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "32368c1ac9d9b46e29ae54af87664a30fcaa69abd7124b67a2c1760ad5d2e396"
+    },
+    {
+      "gateNumber": 26,
+      "name": "UI Writable DTO",
+      "script": "scripts/verify-ui-writable-dto-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "28493bff6424d6b96da27dbdfdd659af9660ebd39981670af85cf1d2fd3ea442"
+    },
+    {
+      "gateNumber": 27,
+      "name": "Run Trust Path Rejection Baseline",
+      "script": "scripts/verify-run-trust-path-rejection-baseline-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "fe346f395cb3b7faea0ff6a0e66f2bbe079296b195e302a5e9ecd995d93d5ce4"
+    },
+    {
+      "gateNumber": 28,
+      "name": "Trust Field Protocol Path Matching",
+      "script": "scripts/verify-trust-field-protocol-path-matching-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "af10b6c8076da1b1e0bc893eeb736208333e7d871f833c53e4b4b599aa0964ea"
+    },
+    {
+      "gateNumber": 29,
+      "name": "Workbench Context Trust Boundary",
+      "script": "scripts/verify-workbench-context-verified-trust-boundary-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "d65645cdfc69da88a284b2a44f7a9c2c8727b314b7b70a0833a7a2716f0b7c7a"
+    },
+    {
+      "gateNumber": 30,
+      "name": "Agent Context Injection Rejection",
+      "script": "scripts/verify-agent-context-injection-rejection-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "d0cf1fc1a34d4fc9f9429658f85840dbaa0b91b1a3a83a9cdb3f5a9565941a11"
+    },
+    {
+      "gateNumber": 31,
+      "name": "UI Run Status Verification Separation",
+      "script": "scripts/verify-ui-run-status-verification-separation-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "11a4c39cb53ad5248520b0dc086832d12d3a221923bbfe4f9d75eeb0b428a5e3"
+    },
+    {
+      "gateNumber": 32,
+      "name": "Verified Assignment Invariant",
+      "script": "scripts/verify-verified-assignment-invariant-001.mjs",
+      "exitCode": 0,
+      "sourceSha256": "242f65803c18323aee91c9f45aeca45f8486557172580e4be4ee91530d4a6685"
+    },
+    {
+      "gateNumber": 33,
+      "name": "Legacy Memories Trust Semantics",
+      "script": "scripts/verify-memories.mjs",
+      "exitCode": 0,
+      "sourceSha256": "fbdf26370ca52c61d4ecfb7ba6322910c8f213ed882c26f8af653d8b7fe620d8"
+    },
+    {
+      "gateNumber": 34,
+      "name": "Legacy Verification Layer Trust Semantics",
+      "script": "scripts/verify-verification-layer.mjs",
+      "exitCode": 0,
+      "sourceSha256": "81383b7ce505d183b35b5d888a0669420ab718cebae9186d19fd2451e1c4f029"
+    },
+    {
+      "gateNumber": 35,
+      "name": "Legacy Tasks Runs Trust Semantics",
+      "script": "scripts/verify-tasks-runs.mjs",
+      "exitCode": 0,
+      "sourceSha256": "5f011c5d882d8753b9b8105e1b52c0b924d8be272488007297032f8e7ecfe52b"
+    }
+  ]
+}

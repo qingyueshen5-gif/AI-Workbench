@@ -1,0 +1,198 @@
+{
+  "schemaVersion": "ai-workbench.step7-mandatory-gates-antifraud/v1",
+  "result": "PASS",
+  "generatedFromRealExecution": true,
+  "deployment": "GATE_PASSED_NOT_DEPLOYED",
+  "requiredGateCount": 35,
+  "observedGateCount": 35,
+  "allRequiredGatesStarted": true,
+  "allRequiredGatesCompleted": true,
+  "missingGateCount": 0,
+  "duplicateGateCount": 0,
+  "skippedGateCount": 0,
+  "firstFailure": null,
+  "allExitCodesZero": true,
+  "gateNamesUnique": true,
+  "gateScriptsUnique": true,
+  "noFixtureOnlySubstitution": true,
+  "noPreFilledPass": true,
+  "productionDeploymentPerformed": false,
+  "executionFactsSha256": "ba401d2b11fb27547b903415081080c43c0bdb6b36295d3f70ffb4b8b066ec9c",
+  "gates": [
+    {
+      "name": "Checkpoint Protection",
+      "script": "scripts/verify-checkpoint-protection-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Git Destructive Bypass Scan",
+      "script": "scripts/scan-git-destructive-bypasses.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Execution Protocol Checkpoint Rules",
+      "script": "scripts/verify-execution-protocol-checkpoint.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "External Skill Drift",
+      "script": "scripts/verify-external-skill-drift-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Save Decoupled From Gate",
+      "script": "scripts/verify-save-decoupled-from-gate-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Authorization Boundary",
+      "script": "scripts/verify-authorization-boundary-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Feishu Delivery Idempotency",
+      "script": "scripts/verify-feishu-delivery-idempotency-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "IPC Acceptance Recovery",
+      "script": "scripts/verify-ipc-acceptance-recovery-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Run Lease",
+      "script": "scripts/verify-run-lease-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Task Atomicity",
+      "script": "scripts/verify-task-atomicity-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Provider Control",
+      "script": "scripts/verify-provider-control-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Run Recovery",
+      "script": "scripts/verify-run-recovery-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Task Lifecycle",
+      "script": "scripts/verify-task-lifecycle-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Cancellation",
+      "script": "scripts/verify-runtime-cancellation-gate.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Critical/High",
+      "script": "scripts/verify-v1-critical-high-gates.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "IPC Closed Loop",
+      "script": "scripts/verify-ipc-closed-loop.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Progress",
+      "script": "scripts/verify-minimal-progress-protocol.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Runtime Switch",
+      "script": "scripts/verify-gateway-runtime-switch.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Gateway Pure Transport",
+      "script": "scripts/verify-gateway-runtime-business-boundary.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Existing Product Regression",
+      "script": "scripts/verify.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Run API Verified Injection Rejection",
+      "script": "scripts/verify-run-api-verified-injection-rejection-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Data Import Verified Injection Rejection",
+      "script": "scripts/verify-data-import-verified-injection-rejection-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Legacy Persisted Verified Claim Fail Closed",
+      "script": "scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Isolated Verification Not Business Verified",
+      "script": "scripts/verify-isolated-run-verification-not-business-verified-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Server Owned Run Fact Preservation",
+      "script": "scripts/verify-server-owned-run-fact-preservation-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "UI Writable DTO",
+      "script": "scripts/verify-ui-writable-dto-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Run Trust Path Rejection Baseline",
+      "script": "scripts/verify-run-trust-path-rejection-baseline-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Trust Field Protocol Path Matching",
+      "script": "scripts/verify-trust-field-protocol-path-matching-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Workbench Context Trust Boundary",
+      "script": "scripts/verify-workbench-context-verified-trust-boundary-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Agent Context Injection Rejection",
+      "script": "scripts/verify-agent-context-injection-rejection-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "UI Run Status Verification Separation",
+      "script": "scripts/verify-ui-run-status-verification-separation-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Verified Assignment Invariant",
+      "script": "scripts/verify-verified-assignment-invariant-001.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Legacy Memories Trust Semantics",
+      "script": "scripts/verify-memories.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Legacy Verification Layer Trust Semantics",
+      "script": "scripts/verify-verification-layer.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "Legacy Tasks Runs Trust Semantics",
+      "script": "scripts/verify-tasks-runs.mjs",
+      "exitCode": 0
+    }
+  ]
+}

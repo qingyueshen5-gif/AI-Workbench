@@ -13,6 +13,10 @@
     "specialists",
     "legacyTests",
     "productAllowlist",
+    "effectiveProductAllowlistCount",
+    "effectiveProductAllowlist",
+    "approvedFailureRepairExtension",
+    "baseProductAllowlistCount",
     "prohibitedChanges",
     "requiredEvidence",
     "validators",
@@ -69,6 +73,18 @@
     },
     "currentStateAfterEnablement": {
       "type": "object"
+    },
+    "baseProductAllowlistCount": {
+      "type": "integer"
+    },
+    "approvedFailureRepairExtension": {
+      "type": "object"
+    },
+    "effectiveProductAllowlist": {
+      "type": "array"
+    },
+    "effectiveProductAllowlistCount": {
+      "type": "integer"
     }
   }
 }
