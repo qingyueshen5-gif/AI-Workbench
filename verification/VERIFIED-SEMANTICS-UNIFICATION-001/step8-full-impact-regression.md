@@ -1,18 +1,24 @@
 # Step8 Full Impact Regression
 
-- Evidence generated: `2026-08-07T17:18:29.884Z`
-- Runner HEAD: `f352fbde8511b4c37f5f11110398871b0203d4dc`
+- Evidence generated: `2026-08-08T04:55:24.748Z`
+- Runner HEAD: `a83d57a0a7e7689d459c588e24c372b9d5d75539`
+- Runner SHA-256: `d2ee667c380d4290e488678bcda942c8bac9be36bd25bb61f08d3aafbc8067d3`
+- Step8 contract validator SHA-256: `06911a32ea5e83da707d282a2ef89d0866c79dd1df26de3978fe16be9aa00755`
 - Step7 validator SHA-256: `4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2`
+- Mandatory gates SHA-256: `66e1cf74562fe34d50cfbbf5d7a7999570ab3d15430c9b6f758ce7a9c7e73bbe`
+- Propagation specialist SHA-256: `78641ea90fdb67d5a0bfa609ea157f66160d03186ebe6d9ba2c09cae3d2a6322`
 - Result: **PASS**
 - Required/completed regressions: `12/12`
 - Required/completed attacks: `14/14`
 - Mandatory gates: `35/35`
+- Propagation specialist: `3/3`
+- Temporary evidence complete: `true`
+- Historical propagation evidence clean: `true`
 - First failure: `NONE`
-- Antifraud: `PASS`
 - Final acceptance: `false`
 - Deployment: `NOT_DEPLOYED`
 
-## Regression executions
+## Regression source bindings
 
 - `Step7 Mandatory Gates 35` — exit `0`, source SHA-256 `66e1cf74562fe34d50cfbbf5d7a7999570ab3d15430c9b6f758ce7a9c7e73bbe`
 - `Step7 Contract Validator` — exit `0`, source SHA-256 `4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2`
@@ -24,5 +30,5 @@
 - `Exec Guard Tests` — exit `0`, source SHA-256 `a3834e8fa9852a6033df3adf0f6ab379385ffdb75f99fd9aaad338806ca63bd8`
 - `Build` — exit `0`, source SHA-256 `49c3fdd2f029c02735577f79891acacde797d4c4e5181059cc13dfe30d901f59`
 - `Existing Product Regression` — exit `0`, source SHA-256 `97abcb215b5e58c662cbf5801bdc730730a9fa3738299f1a41eb932586cca0db`
-- `Verified Propagation Boundary` — exit `0`, source SHA-256 `dda1be5eb962681d7358fa0a67f6108f644ffffd52c50cf8906677ec5859fa66`
+- `Verified Propagation Boundary` — exit `0`, source SHA-256 `78641ea90fdb67d5a0bfa609ea157f66160d03186ebe6d9ba2c09cae3d2a6322`
 - `Gateway Business Boundary` — exit `0`, source SHA-256 `090396bc50022497bfafdc0a947aefdafd0a6ea59894b581c21609b32d534b16`

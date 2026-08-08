@@ -1,70 +1,83 @@
 {
   "schemaVersion": "ai-workbench.step8-fourth-risk-closeout/v1",
   "contractId": "STEP8-FULL-IMPACT-REGRESSION-MACHINE-CONTRACT-001",
+  "evidenceGeneratedAt": "2026-08-08T04:55:24.748Z",
+  "runnerHead": "a83d57a0a7e7689d459c588e24c372b9d5d75539",
+  "runnerSHA256": "d2ee667c380d4290e488678bcda942c8bac9be36bd25bb61f08d3aafbc8067d3",
+  "step8ContractValidatorSHA256": "06911a32ea5e83da707d282a2ef89d0866c79dd1df26de3978fe16be9aa00755",
+  "propagationSpecialistSHA256": "78641ea90fdb67d5a0bfa609ea157f66160d03186ebe6d9ba2c09cae3d2a6322",
+  "step7ValidatorSHA256": "4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2",
+  "mandatoryGatesSHA256": "66e1cf74562fe34d50cfbbf5d7a7999570ab3d15430c9b6f758ce7a9c7e73bbe",
   "riskName": "LEGACY_WORKBENCH_RUN_VERIFIED_TRUST_BOUNDARY_BYPASS",
   "openState": "OPEN",
   "closedState": "RESOLVED",
   "decision": "RESOLVED",
-  "runnerHead": "f352fbde8511b4c37f5f11110398871b0203d4dc",
-  "evidenceGeneratedAt": "2026-08-07T17:18:29.884Z",
-  "step7ValidatorSHA256": "4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2",
   "conditions": [
     {
       "condition": "all required attack-matrix cases fresh PASS",
       "satisfied": true,
-      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
+      "evidence": "fresh execution 2026-08-08T04:55:24.748Z; 12/12, 14/14, 35/35, propagation 3/3"
     },
     {
       "condition": "35 mandatory gates fresh PASS",
       "satisfied": true,
-      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
+      "evidence": "fresh execution 2026-08-08T04:55:24.748Z; 12/12, 14/14, 35/35, propagation 3/3"
     },
     {
       "condition": "full-impact regression has no first failure",
       "satisfied": true,
-      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
+      "evidence": "fresh execution 2026-08-08T04:55:24.748Z; 12/12, 14/14, 35/35, propagation 3/3"
     },
     {
       "condition": "all required source SHA-256 values recorded",
       "satisfied": true,
-      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
+      "evidence": "fresh execution 2026-08-08T04:55:24.748Z; 12/12, 14/14, 35/35, propagation 3/3"
     },
     {
       "condition": "client and imported verified values fail closed",
       "satisfied": true,
-      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
+      "evidence": "fresh execution 2026-08-08T04:55:24.748Z; 12/12, 14/14, 35/35, propagation 3/3"
     },
     {
       "condition": "isolated verification cannot promote business verified",
       "satisfied": true,
-      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
+      "evidence": "fresh execution 2026-08-08T04:55:24.748Z; 12/12, 14/14, 35/35, propagation 3/3"
     },
     {
       "condition": "Context Agent UI Gateway and Delivery boundaries preserve only trusted derivation",
       "satisfied": true,
-      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
+      "evidence": "fresh execution 2026-08-08T04:55:24.748Z; 12/12, 14/14, 35/35, propagation 3/3"
     },
     {
       "condition": "legacy tests execute under the migrated trust contract",
       "satisfied": true,
-      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
+      "evidence": "fresh execution 2026-08-08T04:55:24.748Z; 12/12, 14/14, 35/35, propagation 3/3"
     },
     {
       "condition": "Step8 anti-fraud validation passes",
       "satisfied": true,
-      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
+      "evidence": "fresh execution 2026-08-08T04:55:24.748Z; 12/12, 14/14, 35/35, propagation 3/3"
     },
     {
       "condition": "finalAcceptance remains false",
       "satisfied": true,
-      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
+      "evidence": "fresh execution 2026-08-08T04:55:24.748Z; 12/12, 14/14, 35/35, propagation 3/3"
     },
     {
       "condition": "deployment remains NOT_DEPLOYED",
       "satisfied": true,
-      "evidence": "fresh execution finishedAt 2026-08-07T17:18:29.884Z; Step7 validator SHA-256 4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2"
+      "evidence": "fresh execution 2026-08-08T04:55:24.748Z; 12/12, 14/14, 35/35, propagation 3/3"
     }
   ],
+  "freshExecutionBinding": {
+    "regressions": "12/12",
+    "attacks": "14/14",
+    "mandatoryGates": "35/35",
+    "propagationSpecialist": "3/3",
+    "firstFailure": null,
+    "temporaryEvidenceComplete": true,
+    "historicalPropagationEvidenceClean": true
+  },
   "inScope": [
     "POST /api/runs verified injection",
     "PUT /api/data and Data Import verified injection",

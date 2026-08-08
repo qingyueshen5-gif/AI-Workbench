@@ -1,12 +1,14 @@
 # Step8 Fourth Risk Closeout
 
-- Evidence generated: `2026-08-07T17:18:29.884Z`
+- Evidence generated: `2026-08-08T04:55:24.748Z`
 - Risk: `LEGACY_WORKBENCH_RUN_VERIFIED_TRUST_BOUNDARY_BYPASS`
 - Decision: **RESOLVED**
-- Runner HEAD: `f352fbde8511b4c37f5f11110398871b0203d4dc`
-- Step7 validator SHA-256: `4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2`
-- All machine close conditions: `true`
-- Product landing blockers remain open: `true`
+- Fresh regression: `12/12`
+- Fresh attack matrix: `14/14`
+- Fresh mandatory gates: `35/35`
+- Fresh propagation specialist: `3/3`
+- Temporary evidence complete: `true`
+- Historical propagation evidence clean: `true`
 - Final acceptance: `false`
 - Deployment: `NOT_DEPLOYED`
 

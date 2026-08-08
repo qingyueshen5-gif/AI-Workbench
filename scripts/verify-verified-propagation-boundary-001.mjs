@@ -2,7 +2,7 @@
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import { createHash } from 'node:crypto';
-import { join, dirname, extname } from 'node:path';
+import { join, dirname, extname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { deriveBoundVerifierResult } from '../agents/verified-semantics.mjs';
@@ -13,7 +13,9 @@ const json=value=>`${JSON.stringify(value,null,2)}\n`;
 
 export async function runSpecialist(){
   const root=dirname(dirname(fileURLToPath(import.meta.url)));
-  const evidenceRoot=join(root,'verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001');
+  const configuredEvidenceRoot=String(process.env.AIW_PROPAGATION_EVIDENCE_DIR||'').trim();
+  const evidenceRoot=configuredEvidenceRoot?resolve(configuredEvidenceRoot):join(root,'verification/LEGACY-RUN-API-VERIFIED-TRUST-BOUNDARY-FIX-001');
+  await fs.mkdir(evidenceRoot,{recursive:true});
   const auditPath=join(evidenceRoot,'propagation-boundary-audit.json');
   const auditMdPath=join(evidenceRoot,'propagation-boundary-audit.md');
   const matrixPath=join(evidenceRoot,'propagation-boundary-matrix.json');
@@ -91,11 +93,11 @@ export async function runSpecialist(){
   const policyFailures=failures.filter(x=>/P[1-9]|FIXTURE_TRUSTED/.test(x));const boundaryPolicyOk=policyFailures.length===0;
   const report=`# Step5-E传播边界专项报告\n\napprovedBaseline=010478e10d1e2a2530588dc13ccd4d6b9c60b43d\nrepairExecutionBaseline=b5126ded20c62f8a464e2358718e95ccfa4ffb2f\nresumeFromWipCommit=b5126ded20c62f8a464e2358718e95ccfa4ffb2f\ncomponentsAudited=8\nprobesExecuted=${probesExecuted}\ndirectConsumptionFound=${directConsumptionFound}\nboundaryPolicyOk=${boundaryPolicyOk}\nproductionCodeModified=false\ntrustedFactsControlSha256=${trustedFactsControlSha256}\ntrustedFactsForgedSha256=${trustedFactsForgedSha256}\n\nC1-C8 本轮扫描、真实入口探针及结果矩阵见 propagation-boundary-matrix.json。该证据仍属于 WIP 修复，不是正式功能 Checkpoint。\n`;
   const expected={audit:json(audit),auditMd,matrix:json(matrix),report};
-  const current={audit:await fs.readFile(auditPath,'utf8'),auditMd:await fs.readFile(auditMdPath,'utf8'),matrix:await fs.readFile(matrixPath,'utf8'),report:await fs.readFile(reportPath,'utf8')};
+  const current={};for(const [key,path] of Object.entries({audit:auditPath,auditMd:auditMdPath,matrix:matrixPath,report:reportPath}))try{current[key]=await fs.readFile(path,'utf8')}catch(error){if(error.code==='ENOENT')current[key]=null;else throw error}
   const finalized=Object.keys(expected).every(k=>current[k]===expected[k]);
   let evidenceWritePhase='COMPLETE_CLOSURE';
-  if(!finalized&&failures.length===0){await fs.writeFile(auditPath,expected.audit,'utf8');await fs.writeFile(auditMdPath,expected.auditMd,'utf8');await fs.writeFile(matrixPath,expected.matrix,'utf8');await fs.writeFile(reportPath,expected.report,'utf8');evidenceWritePhase='COMPLETE_FIRST_RUN'}
-  if(finalized){const parsedAudit=JSON.parse(current.audit),parsedMatrix=JSON.parse(current.matrix);check(stable(parsedAudit)===stable(audit),'audit integrity mismatch','closure');check(stable(parsedMatrix)===stable(matrix),'matrix integrity mismatch','closure');check(current.report===report,'report integrity mismatch','closure');check(parsedMatrix.components.length===8&&new Set(parsedMatrix.components.map(x=>x.id)).size===8,'component closure mismatch','closure')}
+  if(!finalized&&failures.length===0){await fs.writeFile(auditPath,expected.audit,'utf8');await fs.writeFile(auditMdPath,expected.auditMd,'utf8');await fs.writeFile(matrixPath,expected.matrix,'utf8');await fs.writeFile(reportPath,expected.report,'utf8');for(const [key,path] of Object.entries({audit:auditPath,auditMd:auditMdPath,matrix:matrixPath,report:reportPath}))current[key]=await fs.readFile(path,'utf8');evidenceWritePhase='COMPLETE_FIRST_RUN'}
+  if(finalized||evidenceWritePhase==='COMPLETE_FIRST_RUN'){const parsedAudit=JSON.parse(current.audit),parsedMatrix=JSON.parse(current.matrix);check(stable(parsedAudit)===stable(audit),'audit integrity mismatch','closure');check(stable(parsedMatrix)===stable(matrix),'matrix integrity mismatch','closure');check(current.auditMd===auditMd,'audit markdown integrity mismatch','closure');check(current.report===report,'report integrity mismatch','closure');check(parsedMatrix.components.length===8&&new Set(parsedMatrix.components.map(x=>x.id)).size===8,'component closure mismatch','closure')}
   const auditIntegrityOk=!failures.some(x=>/audit|matrix|component|production entry|Electron IPC presence/.test(x));const reportIntegrityOk=!failures.some(x=>/report/.test(x));
   const result={ok:failures.length===0,auditIntegrityOk,reportIntegrityOk,boundaryPolicyOk,staticChecks,probeChecks,closureChecks,checks:staticChecks+probeChecks+closureChecks,failures,runtimeHead,evidenceWritePhase,trustedFactsControlSha256,trustedFactsForgedSha256,probeResults:outcomes};
   process.stdout.write(`${JSON.stringify(result)}\n`);if(!result.ok)process.exitCode=1;

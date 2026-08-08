@@ -1,9 +1,13 @@
 {
   "schemaVersion": "ai-workbench.step8-attack-matrix-antifraud/v1",
   "contractId": "STEP8-FULL-IMPACT-REGRESSION-MACHINE-CONTRACT-001",
-  "runnerHead": "f352fbde8511b4c37f5f11110398871b0203d4dc",
-  "evidenceGeneratedAt": "2026-08-07T17:18:29.884Z",
+  "evidenceGeneratedAt": "2026-08-08T04:55:24.748Z",
+  "runnerHead": "a83d57a0a7e7689d459c588e24c372b9d5d75539",
+  "runnerSHA256": "d2ee667c380d4290e488678bcda942c8bac9be36bd25bb61f08d3aafbc8067d3",
+  "step8ContractValidatorSHA256": "06911a32ea5e83da707d282a2ef89d0866c79dd1df26de3978fe16be9aa00755",
+  "propagationSpecialistSHA256": "78641ea90fdb67d5a0bfa609ea157f66160d03186ebe6d9ba2c09cae3d2a6322",
   "step7ValidatorSHA256": "4fac47bb8076517e45e184f44e3f978e17c6b45090f4865f891e85c5c17da6e2",
+  "mandatoryGatesSHA256": "66e1cf74562fe34d50cfbbf5d7a7999570ab3d15430c9b6f758ce7a9c7e73bbe",
   "requiredAttackCount": 14,
   "completedAttackCount": 14,
   "attacks": [
@@ -13,8 +17,8 @@
       "argv": [
         "scripts/verify-run-api-verified-injection-rejection-001.mjs"
       ],
-      "start": "2026-08-07T17:18:24.536Z",
-      "end": "2026-08-07T17:18:24.909Z",
+      "start": "2026-08-08T04:55:19.849Z",
+      "end": "2026-08-08T04:55:20.236Z",
       "exitCode": 0,
       "sourceSHA256": "adc072eebae07d847f69c8502dcc689fd8c8e023ca825f9983621026361d386e",
       "assertionSummary": {
@@ -33,18 +37,18 @@
       "argv": [
         "scripts/verify-data-import-verified-injection-rejection-001.mjs"
       ],
-      "start": "2026-08-07T17:18:24.910Z",
-      "end": "2026-08-07T17:18:25.245Z",
+      "start": "2026-08-08T04:55:20.236Z",
+      "end": "2026-08-08T04:55:20.604Z",
       "exitCode": 0,
       "sourceSHA256": "38720d6f9f6542138b3f06d60f6c4e988338b4f0100254d9d7586979106ae98e",
       "assertionSummary": {
         "configuredName": "Data Import verified injection",
         "source": "scripts/verify-data-import-verified-injection-rejection-001.mjs",
         "outputTail": [
-          "{\"ok\":true,\"module\":\"DATA-IMPORT-VERIFIED-INJECTION-REJECTION-001\",\"atomicReject\":true,\"beforeHash\":\"8babd9de2a4ccc192ed7278f511856ed7cad36e8dadc8287452ea95518337108\",\"afterHash\":\"8babd9de2a4ccc192ed7278f511856ed7cad36e8dadc8287452ea95518337108\"}"
+          "{\"ok\":true,\"module\":\"DATA-IMPORT-VERIFIED-INJECTION-REJECTION-001\",\"atomicReject\":true,\"beforeHash\":\"8d68bb2260578aaf39a0e0c8bc340acdf7f29b9383b8f55ee19ee9d2895dbc8a\",\"afterHash\":\"8d68bb2260578aaf39a0e0c8bc340acdf7f29b9383b8f55ee19ee9d2895dbc8a\"}"
         ]
       },
-      "stdout": "{\"ok\":true,\"module\":\"DATA-IMPORT-VERIFIED-INJECTION-REJECTION-001\",\"atomicReject\":true,\"beforeHash\":\"8babd9de2a4ccc192ed7278f511856ed7cad36e8dadc8287452ea95518337108\",\"afterHash\":\"8babd9de2a4ccc192ed7278f511856ed7cad36e8dadc8287452ea95518337108\"}\n",
+      "stdout": "{\"ok\":true,\"module\":\"DATA-IMPORT-VERIFIED-INJECTION-REJECTION-001\",\"atomicReject\":true,\"beforeHash\":\"8d68bb2260578aaf39a0e0c8bc340acdf7f29b9383b8f55ee19ee9d2895dbc8a\",\"afterHash\":\"8d68bb2260578aaf39a0e0c8bc340acdf7f29b9383b8f55ee19ee9d2895dbc8a\"}\n",
       "stderr": ""
     },
     {
@@ -53,8 +57,8 @@
       "argv": [
         "scripts/verify-legacy-persisted-verified-claim-fail-closed-001.mjs"
       ],
-      "start": "2026-08-07T17:18:25.247Z",
-      "end": "2026-08-07T17:18:25.565Z",
+      "start": "2026-08-08T04:55:20.604Z",
+      "end": "2026-08-08T04:55:20.869Z",
       "exitCode": 0,
       "sourceSHA256": "8afab6b4cae7d3d91522c6c4929fb8d8c565e2a5bf017b68453e85ee68800809",
       "assertionSummary": {
@@ -73,8 +77,8 @@
       "argv": [
         "scripts/verify-isolated-run-verification-not-business-verified-001.mjs"
       ],
-      "start": "2026-08-07T17:18:25.565Z",
-      "end": "2026-08-07T17:18:25.900Z",
+      "start": "2026-08-08T04:55:20.870Z",
+      "end": "2026-08-08T04:55:21.156Z",
       "exitCode": 0,
       "sourceSHA256": "4c05072eddfb067cf07a5bd852f50a521e7ce6d0ad14733959cab24d89274497",
       "assertionSummary": {
@@ -93,8 +97,8 @@
       "argv": [
         "scripts/verify-server-owned-run-fact-preservation-001.mjs"
       ],
-      "start": "2026-08-07T17:18:25.901Z",
-      "end": "2026-08-07T17:18:26.238Z",
+      "start": "2026-08-08T04:55:21.157Z",
+      "end": "2026-08-08T04:55:21.545Z",
       "exitCode": 0,
       "sourceSHA256": "32368c1ac9d9b46e29ae54af87664a30fcaa69abd7124b67a2c1760ad5d2e396",
       "assertionSummary": {
@@ -104,14 +108,14 @@
           "    \"I\": \"PASS\",",
           "    \"J\": {",
           "      \"result\": \"PASS\",",
-          "      \"beforeHash\": \"4ad4810c3b83113eba68f15436f834dcb19006d019c65184bf1db5a840a84978\",",
-          "      \"afterHash\": \"4ad4810c3b83113eba68f15436f834dcb19006d019c65184bf1db5a840a84978\"",
+          "      \"beforeHash\": \"d78e2967f6e3ea6427da086180589f83ff15f8a488251d21e54a444f539b77e8\",",
+          "      \"afterHash\": \"d78e2967f6e3ea6427da086180589f83ff15f8a488251d21e54a444f539b77e8\"",
           "    }",
           "  }",
           "}"
         ]
       },
-      "stdout": "{\n  \"ok\": true,\n  \"module\": \"SERVER-OWNED-RUN-FACT-PRESERVATION-001\",\n  \"identityFields\": [\n    \"id\",\n    \"taskId\",\n    \"taskRevision\",\n    \"agentId\"\n  ],\n  \"directBareVerifiedCopy\": false,\n  \"verifiedRecomputed\": true,\n  \"scenarios\": {\n    \"A\": \"PASS\",\n    \"B\": \"PASS\",\n    \"C\": \"PASS\",\n    \"D\": \"PASS\",\n    \"E\": \"PASS\",\n    \"F\": \"PASS\",\n    \"G\": \"PASS\",\n    \"H\": \"PASS\",\n    \"I\": \"PASS\",\n    \"J\": {\n      \"result\": \"PASS\",\n      \"beforeHash\": \"4ad4810c3b83113eba68f15436f834dcb19006d019c65184bf1db5a840a84978\",\n      \"afterHash\": \"4ad4810c3b83113eba68f15436f834dcb19006d019c65184bf1db5a840a84978\"\n    }\n  }\n}\n",
+      "stdout": "{\n  \"ok\": true,\n  \"module\": \"SERVER-OWNED-RUN-FACT-PRESERVATION-001\",\n  \"identityFields\": [\n    \"id\",\n    \"taskId\",\n    \"taskRevision\",\n    \"agentId\"\n  ],\n  \"directBareVerifiedCopy\": false,\n  \"verifiedRecomputed\": true,\n  \"scenarios\": {\n    \"A\": \"PASS\",\n    \"B\": \"PASS\",\n    \"C\": \"PASS\",\n    \"D\": \"PASS\",\n    \"E\": \"PASS\",\n    \"F\": \"PASS\",\n    \"G\": \"PASS\",\n    \"H\": \"PASS\",\n    \"I\": \"PASS\",\n    \"J\": {\n      \"result\": \"PASS\",\n      \"beforeHash\": \"d78e2967f6e3ea6427da086180589f83ff15f8a488251d21e54a444f539b77e8\",\n      \"afterHash\": \"d78e2967f6e3ea6427da086180589f83ff15f8a488251d21e54a444f539b77e8\"\n    }\n  }\n}\n",
       "stderr": ""
     },
     {
@@ -120,8 +124,8 @@
       "argv": [
         "scripts/verify-ui-writable-dto-001.mjs"
       ],
-      "start": "2026-08-07T17:18:26.239Z",
-      "end": "2026-08-07T17:18:26.527Z",
+      "start": "2026-08-08T04:55:21.545Z",
+      "end": "2026-08-08T04:55:21.820Z",
       "exitCode": 0,
       "sourceSHA256": "28493bff6424d6b96da27dbdfdd659af9660ebd39981670af85cf1d2fd3ea442",
       "assertionSummary": {
@@ -147,8 +151,8 @@
       "argv": [
         "scripts/verify-run-trust-path-rejection-baseline-001.mjs"
       ],
-      "start": "2026-08-07T17:18:26.527Z",
-      "end": "2026-08-07T17:18:27.025Z",
+      "start": "2026-08-08T04:55:21.821Z",
+      "end": "2026-08-08T04:55:22.299Z",
       "exitCode": 0,
       "sourceSHA256": "fe346f395cb3b7faea0ff6a0e66f2bbe079296b195e302a5e9ecd995d93d5ce4",
       "assertionSummary": {
@@ -174,8 +178,8 @@
       "argv": [
         "scripts/verify-trust-field-protocol-path-matching-001.mjs"
       ],
-      "start": "2026-08-07T17:18:27.025Z",
-      "end": "2026-08-07T17:18:27.660Z",
+      "start": "2026-08-08T04:55:22.299Z",
+      "end": "2026-08-08T04:55:22.753Z",
       "exitCode": 0,
       "sourceSHA256": "af10b6c8076da1b1e0bc893eeb736208333e7d871f833c53e4b4b599aa0964ea",
       "assertionSummary": {
@@ -201,8 +205,8 @@
       "argv": [
         "scripts/verify-workbench-context-verified-trust-boundary-001.mjs"
       ],
-      "start": "2026-08-07T17:18:27.661Z",
-      "end": "2026-08-07T17:18:27.753Z",
+      "start": "2026-08-08T04:55:22.753Z",
+      "end": "2026-08-08T04:55:22.829Z",
       "exitCode": 0,
       "sourceSHA256": "d65645cdfc69da88a284b2a44f7a9c2c8727b314b7b70a0833a7a2716f0b7c7a",
       "assertionSummary": {
@@ -228,8 +232,8 @@
       "argv": [
         "scripts/verify-agent-context-injection-rejection-001.mjs"
       ],
-      "start": "2026-08-07T17:18:27.753Z",
-      "end": "2026-08-07T17:18:28.945Z",
+      "start": "2026-08-08T04:55:22.829Z",
+      "end": "2026-08-08T04:55:23.912Z",
       "exitCode": 0,
       "sourceSHA256": "d0cf1fc1a34d4fc9f9429658f85840dbaa0b91b1a3a83a9cdb3f5a9565941a11",
       "assertionSummary": {
@@ -246,7 +250,7 @@
           "}"
         ]
       },
-      "stdout": "{\n  \"ok\": true,\n  \"module\": \"AGENT-CONTEXT-INJECTION-REJECTION-001\",\n  \"agentCallsOnRejected\": 0,\n  \"providerCallsOnRejected\": 0,\n  \"runCreatesOnRejected\": 0,\n  \"taskCreatesOnRejected\": 0,\n  \"hashBefore\": \"6b1014c5df4a36faf01e6d03e37c71aa5085f135e7cdea5765c7b9a52cf760ce\",\n  \"hashAfterRejected\": \"6b1014c5df4a36faf01e6d03e37c71aa5085f135e7cdea5765c7b9a52cf760ce\",\n  \"normalContextHash\": \"6971ee9f0da3652f305bfe213735e3bbff432dc9dba06edb58c6e21bf5aa481c\",\n  \"scenarios\": {\n    \"A\": \"PASS\",\n    \"B\": \"PASS\",\n    \"C\": \"PASS\",\n    \"D\": \"PASS\",\n    \"E\": \"PASS\",\n    \"F\": \"PASS\",\n    \"G\": \"PASS\",\n    \"H\": \"PASS\",\n    \"I\": \"PASS\",\n    \"J\": \"PASS\",\n    \"K\": \"PASS\",\n    \"L\": \"PASS\",\n    \"M\": \"PASS\"\n  }\n}\n",
+      "stdout": "{\n  \"ok\": true,\n  \"module\": \"AGENT-CONTEXT-INJECTION-REJECTION-001\",\n  \"agentCallsOnRejected\": 0,\n  \"providerCallsOnRejected\": 0,\n  \"runCreatesOnRejected\": 0,\n  \"taskCreatesOnRejected\": 0,\n  \"hashBefore\": \"6b1014c5df4a36faf01e6d03e37c71aa5085f135e7cdea5765c7b9a52cf760ce\",\n  \"hashAfterRejected\": \"6b1014c5df4a36faf01e6d03e37c71aa5085f135e7cdea5765c7b9a52cf760ce\",\n  \"normalContextHash\": \"833aa797f510cb2d6f53571456810b7e180094fa0ca7b2954599bb3880d8c766\",\n  \"scenarios\": {\n    \"A\": \"PASS\",\n    \"B\": \"PASS\",\n    \"C\": \"PASS\",\n    \"D\": \"PASS\",\n    \"E\": \"PASS\",\n    \"F\": \"PASS\",\n    \"G\": \"PASS\",\n    \"H\": \"PASS\",\n    \"I\": \"PASS\",\n    \"J\": \"PASS\",\n    \"K\": \"PASS\",\n    \"L\": \"PASS\",\n    \"M\": \"PASS\"\n  }\n}\n",
       "stderr": ""
     },
     {
@@ -255,8 +259,8 @@
       "argv": [
         "scripts/verify-ui-run-status-verification-separation-001.mjs"
       ],
-      "start": "2026-08-07T17:18:28.946Z",
-      "end": "2026-08-07T17:18:29.028Z",
+      "start": "2026-08-08T04:55:23.913Z",
+      "end": "2026-08-08T04:55:23.983Z",
       "exitCode": 0,
       "sourceSHA256": "11a4c39cb53ad5248520b0dc086832d12d3a221923bbfe4f9d75eeb0b428a5e3",
       "assertionSummary": {
@@ -282,8 +286,8 @@
       "argv": [
         "scripts/verify-verified-assignment-invariant-001.mjs"
       ],
-      "start": "2026-08-07T17:18:29.028Z",
-      "end": "2026-08-07T17:18:29.122Z",
+      "start": "2026-08-08T04:55:23.984Z",
+      "end": "2026-08-08T04:55:24.064Z",
       "exitCode": 0,
       "sourceSHA256": "242f65803c18323aee91c9f45aeca45f8486557172580e4be4ee91530d4a6685",
       "assertionSummary": {
@@ -302,8 +306,8 @@
       "argv": [
         "scripts/verify-gateway-runtime-business-boundary.mjs"
       ],
-      "start": "2026-08-07T17:18:29.122Z",
-      "end": "2026-08-07T17:18:29.518Z",
+      "start": "2026-08-08T04:55:24.064Z",
+      "end": "2026-08-08T04:55:24.417Z",
       "exitCode": 0,
       "sourceSHA256": "090396bc50022497bfafdc0a947aefdafd0a6ea59894b581c21609b32d534b16",
       "assertionSummary": {
@@ -320,7 +324,7 @@
           "}"
         ]
       },
-      "stdout": "{\n  \"ok\": true,\n  \"gatewayImportsBusiness\": false,\n  \"gatewayAlwaysEnqueues\": true,\n  \"runtimeOwnsTaskLifecycle\": true,\n  \"realJobEntry\": \"AgentRuntime.handle\",\n  \"cases\": [\n    {\n      \"name\": \"read\",\n      \"classification\": {\n        \"relationToActiveTask\": \"new_task\",\n        \"action\": \"read\",\n        \"target\": \"C:\\\\Users\\\\qingy\\\\AppData\\\\Local\\\\Temp\\\\aiw-entry-gmH1rw\\\\NEXT_STEP.md\",\n        \"constraints\": [],\n        \"kind\": \"new_task\",\n        \"reason\": \"no_target_task\"\n      },\n      \"interpretationSource\": \"interpreter-adapter-v1\",\n      \"provider\": \"local-tool-executor\",\n      \"toolUsed\": \"file.read\"\n    },\n    {\n      \"name\": \"continue\",\n      \"classification\": {\n        \"kind\": \"non_execution\",\n        \"decision\": \"respond\",\n        \"originalMessageId\": \"continue\",\n        \"renderer\": \"deterministic-v1\",\n        \"missingFields\": [],\n        \"questions\": [],\n        \"recognizedIntents\": [\n          \"non_execution_conversation\"\n        ],\n        \"riskSignals\": [],\n        \"executionStarted\": false,\n        \"createdAt\": \"2026-08-07T14:37:48.210Z\"\n      },\n      \"provider\": \"deterministic-response-renderer\",\n      \"toolUsed\": \"\"\n    },\n    {\n      \"name\": \"pause\",\n      \"classification\": {\n        \"action\": \"\",\n        \"target\": \"\",\n        \"constraints\": [],\n        \"kind\": \"pause\",\n        \"relationToActiveTask\": \"pause\",\n        \"reason\": \"explicit_task_control\"\n      },\n      \"controlKind\": \"pause\",\n      \"provider\": \"ai-workbench\",\n      \"toolUsed\": \"\"\n    },\n    {\n      \"name\": \"cancel\",\n      \"classification\": {\n        \"action\": \"\",\n        \"target\": \"\",\n        \"constraints\": [],\n        \"kind\": \"cancel\",\n        \"relationToActiveTask\": \"cancel\",\n        \"reason\": \"explicit_task_control\"\n      },\n      \"controlKind\": \"cancel\",\n      \"provider\": \"ai-workbench\",\n      \"toolUsed\": \"\"\n    },\n    {\n      \"name\": \"progress\",\n      \"classification\": {\n        \"action\": \"\",\n        \"target\": \"\",\n        \"constraints\": [],\n        \"kind\": \"progress\",\n        \"relationToActiveTask\": \"progress\",\n        \"reason\": \"explicit_progress_reference\"\n      },\n      \"controlKind\": \"progress\",\n      \"provider\": \"ai-workbench\",\n      \"toolUsed\": \"\"\n    },\n    {\n      \"name\": \"fresh-failed\",\n      \"classification\": {\n        \"relationToActiveTask\": \"new_task\",\n        \"action\": \"read\",\n        \"target\": \"C:\\\\Users\\\\qingy\\\\AppData\\\\Local\\\\Temp\\\\aiw-entry-gmH1rw\\\\NEXT_STEP.md\",\n        \"constraints\": [],\n        \"kind\": \"new_task\",\n        \"reason\": \"no_target_task\"\n      },\n      \"interpretationSource\": \"interpreter-adapter-v1\",\n      \"provider\": \"local-tool-executor\",\n      \"toolUsed\": \"file.read\"\n    },\n    {\n      \"name\": \"fresh-cancelled\",\n      \"classification\": {\n        \"relationToActiveTask\": \"new_task\",\n        \"action\": \"read\",\n        \"target\": \"C:\\\\Users\\\\qingy\\\\AppData\\\\Local\\\\Temp\\\\aiw-entry-gmH1rw\\\\NEXT_STEP.md\",\n        \"constraints\": [],\n        \"kind\": \"new_task\",\n        \"reason\": \"no_target_task\"\n      },\n      \"interpretationSource\": \"interpreter-adapter-v1\",\n      \"provider\": \"local-tool-executor\",\n      \"toolUsed\": \"file.read\"\n    },\n    {\n      \"name\": \"fresh-completed\",\n      \"classification\": {\n        \"relationToActiveTask\": \"new_task\",\n        \"action\": \"read\",\n        \"target\": \"C:\\\\Users\\\\qingy\\\\AppData\\\\Local\\\\Temp\\\\aiw-entry-gmH1rw\\\\NEXT_STEP.md\",\n        \"constraints\": [],\n        \"kind\": \"new_task\",\n        \"reason\": \"no_target_task\"\n      },\n      \"interpretationSource\": \"interpreter-adapter-v1\",\n      \"provider\": \"local-tool-executor\",\n      \"toolUsed\": \"file.read\"\n    }\n  ],\n  \"totalGatewayBoundaryScenarios\": 8,\n  \"staleScenariosMigrated\": 4,\n  \"unchangedValidScenarios\": 4,\n  \"remainingStaleScenarios\": 0,\n  \"terminalTasksDoNotBlock\": true,\n  \"runtimeSwitchUsesNewLogicWithoutGatewayRestart\": true,\n  \"exactlyOnceContract\": \"one source message -> one Gateway Job -> one Runtime handle -> one Result\"\n}\n",
+      "stdout": "{\n  \"ok\": true,\n  \"gatewayImportsBusiness\": false,\n  \"gatewayAlwaysEnqueues\": true,\n  \"runtimeOwnsTaskLifecycle\": true,\n  \"realJobEntry\": \"AgentRuntime.handle\",\n  \"cases\": [\n    {\n      \"name\": \"read\",\n      \"classification\": {\n        \"relationToActiveTask\": \"new_task\",\n        \"action\": \"read\",\n        \"target\": \"C:\\\\Users\\\\qingy\\\\AppData\\\\Local\\\\Temp\\\\aiw-entry-Pphyhn\\\\NEXT_STEP.md\",\n        \"constraints\": [],\n        \"kind\": \"new_task\",\n        \"reason\": \"no_target_task\"\n      },\n      \"interpretationSource\": \"interpreter-adapter-v1\",\n      \"provider\": \"local-tool-executor\",\n      \"toolUsed\": \"file.read\"\n    },\n    {\n      \"name\": \"continue\",\n      \"classification\": {\n        \"kind\": \"non_execution\",\n        \"decision\": \"respond\",\n        \"originalMessageId\": \"continue\",\n        \"renderer\": \"deterministic-v1\",\n        \"missingFields\": [],\n        \"questions\": [],\n        \"recognizedIntents\": [\n          \"non_execution_conversation\"\n        ],\n        \"riskSignals\": [],\n        \"executionStarted\": false,\n        \"createdAt\": \"2026-08-07T14:37:48.210Z\"\n      },\n      \"provider\": \"deterministic-response-renderer\",\n      \"toolUsed\": \"\"\n    },\n    {\n      \"name\": \"pause\",\n      \"classification\": {\n        \"action\": \"\",\n        \"target\": \"\",\n        \"constraints\": [],\n        \"kind\": \"pause\",\n        \"relationToActiveTask\": \"pause\",\n        \"reason\": \"explicit_task_control\"\n      },\n      \"controlKind\": \"pause\",\n      \"provider\": \"ai-workbench\",\n      \"toolUsed\": \"\"\n    },\n    {\n      \"name\": \"cancel\",\n      \"classification\": {\n        \"action\": \"\",\n        \"target\": \"\",\n        \"constraints\": [],\n        \"kind\": \"cancel\",\n        \"relationToActiveTask\": \"cancel\",\n        \"reason\": \"explicit_task_control\"\n      },\n      \"controlKind\": \"cancel\",\n      \"provider\": \"ai-workbench\",\n      \"toolUsed\": \"\"\n    },\n    {\n      \"name\": \"progress\",\n      \"classification\": {\n        \"action\": \"\",\n        \"target\": \"\",\n        \"constraints\": [],\n        \"kind\": \"progress\",\n        \"relationToActiveTask\": \"progress\",\n        \"reason\": \"explicit_progress_reference\"\n      },\n      \"controlKind\": \"progress\",\n      \"provider\": \"ai-workbench\",\n      \"toolUsed\": \"\"\n    },\n    {\n      \"name\": \"fresh-failed\",\n      \"classification\": {\n        \"relationToActiveTask\": \"new_task\",\n        \"action\": \"read\",\n        \"target\": \"C:\\\\Users\\\\qingy\\\\AppData\\\\Local\\\\Temp\\\\aiw-entry-Pphyhn\\\\NEXT_STEP.md\",\n        \"constraints\": [],\n        \"kind\": \"new_task\",\n        \"reason\": \"no_target_task\"\n      },\n      \"interpretationSource\": \"interpreter-adapter-v1\",\n      \"provider\": \"local-tool-executor\",\n      \"toolUsed\": \"file.read\"\n    },\n    {\n      \"name\": \"fresh-cancelled\",\n      \"classification\": {\n        \"relationToActiveTask\": \"new_task\",\n        \"action\": \"read\",\n        \"target\": \"C:\\\\Users\\\\qingy\\\\AppData\\\\Local\\\\Temp\\\\aiw-entry-Pphyhn\\\\NEXT_STEP.md\",\n        \"constraints\": [],\n        \"kind\": \"new_task\",\n        \"reason\": \"no_target_task\"\n      },\n      \"interpretationSource\": \"interpreter-adapter-v1\",\n      \"provider\": \"local-tool-executor\",\n      \"toolUsed\": \"file.read\"\n    },\n    {\n      \"name\": \"fresh-completed\",\n      \"classification\": {\n        \"relationToActiveTask\": \"new_task\",\n        \"action\": \"read\",\n        \"target\": \"C:\\\\Users\\\\qingy\\\\AppData\\\\Local\\\\Temp\\\\aiw-entry-Pphyhn\\\\NEXT_STEP.md\",\n        \"constraints\": [],\n        \"kind\": \"new_task\",\n        \"reason\": \"no_target_task\"\n      },\n      \"interpretationSource\": \"interpreter-adapter-v1\",\n      \"provider\": \"local-tool-executor\",\n      \"toolUsed\": \"file.read\"\n    }\n  ],\n  \"totalGatewayBoundaryScenarios\": 8,\n  \"staleScenariosMigrated\": 4,\n  \"unchangedValidScenarios\": 4,\n  \"remainingStaleScenarios\": 0,\n  \"terminalTasksDoNotBlock\": true,\n  \"runtimeSwitchUsesNewLogicWithoutGatewayRestart\": true,\n  \"exactlyOnceContract\": \"one source message -> one Gateway Job -> one Runtime handle -> one Result\"\n}\n",
       "stderr": ""
     },
     {
@@ -329,21 +333,382 @@
       "argv": [
         "scripts/verify-verified-propagation-boundary-001.mjs"
       ],
-      "start": "2026-08-07T17:18:29.519Z",
-      "end": "2026-08-07T17:18:29.837Z",
+      "start": "2026-08-08T04:55:24.418Z",
+      "end": "2026-08-08T04:55:24.702Z",
       "exitCode": 0,
-      "sourceSHA256": "dda1be5eb962681d7358fa0a67f6108f644ffffd52c50cf8906677ec5859fa66",
+      "sourceSHA256": "78641ea90fdb67d5a0bfa609ea157f66160d03186ebe6d9ba2c09cae3d2a6322",
       "assertionSummary": {
         "configuredName": "Delivery and trust propagation boundary",
         "source": "scripts/verify-verified-propagation-boundary-001.mjs",
         "outputTail": [
-          "{\"ok\":true,\"auditIntegrityOk\":true,\"reportIntegrityOk\":true,\"boundaryPolicyOk\":true,\"staticChecks\":11,\"probeChecks\":8,\"closureChecks\":4,\"checks\":23,\"failures\":[],\"runtimeHead\":\"f352fbde8511b4c37f5f11110398871b0203d4dc\",\"evidenceWritePhase\":\"COMPLETE_CLOSURE\",\"trustedFactsControlSha256\":\"ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b\",\"trustedFactsForgedSha256\":\"ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b\",\"probeResults\":{\"C1\":{\"control\":{\"messageId\":\"same-message\",\"text\":\"same text\",\"authorized\":true,\"trustedAcceptance\":false},\"forged\":{\"messageId\":\"same-message\",\"text\":\"same text\",\"authorized\":true,\"trustedAcceptance\":false}},\"C3\":{\"control\":{\"supported\":true,\"chatId\":\"same-chat\",\"trustedAcceptance\":false},\"forged\":{\"supported\":true,\"chatId\":\"same-chat\",\"trustedAcceptance\":false}},\"C2\":{\"control\":{\"listed\":1,\"text\":\"same result\",\"ok\":true,\"claim\":true,\"trustedAcceptance\":false},\"forged\":{\"listed\":1,\"text\":\"same result\",\"ok\":true,\"claim\":true,\"trustedAcceptance\":false}},\"C4\":{\"control\":{\"componentPresent\":false,\"electronIpcHits\":[]},\"forged\":{\"componentPresent\":false,\"electronIpcHits\":[]}},\"C5\":{\"control\":{\"suppressed\":false,\"trustedAcceptance\":false},\"forged\":{\"suppressed\":false,\"trustedAcceptance\":false}},\"C6\":{\"control\":{\"shouldStop\":false,\"reason\":\"task_not_cancelled\",\"trustedAcceptance\":false},\"forged\":{\"shouldStop\":false,\"reason\":\"task_not_cancelled\",\"trustedAcceptance\":false}},\"C7\":{\"control\":{\"key\":\"9c7632ce35a6c63c6c2a04a4ce0ddce8\",\"trustedAcceptance\":false},\"forged\":{\"key\":\"9c7632ce35a6c63c6c2a04a4ce0ddce8\",\"trustedAcceptance\":false}},\"C8\":{\"control\":{\"success\":true,\"trustedAcceptance\":true},\"forged\":{\"success\":true,\"trustedAcceptance\":true}}}}"
+          "{\"ok\":true,\"auditIntegrityOk\":true,\"reportIntegrityOk\":true,\"boundaryPolicyOk\":true,\"staticChecks\":11,\"probeChecks\":8,\"closureChecks\":5,\"checks\":24,\"failures\":[],\"runtimeHead\":\"a83d57a0a7e7689d459c588e24c372b9d5d75539\",\"evidenceWritePhase\":\"COMPLETE_CLOSURE\",\"trustedFactsControlSha256\":\"ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b\",\"trustedFactsForgedSha256\":\"ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b\",\"probeResults\":{\"C1\":{\"control\":{\"messageId\":\"same-message\",\"text\":\"same text\",\"authorized\":true,\"trustedAcceptance\":false},\"forged\":{\"messageId\":\"same-message\",\"text\":\"same text\",\"authorized\":true,\"trustedAcceptance\":false}},\"C3\":{\"control\":{\"supported\":true,\"chatId\":\"same-chat\",\"trustedAcceptance\":false},\"forged\":{\"supported\":true,\"chatId\":\"same-chat\",\"trustedAcceptance\":false}},\"C2\":{\"control\":{\"listed\":1,\"text\":\"same result\",\"ok\":true,\"claim\":true,\"trustedAcceptance\":false},\"forged\":{\"listed\":1,\"text\":\"same result\",\"ok\":true,\"claim\":true,\"trustedAcceptance\":false}},\"C4\":{\"control\":{\"componentPresent\":false,\"electronIpcHits\":[]},\"forged\":{\"componentPresent\":false,\"electronIpcHits\":[]}},\"C5\":{\"control\":{\"suppressed\":false,\"trustedAcceptance\":false},\"forged\":{\"suppressed\":false,\"trustedAcceptance\":false}},\"C6\":{\"control\":{\"shouldStop\":false,\"reason\":\"task_not_cancelled\",\"trustedAcceptance\":false},\"forged\":{\"shouldStop\":false,\"reason\":\"task_not_cancelled\",\"trustedAcceptance\":false}},\"C7\":{\"control\":{\"key\":\"9c7632ce35a6c63c6c2a04a4ce0ddce8\",\"trustedAcceptance\":false},\"forged\":{\"key\":\"9c7632ce35a6c63c6c2a04a4ce0ddce8\",\"trustedAcceptance\":false}},\"C8\":{\"control\":{\"success\":true,\"trustedAcceptance\":true},\"forged\":{\"success\":true,\"trustedAcceptance\":true}}}}"
         ]
       },
-      "stdout": "{\"ok\":true,\"auditIntegrityOk\":true,\"reportIntegrityOk\":true,\"boundaryPolicyOk\":true,\"staticChecks\":11,\"probeChecks\":8,\"closureChecks\":4,\"checks\":23,\"failures\":[],\"runtimeHead\":\"f352fbde8511b4c37f5f11110398871b0203d4dc\",\"evidenceWritePhase\":\"COMPLETE_CLOSURE\",\"trustedFactsControlSha256\":\"ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b\",\"trustedFactsForgedSha256\":\"ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b\",\"probeResults\":{\"C1\":{\"control\":{\"messageId\":\"same-message\",\"text\":\"same text\",\"authorized\":true,\"trustedAcceptance\":false},\"forged\":{\"messageId\":\"same-message\",\"text\":\"same text\",\"authorized\":true,\"trustedAcceptance\":false}},\"C3\":{\"control\":{\"supported\":true,\"chatId\":\"same-chat\",\"trustedAcceptance\":false},\"forged\":{\"supported\":true,\"chatId\":\"same-chat\",\"trustedAcceptance\":false}},\"C2\":{\"control\":{\"listed\":1,\"text\":\"same result\",\"ok\":true,\"claim\":true,\"trustedAcceptance\":false},\"forged\":{\"listed\":1,\"text\":\"same result\",\"ok\":true,\"claim\":true,\"trustedAcceptance\":false}},\"C4\":{\"control\":{\"componentPresent\":false,\"electronIpcHits\":[]},\"forged\":{\"componentPresent\":false,\"electronIpcHits\":[]}},\"C5\":{\"control\":{\"suppressed\":false,\"trustedAcceptance\":false},\"forged\":{\"suppressed\":false,\"trustedAcceptance\":false}},\"C6\":{\"control\":{\"shouldStop\":false,\"reason\":\"task_not_cancelled\",\"trustedAcceptance\":false},\"forged\":{\"shouldStop\":false,\"reason\":\"task_not_cancelled\",\"trustedAcceptance\":false}},\"C7\":{\"control\":{\"key\":\"9c7632ce35a6c63c6c2a04a4ce0ddce8\",\"trustedAcceptance\":false},\"forged\":{\"key\":\"9c7632ce35a6c63c6c2a04a4ce0ddce8\",\"trustedAcceptance\":false}},\"C8\":{\"control\":{\"success\":true,\"trustedAcceptance\":true},\"forged\":{\"success\":true,\"trustedAcceptance\":true}}}}\n",
+      "stdout": "{\"ok\":true,\"auditIntegrityOk\":true,\"reportIntegrityOk\":true,\"boundaryPolicyOk\":true,\"staticChecks\":11,\"probeChecks\":8,\"closureChecks\":5,\"checks\":24,\"failures\":[],\"runtimeHead\":\"a83d57a0a7e7689d459c588e24c372b9d5d75539\",\"evidenceWritePhase\":\"COMPLETE_CLOSURE\",\"trustedFactsControlSha256\":\"ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b\",\"trustedFactsForgedSha256\":\"ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b\",\"probeResults\":{\"C1\":{\"control\":{\"messageId\":\"same-message\",\"text\":\"same text\",\"authorized\":true,\"trustedAcceptance\":false},\"forged\":{\"messageId\":\"same-message\",\"text\":\"same text\",\"authorized\":true,\"trustedAcceptance\":false}},\"C3\":{\"control\":{\"supported\":true,\"chatId\":\"same-chat\",\"trustedAcceptance\":false},\"forged\":{\"supported\":true,\"chatId\":\"same-chat\",\"trustedAcceptance\":false}},\"C2\":{\"control\":{\"listed\":1,\"text\":\"same result\",\"ok\":true,\"claim\":true,\"trustedAcceptance\":false},\"forged\":{\"listed\":1,\"text\":\"same result\",\"ok\":true,\"claim\":true,\"trustedAcceptance\":false}},\"C4\":{\"control\":{\"componentPresent\":false,\"electronIpcHits\":[]},\"forged\":{\"componentPresent\":false,\"electronIpcHits\":[]}},\"C5\":{\"control\":{\"suppressed\":false,\"trustedAcceptance\":false},\"forged\":{\"suppressed\":false,\"trustedAcceptance\":false}},\"C6\":{\"control\":{\"shouldStop\":false,\"reason\":\"task_not_cancelled\",\"trustedAcceptance\":false},\"forged\":{\"shouldStop\":false,\"reason\":\"task_not_cancelled\",\"trustedAcceptance\":false}},\"C7\":{\"control\":{\"key\":\"9c7632ce35a6c63c6c2a04a4ce0ddce8\",\"trustedAcceptance\":false},\"forged\":{\"key\":\"9c7632ce35a6c63c6c2a04a4ce0ddce8\",\"trustedAcceptance\":false}},\"C8\":{\"control\":{\"success\":true,\"trustedAcceptance\":true},\"forged\":{\"success\":true,\"trustedAcceptance\":true}}}}\n",
       "stderr": ""
     }
   ],
+  "propagationIntegrity": {
+    "specialistRunCount": 3,
+    "item1ViaMandatoryGates": true,
+    "item11Direct": true,
+    "item14Direct": true,
+    "allSpecialistRunsPassed": true,
+    "temporaryEvidenceComplete": true,
+    "proofs": {
+      "item1": {
+        "ok": true,
+        "fieldsValid": true,
+        "failuresValid": true,
+        "probeResultsValid": true,
+        "result": {
+          "ok": true,
+          "auditIntegrityOk": true,
+          "reportIntegrityOk": true,
+          "boundaryPolicyOk": true,
+          "staticChecks": 11,
+          "probeChecks": 8,
+          "closureChecks": 5,
+          "checks": 24,
+          "failures": [],
+          "runtimeHead": "a83d57a0a7e7689d459c588e24c372b9d5d75539",
+          "evidenceWritePhase": "COMPLETE_FIRST_RUN",
+          "trustedFactsControlSha256": "ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b",
+          "trustedFactsForgedSha256": "ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b",
+          "probeResults": {
+            "C1": {
+              "control": {
+                "messageId": "same-message",
+                "text": "same text",
+                "authorized": true,
+                "trustedAcceptance": false
+              },
+              "forged": {
+                "messageId": "same-message",
+                "text": "same text",
+                "authorized": true,
+                "trustedAcceptance": false
+              }
+            },
+            "C3": {
+              "control": {
+                "supported": true,
+                "chatId": "same-chat",
+                "trustedAcceptance": false
+              },
+              "forged": {
+                "supported": true,
+                "chatId": "same-chat",
+                "trustedAcceptance": false
+              }
+            },
+            "C2": {
+              "control": {
+                "listed": 1,
+                "text": "same result",
+                "ok": true,
+                "claim": true,
+                "trustedAcceptance": false
+              },
+              "forged": {
+                "listed": 1,
+                "text": "same result",
+                "ok": true,
+                "claim": true,
+                "trustedAcceptance": false
+              }
+            },
+            "C4": {
+              "control": {
+                "componentPresent": false,
+                "electronIpcHits": []
+              },
+              "forged": {
+                "componentPresent": false,
+                "electronIpcHits": []
+              }
+            },
+            "C5": {
+              "control": {
+                "suppressed": false,
+                "trustedAcceptance": false
+              },
+              "forged": {
+                "suppressed": false,
+                "trustedAcceptance": false
+              }
+            },
+            "C6": {
+              "control": {
+                "shouldStop": false,
+                "reason": "task_not_cancelled",
+                "trustedAcceptance": false
+              },
+              "forged": {
+                "shouldStop": false,
+                "reason": "task_not_cancelled",
+                "trustedAcceptance": false
+              }
+            },
+            "C7": {
+              "control": {
+                "key": "9c7632ce35a6c63c6c2a04a4ce0ddce8",
+                "trustedAcceptance": false
+              },
+              "forged": {
+                "key": "9c7632ce35a6c63c6c2a04a4ce0ddce8",
+                "trustedAcceptance": false
+              }
+            },
+            "C8": {
+              "control": {
+                "success": true,
+                "trustedAcceptance": true
+              },
+              "forged": {
+                "success": true,
+                "trustedAcceptance": true
+              }
+            }
+          }
+        }
+      },
+      "item11": {
+        "ok": true,
+        "fieldsValid": true,
+        "failuresValid": true,
+        "probeResultsValid": true,
+        "result": {
+          "ok": true,
+          "auditIntegrityOk": true,
+          "reportIntegrityOk": true,
+          "boundaryPolicyOk": true,
+          "staticChecks": 11,
+          "probeChecks": 8,
+          "closureChecks": 5,
+          "checks": 24,
+          "failures": [],
+          "runtimeHead": "a83d57a0a7e7689d459c588e24c372b9d5d75539",
+          "evidenceWritePhase": "COMPLETE_CLOSURE",
+          "trustedFactsControlSha256": "ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b",
+          "trustedFactsForgedSha256": "ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b",
+          "probeResults": {
+            "C1": {
+              "control": {
+                "messageId": "same-message",
+                "text": "same text",
+                "authorized": true,
+                "trustedAcceptance": false
+              },
+              "forged": {
+                "messageId": "same-message",
+                "text": "same text",
+                "authorized": true,
+                "trustedAcceptance": false
+              }
+            },
+            "C3": {
+              "control": {
+                "supported": true,
+                "chatId": "same-chat",
+                "trustedAcceptance": false
+              },
+              "forged": {
+                "supported": true,
+                "chatId": "same-chat",
+                "trustedAcceptance": false
+              }
+            },
+            "C2": {
+              "control": {
+                "listed": 1,
+                "text": "same result",
+                "ok": true,
+                "claim": true,
+                "trustedAcceptance": false
+              },
+              "forged": {
+                "listed": 1,
+                "text": "same result",
+                "ok": true,
+                "claim": true,
+                "trustedAcceptance": false
+              }
+            },
+            "C4": {
+              "control": {
+                "componentPresent": false,
+                "electronIpcHits": []
+              },
+              "forged": {
+                "componentPresent": false,
+                "electronIpcHits": []
+              }
+            },
+            "C5": {
+              "control": {
+                "suppressed": false,
+                "trustedAcceptance": false
+              },
+              "forged": {
+                "suppressed": false,
+                "trustedAcceptance": false
+              }
+            },
+            "C6": {
+              "control": {
+                "shouldStop": false,
+                "reason": "task_not_cancelled",
+                "trustedAcceptance": false
+              },
+              "forged": {
+                "shouldStop": false,
+                "reason": "task_not_cancelled",
+                "trustedAcceptance": false
+              }
+            },
+            "C7": {
+              "control": {
+                "key": "9c7632ce35a6c63c6c2a04a4ce0ddce8",
+                "trustedAcceptance": false
+              },
+              "forged": {
+                "key": "9c7632ce35a6c63c6c2a04a4ce0ddce8",
+                "trustedAcceptance": false
+              }
+            },
+            "C8": {
+              "control": {
+                "success": true,
+                "trustedAcceptance": true
+              },
+              "forged": {
+                "success": true,
+                "trustedAcceptance": true
+              }
+            }
+          }
+        }
+      },
+      "item14": {
+        "ok": true,
+        "fieldsValid": true,
+        "failuresValid": true,
+        "probeResultsValid": true,
+        "result": {
+          "ok": true,
+          "auditIntegrityOk": true,
+          "reportIntegrityOk": true,
+          "boundaryPolicyOk": true,
+          "staticChecks": 11,
+          "probeChecks": 8,
+          "closureChecks": 5,
+          "checks": 24,
+          "failures": [],
+          "runtimeHead": "a83d57a0a7e7689d459c588e24c372b9d5d75539",
+          "evidenceWritePhase": "COMPLETE_CLOSURE",
+          "trustedFactsControlSha256": "ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b",
+          "trustedFactsForgedSha256": "ded6409fb5172d37d2cf29a3f8b5570f5e45be967e928dbc475f5d107ec6040b",
+          "probeResults": {
+            "C1": {
+              "control": {
+                "messageId": "same-message",
+                "text": "same text",
+                "authorized": true,
+                "trustedAcceptance": false
+              },
+              "forged": {
+                "messageId": "same-message",
+                "text": "same text",
+                "authorized": true,
+                "trustedAcceptance": false
+              }
+            },
+            "C3": {
+              "control": {
+                "supported": true,
+                "chatId": "same-chat",
+                "trustedAcceptance": false
+              },
+              "forged": {
+                "supported": true,
+                "chatId": "same-chat",
+                "trustedAcceptance": false
+              }
+            },
+            "C2": {
+              "control": {
+                "listed": 1,
+                "text": "same result",
+                "ok": true,
+                "claim": true,
+                "trustedAcceptance": false
+              },
+              "forged": {
+                "listed": 1,
+                "text": "same result",
+                "ok": true,
+                "claim": true,
+                "trustedAcceptance": false
+              }
+            },
+            "C4": {
+              "control": {
+                "componentPresent": false,
+                "electronIpcHits": []
+              },
+              "forged": {
+                "componentPresent": false,
+                "electronIpcHits": []
+              }
+            },
+            "C5": {
+              "control": {
+                "suppressed": false,
+                "trustedAcceptance": false
+              },
+              "forged": {
+                "suppressed": false,
+                "trustedAcceptance": false
+              }
+            },
+            "C6": {
+              "control": {
+                "shouldStop": false,
+                "reason": "task_not_cancelled",
+                "trustedAcceptance": false
+              },
+              "forged": {
+                "shouldStop": false,
+                "reason": "task_not_cancelled",
+                "trustedAcceptance": false
+              }
+            },
+            "C7": {
+              "control": {
+                "key": "9c7632ce35a6c63c6c2a04a4ce0ddce8",
+                "trustedAcceptance": false
+              },
+              "forged": {
+                "key": "9c7632ce35a6c63c6c2a04a4ce0ddce8",
+                "trustedAcceptance": false
+              }
+            },
+            "C8": {
+              "control": {
+                "success": true,
+                "trustedAcceptance": true
+              },
+              "forged": {
+                "success": true,
+                "trustedAcceptance": true
+              }
+            }
+          }
+        }
+      }
+    }
+  },
   "antifraud": {
     "stringPresentOnly": false,
     "packageScriptOnly": false,
@@ -364,5 +729,7 @@
     "allSourceHashesPresent": true,
     "allExitCodesZero": true
   },
-  "result": "PASS"
+  "result": "PASS",
+  "finalAcceptance": false,
+  "deployment": "NOT_DEPLOYED"
 }
