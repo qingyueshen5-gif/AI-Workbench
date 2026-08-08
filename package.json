@@ -73,7 +73,9 @@
     "test:step7-contract-validator": "node --test tests/verify-step7-mandatory-gates-contract-001.test.mjs",
     "verify:step8-contract": "node scripts/verify-step8-full-impact-regression-contract-001.mjs",
     "test:step8-contract-validator": "node --test tests/verify-step8-full-impact-regression-contract-001.test.mjs",
-    "verify:step8-full-regression": "node scripts/run-step8-full-impact-regression-001.mjs"
+    "verify:step8-full-regression": "node scripts/run-step8-full-impact-regression-001.mjs",
+    "verify:package-b-contract": "node scripts/verify-package-b-runtime-authority-contract-001.mjs",
+    "test:package-b-contract-validator": "node --test tests/verify-package-b-runtime-authority-contract-001.test.mjs"
   },
   "dependencies": {
     "@larksuiteoapi/node-sdk": "^1.71.1",

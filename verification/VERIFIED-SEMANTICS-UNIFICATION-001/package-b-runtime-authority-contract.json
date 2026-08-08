@@ -1,0 +1,363 @@
+{
+  "contractId": "PACKAGE-B-RUNTIME-AUTHORITY-UNIFICATION-CONTRACT-001",
+  "contractVersion": 1,
+  "baseline": {
+    "baselineCommit": "688b8b032678d489eb2496af11279f676bf89ca2",
+    "baselineBranch": "candidate/interpreter-adapter-v1-work",
+    "semantics": "PACKAGE_B_CONTRACT_SOURCE_BASELINE"
+  },
+  "packageAInvariants": {
+    "packageAStatus": "PRESENT_AND_VERIFIED",
+    "packageACompletionRatio": "7/7",
+    "fourthRiskStatus": "RESOLVED",
+    "finalAcceptance": false,
+    "deployment": "NOT_DEPLOYED",
+    "packageBConstructionStatus": "NOT_STARTED"
+  },
+  "productDecisions": {
+    "canonicalRuntime": "agents/agent-runtime.mjs::AgentRuntime",
+    "legacyFeishuAuthorityDisposition": "REMOVE_PRODUCTION_START_ENTRY",
+    "legacyFeishuAuthorityOption": "OPTION_A",
+    "recommendedPackageBStrategy": "LIGHTWEIGHT_CONTRACT_FIRST_THEN_SINGLE_CONSTRUCTION_PACKAGE",
+    "topLevelProductLandingBlockerCount": 7
+  },
+  "topLevelProductLandingBlockers": [
+    "PROGRESS_AND_FINAL_SHARE_FEISHU_UUID_NAMESPACE",
+    "STALE_ACCEPTED_ORPHAN_HAS_NO_TERMINAL_FAIL_CLOSED_STATE",
+    "GATEWAY_RUNTIME_COMMIT_BOUNDING_NOT_VERIFIED",
+    "DUAL_RUNTIME_AUTHORITY_UNRESOLVED",
+    "DESKTOP_CANONICAL_RUNTIME_BINDING_MISSING",
+    "PRODUCTION_EQUIVALENT_FEISHU_E2E_MISSING",
+    "HUMAN_ACCEPTANCE_MISSING"
+  ],
+  "subGates": [
+    {
+      "id": "REAL_FEISHU_SMOKE_MISSING",
+      "classification": "SUB_GATE_OF_PRODUCTION_EQUIVALENT_FEISHU_E2E_MISSING",
+      "parent": "PRODUCTION_EQUIVALENT_FEISHU_E2E_MISSING"
+    },
+    {
+      "id": "MOBILE_REAL_DEVICE_ACCEPTANCE_MISSING",
+      "classification": "SUB_GATE_OF_HUMAN_ACCEPTANCE_MISSING",
+      "parent": "HUMAN_ACCEPTANCE_MISSING"
+    }
+  ],
+  "blockerDisposition": {
+    "closableByPackageB": [
+      "PROGRESS_AND_FINAL_SHARE_FEISHU_UUID_NAMESPACE",
+      "STALE_ACCEPTED_ORPHAN_HAS_NO_TERMINAL_FAIL_CLOSED_STATE",
+      "DUAL_RUNTIME_AUTHORITY_UNRESOLVED",
+      "DESKTOP_CANONICAL_RUNTIME_BINDING_MISSING"
+    ],
+    "conditionallyClosableByPackageB": [
+      "GATEWAY_RUNTIME_COMMIT_BOUNDING_NOT_VERIFIED"
+    ],
+    "deferredAfterPackageB": [
+      "PRODUCTION_EQUIVALENT_FEISHU_E2E_MISSING",
+      "HUMAN_ACCEPTANCE_MISSING"
+    ]
+  },
+  "authorityTopology": {
+    "entryState": {
+      "runtimeAuthorityCount": 3,
+      "duplicateBusinessAuthorityCount": 2,
+      "authorities": [
+        {
+          "type": "CANONICAL_RUNTIME_CANDIDATE",
+          "path": "agents/agent-runtime.mjs",
+          "symbol": "AgentRuntime"
+        },
+        {
+          "type": "LEGACY_PARALLEL_AUTHORITY",
+          "path": "server.mjs"
+        },
+        {
+          "type": "LEGACY_PARALLEL_AUTHORITY",
+          "path": "scripts/feishu-task-channel.mjs",
+          "downstream": "scripts/task-gateway.mjs"
+        }
+      ],
+      "desktopUsesCanonicalAgentRuntime": false,
+      "fixedGatewayUsesCanonicalAgentRuntime": true,
+      "legacyFeishuChannelUsesCanonicalAgentRuntime": false,
+      "feishuUsesCanonicalAgentRuntime": "PARTIAL",
+      "feishuOverallAuthorityUnified": false,
+      "gatewayTransportOnly": true,
+      "controlPlaneBypasses": [
+        {
+          "path": "scripts/start-feishu-workbench-bridge.mjs",
+          "currentClassification": "CONTROL_PLANE_BYPASS"
+        }
+      ]
+    },
+    "targetState": {
+      "singleRuntimeAuthority": true,
+      "runtimeAuthorityCount": 1,
+      "duplicateBusinessAuthorityCount": 0,
+      "canonicalRuntime": "agents/agent-runtime.mjs::AgentRuntime",
+      "desktopUsesCanonicalAgentRuntime": true,
+      "fixedGatewayUsesCanonicalAgentRuntime": true,
+      "feishuUsesCanonicalAgentRuntime": true,
+      "feishuOverallAuthorityUnified": true,
+      "legacyDesktopBusinessAuthority": false,
+      "legacyFeishuBusinessAuthority": false,
+      "legacyFeishuTaskChannelProductionStartEntry": false,
+      "legacyFeishuTaskChannelProductReachable": false,
+      "legacyTaskGatewayProductReachable": false,
+      "gatewayTransportOnly": true,
+      "supervisorBypassEntryCount": 0,
+      "secondTaskAuthorityAllowed": false,
+      "secondRunAuthorityAllowed": false,
+      "secondProviderAuthorityAllowed": false,
+      "secondIndependentVerifierAuthorityAllowed": false,
+      "secondIndependentlyPersistedBusinessStateMachineAllowed": false
+    }
+  },
+  "runCompleteness": {
+    "entryState": {
+      "canonicalRuntimeAllProviderRunCoverage": false,
+      "allProviderPathsUseRun": false,
+      "allProviderAttemptsHaveRunId": false,
+      "processProviderHasRun": false,
+      "codeProviderHasRun": false,
+      "conversationProviderHasRun": false,
+      "allVerificationBoundToRun": false,
+      "allProgressBoundToRun": false,
+      "allFinalResultsBoundToRun": false,
+      "taskRunTerminalCommitAtomic": false
+    },
+    "targetState": {
+      "allProviderPathsUseRun": true,
+      "allProviderAttemptsHaveRunId": true,
+      "groundedProviderHasRun": true,
+      "processProviderHasRun": true,
+      "codeProviderHasRun": true,
+      "conversationProviderHasRun": true,
+      "allVerificationBoundToRun": true,
+      "allProgressBoundToRun": true,
+      "allFinalResultsBoundToRun": true,
+      "providerExecutionIsNotParallelAuthority": true,
+      "legacyProviderExecutionAuthorityRemoved": true,
+      "taskRunTerminalCommitAtomic": true,
+      "requiredAttemptIdentity": [
+        "taskId",
+        "runId",
+        "attemptIdentity",
+        "leaseFenceIdentity"
+      ]
+    }
+  },
+  "leaseRunFencing": {
+    "entryState": {
+      "ipcClaimBoundToBusinessRun": false,
+      "staleWorkerResultFenced": false,
+      "replacementWorkerCreatesNewBusinessRun": false,
+      "oldProgressFenced": false,
+      "oldVerificationFenced": false,
+      "oldFinalFenced": false
+    },
+    "targetState": {
+      "ipcClaimBoundToBusinessRun": true,
+      "ipcWorkerIdEqualsRunLeaseOwner": true,
+      "staleWorkerCannotWriteResult": true,
+      "staleWorkerCannotDeleteCurrentClaim": true,
+      "replacementWorkerCreatesNewRunAttempt": true,
+      "oldProgressRejected": true,
+      "oldVerificationRejected": true,
+      "oldFinalRejected": true,
+      "allProgressCarriesTaskId": true,
+      "allProgressCarriesRunId": true,
+      "allVerificationCarriesRunId": true,
+      "allFinalResultsCarryRunId": true,
+      "identityChain": [
+        "IPC_CLAIM",
+        "BUSINESS_RUN_LEASE",
+        "PROVIDER_ATTEMPT",
+        "PROGRESS",
+        "VERIFICATION",
+        "FINAL_RESULT"
+      ]
+    }
+  },
+  "staleLifecycle": {
+    "targetState": {
+      "staleAcceptedTerminalFailClosed": true,
+      "expiredAcceptedProducesTerminalResult": true,
+      "expiredAcceptedResultExactlyOnce": true,
+      "orphanJobArchivedWithTerminalState": true,
+      "orphanTaskFailedWhenTaskExists": true,
+      "restartSafe": true
+    }
+  },
+  "progressResultDeliveryIdentity": {
+    "targetState": {
+      "ackUuidNamespaceDistinct": true,
+      "progress1UuidNotEqualProgress2Uuid": true,
+      "progressUuidIncludesProgressEventId": true,
+      "progressUuidNotEqualFinalUuid": true,
+      "finalUuidBoundToTaskOrRevision": true,
+      "progressExactlyOnce": true,
+      "finalExactlyOnce": true,
+      "progressFailureDoesNotBlockFinal": true,
+      "identityModel": {
+        "ack": [
+          "channelAccount",
+          "originalMessageId"
+        ],
+        "progress": [
+          "channelAccount",
+          "originalMessageId",
+          "progressEventId"
+        ],
+        "final": [
+          "channelAccount",
+          "originalMessageId",
+          "taskIdOrTaskRevision"
+        ]
+      }
+    }
+  },
+  "runtimeReleaseBinding": {
+    "targetState": {
+      "gatewayCommitRecorded": true,
+      "runtimeCommitRecorded": true,
+      "approvedReleaseBindingRecorded": true,
+      "gatewayRuntimeBindingValidated": true,
+      "ipcBindingMatchesCanonicalRoot": true,
+      "recordedPidsAliveDuringValidation": true,
+      "staleBindingRejected": true,
+      "runtimeSwitchRequiresQueueQuiescence": true,
+      "runtimeSwitchRequiresNoActiveRun": true,
+      "runtimeSwitchFencesOldProviderAttempts": true,
+      "supervisorBypassEntryCount": 0
+    },
+    "completionBoundary": {
+      "productionBindingMachineContractSatisfied": true,
+      "currentProductionBindingProven": false,
+      "currentProductionBindingStatus": "DEFERRED_TO_CONTROLLED_E2E"
+    }
+  },
+  "constructionPlan": {
+    "strategy": "LIGHTWEIGHT_CONTRACT_FIRST_THEN_SINGLE_CONSTRUCTION_PACKAGE",
+    "package": "PACKAGE_B_SINGLE_CONSTRUCTION_PACKAGE",
+    "phases": [
+      {
+        "phase": 1,
+        "id": "AUTHORITY_TOPOLOGY_AND_LEGACY_ENTRY_CLOSURE"
+      },
+      {
+        "phase": 2,
+        "id": "ALL_PROVIDER_RUN_UNIFICATION_AND_IPC_RUN_FENCING"
+      },
+      {
+        "phase": 3,
+        "id": "DESKTOP_CANONICAL_RUNTIME_BINDING"
+      },
+      {
+        "phase": 4,
+        "id": "DELIVERY_NAMESPACE_ORPHAN_CLOSEOUT_AND_FENCING"
+      },
+      {
+        "phase": 5,
+        "id": "PACKAGE_B_REGRESSION_AND_CHECKPOINT"
+      }
+    ]
+  },
+  "constructionAllowlist": {
+    "packageBMinimumProductionFileSet": [
+      "server.mjs",
+      "src/main.jsx",
+      "agents/agent-runtime.mjs",
+      "channels/task-store.mjs",
+      "channels/session-store.mjs",
+      "scripts/workbench-agent-runtime.mjs",
+      "scripts/feishu-worker-ipc.mjs",
+      "scripts/workbench-feishu-adapter.mjs",
+      "scripts/runtime-supervisor.mjs",
+      "scripts/start-fixed-feishu-gateway.mjs",
+      "scripts/start-feishu-workbench-bridge.mjs",
+      "scripts/feishu-task-channel.mjs",
+      "scripts/task-gateway.mjs",
+      "package.json"
+    ],
+    "classification": "FUTURE_REQUIRED_PRODUCTION_SET"
+  },
+  "completionBoundary": {
+    "contractEnablementSuccessMeans": [
+      "LIGHTWEIGHT_MACHINE_CONTRACT_ESTABLISHED",
+      "SCHEMAS_ESTABLISHED",
+      "VALIDATOR_ESTABLISHED",
+      "DEDICATED_TESTS_ESTABLISHED",
+      "CONTRACT_COMMIT_ESTABLISHED",
+      "CONTRACT_CHECKPOINT_ESTABLISHED"
+    ],
+    "contractEnablementDoesNotMeanPackageBConstructionComplete": true,
+    "packageBConstructionFutureSuccessRequirements": {
+      "singleRuntimeAuthority": true,
+      "runtimeAuthorityCount": 1,
+      "duplicateBusinessAuthorityCount": 0,
+      "desktopUsesCanonicalAgentRuntime": true,
+      "fixedGatewayUsesCanonicalAgentRuntime": true,
+      "feishuUsesCanonicalAgentRuntime": true,
+      "legacyDesktopBusinessAuthority": false,
+      "legacyFeishuBusinessAuthority": false,
+      "legacyFeishuTaskChannelProductionStartEntry": false,
+      "legacyTaskGatewayProductReachable": false,
+      "supervisorBypassEntryCount": 0,
+      "allProviderPathsUseRun": true,
+      "allProviderAttemptsHaveRunId": true,
+      "groundedProviderHasRun": true,
+      "processProviderHasRun": true,
+      "codeProviderHasRun": true,
+      "conversationProviderHasRun": true,
+      "ipcClaimBoundToBusinessRun": true,
+      "ipcWorkerIdEqualsRunLeaseOwner": true,
+      "staleWorkerCannotWriteResult": true,
+      "staleWorkerCannotDeleteCurrentClaim": true,
+      "replacementWorkerCreatesNewRunAttempt": true,
+      "oldProgressRejected": true,
+      "oldVerificationRejected": true,
+      "oldFinalRejected": true,
+      "taskRunTerminalCommitAtomic": true,
+      "staleAcceptedTerminalFailClosed": true,
+      "progress1UuidNotEqualProgress2Uuid": true,
+      "progressUuidNotEqualFinalUuid": true,
+      "existingStep8RegressionStillPasses": true,
+      "MandatoryGates35StillPass": true,
+      "packageBContractStillPasses": true,
+      "buildPass": true
+    },
+    "finalAcceptance": false,
+    "deployment": "NOT_DEPLOYED",
+    "deferredMilestones": [
+      "PRODUCTION_EQUIVALENT_FEISHU_E2E",
+      "REAL_FEISHU_SMOKE",
+      "HUMAN_ACCEPTANCE",
+      "MOBILE_REAL_DEVICE_ACCEPTANCE",
+      "DEPLOYMENT",
+      "PRODUCTION_RELEASE_APPROVAL"
+    ]
+  },
+  "prohibitedScope": {
+    "contractEnablementProductionImplementationChanges": false,
+    "packageBCompletionExcludes": [
+      "PRODUCTION_EQUIVALENT_FEISHU_E2E",
+      "REAL_FEISHU_SMOKE",
+      "HUMAN_ACCEPTANCE",
+      "MOBILE_REAL_DEVICE_ACCEPTANCE",
+      "DEPLOYMENT",
+      "PRODUCTION_RELEASE_APPROVAL"
+    ],
+    "packageAHistoricalEvidenceMutationAllowed": false,
+    "authoritativeIndexMutationAllowed": false,
+    "step8EvidenceRegenerationAllowed": false
+  },
+  "validationRequirements": {
+    "schemaFailClosed": true,
+    "executionReportSchemaFailClosed": true,
+    "crossFieldSemanticValidation": true,
+    "validatorCommand": "node scripts/verify-package-b-runtime-authority-contract-001.mjs",
+    "testCommand": "node --test tests/verify-package-b-runtime-authority-contract-001.test.mjs",
+    "requiredSemanticCheckCount": 71
+  }
+}

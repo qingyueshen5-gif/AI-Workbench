@@ -1,0 +1,1325 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ai-workbench/package-b-runtime-authority-contract.schema.json",
+  "title": "Package B Runtime Authority Unification Contract",
+  "description": "Fail-closed lightweight machine contract.",
+  "type": "object",
+  "required": [
+    "contractId",
+    "contractVersion",
+    "baseline",
+    "packageAInvariants",
+    "productDecisions",
+    "topLevelProductLandingBlockers",
+    "subGates",
+    "blockerDisposition",
+    "authorityTopology",
+    "runCompleteness",
+    "leaseRunFencing",
+    "staleLifecycle",
+    "progressResultDeliveryIdentity",
+    "runtimeReleaseBinding",
+    "constructionPlan",
+    "constructionAllowlist",
+    "completionBoundary",
+    "prohibitedScope",
+    "validationRequirements"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "contractId": {
+      "type": "string",
+      "const": "PACKAGE-B-RUNTIME-AUTHORITY-UNIFICATION-CONTRACT-001"
+    },
+    "contractVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "baseline": {
+      "type": "object",
+      "required": [
+        "baselineCommit",
+        "baselineBranch",
+        "semantics"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "baselineCommit": {
+          "type": "string",
+          "const": "688b8b032678d489eb2496af11279f676bf89ca2"
+        },
+        "baselineBranch": {
+          "type": "string",
+          "const": "candidate/interpreter-adapter-v1-work"
+        },
+        "semantics": {
+          "type": "string",
+          "const": "PACKAGE_B_CONTRACT_SOURCE_BASELINE"
+        }
+      }
+    },
+    "packageAInvariants": {
+      "type": "object",
+      "required": [
+        "packageAStatus",
+        "packageACompletionRatio",
+        "fourthRiskStatus",
+        "finalAcceptance",
+        "deployment",
+        "packageBConstructionStatus"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "packageAStatus": {
+          "type": "string",
+          "const": "PRESENT_AND_VERIFIED"
+        },
+        "packageACompletionRatio": {
+          "type": "string",
+          "const": "7/7"
+        },
+        "fourthRiskStatus": {
+          "type": "string",
+          "const": "RESOLVED"
+        },
+        "finalAcceptance": {
+          "type": "boolean",
+          "const": false
+        },
+        "deployment": {
+          "type": "string",
+          "const": "NOT_DEPLOYED"
+        },
+        "packageBConstructionStatus": {
+          "type": "string",
+          "const": "NOT_STARTED"
+        }
+      }
+    },
+    "productDecisions": {
+      "type": "object",
+      "required": [
+        "canonicalRuntime",
+        "legacyFeishuAuthorityDisposition",
+        "legacyFeishuAuthorityOption",
+        "recommendedPackageBStrategy",
+        "topLevelProductLandingBlockerCount"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "canonicalRuntime": {
+          "type": "string",
+          "const": "agents/agent-runtime.mjs::AgentRuntime"
+        },
+        "legacyFeishuAuthorityDisposition": {
+          "type": "string",
+          "const": "REMOVE_PRODUCTION_START_ENTRY"
+        },
+        "legacyFeishuAuthorityOption": {
+          "type": "string",
+          "const": "OPTION_A"
+        },
+        "recommendedPackageBStrategy": {
+          "type": "string",
+          "const": "LIGHTWEIGHT_CONTRACT_FIRST_THEN_SINGLE_CONSTRUCTION_PACKAGE"
+        },
+        "topLevelProductLandingBlockerCount": {
+          "type": "integer",
+          "const": 7
+        }
+      }
+    },
+    "topLevelProductLandingBlockers": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "uniqueItems": true,
+      "const": [
+        "PROGRESS_AND_FINAL_SHARE_FEISHU_UUID_NAMESPACE",
+        "STALE_ACCEPTED_ORPHAN_HAS_NO_TERMINAL_FAIL_CLOSED_STATE",
+        "GATEWAY_RUNTIME_COMMIT_BOUNDING_NOT_VERIFIED",
+        "DUAL_RUNTIME_AUTHORITY_UNRESOLVED",
+        "DESKTOP_CANONICAL_RUNTIME_BINDING_MISSING",
+        "PRODUCTION_EQUIVALENT_FEISHU_E2E_MISSING",
+        "HUMAN_ACCEPTANCE_MISSING"
+      ]
+    },
+    "subGates": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "const": [
+        {
+          "id": "REAL_FEISHU_SMOKE_MISSING",
+          "classification": "SUB_GATE_OF_PRODUCTION_EQUIVALENT_FEISHU_E2E_MISSING",
+          "parent": "PRODUCTION_EQUIVALENT_FEISHU_E2E_MISSING"
+        },
+        {
+          "id": "MOBILE_REAL_DEVICE_ACCEPTANCE_MISSING",
+          "classification": "SUB_GATE_OF_HUMAN_ACCEPTANCE_MISSING",
+          "parent": "HUMAN_ACCEPTANCE_MISSING"
+        }
+      ]
+    },
+    "blockerDisposition": {
+      "type": "object",
+      "required": [
+        "closableByPackageB",
+        "conditionallyClosableByPackageB",
+        "deferredAfterPackageB"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "closableByPackageB": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "const": [
+            "PROGRESS_AND_FINAL_SHARE_FEISHU_UUID_NAMESPACE",
+            "STALE_ACCEPTED_ORPHAN_HAS_NO_TERMINAL_FAIL_CLOSED_STATE",
+            "DUAL_RUNTIME_AUTHORITY_UNRESOLVED",
+            "DESKTOP_CANONICAL_RUNTIME_BINDING_MISSING"
+          ]
+        },
+        "conditionallyClosableByPackageB": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true,
+          "const": [
+            "GATEWAY_RUNTIME_COMMIT_BOUNDING_NOT_VERIFIED"
+          ]
+        },
+        "deferredAfterPackageB": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "const": [
+            "PRODUCTION_EQUIVALENT_FEISHU_E2E_MISSING",
+            "HUMAN_ACCEPTANCE_MISSING"
+          ]
+        }
+      }
+    },
+    "authorityTopology": {
+      "type": "object",
+      "required": [
+        "entryState",
+        "targetState"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "entryState": {
+          "type": "object",
+          "required": [
+            "runtimeAuthorityCount",
+            "duplicateBusinessAuthorityCount",
+            "authorities",
+            "desktopUsesCanonicalAgentRuntime",
+            "fixedGatewayUsesCanonicalAgentRuntime",
+            "legacyFeishuChannelUsesCanonicalAgentRuntime",
+            "feishuUsesCanonicalAgentRuntime",
+            "feishuOverallAuthorityUnified",
+            "gatewayTransportOnly",
+            "controlPlaneBypasses"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "runtimeAuthorityCount": {
+              "type": "integer",
+              "const": 3
+            },
+            "duplicateBusinessAuthorityCount": {
+              "type": "integer",
+              "const": 2
+            },
+            "authorities": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "uniqueItems": true,
+              "const": [
+                {
+                  "type": "CANONICAL_RUNTIME_CANDIDATE",
+                  "path": "agents/agent-runtime.mjs",
+                  "symbol": "AgentRuntime"
+                },
+                {
+                  "type": "LEGACY_PARALLEL_AUTHORITY",
+                  "path": "server.mjs"
+                },
+                {
+                  "type": "LEGACY_PARALLEL_AUTHORITY",
+                  "path": "scripts/feishu-task-channel.mjs",
+                  "downstream": "scripts/task-gateway.mjs"
+                }
+              ]
+            },
+            "desktopUsesCanonicalAgentRuntime": {
+              "type": "boolean",
+              "const": false
+            },
+            "fixedGatewayUsesCanonicalAgentRuntime": {
+              "type": "boolean",
+              "const": true
+            },
+            "legacyFeishuChannelUsesCanonicalAgentRuntime": {
+              "type": "boolean",
+              "const": false
+            },
+            "feishuUsesCanonicalAgentRuntime": {
+              "type": "string",
+              "const": "PARTIAL"
+            },
+            "feishuOverallAuthorityUnified": {
+              "type": "boolean",
+              "const": false
+            },
+            "gatewayTransportOnly": {
+              "type": "boolean",
+              "const": true
+            },
+            "controlPlaneBypasses": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "uniqueItems": true,
+              "const": [
+                {
+                  "path": "scripts/start-feishu-workbench-bridge.mjs",
+                  "currentClassification": "CONTROL_PLANE_BYPASS"
+                }
+              ]
+            }
+          }
+        },
+        "targetState": {
+          "type": "object",
+          "required": [
+            "singleRuntimeAuthority",
+            "runtimeAuthorityCount",
+            "duplicateBusinessAuthorityCount",
+            "canonicalRuntime",
+            "desktopUsesCanonicalAgentRuntime",
+            "fixedGatewayUsesCanonicalAgentRuntime",
+            "feishuUsesCanonicalAgentRuntime",
+            "feishuOverallAuthorityUnified",
+            "legacyDesktopBusinessAuthority",
+            "legacyFeishuBusinessAuthority",
+            "legacyFeishuTaskChannelProductionStartEntry",
+            "legacyFeishuTaskChannelProductReachable",
+            "legacyTaskGatewayProductReachable",
+            "gatewayTransportOnly",
+            "supervisorBypassEntryCount",
+            "secondTaskAuthorityAllowed",
+            "secondRunAuthorityAllowed",
+            "secondProviderAuthorityAllowed",
+            "secondIndependentVerifierAuthorityAllowed",
+            "secondIndependentlyPersistedBusinessStateMachineAllowed"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "singleRuntimeAuthority": {
+              "type": "boolean",
+              "const": true
+            },
+            "runtimeAuthorityCount": {
+              "type": "integer",
+              "const": 1
+            },
+            "duplicateBusinessAuthorityCount": {
+              "type": "integer",
+              "const": 0
+            },
+            "canonicalRuntime": {
+              "type": "string",
+              "const": "agents/agent-runtime.mjs::AgentRuntime"
+            },
+            "desktopUsesCanonicalAgentRuntime": {
+              "type": "boolean",
+              "const": true
+            },
+            "fixedGatewayUsesCanonicalAgentRuntime": {
+              "type": "boolean",
+              "const": true
+            },
+            "feishuUsesCanonicalAgentRuntime": {
+              "type": "boolean",
+              "const": true
+            },
+            "feishuOverallAuthorityUnified": {
+              "type": "boolean",
+              "const": true
+            },
+            "legacyDesktopBusinessAuthority": {
+              "type": "boolean",
+              "const": false
+            },
+            "legacyFeishuBusinessAuthority": {
+              "type": "boolean",
+              "const": false
+            },
+            "legacyFeishuTaskChannelProductionStartEntry": {
+              "type": "boolean",
+              "const": false
+            },
+            "legacyFeishuTaskChannelProductReachable": {
+              "type": "boolean",
+              "const": false
+            },
+            "legacyTaskGatewayProductReachable": {
+              "type": "boolean",
+              "const": false
+            },
+            "gatewayTransportOnly": {
+              "type": "boolean",
+              "const": true
+            },
+            "supervisorBypassEntryCount": {
+              "type": "integer",
+              "const": 0
+            },
+            "secondTaskAuthorityAllowed": {
+              "type": "boolean",
+              "const": false
+            },
+            "secondRunAuthorityAllowed": {
+              "type": "boolean",
+              "const": false
+            },
+            "secondProviderAuthorityAllowed": {
+              "type": "boolean",
+              "const": false
+            },
+            "secondIndependentVerifierAuthorityAllowed": {
+              "type": "boolean",
+              "const": false
+            },
+            "secondIndependentlyPersistedBusinessStateMachineAllowed": {
+              "type": "boolean",
+              "const": false
+            }
+          }
+        }
+      }
+    },
+    "runCompleteness": {
+      "type": "object",
+      "required": [
+        "entryState",
+        "targetState"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "entryState": {
+          "type": "object",
+          "required": [
+            "canonicalRuntimeAllProviderRunCoverage",
+            "allProviderPathsUseRun",
+            "allProviderAttemptsHaveRunId",
+            "processProviderHasRun",
+            "codeProviderHasRun",
+            "conversationProviderHasRun",
+            "allVerificationBoundToRun",
+            "allProgressBoundToRun",
+            "allFinalResultsBoundToRun",
+            "taskRunTerminalCommitAtomic"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "canonicalRuntimeAllProviderRunCoverage": {
+              "type": "boolean",
+              "const": false
+            },
+            "allProviderPathsUseRun": {
+              "type": "boolean",
+              "const": false
+            },
+            "allProviderAttemptsHaveRunId": {
+              "type": "boolean",
+              "const": false
+            },
+            "processProviderHasRun": {
+              "type": "boolean",
+              "const": false
+            },
+            "codeProviderHasRun": {
+              "type": "boolean",
+              "const": false
+            },
+            "conversationProviderHasRun": {
+              "type": "boolean",
+              "const": false
+            },
+            "allVerificationBoundToRun": {
+              "type": "boolean",
+              "const": false
+            },
+            "allProgressBoundToRun": {
+              "type": "boolean",
+              "const": false
+            },
+            "allFinalResultsBoundToRun": {
+              "type": "boolean",
+              "const": false
+            },
+            "taskRunTerminalCommitAtomic": {
+              "type": "boolean",
+              "const": false
+            }
+          }
+        },
+        "targetState": {
+          "type": "object",
+          "required": [
+            "allProviderPathsUseRun",
+            "allProviderAttemptsHaveRunId",
+            "groundedProviderHasRun",
+            "processProviderHasRun",
+            "codeProviderHasRun",
+            "conversationProviderHasRun",
+            "allVerificationBoundToRun",
+            "allProgressBoundToRun",
+            "allFinalResultsBoundToRun",
+            "providerExecutionIsNotParallelAuthority",
+            "legacyProviderExecutionAuthorityRemoved",
+            "taskRunTerminalCommitAtomic",
+            "requiredAttemptIdentity"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "allProviderPathsUseRun": {
+              "type": "boolean",
+              "const": true
+            },
+            "allProviderAttemptsHaveRunId": {
+              "type": "boolean",
+              "const": true
+            },
+            "groundedProviderHasRun": {
+              "type": "boolean",
+              "const": true
+            },
+            "processProviderHasRun": {
+              "type": "boolean",
+              "const": true
+            },
+            "codeProviderHasRun": {
+              "type": "boolean",
+              "const": true
+            },
+            "conversationProviderHasRun": {
+              "type": "boolean",
+              "const": true
+            },
+            "allVerificationBoundToRun": {
+              "type": "boolean",
+              "const": true
+            },
+            "allProgressBoundToRun": {
+              "type": "boolean",
+              "const": true
+            },
+            "allFinalResultsBoundToRun": {
+              "type": "boolean",
+              "const": true
+            },
+            "providerExecutionIsNotParallelAuthority": {
+              "type": "boolean",
+              "const": true
+            },
+            "legacyProviderExecutionAuthorityRemoved": {
+              "type": "boolean",
+              "const": true
+            },
+            "taskRunTerminalCommitAtomic": {
+              "type": "boolean",
+              "const": true
+            },
+            "requiredAttemptIdentity": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "uniqueItems": true,
+              "const": [
+                "taskId",
+                "runId",
+                "attemptIdentity",
+                "leaseFenceIdentity"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "leaseRunFencing": {
+      "type": "object",
+      "required": [
+        "entryState",
+        "targetState"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "entryState": {
+          "type": "object",
+          "required": [
+            "ipcClaimBoundToBusinessRun",
+            "staleWorkerResultFenced",
+            "replacementWorkerCreatesNewBusinessRun",
+            "oldProgressFenced",
+            "oldVerificationFenced",
+            "oldFinalFenced"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "ipcClaimBoundToBusinessRun": {
+              "type": "boolean",
+              "const": false
+            },
+            "staleWorkerResultFenced": {
+              "type": "boolean",
+              "const": false
+            },
+            "replacementWorkerCreatesNewBusinessRun": {
+              "type": "boolean",
+              "const": false
+            },
+            "oldProgressFenced": {
+              "type": "boolean",
+              "const": false
+            },
+            "oldVerificationFenced": {
+              "type": "boolean",
+              "const": false
+            },
+            "oldFinalFenced": {
+              "type": "boolean",
+              "const": false
+            }
+          }
+        },
+        "targetState": {
+          "type": "object",
+          "required": [
+            "ipcClaimBoundToBusinessRun",
+            "ipcWorkerIdEqualsRunLeaseOwner",
+            "staleWorkerCannotWriteResult",
+            "staleWorkerCannotDeleteCurrentClaim",
+            "replacementWorkerCreatesNewRunAttempt",
+            "oldProgressRejected",
+            "oldVerificationRejected",
+            "oldFinalRejected",
+            "allProgressCarriesTaskId",
+            "allProgressCarriesRunId",
+            "allVerificationCarriesRunId",
+            "allFinalResultsCarryRunId",
+            "identityChain"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "ipcClaimBoundToBusinessRun": {
+              "type": "boolean",
+              "const": true
+            },
+            "ipcWorkerIdEqualsRunLeaseOwner": {
+              "type": "boolean",
+              "const": true
+            },
+            "staleWorkerCannotWriteResult": {
+              "type": "boolean",
+              "const": true
+            },
+            "staleWorkerCannotDeleteCurrentClaim": {
+              "type": "boolean",
+              "const": true
+            },
+            "replacementWorkerCreatesNewRunAttempt": {
+              "type": "boolean",
+              "const": true
+            },
+            "oldProgressRejected": {
+              "type": "boolean",
+              "const": true
+            },
+            "oldVerificationRejected": {
+              "type": "boolean",
+              "const": true
+            },
+            "oldFinalRejected": {
+              "type": "boolean",
+              "const": true
+            },
+            "allProgressCarriesTaskId": {
+              "type": "boolean",
+              "const": true
+            },
+            "allProgressCarriesRunId": {
+              "type": "boolean",
+              "const": true
+            },
+            "allVerificationCarriesRunId": {
+              "type": "boolean",
+              "const": true
+            },
+            "allFinalResultsCarryRunId": {
+              "type": "boolean",
+              "const": true
+            },
+            "identityChain": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "uniqueItems": true,
+              "const": [
+                "IPC_CLAIM",
+                "BUSINESS_RUN_LEASE",
+                "PROVIDER_ATTEMPT",
+                "PROGRESS",
+                "VERIFICATION",
+                "FINAL_RESULT"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "staleLifecycle": {
+      "type": "object",
+      "required": [
+        "targetState"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "targetState": {
+          "type": "object",
+          "required": [
+            "staleAcceptedTerminalFailClosed",
+            "expiredAcceptedProducesTerminalResult",
+            "expiredAcceptedResultExactlyOnce",
+            "orphanJobArchivedWithTerminalState",
+            "orphanTaskFailedWhenTaskExists",
+            "restartSafe"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "staleAcceptedTerminalFailClosed": {
+              "type": "boolean",
+              "const": true
+            },
+            "expiredAcceptedProducesTerminalResult": {
+              "type": "boolean",
+              "const": true
+            },
+            "expiredAcceptedResultExactlyOnce": {
+              "type": "boolean",
+              "const": true
+            },
+            "orphanJobArchivedWithTerminalState": {
+              "type": "boolean",
+              "const": true
+            },
+            "orphanTaskFailedWhenTaskExists": {
+              "type": "boolean",
+              "const": true
+            },
+            "restartSafe": {
+              "type": "boolean",
+              "const": true
+            }
+          }
+        }
+      }
+    },
+    "progressResultDeliveryIdentity": {
+      "type": "object",
+      "required": [
+        "targetState"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "targetState": {
+          "type": "object",
+          "required": [
+            "ackUuidNamespaceDistinct",
+            "progress1UuidNotEqualProgress2Uuid",
+            "progressUuidIncludesProgressEventId",
+            "progressUuidNotEqualFinalUuid",
+            "finalUuidBoundToTaskOrRevision",
+            "progressExactlyOnce",
+            "finalExactlyOnce",
+            "progressFailureDoesNotBlockFinal",
+            "identityModel"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "ackUuidNamespaceDistinct": {
+              "type": "boolean",
+              "const": true
+            },
+            "progress1UuidNotEqualProgress2Uuid": {
+              "type": "boolean",
+              "const": true
+            },
+            "progressUuidIncludesProgressEventId": {
+              "type": "boolean",
+              "const": true
+            },
+            "progressUuidNotEqualFinalUuid": {
+              "type": "boolean",
+              "const": true
+            },
+            "finalUuidBoundToTaskOrRevision": {
+              "type": "boolean",
+              "const": true
+            },
+            "progressExactlyOnce": {
+              "type": "boolean",
+              "const": true
+            },
+            "finalExactlyOnce": {
+              "type": "boolean",
+              "const": true
+            },
+            "progressFailureDoesNotBlockFinal": {
+              "type": "boolean",
+              "const": true
+            },
+            "identityModel": {
+              "type": "object",
+              "required": [
+                "ack",
+                "progress",
+                "final"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "ack": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "uniqueItems": true,
+                  "const": [
+                    "channelAccount",
+                    "originalMessageId"
+                  ]
+                },
+                "progress": {
+                  "type": "array",
+                  "minItems": 3,
+                  "maxItems": 3,
+                  "uniqueItems": true,
+                  "const": [
+                    "channelAccount",
+                    "originalMessageId",
+                    "progressEventId"
+                  ]
+                },
+                "final": {
+                  "type": "array",
+                  "minItems": 3,
+                  "maxItems": 3,
+                  "uniqueItems": true,
+                  "const": [
+                    "channelAccount",
+                    "originalMessageId",
+                    "taskIdOrTaskRevision"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "runtimeReleaseBinding": {
+      "type": "object",
+      "required": [
+        "targetState",
+        "completionBoundary"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "targetState": {
+          "type": "object",
+          "required": [
+            "gatewayCommitRecorded",
+            "runtimeCommitRecorded",
+            "approvedReleaseBindingRecorded",
+            "gatewayRuntimeBindingValidated",
+            "ipcBindingMatchesCanonicalRoot",
+            "recordedPidsAliveDuringValidation",
+            "staleBindingRejected",
+            "runtimeSwitchRequiresQueueQuiescence",
+            "runtimeSwitchRequiresNoActiveRun",
+            "runtimeSwitchFencesOldProviderAttempts",
+            "supervisorBypassEntryCount"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "gatewayCommitRecorded": {
+              "type": "boolean",
+              "const": true
+            },
+            "runtimeCommitRecorded": {
+              "type": "boolean",
+              "const": true
+            },
+            "approvedReleaseBindingRecorded": {
+              "type": "boolean",
+              "const": true
+            },
+            "gatewayRuntimeBindingValidated": {
+              "type": "boolean",
+              "const": true
+            },
+            "ipcBindingMatchesCanonicalRoot": {
+              "type": "boolean",
+              "const": true
+            },
+            "recordedPidsAliveDuringValidation": {
+              "type": "boolean",
+              "const": true
+            },
+            "staleBindingRejected": {
+              "type": "boolean",
+              "const": true
+            },
+            "runtimeSwitchRequiresQueueQuiescence": {
+              "type": "boolean",
+              "const": true
+            },
+            "runtimeSwitchRequiresNoActiveRun": {
+              "type": "boolean",
+              "const": true
+            },
+            "runtimeSwitchFencesOldProviderAttempts": {
+              "type": "boolean",
+              "const": true
+            },
+            "supervisorBypassEntryCount": {
+              "type": "integer",
+              "const": 0
+            }
+          }
+        },
+        "completionBoundary": {
+          "type": "object",
+          "required": [
+            "productionBindingMachineContractSatisfied",
+            "currentProductionBindingProven",
+            "currentProductionBindingStatus"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "productionBindingMachineContractSatisfied": {
+              "type": "boolean",
+              "const": true
+            },
+            "currentProductionBindingProven": {
+              "type": "boolean",
+              "const": false
+            },
+            "currentProductionBindingStatus": {
+              "type": "string",
+              "const": "DEFERRED_TO_CONTROLLED_E2E"
+            }
+          }
+        }
+      }
+    },
+    "constructionPlan": {
+      "type": "object",
+      "required": [
+        "strategy",
+        "package",
+        "phases"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "const": "LIGHTWEIGHT_CONTRACT_FIRST_THEN_SINGLE_CONSTRUCTION_PACKAGE"
+        },
+        "package": {
+          "type": "string",
+          "const": "PACKAGE_B_SINGLE_CONSTRUCTION_PACKAGE"
+        },
+        "phases": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "uniqueItems": true,
+          "const": [
+            {
+              "phase": 1,
+              "id": "AUTHORITY_TOPOLOGY_AND_LEGACY_ENTRY_CLOSURE"
+            },
+            {
+              "phase": 2,
+              "id": "ALL_PROVIDER_RUN_UNIFICATION_AND_IPC_RUN_FENCING"
+            },
+            {
+              "phase": 3,
+              "id": "DESKTOP_CANONICAL_RUNTIME_BINDING"
+            },
+            {
+              "phase": 4,
+              "id": "DELIVERY_NAMESPACE_ORPHAN_CLOSEOUT_AND_FENCING"
+            },
+            {
+              "phase": 5,
+              "id": "PACKAGE_B_REGRESSION_AND_CHECKPOINT"
+            }
+          ]
+        }
+      }
+    },
+    "constructionAllowlist": {
+      "type": "object",
+      "required": [
+        "packageBMinimumProductionFileSet",
+        "classification"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "packageBMinimumProductionFileSet": {
+          "type": "array",
+          "minItems": 14,
+          "maxItems": 14,
+          "uniqueItems": true,
+          "const": [
+            "server.mjs",
+            "src/main.jsx",
+            "agents/agent-runtime.mjs",
+            "channels/task-store.mjs",
+            "channels/session-store.mjs",
+            "scripts/workbench-agent-runtime.mjs",
+            "scripts/feishu-worker-ipc.mjs",
+            "scripts/workbench-feishu-adapter.mjs",
+            "scripts/runtime-supervisor.mjs",
+            "scripts/start-fixed-feishu-gateway.mjs",
+            "scripts/start-feishu-workbench-bridge.mjs",
+            "scripts/feishu-task-channel.mjs",
+            "scripts/task-gateway.mjs",
+            "package.json"
+          ]
+        },
+        "classification": {
+          "type": "string",
+          "const": "FUTURE_REQUIRED_PRODUCTION_SET"
+        }
+      }
+    },
+    "completionBoundary": {
+      "type": "object",
+      "required": [
+        "contractEnablementSuccessMeans",
+        "contractEnablementDoesNotMeanPackageBConstructionComplete",
+        "packageBConstructionFutureSuccessRequirements",
+        "finalAcceptance",
+        "deployment",
+        "deferredMilestones"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "contractEnablementSuccessMeans": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "uniqueItems": true,
+          "const": [
+            "LIGHTWEIGHT_MACHINE_CONTRACT_ESTABLISHED",
+            "SCHEMAS_ESTABLISHED",
+            "VALIDATOR_ESTABLISHED",
+            "DEDICATED_TESTS_ESTABLISHED",
+            "CONTRACT_COMMIT_ESTABLISHED",
+            "CONTRACT_CHECKPOINT_ESTABLISHED"
+          ]
+        },
+        "contractEnablementDoesNotMeanPackageBConstructionComplete": {
+          "type": "boolean",
+          "const": true
+        },
+        "packageBConstructionFutureSuccessRequirements": {
+          "type": "object",
+          "required": [
+            "singleRuntimeAuthority",
+            "runtimeAuthorityCount",
+            "duplicateBusinessAuthorityCount",
+            "desktopUsesCanonicalAgentRuntime",
+            "fixedGatewayUsesCanonicalAgentRuntime",
+            "feishuUsesCanonicalAgentRuntime",
+            "legacyDesktopBusinessAuthority",
+            "legacyFeishuBusinessAuthority",
+            "legacyFeishuTaskChannelProductionStartEntry",
+            "legacyTaskGatewayProductReachable",
+            "supervisorBypassEntryCount",
+            "allProviderPathsUseRun",
+            "allProviderAttemptsHaveRunId",
+            "groundedProviderHasRun",
+            "processProviderHasRun",
+            "codeProviderHasRun",
+            "conversationProviderHasRun",
+            "ipcClaimBoundToBusinessRun",
+            "ipcWorkerIdEqualsRunLeaseOwner",
+            "staleWorkerCannotWriteResult",
+            "staleWorkerCannotDeleteCurrentClaim",
+            "replacementWorkerCreatesNewRunAttempt",
+            "oldProgressRejected",
+            "oldVerificationRejected",
+            "oldFinalRejected",
+            "taskRunTerminalCommitAtomic",
+            "staleAcceptedTerminalFailClosed",
+            "progress1UuidNotEqualProgress2Uuid",
+            "progressUuidNotEqualFinalUuid",
+            "existingStep8RegressionStillPasses",
+            "MandatoryGates35StillPass",
+            "packageBContractStillPasses",
+            "buildPass"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "singleRuntimeAuthority": {
+              "type": "boolean",
+              "const": true
+            },
+            "runtimeAuthorityCount": {
+              "type": "integer",
+              "const": 1
+            },
+            "duplicateBusinessAuthorityCount": {
+              "type": "integer",
+              "const": 0
+            },
+            "desktopUsesCanonicalAgentRuntime": {
+              "type": "boolean",
+              "const": true
+            },
+            "fixedGatewayUsesCanonicalAgentRuntime": {
+              "type": "boolean",
+              "const": true
+            },
+            "feishuUsesCanonicalAgentRuntime": {
+              "type": "boolean",
+              "const": true
+            },
+            "legacyDesktopBusinessAuthority": {
+              "type": "boolean",
+              "const": false
+            },
+            "legacyFeishuBusinessAuthority": {
+              "type": "boolean",
+              "const": false
+            },
+            "legacyFeishuTaskChannelProductionStartEntry": {
+              "type": "boolean",
+              "const": false
+            },
+            "legacyTaskGatewayProductReachable": {
+              "type": "boolean",
+              "const": false
+            },
+            "supervisorBypassEntryCount": {
+              "type": "integer",
+              "const": 0
+            },
+            "allProviderPathsUseRun": {
+              "type": "boolean",
+              "const": true
+            },
+            "allProviderAttemptsHaveRunId": {
+              "type": "boolean",
+              "const": true
+            },
+            "groundedProviderHasRun": {
+              "type": "boolean",
+              "const": true
+            },
+            "processProviderHasRun": {
+              "type": "boolean",
+              "const": true
+            },
+            "codeProviderHasRun": {
+              "type": "boolean",
+              "const": true
+            },
+            "conversationProviderHasRun": {
+              "type": "boolean",
+              "const": true
+            },
+            "ipcClaimBoundToBusinessRun": {
+              "type": "boolean",
+              "const": true
+            },
+            "ipcWorkerIdEqualsRunLeaseOwner": {
+              "type": "boolean",
+              "const": true
+            },
+            "staleWorkerCannotWriteResult": {
+              "type": "boolean",
+              "const": true
+            },
+            "staleWorkerCannotDeleteCurrentClaim": {
+              "type": "boolean",
+              "const": true
+            },
+            "replacementWorkerCreatesNewRunAttempt": {
+              "type": "boolean",
+              "const": true
+            },
+            "oldProgressRejected": {
+              "type": "boolean",
+              "const": true
+            },
+            "oldVerificationRejected": {
+              "type": "boolean",
+              "const": true
+            },
+            "oldFinalRejected": {
+              "type": "boolean",
+              "const": true
+            },
+            "taskRunTerminalCommitAtomic": {
+              "type": "boolean",
+              "const": true
+            },
+            "staleAcceptedTerminalFailClosed": {
+              "type": "boolean",
+              "const": true
+            },
+            "progress1UuidNotEqualProgress2Uuid": {
+              "type": "boolean",
+              "const": true
+            },
+            "progressUuidNotEqualFinalUuid": {
+              "type": "boolean",
+              "const": true
+            },
+            "existingStep8RegressionStillPasses": {
+              "type": "boolean",
+              "const": true
+            },
+            "MandatoryGates35StillPass": {
+              "type": "boolean",
+              "const": true
+            },
+            "packageBContractStillPasses": {
+              "type": "boolean",
+              "const": true
+            },
+            "buildPass": {
+              "type": "boolean",
+              "const": true
+            }
+          }
+        },
+        "finalAcceptance": {
+          "type": "boolean",
+          "const": false
+        },
+        "deployment": {
+          "type": "string",
+          "const": "NOT_DEPLOYED"
+        },
+        "deferredMilestones": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "uniqueItems": true,
+          "const": [
+            "PRODUCTION_EQUIVALENT_FEISHU_E2E",
+            "REAL_FEISHU_SMOKE",
+            "HUMAN_ACCEPTANCE",
+            "MOBILE_REAL_DEVICE_ACCEPTANCE",
+            "DEPLOYMENT",
+            "PRODUCTION_RELEASE_APPROVAL"
+          ]
+        }
+      }
+    },
+    "prohibitedScope": {
+      "type": "object",
+      "required": [
+        "contractEnablementProductionImplementationChanges",
+        "packageBCompletionExcludes",
+        "packageAHistoricalEvidenceMutationAllowed",
+        "authoritativeIndexMutationAllowed",
+        "step8EvidenceRegenerationAllowed"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "contractEnablementProductionImplementationChanges": {
+          "type": "boolean",
+          "const": false
+        },
+        "packageBCompletionExcludes": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "uniqueItems": true,
+          "const": [
+            "PRODUCTION_EQUIVALENT_FEISHU_E2E",
+            "REAL_FEISHU_SMOKE",
+            "HUMAN_ACCEPTANCE",
+            "MOBILE_REAL_DEVICE_ACCEPTANCE",
+            "DEPLOYMENT",
+            "PRODUCTION_RELEASE_APPROVAL"
+          ]
+        },
+        "packageAHistoricalEvidenceMutationAllowed": {
+          "type": "boolean",
+          "const": false
+        },
+        "authoritativeIndexMutationAllowed": {
+          "type": "boolean",
+          "const": false
+        },
+        "step8EvidenceRegenerationAllowed": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "validationRequirements": {
+      "type": "object",
+      "required": [
+        "schemaFailClosed",
+        "executionReportSchemaFailClosed",
+        "crossFieldSemanticValidation",
+        "validatorCommand",
+        "testCommand",
+        "requiredSemanticCheckCount"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schemaFailClosed": {
+          "type": "boolean",
+          "const": true
+        },
+        "executionReportSchemaFailClosed": {
+          "type": "boolean",
+          "const": true
+        },
+        "crossFieldSemanticValidation": {
+          "type": "boolean",
+          "const": true
+        },
+        "validatorCommand": {
+          "type": "string",
+          "const": "node scripts/verify-package-b-runtime-authority-contract-001.mjs"
+        },
+        "testCommand": {
+          "type": "string",
+          "const": "node --test tests/verify-package-b-runtime-authority-contract-001.test.mjs"
+        },
+        "requiredSemanticCheckCount": {
+          "type": "integer",
+          "const": 71
+        }
+      }
+    }
+  }
+}

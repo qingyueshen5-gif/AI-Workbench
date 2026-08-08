@@ -1,0 +1,428 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ai-workbench/package-b-execution-report.schema.json",
+  "title": "Package B Single Construction Package Execution Report",
+  "type": "object",
+  "required": [
+    "contractId",
+    "contractVersion",
+    "finalStatus",
+    "phase",
+    "baselineCommit",
+    "constructionCommit",
+    "constructionCommitParent",
+    "exactChangedFiles",
+    "authorityTopologyResult",
+    "runtimeAuthorityCount",
+    "duplicateBusinessAuthorityCount",
+    "canonicalRuntime",
+    "desktopUsesCanonicalAgentRuntime",
+    "fixedGatewayUsesCanonicalAgentRuntime",
+    "legacyFeishuAuthorityClosed",
+    "legacyFeishuProductionStartEntryPresent",
+    "legacyTaskGatewayProductReachable",
+    "supervisorBypassEntryCount",
+    "allProviderPathsUseRun",
+    "allProviderAttemptsHaveRunId",
+    "groundedProviderHasRun",
+    "processProviderHasRun",
+    "codeProviderHasRun",
+    "conversationProviderHasRun",
+    "allProgressCarriesTaskId",
+    "allProgressCarriesRunId",
+    "allVerificationCarriesRunId",
+    "allFinalResultsCarryRunId",
+    "ipcClaimBoundToBusinessRun",
+    "ipcWorkerIdEqualsRunLeaseOwner",
+    "staleWorkerFencingResult",
+    "replacementWorkerRunAttemptResult",
+    "taskRunTerminalCommitAtomic",
+    "staleAcceptedTerminalResult",
+    "progressFinalIdentityResult",
+    "releaseBindingMachineProof",
+    "currentProductionBindingProven",
+    "step8RegressionResult",
+    "mandatoryGatesResult",
+    "packageBContractResult",
+    "buildResult",
+    "checkpointResult",
+    "firstFailure",
+    "finalAcceptance",
+    "deployment"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "contractId": {
+      "type": "string",
+      "const": "PACKAGE-B-RUNTIME-AUTHORITY-UNIFICATION-CONTRACT-001"
+    },
+    "contractVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "finalStatus": {
+      "type": "string",
+      "enum": [
+        "SUCCESS",
+        "FIRST_FAILURE"
+      ]
+    },
+    "phase": {
+      "type": "string",
+      "minLength": 1
+    },
+    "baselineCommit": {
+      "type": "string",
+      "const": "688b8b032678d489eb2496af11279f676bf89ca2"
+    },
+    "constructionCommit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "constructionCommitParent": {
+      "type": "string",
+      "minLength": 1
+    },
+    "exactChangedFiles": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "authorityTopologyResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ok"
+      ],
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    },
+    "runtimeAuthorityCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "duplicateBusinessAuthorityCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "canonicalRuntime": {
+      "type": "string",
+      "const": "agents/agent-runtime.mjs::AgentRuntime"
+    },
+    "desktopUsesCanonicalAgentRuntime": {
+      "type": "boolean"
+    },
+    "fixedGatewayUsesCanonicalAgentRuntime": {
+      "type": "boolean"
+    },
+    "legacyFeishuAuthorityClosed": {
+      "type": "boolean"
+    },
+    "legacyFeishuProductionStartEntryPresent": {
+      "type": "boolean"
+    },
+    "legacyTaskGatewayProductReachable": {
+      "type": "boolean"
+    },
+    "supervisorBypassEntryCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "allProviderPathsUseRun": {
+      "type": "boolean"
+    },
+    "allProviderAttemptsHaveRunId": {
+      "type": "boolean"
+    },
+    "groundedProviderHasRun": {
+      "type": "boolean"
+    },
+    "processProviderHasRun": {
+      "type": "boolean"
+    },
+    "codeProviderHasRun": {
+      "type": "boolean"
+    },
+    "conversationProviderHasRun": {
+      "type": "boolean"
+    },
+    "allProgressCarriesTaskId": {
+      "type": "boolean"
+    },
+    "allProgressCarriesRunId": {
+      "type": "boolean"
+    },
+    "allVerificationCarriesRunId": {
+      "type": "boolean"
+    },
+    "allFinalResultsCarryRunId": {
+      "type": "boolean"
+    },
+    "ipcClaimBoundToBusinessRun": {
+      "type": "boolean"
+    },
+    "ipcWorkerIdEqualsRunLeaseOwner": {
+      "type": "boolean"
+    },
+    "staleWorkerFencingResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ok"
+      ],
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    },
+    "replacementWorkerRunAttemptResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ok"
+      ],
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    },
+    "taskRunTerminalCommitAtomic": {
+      "type": "boolean"
+    },
+    "staleAcceptedTerminalResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ok"
+      ],
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    },
+    "progressFinalIdentityResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ok"
+      ],
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    },
+    "releaseBindingMachineProof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ok"
+      ],
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    },
+    "currentProductionBindingProven": {
+      "oneOf": [
+        {
+          "type": "boolean",
+          "const": false
+        },
+        {
+          "type": "string",
+          "const": "DEFERRED_TO_CONTROLLED_E2E"
+        }
+      ]
+    },
+    "step8RegressionResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ok"
+      ],
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    },
+    "mandatoryGatesResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ok"
+      ],
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    },
+    "packageBContractResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ok"
+      ],
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    },
+    "buildResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ok"
+      ],
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    },
+    "checkpointResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ok"
+      ],
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    },
+    "firstFailure": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "detail"
+          ],
+          "properties": {
+            "code": {
+              "type": "string",
+              "minLength": 1
+            },
+            "detail": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "finalAcceptance": {
+      "type": "boolean",
+      "const": false
+    },
+    "deployment": {
+      "type": "string",
+      "const": "NOT_DEPLOYED"
+    },
+    "failureClassification": {
+      "type": "string",
+      "minLength": 1
+    },
+    "automaticRepairPerformed": {
+      "type": "boolean",
+      "const": false
+    },
+    "minimumRepairFileSet": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "whyExistingScopeInsufficient": {
+      "type": "string"
+    },
+    "Commit": {
+      "type": "string",
+      "enum": [
+        "YES",
+        "NO"
+      ]
+    },
+    "Push": {
+      "type": "string",
+      "const": "NO"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "finalStatus": {
+            "const": "FIRST_FAILURE"
+          }
+        },
+        "required": [
+          "finalStatus"
+        ]
+      },
+      "then": {
+        "required": [
+          "failureClassification",
+          "automaticRepairPerformed",
+          "minimumRepairFileSet",
+          "whyExistingScopeInsufficient",
+          "Commit",
+          "Push"
+        ]
+      }
+    }
+  ]
+}
