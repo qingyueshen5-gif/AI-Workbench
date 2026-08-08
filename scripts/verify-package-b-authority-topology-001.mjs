@@ -54,7 +54,58 @@ try {
   const taskFiles = await import('node:fs/promises').then((fs) => fs.readdir(join(tmp, 'tasks')));
   check('CANONICAL_TASKSTORE_DURABLE', taskFiles.some((name) => name.endsWith('.json')), taskFiles);
 
-  const result = { schemaVersion: 'ai-workbench.package-b-authority-topology/v1', ok: failures.length === 0, checks, failures };
+  const canonicalAuthority = 'agents/agent-runtime.mjs::AgentRuntime';
+  const checkPassed = (code) => checks.some((item) => item.code === code && item.ok === true);
+  const authorityCandidates = [
+    {
+      authority: canonicalAuthority,
+      classification: 'INDEPENDENT_BUSINESS_AUTHORITY',
+      productReachable: checkPassed('DESKTOP_RUNTIME_AUTHORITY'),
+      evidenceChecks: ['DESKTOP_RUNTIME_AUTHORITY', 'DESKTOP_PROJECTS_TASK_AND_RUN', 'CANONICAL_TASKSTORE_DURABLE']
+    },
+    {
+      authority: 'server.mjs::LegacyDesktopBusinessAuthority',
+      classification: 'INACTIVE_OR_TRANSPORT_ONLY',
+      productReachable: false,
+      evidenceChecks: ['DESKTOP_RUNTIME_AUTHORITY']
+    },
+    {
+      authority: 'scripts/feishu-task-channel.mjs::LegacyFeishuTaskChannel',
+      classification: 'INACTIVE_OR_TRANSPORT_ONLY',
+      productReachable: false,
+      evidenceChecks: ['PACKAGE_NO_LEGACY_FEISHU_START']
+    },
+    {
+      authority: 'scripts/task-gateway.mjs::LegacyTaskGateway',
+      classification: 'INACTIVE_OR_TRANSPORT_ONLY',
+      productReachable: false,
+      evidenceChecks: ['PACKAGE_NO_LEGACY_TASK_GATEWAY_START', 'BRIDGE_DELEGATES_FIXED_GATEWAY']
+    }
+  ];
+  const activeIndependentBusinessAuthorities = authorityCandidates
+    .filter((candidate) => candidate.classification === 'INDEPENDENT_BUSINESS_AUTHORITY' && candidate.productReachable)
+    .map((candidate) => candidate.authority);
+  const inactiveOrTransportOnlyAuthorities = authorityCandidates
+    .filter((candidate) => candidate.classification === 'INACTIVE_OR_TRANSPORT_ONLY' || !candidate.productReachable)
+    .map((candidate) => candidate.authority);
+  const canonicalAuthorityPresent = activeIndependentBusinessAuthorities.includes(canonicalAuthority);
+  const runtimeAuthorityCount = activeIndependentBusinessAuthorities.length;
+  const duplicateBusinessAuthorityCount = activeIndependentBusinessAuthorities
+    .filter((authority) => authority !== canonicalAuthority)
+    .length;
+  const result = {
+    schemaVersion: 'ai-workbench.package-b-authority-topology/v1',
+    ok: failures.length === 0,
+    canonicalAuthority,
+    canonicalAuthorityPresent,
+    authorityCandidates,
+    activeIndependentBusinessAuthorities,
+    inactiveOrTransportOnlyAuthorities,
+    runtimeAuthorityCount,
+    duplicateBusinessAuthorityCount,
+    checks,
+    failures
+  };
   console.log(JSON.stringify(result, null, 2));
   process.exitCode = result.ok ? 0 : 1;
 } catch (error) {
