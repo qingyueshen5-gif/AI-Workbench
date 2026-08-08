@@ -74,7 +74,8 @@ export class ActiveTaskController {
       return { intercepted: true, kind: 'continue', text: taskStatusText(await this.store.load(active.taskId)), activeTaskId: active.taskId, targetTaskId: active.taskId, classification };
     }
 
-    if (classification.kind === 'continue' || classification.kind === 'correction') return { intercepted: false, active, classification, targetTaskId: active.taskId };
+    if (classification.kind === 'continue') return { intercepted: true, kind: 'continue', text: taskStatusText(active), activeTaskId: active.taskId, targetTaskId: active.taskId, classification };
+    if (classification.kind === 'correction') return { intercepted: false, active, classification, targetTaskId: active.taskId };
     return { intercepted: false, active, classification };
   }
 

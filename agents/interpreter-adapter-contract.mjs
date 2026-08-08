@@ -3,7 +3,7 @@ import { validateTaskInterpretation } from './task-interpreter.mjs';
 export const INTERPRETER_ADAPTER_VERSION='interpreter-adapter-v1';
 export const GROUND_TRUTH_VERSION='d0-1b-v1';
 export const ADAPTER_DECISIONS=Object.freeze(['execute','respond','clarify','unsupported']);
-export const EXECUTION_ALLOWLIST=Object.freeze(['runtime.status','file.read']);
+export const EXECUTION_ALLOWLIST=Object.freeze(['runtime.status','file.read','conversation']);
 export const STRIPPED_SEMANTIC_FIELDS=Object.freeze(['taskType','capability','requiredCapabilities','providerId','approved','authorized','authorizationContext','riskLevel','path']);
 
 function array(value){return Array.isArray(value)?value:[];}

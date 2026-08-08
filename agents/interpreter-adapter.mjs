@@ -2,6 +2,7 @@ import { validateGroundTruth } from './original-ground-truth-extractor.mjs';
 import { makeAdapterResult, sanitizeSemanticCandidate, validateAdapterInput } from './interpreter-adapter-contract.mjs';
 
 const greeting=/^(?:你好|您好|在吗|早上好|上午好|下午好|晚上好|hello|hi|hey|嗨)[！!。.，,\s]*$/iu;
+const unresolvedConversationReference=/^(?:请)?帮我分析(?:一下)?(?:这个|那个)问题[！!。.，,\s]*$/iu;
 const runtimeStatus=/(?:runtime|运行时|系统).*(?:状态|怎么样|正常|检查|查看|运行状态)|(?:状态|检查|查看|运行状态).*(?:runtime|运行时|系统)/iu;
 const readAction=/(?:读取|读取内容|读一下|读下|帮我读|帮我看|只读|查看|查看内容|看一下|看下|看看|打开并读取|打开看|打开看看|瞅一下|瞧一下|\bread\b|\bopen\b)/iu;
 const fileObject=/(?:文件|文档|文本|内容|完整路径|[\w.-]+\.[A-Za-z0-9]{1,12})(?:\b|$)/iu;
@@ -38,6 +39,12 @@ function filenameFacts(groundTruth){return groundTruth.facts.filter((item)=>item
 function riskSignals(text){return riskRules.filter(([,pattern])=>pattern.test(text)).map(([id])=>id);}
 function sourceValues(items){return items.map((item)=>item.raw);}
 function baseTask({taskType,goal,actions,targets,constraints,requiredCapabilities,successCriteria,context={}}){return {taskType,goal,actions,targets,context,constraints,riskLevel:'low',requiredCapabilities,successCriteria,requiresConfirmation:false,confidence:1};}
+function conversationGoal(text){return `自然语言回答用户请求：${text.trim()}`;}
+function conversationConstraints(groundTruth){return sourceValues(groundTruth.constraints);}
+function conversationSuccessCriteria(text,groundTruth){
+  const extracted=sourceValues(groundTruth.successCriteria);
+  return extracted.length?extracted:[`生成直接回应用户请求的非空自然语言结果：${text.trim()}`];
+}
 function hasFileReadIntent(text,groundTruth){
   const hasObject=fileObject.test(text)||pathFacts(groundTruth).length>0||filenameFacts(groundTruth).length>0;
   return hasObject&&readAction.test(text);
@@ -62,6 +69,7 @@ export class InterpreterAdapter{
     const hasRead=hasFileReadIntent(originalText,groundTruth);
     const independent=[hasRead?'读取文件':'',hasRuntime?'检查Runtime状态':''].filter(Boolean);
     const compound=compoundStructure(originalText);
+    if(!originalText.trim())return makeAdapterResult({decision:'clarify',response:{renderer:'deterministic-v1',text:'我还没有收到可处理的内容。请告诉我你希望我回答或处理什么。'},riskSignals:signals,unresolved:groundTruth.unresolved,semanticCandidateVersion:cleaned.version,missingFields:['userMessage'],questions:['请提供你希望我回答或处理的具体内容。'],recognizedIntents:['invalid_empty_input']});
     if(compound){
       const complete=independent.length>1;
       const detail=complete?`我识别到多个任务：${independent.join('、')}。`:'当前消息可能包含多个任务，我可能没有完整识别另一部分要求。';
@@ -80,6 +88,8 @@ export class InterpreterAdapter{
       return makeAdapterResult({decision:'execute',taskDraft,response:null,riskSignals:signals,unresolved:groundTruth.unresolved,semanticCandidateVersion:cleaned.version,recognizedIntents:['file.read']});
     }
     if(greeting.test(originalText.trim()))return makeAdapterResult({decision:'respond',response:{renderer:'deterministic-v1',text:'你好，我在。你可以让我检查Runtime状态，或者只读查看你明确提供路径的文件。'},riskSignals:signals,unresolved:groundTruth.unresolved,semanticCandidateVersion:cleaned.version,recognizedIntents:['greeting']});
-    return makeAdapterResult({decision:'respond',response:{renderer:'deterministic-v1',text:'我在。当前可以检查Runtime状态，或者只读查看你明确提供路径的文件。'},riskSignals:signals,unresolved:groundTruth.unresolved,semanticCandidateVersion:cleaned.version,recognizedIntents:['non_execution_conversation']});
+    if(groundTruth.unresolved.length||unresolvedConversationReference.test(originalText.trim()))return makeAdapterResult({decision:'clarify',response:{renderer:'deterministic-v1',text:'我还缺少完成回答所需的明确对象或上下文。请补充你希望我分析或处理的具体内容。'},riskSignals:signals,unresolved:groundTruth.unresolved,semanticCandidateVersion:cleaned.version,missingFields:['conversationContext'],questions:['请补充需要分析或处理的具体对象或上下文。'],recognizedIntents:['conversation.clarification']});
+    const taskDraft=baseTask({taskType:'chat',goal:conversationGoal(originalText),actions:['answer'],targets:[],context:{source:'interpreter-adapter-v1'},constraints:conversationConstraints(groundTruth),requiredCapabilities:['conversation'],successCriteria:conversationSuccessCriteria(originalText,groundTruth)});
+    return makeAdapterResult({decision:'execute',taskDraft,response:null,riskSignals:signals,unresolved:groundTruth.unresolved,semanticCandidateVersion:cleaned.version,recognizedIntents:['conversation']});
   }
 }

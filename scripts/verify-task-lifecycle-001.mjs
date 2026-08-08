@@ -16,7 +16,7 @@ const taskRoot = join(root, 'tasks');
 const file = join(root, 'NEXT_STEP.md');
 await fs.writeFile(file, '<!-- AIW_NEXT_STEP_START -->\nTASK-LIFECYCLE-001 matrix goal\n<!-- AIW_NEXT_STEP_END -->\n', 'utf8');
 
-const chat = (goal = 'answer user') => ({ taskType: 'chat', goal, actions: ['answer'], targets: [], context: {}, constraints: [], riskLevel: 'low', requiredCapabilities: [], successCriteria: ['non-empty answer'], requiresConfirmation: false, confidence: 0.99 });
+const chat = (goal = 'answer user') => ({ taskType: 'chat', goal, actions: ['answer'], targets: [], context: {}, constraints: [], riskLevel: 'low', requiredCapabilities: ['conversation'], successCriteria: ['non-empty answer'], requiresConfirmation: false, confidence: 0.99 });
 const clarification = () => ({ taskType: 'clarification', goal: 'clarify target', actions: [], targets: [], context: { missingFields: ['target'], questions: ['Which target should I use?'] }, constraints: [], riskLevel: 'low', requiredCapabilities: [], successCriteria: ['user supplies target'], requiresConfirmation: false, confidence: 0.4 });
 const fileRead = () => ({ taskType: 'file_operation', goal: 'read file', actions: ['read'], targets: [{ type: 'file', path: file }], context: { absolutePath: file }, constraints: ['read only'], riskLevel: 'low', requiredCapabilities: ['file.read'], successCriteria: ['file read evidence'], requiresConfirmation: false, confidence: 0.99 });
 const confirmation = () => ({ taskType: 'commerce', goal: 'place order', actions: ['pay'], targets: [{ type: 'order' }], context: {}, constraints: [], riskLevel: 'high', requiredCapabilities: ['commerce.payment'], successCriteria: ['confirmation first'], requiresConfirmation: true, confidence: 0.95 });
@@ -49,6 +49,43 @@ function makeRuntime({ tasks = new TaskStore({ root: taskRoot }), sessions = new
 
 const cases = [];
 const record = (name, details = {}) => cases.push({ name, ...details });
+
+{
+  const tasks = new TaskStore({ root: join(root, 'pure-greeting') });
+  const models = makeModels();
+  const runtime = new AgentRuntime({ root, allowedRoots: [root], tasks, sessions: new ContractSessionStore(), models, tools: makeTools(), verifier: new ResultVerifier(), nonExecutionMessageOptions: { root: join(root, 'pure-greeting-non-execution') } });
+  const result = await runtime.handle({ messageId: 'pure-greeting', originalMessageId: 'pure-greeting', conversationId: 'pure-greeting-c', chatId: 'pure-greeting-c', text: '你好' });
+  assert.equal(result.classification.decision, 'respond');
+  assert.equal(result.executionStarted, false);
+  assert.equal(await tasks.load('pure-greeting'), null);
+  assert.equal(models.calls.express, 0);
+  record('pure-greeting-non-execution', { taskCreates: 0, runCreates: 0, providerCalls: 0 });
+}
+
+{
+  const tasks = new TaskStore({ root: join(root, 'conversation-business') });
+  const models = makeModels({ express: async () => ({ text: 'E2E-A-OK' }) });
+  const { runtime } = makeRuntime({ tasks, models, interpretation: chat('reply with requested format') });
+  const result = await runtime.handle({ messageId: 'conversation-business', originalMessageId: 'conversation-business', conversationId: 'conversation-business-c', chatId: 'conversation-business-c', leaseOwner: 'conversation-worker', text: '请只回复：E2E-A-OK' });
+  const task = await tasks.load('conversation-business');
+  const run = task.runs[0];
+  assert.equal(task.adapterResult.decision, 'execute');
+  assert.equal(task.interpretation.taskType, 'chat');
+  assert.deepEqual(task.interpretation.requiredCapabilities, ['conversation']);
+  assert.equal(task.currentState, 'completed');
+  assert.deepEqual(task.stateHistory.map((item) => item.to), ['accepted','interpreting','scheduling','ready','executing','verifying','completed']);
+  assert.equal(task.runs.length, 1);
+  assert.equal(run.providerId, 'deepseek');
+  assert.equal(models.calls.express, 1);
+  assert.equal(run.verification.taskId, task.taskId);
+  assert.equal(run.verification.runId, run.runId);
+  assert.equal(task.finalResult.taskId, task.taskId);
+  assert.equal(task.finalResult.runId, run.runId);
+  assert.equal(result.taskId, task.taskId);
+  assert.equal(result.runId, run.runId);
+  assert.equal(task.activeRunId, null);
+  record('conversation-business-execution', { taskCreated: true, lifecycle: task.stateHistory.map((item) => item.to), runs: task.runs.length, runProviderId: run.providerId, expressCalls: models.calls.express, verificationBound: run.verification.runId === run.runId, finalTaskBound: task.finalResult.taskId === task.taskId, finalRunBound: task.finalResult.runId === run.runId });
+}
 
 {
   const store = new TaskStore({ root: join(root, 'one-to-one') });
