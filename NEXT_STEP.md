@@ -1,33 +1,51 @@
 # NEXT_STEP.md — 当前唯一下一步
 
 <!-- AIW_NEXT_STEP_START -->
-等待用户批准Interpreter Adapter
+ZERO_TO_ONE_ONBOARDING_AND_CHANNEL_PAIRING_DISCOVERY_AND_CONTRACT_AWAIT_APPROVAL
 <!-- AIW_NEXT_STEP_END -->
 
-## 目标
+## 当前产品阶段
 
-基于已完成的D0-1B确定性原始事实提取器，等待用户明确批准后再设计和施工Interpreter Adapter。
+```text
+completedProductPhase=FIRST_PRODUCT_CORE_MILESTONE
+nextProductPhase=ZERO_TO_ONE_ONBOARDING_AND_CHANNEL_PAIRING
+```
 
-## 基线
+## 下一任务性质
 
-- RUN-FENCING验收候选：`c2ed8c13e42b5c006a6c30a943b08975cff6c3a5`
-- D0-1B候选：以当前分支最终标签为准。
+等待产品负责人批准一个独立的Discovery / Contract工作包，用于只读审查：
 
-## 执行顺序
+1. 现有Installer、Bootstrap与first-run入口；
+2. User / Workspace / Device identity现状；
+3. ChannelAdapter契约与现有Feishu实现；
+4. 新飞书账号Pairing所需正式接口和授权能力；
+5. Provider first-run setup；
+6. Clean-room First-user Acceptance边界；
+7. 一次性、短期有效且不包含永久Secret/API Key/Token的Pairing安全契约。
 
-1. 停止自动施工；
-2. 等待用户验收D0-1B；
-3. 仅在用户明确批准后开始Interpreter Adapter。
+二维码只属于目标UX，不是已完成事实，也不在本轮预设具体实现。
 
 ## 完成标准
 
-- 用户明确批准Interpreter Adapter的施工范围、输入输出契约和验收门禁。
+下一轮Discovery / Contract必须形成：
+
+- 当前代码与产品能力事实盘点；
+- 明确的Identity与Channel Binding数据契约；
+- Feishu官方能力与现有实现差距；
+- 威胁模型、权限、Secret与失效策略；
+- Installer / Bootstrap / Provider setup依赖图；
+- Clean-room测试环境计划；
+- 原子施工包、门禁与首失败停止条件。
 
 ## 明确禁止
 
-- Interpreter Adapter提前施工；
-- 自动部署；
-- 切换生产Runtime或触碰生产IPC；
-- 未保存成果时reset/clean。
+在产品负责人批准Discovery / Contract之前，不得：
 
-Interpreter Adapter仅在用户再次明确确认后开始；本轮D0-1B完成后必须停止。
+- 实施Pairing或二维码；
+- 修改Installer或Bootstrap；
+- 创建新Feishu账号绑定；
+- 破坏Golden Reference Environment；
+- 执行Human Acceptance；
+- 实施Billing、Multi-task或Multi-agent；
+- Rebind当前live Runtime；
+- 自动进入任何功能开发。
