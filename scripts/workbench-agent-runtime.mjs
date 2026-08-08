@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { AgentRuntime } from '../agents/agent-runtime.mjs';
-import { claimJob, completeJob, enqueueProgress, ensureIpcDirs, listJobs, recoverExpiredRunClaims, releaseClaim, renewJobClaim, writeWorkerState } from './feishu-worker-ipc.mjs';
+import { bindJobClaimToRun, claimJob, completeJob, enqueueProgress, ensureIpcDirs, listJobs, recoverExpiredRunClaims, releaseClaim, renewJobClaim, writeWorkerState } from './feishu-worker-ipc.mjs';
 const runtimeEventsPath = join(process.env.AI_WORKBENCH_RUNTIME_DIR || join(process.env.APPDATA || process.env.USERPROFILE || process.cwd(), 'ai-workbench'), 'feishu-workbench-bridge', 'events.jsonl');
 async function runtimeEvent(type, payload = {}) { await fs.mkdir(dirname(runtimeEventsPath), { recursive: true }); await fs.appendFile(runtimeEventsPath, `${JSON.stringify({ at: new Date().toISOString(), type, payload })}\n`, 'utf8'); }
 import { createHash } from 'node:crypto';
@@ -46,6 +46,10 @@ async function acquireRuntimeLock() {
 const runtime = new AgentRuntime({
   root,
   allowedRoots,
+  onRunStarted: async ({ job, identity }) => {
+    if (job) job.__runIdentity = identity;
+    if (job?.messageId && job?.workerId) await bindJobClaimToRun(job.messageId, job.workerId, identity);
+  },
   onProgress: async (progress) => { const task=await tasks.load(progress.taskId||progress.jobId);const gate=shouldStopJobForActiveTask({taskId:progress.taskId||progress.jobId,messageId:progress.originalMessageId,originalMessageId:progress.originalMessageId},task);if(gate.shouldStop){await runtimeEvent('progress_suppressed',{eventId:progress.eventId,taskId:gate.taskId,reason:gate.reason});return;}await enqueueProgress(progress);await runtimeEvent('progress_generated', { eventId: progress.eventId, jobId: progress.jobId, stage: progress.stage, createdAt: progress.createdAt }); },
   onStage: async (job, stage) => { await runtimeEvent('job_stage', { messageId: job.messageId, taskId: job.taskId, stage, atMs: Date.now(), runtimePid: process.pid }); await patchStatus({ codex: stage === 'executing' ? 'busy' : undefined }); }
 });
@@ -61,24 +65,28 @@ export function shouldStopJobForActiveTask(job, task) {
 }
 export function shouldSuppressCompletedResult(job,task,result={}){const gate=shouldStopJobForActiveTask(job,task);return gate.shouldStop||(!result.controlKind&&task?.originalMessageId===(job.originalMessageId||job.messageId)&&TERMINAL_TASK_STATES.has(task.currentState)&&!task.finalResult);}
 async function executeClaimedJob(job,workerId) {
-  const leaseTimer=setInterval(()=>renewJobClaim(job.messageId,workerId,{runtimePid:process.pid}).catch(()=>{}),Number(process.env.AIW_RUN_LEASE_RENEW_MS||30000));
+  let runIdentity=null;
+  const claimedJob={...job,workerId,leaseOwner:workerId,channelAccount:job.channelAccount||'feishu'};
+  const leaseTimer=setInterval(()=>renewJobClaim(job.messageId,workerId,{runtimePid:process.pid,...(runIdentity||{})}).catch(()=>{}),Number(process.env.AIW_RUN_LEASE_RENEW_MS||30000));
   leaseTimer.unref?.();
   try {
-    const result=await runtime.handle(job);
+    const result=await runtime.handle(claimedJob);
+    runIdentity=claimedJob.__runIdentity||runIdentity;
+    if(result?.runId)runIdentity={runId:result.runId,attemptId:result.attemptId,leaseOwner:result.leaseOwner||workerId,taskRevision:result.taskRevision,taskId:result.taskId||job.taskId||job.messageId};
     const task=await tasks.load(job.taskId||job.messageId);
     const stale=shouldSuppressCompletedResult(job,task,result);
     const finishedAt=Date.now();
-    await completeJob(job, stale
+    const payload=stale
       ? {messageId:job.messageId,originalMessageId:job.originalMessageId||job.messageId,conversationId:job.conversationId||job.chatId,chatId:job.chatId,ok:false,text:'',suppressed:true,errorClass:'Superseded',finishedAt}
-      : { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: true, text: result.text, provider: result.provider, providerSessionId: result.providerSessionId, toolUsed: result.toolUsed, verified: result.verified, controlKind: result.controlKind || '', ...(result.activeTaskId ? { activeTaskId: result.activeTaskId } : {}), classification: result.classification || null, finishedAt });
+      : {messageId:job.messageId,originalMessageId:job.originalMessageId||job.messageId,channelAccount:result.channelAccount||job.channelAccount||'feishu',conversationId:job.conversationId||job.chatId,chatId:job.chatId,ok:true,text:result.text,provider:result.provider,providerSessionId:result.providerSessionId,toolUsed:result.toolUsed,verified:result.verified,taskId:result.taskId||job.taskId||job.messageId,runId:result.runId||'',attemptId:result.attemptId||'',leaseOwner:result.leaseOwner||workerId,taskRevision:result.taskRevision??null,controlKind:result.controlKind||'',...(result.activeTaskId?{activeTaskId:result.activeTaskId}:{}),classification:result.classification||null,finishedAt};
+    await completeJob(job,payload,runIdentity);
     await runtimeEvent(stale?'result_suppressed':'result_generated',{messageId:job.messageId,finishedAt,provider:result.provider,toolUsed:result.toolUsed,verified:result.verified});
-    if(!stale)await patchStatus({ latestError: '', deepseek: 'online', codex: 'online', localTools: 'online' });
+    if(!stale)await patchStatus({latestError:'',deepseek:'online',codex:'online',localTools:'online'});
   } catch(error) {
-    await completeJob(job,{messageId:job.messageId,originalMessageId:job.originalMessageId||job.messageId,conversationId:job.conversationId||job.chatId,chatId:job.chatId,ok:false,text:'这次没有完成，我已经停止。你可以继续发送新消息。',errorClass:error.name||'Error',finishedAt:Date.now()});
+    await completeJob(job,{messageId:job.messageId,originalMessageId:job.originalMessageId||job.messageId,conversationId:job.conversationId||job.chatId,chatId:job.chatId,ok:false,text:'Runtime did not complete this request.',errorClass:error.name||'Error',finishedAt:Date.now()},runIdentity);
     await patchStatus({codex:'online',latestError:error.message||String(error)});
-  } finally { clearInterval(leaseTimer);await releaseClaim(job.messageId).catch(()=>{});runningJobs.delete(job.messageId); }
+  } finally { clearInterval(leaseTimer);await releaseClaim(job.messageId,runIdentity).catch(()=>{});runningJobs.delete(job.messageId); }
 }
-
 export async function supervisorLoop() {
   await acquireRuntimeLock();
   await ensureIpcDirs();
@@ -106,7 +114,7 @@ export async function supervisorLoop() {
       const active = await tasks.load(job.taskId || job.messageId);
       const taskGate = shouldStopJobForActiveTask(job, active);
       if (taskGate.shouldStop) {
-        await completeJob(job, { taskId: taskGate.taskId, messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: false, text: '任务已取消，不会继续执行。', terminalState: taskGate.terminalState, errorClass: 'Cancelled', finishedAt: Date.now() });
+        await completeJob(job, { taskId: taskGate.taskId, messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, conversationId: job.conversationId || job.chatId, chatId: job.chatId, ok: false, text: 'Task was cancelled and will not continue.', terminalState: taskGate.terminalState, errorClass: 'Cancelled', finishedAt: Date.now() });
         continue;
       }
       if (!(await claimJob(job, workerId))) continue;

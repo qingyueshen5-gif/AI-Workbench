@@ -589,6 +589,11 @@ function codexContract() {
 }
 
 async function main(argv = process.argv.slice(2)) {
+  if (process.env.AIW_ENABLE_LEGACY_TASK_GATEWAY_CLI !== '1') {
+    console.error(JSON.stringify({ ok: false, reason: 'legacy_task_gateway_cli_disabled', message: 'Legacy task-gateway product CLI is disabled; use the Package B bridge path.' }, null, 2));
+    process.exitCode = 1;
+    return;
+  }
   const [command, ...args] = argv;
   await ensureDirs();
   try {

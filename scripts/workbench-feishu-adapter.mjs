@@ -177,8 +177,11 @@ export async function startWorkbenchFeishuAdapter() {
   const lark = await import('@larksuiteoapi/node-sdk');
   const config = { appId, appSecret, loggerLevel: lark.LoggerLevel.warn };
   const client = new lark.Client(config);
-  const reply = async (messageId, text, purpose = 'final') => {
-    const uuid = createHash('sha256').update(`aiw-${purpose}:${messageId}`).digest('hex').slice(0, 32);
+  const reply = async (messageId, text, purpose = 'final', identity = {}) => {
+    const scope = purpose === 'final'
+      ? `${identity.channelAccount || 'feishu'}:${identity.originalMessageId || messageId}:${identity.taskId || ''}:${identity.taskRevision ?? ''}`
+      : `${identity.channelAccount || 'feishu'}:${identity.originalMessageId || messageId}:${identity.progressEventId || identity.eventId || ''}`;
+    const uuid = createHash('sha256').update(`aiw-${purpose}:${scope}`).digest('hex').slice(0, 32);
     let response;
     try {
       response = await client.im.v1.message.reply({ path: { message_id: messageId }, data: { msg_type: 'text', content: JSON.stringify({ text }), uuid } });
@@ -259,10 +262,10 @@ export async function startWorkbenchFeishuAdapter() {
     for (const result of await listResults()) {
       if(result.suppressed||!String(result.text||'').trim()){await markDelivered(result,{suppressed:true});await event('result_delivery_suppressed',{messageId:result.messageId});continue;}
       if (await wasDelivered(result.messageId)) { await markDelivered(result); continue; }
-      if (!(await claimResultDelivery(result.messageId, { pid: process.pid }))) continue;
+      if (!(await claimResultDelivery(result.messageId, { pid: process.pid, channelAccount: result.channelAccount || 'feishu', originalMessageId: result.originalMessageId || result.messageId, taskId: result.taskId || result.activeTaskId || '', taskRevision: result.taskRevision ?? '' }))) continue;
       await event('reply_sender_claimed', { messageId: result.messageId, claimedAt: Date.now(), pid: process.pid });
       try {
-        const replyMessageId = await reply(result.originalMessageId || result.messageId, String(result.text || '这次没有完成。'));
+        const replyMessageId = await reply(result.originalMessageId || result.messageId, String(result.text || '这次没有完成。'), 'final', result);
         await markDelivered(result, { replyMessageId });
         await event('result_delivered', { messageId: result.messageId, replyMessageId, provider: result.provider || '', toolUsed: result.toolUsed || '', verified: result.verified === true });
         await patchStatus({ currentStage: result.ok ? 'completed' : 'failed', latestSuccessfulTask: result.ok ? result.messageId : (await readStatus()).latestSuccessfulTask || '', latestError: result.ok ? '' : String(result.errorClass || '任务失败') });
@@ -285,7 +288,7 @@ export async function startWorkbenchFeishuAdapter() {
         if (await wasProgressDelivered(progress.eventId)) { await markProgressDelivered(raw); continue; }
         if (!(await claimProgress(progress.eventId, { gatewayPid: process.pid }))) continue;
         try {
-          const replyMessageId = await reply(progress.originalMessageId, progress.message);
+          const replyMessageId = await reply(progress.originalMessageId, progress.message, 'progress', progress);
           await markProgressDelivered(raw, { replyMessageId, stage: progress.stage });
           await event('progress_delivered', { eventId: progress.eventId, jobId: progress.jobId, originalMessageId: progress.originalMessageId, stage: progress.stage, replyMessageId, deliveredAt: Date.now() });
         } catch (error) {

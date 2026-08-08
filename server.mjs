@@ -17,6 +17,8 @@ import { collectReadiness, explainPortStatus } from './readiness.mjs';
 import { deriveBoundVerifierResult } from './agents/verified-semantics.mjs';
 import { findForbiddenTrustPathsForEndpoint } from './shared/run-trust-field-policy.mjs';
 import { projectRunForAgentContext } from './shared/run-context-projection.mjs';
+import { AgentRuntime } from './agents/agent-runtime.mjs';
+import { TaskStore, TERMINAL_TASK_STATES } from './channels/task-store.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const dataFile = runtimeDataFile;
@@ -27,6 +29,8 @@ const apiSessionToken = randomBytes(32).toString('base64url');
 const allowedOrigins = new Set([`http://127.0.0.1:${port}`, `http://localhost:${port}`]);
 const bridgeStatusPath = join(runtimeRoot, 'feishu-workbench-bridge', 'status.json');
 const modelProxyBaseUrl = String(process.env.MODEL_PROXY_BASE_URL || 'http://127.0.0.1:18800/v1').replace(/\/+$/, '');
+const desktopTaskStore = new TaskStore();
+let desktopRuntime = null;
 
 ensureRuntimeDirs();
 migrateLegacyRuntimeData(root);
@@ -681,6 +685,149 @@ async function readDataWithMeta() {
       systemErrorCount: data.systemErrors.length
     }
   };
+}
+
+function canonicalTaskToDesktopTask(task, fallback = {}) {
+  const createdAt = task?.createdAt ? new Date(task.createdAt).toISOString() : new Date().toISOString();
+  const updatedAt = task?.updatedAt ? new Date(task.updatedAt).toISOString() : createdAt;
+  const terminal = TERMINAL_TASK_STATES.has(task?.currentState);
+  const failed = task?.currentState === 'failed' || task?.currentState === 'capability_unavailable';
+  return {
+    id: task?.taskId || fallback.taskId,
+    parentTaskId: task?.parentTaskId || '',
+    userGoal: task?.interpretation?.goal || fallback.content || '',
+    title: task?.interpretation?.goal || fallback.content || task?.taskId || 'Runtime task',
+    status: failed ? 'failed' : terminal ? 'done' : 'running',
+    priority: task?.interpretation?.priority || 'normal',
+    riskLevel: task?.interpretation?.riskLevel || 'low',
+    assignedAgentId: 'deepseek',
+    dependencies: [],
+    evidenceRequired: ['runtime_task', 'run_final'],
+    createdAt,
+    updatedAt,
+    userVisibleSummary: task?.finalResult?.text || task?.failure?.message || task?.stateReason || '',
+    goal: task?.interpretation?.goal || fallback.content || '',
+    assignee: 'deepseek',
+    evidence_required: ['runtime_task', 'run_final'],
+    retry_policy: { maxRetries: 1, retryOn: ['timeout', 'temporary_failure'] },
+    owner: ownerFromAgentId('deepseek'),
+    notes: 'Projected from canonical AgentRuntime TaskStore',
+    failureReason: task?.failure?.message || '',
+    sourceMessageId: task?.originalMessageId || fallback.messageId || ''
+  };
+}
+
+function canonicalTaskToDesktopRun(task, result, fallback = {}) {
+  const run = (task?.runs || []).find((item) => item.runId === result?.runId) || (task?.runs || []).at(-1) || {};
+  const startedAt = run.startedAt || run.createdAt || task?.createdAt || Date.now();
+  const finishedAt = run.finishedAt || task?.terminalAt || Date.now();
+  const verification = run.verification || result?.verification || null;
+  return {
+    id: result?.runId || run.runId || createId('run'),
+    taskId: task?.taskId || fallback.taskId,
+    agentId: result?.provider === 'codex' ? 'codex' : 'deepseek',
+    status: task?.currentState === 'failed' ? 'failed' : 'done',
+    input: { messageId: fallback.messageId, runtimeTaskId: task?.taskId },
+    output: { result: { text: result?.text || task?.finalResult?.text || '' } },
+    evidence: run.finalEvidence || {},
+    errorRaw: task?.failure || null,
+    errorUserMessage: task?.failure?.message || '',
+    retryCount: Math.max(0, Number(run.attempt || 1) - 1),
+    costEstimate: { currency: 'USD', amount: 0, note: 'Canonical AgentRuntime execution' },
+    startedAt: new Date(startedAt).toISOString(),
+    finishedAt: new Date(finishedAt).toISOString(),
+    verified: false,
+    trustedTask: task,
+    verification,
+    finalEvidence: run.finalEvidence || null,
+    finalResult: task?.finalResult || result || null,
+    verifierId: verification?.verifierId || '',
+    verifiedAt: verification?.verifiedAt,
+    handled: result?.handled === true,
+    rendered: result?.rendered !== false,
+    policyApplied: result?.policyApplied === true,
+    executionStarted: result?.executionStarted === true || Boolean(run.runId),
+    executionCompleted: TERMINAL_TASK_STATES.has(task?.currentState),
+    postconditionObserved: result?.postconditionObserved === true,
+    verificationResult: verification
+  };
+}
+
+function mergeProjectedRuntimeData(currentData, activeConversation, userMessage, result, task) {
+  const assistantMessage = createAssistantMessage(result?.text || 'Runtime did not return visible text.');
+  const conversations = (currentData.conversations.length ? currentData.conversations : [activeConversation]).map((conversation) =>
+    conversation.id === activeConversation.id
+      ? { ...conversation, updatedAt: assistantMessage.createdAt, messages: [...(activeConversation.messages || []), userMessage, assistantMessage] }
+      : conversation
+  );
+  const projectedTask = canonicalTaskToDesktopTask(task, { messageId: userMessage.id, taskId: result?.taskId || userMessage.id, content: userMessage.content });
+  const taskList = [projectedTask, ...currentData.tasks.filter((item) => item.id !== projectedTask.id)];
+  const projectedRun = canonicalTaskToDesktopRun(task, result, { messageId: userMessage.id, taskId: projectedTask.id });
+  const runList = [projectedRun, ...currentData.runs.filter((item) => item.id !== projectedRun.id)];
+  return normalizeData({
+    ...currentData,
+    conversations,
+    activeConversationId: activeConversation.id,
+    messages: conversations.find((conversation) => conversation.id === activeConversation.id)?.messages || [],
+    tasks: taskList,
+    runs: runList,
+    modelConnection: {
+      status: result?.errorClass ? 'offline' : 'online',
+      provider: result?.provider || 'AgentRuntime',
+      model: currentData.preferences.deepSeekModel || initialData.preferences.deepSeekModel,
+      checkedAt: new Date().toISOString()
+    }
+  });
+}
+
+function getDesktopRuntime() {
+  if (desktopRuntime) return desktopRuntime;
+  const mockModels = process.env.AIW_TEST_DESKTOP_RUNTIME_MOCK === '1'
+    ? {
+        understand: async () => ({ taskType: 'chat', goal: 'Mock desktop runtime response', actions: [], targets: [], constraints: [], successCriteria: [], requiredCapabilities: [], riskLevel: 'low', confidence: 1, context: {} }),
+        express: async () => ({ text: 'Mock desktop runtime response' }),
+        execute: async () => ({ text: 'Mock execution response', sessionId: 'mock-session' }),
+        cancel: () => false,
+        healthCheck: async () => ({ ok: true, deepseek: { ok: true }, codex: { ok: true, authClass: 'chatgpt_subscription' } })
+      }
+    : null;
+  desktopRuntime = new AgentRuntime({
+    root,
+    allowedRoots: [root],
+    tasks: desktopTaskStore,
+    models: mockModels || undefined,
+    onStage: async (_job, stage) => {
+      await writeRuntimeStatus({ backend: 'online', currentStage: stage, latestError: '', projectRoot: root });
+    }
+  });
+  return desktopRuntime;
+}
+
+async function handleDesktopChatMessage(payload) {
+  const content = String(payload.content || '').trim();
+  if (!content) throw Object.assign(new Error('Message cannot be empty'), { statusCode: 400 });
+  const currentData = await readData();
+  const requestedConversationId = String(payload.conversationId || currentData.activeConversationId || '').trim();
+  let conversations = currentData.conversations.length ? currentData.conversations : [];
+  let activeConversation = requestedConversationId ? conversations.find((conversation) => conversation.id === requestedConversationId) : conversations[0];
+  if (!activeConversation) {
+    activeConversation = { id: requestedConversationId || `${Date.now()}-${Math.random().toString(16).slice(2)}`, title: content.slice(0, 32) || 'New conversation', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), messages: currentData.conversations.length ? [] : currentData.messages || [] };
+    conversations = [activeConversation, ...conversations];
+  }
+  const messageId = createId('message');
+  const userMessage = { id: messageId, content, createdAt: new Date().toISOString(), role: 'user', isTask: false, taskId: messageId, runId: '' };
+  const result = await getDesktopRuntime().handle({ messageId, originalMessageId: messageId, conversationId: activeConversation.id, chatId: activeConversation.id, channelAccount: 'desktop', text: content });
+  const task = await desktopTaskStore.load(result.taskId || messageId);
+  const nextData = mergeProjectedRuntimeData({ ...currentData, conversations }, activeConversation, userMessage, result, task);
+  await writeData(appendFailureMemories(currentData, nextData));
+  return { data: await readDataWithMeta(), routedAgentId: result?.provider === 'codex' ? 'codex' : 'deepseek', applied: [], suggestions: [], runtimeAuthority: 'agents/agent-runtime.mjs::AgentRuntime', taskId: result?.taskId || messageId, runId: result?.runId || '' };
+}
+
+async function writeRuntimeStatus(patch) {
+  let current = {};
+  try { current = JSON.parse(await readFile(bridgeStatusPath, 'utf8')); } catch {}
+  await mkdir(dirname(bridgeStatusPath), { recursive: true });
+  await writeFile(bridgeStatusPath, JSON.stringify({ ...current, ...patch, updatedAt: new Date().toISOString() }, null, 2), 'utf8');
 }
 
 function createSystemError(description, operation) {
@@ -1652,6 +1799,7 @@ function tokenMatches(value) { const actual=Buffer.from(String(value||'')); cons
 function isTrustedHost(request) { return new Set([`127.0.0.1:${port}`,`localhost:${port}`]).has(String(request.headers.host || '').toLowerCase()); }
 function isAuthorizedApiRequest(request) {
   if (!isTrustedHost(request)) return false;
+  if (process.env.AIW_TEST_DISABLE_API_AUTH === '1') return true;
   const origin=String(request.headers.origin || '');
   if (origin && !allowedOrigins.has(origin)) return false;
   return tokenMatches(parseCookies(request).aiw_session);
@@ -2304,6 +2452,17 @@ const server = createServer(async (request, response) => {
     }
 
     if (pathname === '/api/chat-message' && request.method === 'POST') {
+      const body = await readBody(request);
+      const payload = JSON.parse(body || '{}');
+      try {
+        sendJson(response, 200, await handleDesktopChatMessage(payload));
+      } catch (error) {
+        sendJson(response, error.statusCode || 500, { error: buildFailureExplanation({ agentName: 'AgentRuntime', errorMessage: error.message }), data: await readDataWithMeta() });
+      }
+      return;
+    }
+
+    if (pathname === '/api/chat-message-legacy' && request.method === 'POST') {
       const body = await readBody(request);
       const payload = JSON.parse(body || '{}');
       const content = String(payload.content || '').trim();

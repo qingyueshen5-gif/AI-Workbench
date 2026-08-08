@@ -3,6 +3,7 @@ import fsp from 'node:fs/promises';
 import { join, dirname, isAbsolute, resolve } from 'node:path';
 import { createHash } from 'node:crypto';
 import { runtimeRoot } from '../runtime-paths.mjs';
+import { TaskStore, TERMINAL_TASK_STATES } from '../channels/task-store.mjs';
 
 const configuredIpcRoot = String(process.env.AIW_FEISHU_IPC_DIR || '').trim();
 if (!configuredIpcRoot) throw new Error('AIW_FEISHU_IPC_DIR is required');
@@ -34,9 +35,12 @@ async function readJson(path, fallback = null) {
 function safeName(id) { return String(id || '').replace(/[^A-Za-z0-9._-]/g, '_'); }
 function fileFor(dir, id) { return join(dir, `${safeName(id)}.json`); }
 
-export function deliveryIdempotencyKey(messageId, purpose = 'final') {
+export function deliveryIdempotencyKey(messageId, purpose = 'final', identity = {}) {
   if (!String(messageId || '').trim()) throw new Error('message_id is required');
-  return createHash('sha256').update(`aiw-${purpose}:${messageId}`).digest('hex').slice(0, 32);
+  const scope = purpose === 'final'
+    ? `${identity.channelAccount || 'feishu'}:${identity.originalMessageId || messageId}:${identity.taskId || ''}:${identity.taskRevision ?? ''}`
+    : `${identity.channelAccount || 'feishu'}:${identity.originalMessageId || messageId}:${identity.progressEventId || identity.eventId || ''}`;
+  return createHash('sha256').update(`aiw-${purpose}:${scope}`).digest('hex').slice(0, 32);
 }
 
 export async function ensureIpcDirs() {
@@ -47,19 +51,23 @@ const progressStages = new Set(['understanding', 'planning', 'executing', 'verif
 export function validateProgressEvent(event) {
   if (!event || typeof event !== 'object') throw new Error('Progress event must be an object');
   for (const key of ['eventId', 'jobId', 'originalMessageId', 'conversationId', 'stage', 'message']) if (!String(event[key] || '').trim()) throw new Error(`Progress missing ${key}`);
+  const progressEventId = String(event.progressEventId || event.eventId || '').trim();
+  if (!progressEventId) throw new Error('Progress missing progressEventId');
   if (!progressStages.has(event.stage)) throw new Error('Progress stage is invalid');
   if (!Number.isFinite(Number(event.createdAt)) || Number(event.createdAt) <= 0) throw new Error('Progress createdAt is invalid');
   if (String(event.message).length > 500) throw new Error('Progress message is too long');
   const serialized = JSON.stringify(event);
   if (/(?:prompt|token|pid|api[_-]?key|secret|authorization|internal[_ -]?reasoning)/i.test(serialized)) throw new Error('Progress contains forbidden internal data');
-  return { eventId: String(event.eventId), jobId: String(event.jobId), originalMessageId: String(event.originalMessageId), conversationId: String(event.conversationId), stage: event.stage, message: String(event.message), createdAt: Number(event.createdAt) };
+  return { eventId: String(event.eventId), progressEventId, jobId: String(event.jobId), taskId: String(event.taskId || event.jobId), runId: String(event.runId || ''), attemptId: String(event.attemptId || ''), leaseOwner: String(event.leaseOwner || ''), taskRevision: Number.isFinite(Number(event.taskRevision)) ? Number(event.taskRevision) : null, originalMessageId: String(event.originalMessageId), channelAccount: String(event.channelAccount || 'feishu'), conversationId: String(event.conversationId), stage: event.stage, message: String(event.message), createdAt: Number(event.createdAt) };
 }
+
 export async function enqueueProgress(event) {
   await ensureIpcDirs();
   const value = validateProgressEvent(event); const target = fileFor(progressDir, value.eventId);
   try { const handle = await fsp.open(target, 'wx'); try { await handle.writeFile(`${JSON.stringify(value, null, 2)}\n`, 'utf8'); } finally { await handle.close(); } return true; }
   catch (error) { if (error.code === 'EEXIST') return false; throw error; }
 }
+
 export async function listProgress() {
   await ensureIpcDirs(); const items = [];
   for (const name of (await fsp.readdir(progressDir)).filter((item) => item.endsWith('.json')).sort()) { const item = await readJson(join(progressDir, name)); if (item) items.push({ ...item, _path: join(progressDir, name) }); }
@@ -88,6 +96,42 @@ export async function markProgressDelivered(event, metadata = {}) {
 }
 
 function exists(dir, messageId) { return fs.existsSync(fileFor(dir, messageId)); }
+
+async function commitTerminalResultOnce(messageId, result) {
+  const target = fileFor(resultsDir, messageId);
+  try {
+    const handle = await fsp.open(target, 'wx');
+    try { await handle.writeFile(`${JSON.stringify(result, null, 2)}\n`, 'utf8'); }
+    finally { await handle.close(); }
+    return true;
+  } catch (error) {
+    if (error.code === 'EEXIST') return false;
+    throw error;
+  }
+}
+
+async function failTaskIfPresent(taskId, reason, evidence = {}) {
+  const store = new TaskStore();
+  const task = await store.load(taskId);
+  if (!task || TERMINAL_TASK_STATES.has(task.currentState)) return false;
+  if (task.activeRunId) {
+    const run = task.runs.find((item) => item.runId === task.activeRunId);
+    if (run) {
+      await store.failActiveRunAndTask(task.taskId, {
+        runId: run.runId,
+        attemptId: run.attemptId,
+        leaseOwner: run.leaseOwner,
+        taskRevision: run.taskRevision
+      }, {
+        failure: { errorCode: 'IPC_RECONCILIATION_FAILED', failureStage: 'runtime_internal', failureClassification: 'runtime_failure', message: reason, evidence }
+      });
+      return true;
+    }
+  }
+  await store.transitionTask(task.taskId, task.currentState, 'failed', reason, 'feishu-ipc-reconcile', evidence);
+  await store.patch(task.taskId, { failure: { errorCode: 'IPC_RECONCILIATION_FAILED', failureStage: 'runtime_internal', failureClassification: 'runtime_failure', message: reason, taskId: task.taskId, taskRevision: task.taskRevision + 1, failedAt: Date.now(), evidence } }).catch(() => {});
+  return true;
+}
 
 export async function messageState(messageId) {
   await ensureIpcDirs();
@@ -204,7 +248,27 @@ export async function reconcileIpcState({ nowMs = Date.now(), recoveryMaxAgeMs =
     }
     if (state.result || state.job || state.claim) continue;
     const acceptedAt = Number(accepted.acceptedAt || accepted.receivedAt || 0);
-    if (!acceptedAt || nowMs - acceptedAt > recoveryMaxAgeMs) continue;
+    if (!acceptedAt || nowMs - acceptedAt > recoveryMaxAgeMs) {
+      const taskId = accepted.taskId || accepted.messageId;
+      const failedTask = await failTaskIfPresent(taskId, 'stale_accepted_terminal_fail_closed', { messageId: accepted.messageId, acceptedAt });
+      const committed = await commitTerminalResultOnce(accepted.messageId, {
+        messageId: accepted.messageId,
+        originalMessageId: accepted.originalMessageId || accepted.messageId,
+        channelAccount: accepted.channelAccount || 'feishu',
+        conversationId: accepted.conversationId || accepted.chatId || '',
+        chatId: accepted.chatId || '',
+        ok: false,
+        text: 'Runtime did not accept this request before the recovery window expired.',
+        terminalState: 'failed',
+        errorClass: 'StaleAccepted',
+        failClosed: true,
+        taskId,
+        taskFailed: failedTask,
+        finishedAt: nowMs
+      });
+      if (committed) report.cleanedResults.push(accepted.messageId);
+      continue;
+    }
     if (!accepted.text || !accepted.chatId) continue;
     const recovered = await enqueueJob({
       messageId: accepted.messageId,
@@ -230,6 +294,7 @@ export async function reconcileIpcState({ nowMs = Date.now(), recoveryMaxAgeMs =
     const age = nowMs - Number(job.acceptedAt || job.receivedAt || 0);
     if (state.delivered || age > recoveryMaxAgeMs || !state.accepted) {
       const reason = state.delivered ? 'already_delivered' : age > recoveryMaxAgeMs ? 'stale' : 'orphan';
+      await failTaskIfPresent(job.taskId || job.messageId, `orphan_job_archived_${reason}`, { messageId: job.messageId, age, accepted: state.accepted }).catch(() => {});
       if (await archiveFile(path, 'jobs', job.messageId, reason)) report.archivedJobs.push(job.messageId);
       if (state.claim && await archiveFile(fileFor(claimsDir, job.messageId), 'claims', job.messageId, 'paired_job_archived')) report.archivedClaims.push(job.messageId);
     }
@@ -274,12 +339,21 @@ export async function listJobs() {
   return jobs.sort((a, b) => Number(a.acceptedAt || 0) - Number(b.acceptedAt || 0));
 }
 
+function sameRunIdentity(current = {}, identity = {}) {
+  if (!identity || !identity.runId) return true;
+  if (!current || typeof current !== 'object') return false;
+  return current.workerId === identity.leaseOwner
+    && current.runId === identity.runId
+    && current.attemptId === identity.attemptId
+    && Number(current.taskRevision) === Number(identity.taskRevision);
+}
+
 export async function claimJob(job, workerId) {
   await ensureIpcDirs();
   const claim = fileFor(claimsDir, job.messageId);
   try {
     const handle = await fsp.open(claim, 'wx');
-    try { await handle.writeFile(`${JSON.stringify({ messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, workerId, claimedAt: Date.now(), renewedAt: Date.now() }, null, 2)}\n`, 'utf8'); }
+    try { await handle.writeFile(`${JSON.stringify({ messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, taskId: job.taskId || job.messageId, workerId, leaseOwner: workerId, runId: '', attemptId: '', taskRevision: null, claimedAt: Date.now(), renewedAt: Date.now() }, null, 2)}\n`, 'utf8'); }
     finally { await handle.close(); }
     return true;
   } catch (error) {
@@ -296,12 +370,25 @@ export async function renewJobClaim(messageId, workerId, metadata = {}) {
   const path = fileFor(claimsDir, messageId);
   const current = await readJson(path, null);
   if (!current || current.workerId !== workerId) return false;
+  if (metadata.runId && !sameRunIdentity(current, { ...metadata, leaseOwner: workerId })) return false;
   await writeJsonAtomic(path, { ...current, ...metadata, messageId, workerId, renewedAt: Date.now() });
   return true;
 }
 
-export async function completeJob(job, result) {
+export async function bindJobClaimToRun(messageId, workerId, identity = {}) {
+  const path = fileFor(claimsDir, messageId);
+  const current = await readJson(path, null);
+  if (!current || current.workerId !== workerId) return false;
+  const leaseOwner = String(identity.leaseOwner || workerId);
+  if (leaseOwner !== workerId) return false;
+  await writeJsonAtomic(path, { ...current, workerId, leaseOwner, runId: String(identity.runId || ''), attemptId: String(identity.attemptId || ''), taskRevision: Number(identity.taskRevision), taskId: String(identity.taskId || current.taskId || messageId), renewedAt: Date.now() });
+  return true;
+}
+
+export async function completeJob(job, result, identity = null) {
   await ensureIpcDirs();
+  const currentClaim = await readJson(fileFor(claimsDir, job.messageId), null);
+  if (identity && !sameRunIdentity(currentClaim, identity)) throw new Error('Stale worker cannot complete current claim');
   const target = fileFor(resultsDir, job.messageId);
   try {
     const handle = await fsp.open(target, 'wx');
@@ -314,8 +401,13 @@ export async function completeJob(job, result) {
   await fsp.rm(fileFor(claimsDir, job.messageId), { force: true });
 }
 
-export async function releaseClaim(messageId) {
+export async function releaseClaim(messageId, identity = null) {
+  if (identity) {
+    const currentClaim = await readJson(fileFor(claimsDir, messageId), null);
+    if (!sameRunIdentity(currentClaim, identity)) return false;
+  }
   await fsp.rm(fileFor(claimsDir, messageId), { force: true });
+  return true;
 }
 
 export async function listResults() {
@@ -336,7 +428,7 @@ export async function claimResultDelivery(messageId, metadata = {}) {
   const target = fileFor(deliveryClaimsDir, messageId);
   try {
     const handle = await fsp.open(target, 'wx');
-    try { await handle.writeFile(`${JSON.stringify({ messageId, deliveryKey: deliveryIdempotencyKey(messageId), claimedAt: Date.now(), ...metadata }, null, 2)}\n`, 'utf8'); }
+    try { await handle.writeFile(`${JSON.stringify({ messageId, deliveryKey: deliveryIdempotencyKey(messageId, 'final', metadata), claimedAt: Date.now(), ...metadata }, null, 2)}\n`, 'utf8'); }
     finally { await handle.close(); }
     if (exists(deliveredDir, messageId)) { await fsp.rm(target, { force: true }); return false; }
     return true;

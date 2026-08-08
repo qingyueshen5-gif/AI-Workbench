@@ -40,6 +40,15 @@ function progressMessage(state) {
     verifying: 'Verifying the result.'
   })[state] || '';
 }
+function deliveryStage(state) {
+  return ({
+    interpreting: 'understanding',
+    scheduling: 'planning',
+    ready: 'planning',
+    executing: 'executing',
+    verifying: 'verifying'
+  })[state] || state;
+}
 
 function normalizeClassification(classification, text) {
   const next = { relationToActiveTask: classification?.kind || 'new_task', ...classification };
@@ -77,20 +86,29 @@ export class RuntimeProgressController {
     const createdAt = this.now();
     if (!this.lastSentAt && createdAt - this.startedAt < this.firstDelayMs) return false;
     if (this.lastSentAt && createdAt - this.lastSentAt < this.minIntervalMs) return false;
-    await this.emit({
-      eventId: `${task.taskId}-${task.stateHistory.length}-${createdAt}`,
+    const progressEventId = `${task.taskId}-${task.stateHistory.length}-${createdAt}`;
+    const run = task.activeRunId ? (task.runs || []).find((item) => item.runId === task.activeRunId) : null;
+    const event = {
+      eventId: progressEventId,
+      progressEventId,
       taskId: task.taskId,
       jobId: task.taskId,
       originalMessageId: task.originalMessageId,
       conversationId: task.conversationId,
-      stage: task.currentState,
+      channelAccount: task.channelAccount || this.job.channelAccount || this.job.channel || 'desktop',
+      runId: run?.runId || '',
+      attemptId: run?.attemptId || '',
+      leaseOwner: run?.leaseOwner || '',
+      taskRevision: run?.taskRevision || task.taskRevision,
+      stage: deliveryStage(task.currentState),
       state: task.currentState,
       message,
       createdAt
-    });
+    };
+    await this.emit(event);
     this.lastSentAt = createdAt;
     this.lastSentState = task.currentState;
-    return true;
+    return event;
   }
 
   close() {
@@ -118,6 +136,7 @@ export class AgentRuntime {
     this.deliveryKeyFor = options.deliveryKeyFor || ((identity) => `result:${identity.channel}:${identity.stableMessageId}`);
     this.nonExecutionRenderer = options.nonExecutionRenderer || toNonExecutionRuntimeResult;
     this.afterNonExecutionResultPersisted = options.afterNonExecutionResultPersisted || (async () => {});
+    this.onRunStarted = options.onRunStarted || (async () => {});
     this.scheduler = options.scheduler || new CapabilityScheduler({ registry: this.capabilityRegistry });
     this.statePaths = options.statePaths || {
       gateway: resolve(runtimeRoot, 'feishu-workbench-bridge', 'gateway-health.json'),
@@ -130,17 +149,20 @@ export class AgentRuntime {
   async transition(task, to, reason, actor, evidence, progress) {
     const next = await this.tasks.transitionTask(task.taskId, task.currentState, to, reason, actor, evidence);
     await this.onStage({ messageId: next.originalMessageId, taskId: next.taskId, conversationId: next.conversationId }, next.currentState);
-    await progress?.onTransition(next);
+    const event = await progress?.onTransition(next);
+    if (event?.runId) await this.tasks.appendRunProgress(next.taskId, { runId: event.runId, taskRevision: event.taskRevision, attemptId: event.attemptId, leaseOwner: event.leaseOwner }, event).catch(() => {});
     return next;
   }
 
-  async executeWithRun(task,{leaseOwner,providerId},providerStart){
+  async executeWithRun(task,{leaseOwner,providerId,job=null},providerStart){
     const activated=await this.tasks.startRun(task.taskId,{expectedTaskRevision:task.taskRevision,leaseOwner,providerId});
-    const identity={taskId:activated.taskId,runId:activated.activeRunId,taskRevision:activated.taskRevision};
+    const run=activated.runs.find((item)=>item.runId===activated.activeRunId);
+    const identity={taskId:activated.taskId,runId:activated.activeRunId,attemptId:run.attemptId,attempt:run.attempt,leaseOwner:run.leaseOwner,providerId:run.providerId,taskRevision:activated.taskRevision};
+    await this.onRunStarted({job,identity,task:activated});
     await this.tasks.transitionRun(activated.taskId,{...identity,from:'created',to:'starting'});
     try {
-      const result=await providerStart(identity);
       await this.tasks.transitionRun(activated.taskId,{...identity,from:'starting',to:'running',evidence:{providerId}});
+      const result=await providerStart(identity);
       return {identity,result};
     } catch (error) {
       await this.tasks.failRunVerification(activated.taskId,identity,{passed:false,verifierId:'ResultVerifier',verificationMethod:'capability-result-verification',evidenceReferences:[],failureReason:error.message||String(error),verifiedAt:this.now()});
@@ -387,9 +409,8 @@ export class AgentRuntime {
         if (assignments.length !== groundedCapabilities.length) throw new Error('Grounded capability assignment mismatch');
         for (const assignment of assignments) this.assertProviderAuthorized(assignment);
         task = await this.transition(task, 'executing', 'grounded_capability_execution_started', 'agent-runtime', { capabilities: groundedCapabilities }, progress);
-        const started = await this.executeWithRun(task, { leaseOwner: String(job.leaseOwner || job.workerId || 'agent-runtime'), providerId: assignments[0]?.primaryProvider?.providerId || 'grounded-provider' }, (identity) => this.executeCapabilityPlan({ ...capabilityPlan, assignments }, interpretation, identity));
+        const started = await this.executeWithRun(task, { leaseOwner: String(job.leaseOwner || job.workerId || 'agent-runtime'), providerId: assignments[0]?.primaryProvider?.providerId || 'grounded-provider', job }, (identity) => this.executeCapabilityPlan({ ...capabilityPlan, assignments }, interpretation, identity));
         const results = started.result;
-        task = await this.tasks.patch(task.taskId, { providerExecution: { provider: assignments[0]?.primaryProvider?.providerId || 'grounded-provider', results } });
         task = await this.transition(task, 'verifying', 'grounded_capability_verifying', 'agent-runtime', { capabilities: groundedCapabilities, runId: started.identity.runId }, progress);
         const verificationResults = results.map((item) => item.verification);
         const verificationRecord = {
@@ -408,7 +429,7 @@ export class AgentRuntime {
         const text = status ? status.result.text : `Read \`${read.result.evidence.path}\`. Evidence: size ${read.result.evidence.size} bytes, SHA-256 \`${read.result.evidence.sha256}\`; file was not modified.`;
         const toolUsed = status ? 'runtime.status' : 'file.read';
         const provider = status?.providerId || read?.providerId || 'grounded-provider';
-        const candidateFinalResult = { messageId: job.messageId, text, provider, providerSessionId: '', toolUsed, verified: true, verification: verificationRecord, interpretation, schedulerStatus: capabilityPlan.status, capabilityResults: results, classification, taskId: task.taskId, runId: started.identity.runId, taskRevision: started.identity.taskRevision, metrics: { readFileCalls: read ? 1 : 0, codexCalls: 0 } };
+        const candidateFinalResult = { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, channelAccount: job.channelAccount || job.channel || 'desktop', text, provider, providerSessionId: '', toolUsed, verified: true, verification: verificationRecord, interpretation, schedulerStatus: capabilityPlan.status, capabilityResults: results, classification, taskId: task.taskId, runId: started.identity.runId, attemptId: started.identity.attemptId, leaseOwner: started.identity.leaseOwner, taskRevision: started.identity.taskRevision, metrics: { readFileCalls: read ? 1 : 0, codexCalls: 0 } };
         const candidateFinalEvidence = { ...verificationRecord, provider, toolUsed };
         const finalResult = { ...candidateFinalResult, verified: deriveBoundVerifierResult({ task: { ...task, currentState: 'completed', failure: null, activeRunId: started.identity.runId }, run: { taskId: task.taskId, runId: started.identity.runId, taskRevision: started.identity.taskRevision, status: 'completed' }, verification: verificationRecord, finalResult: candidateFinalResult, finalEvidence: candidateFinalEvidence }) };
         await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider, taskId });
@@ -420,15 +441,19 @@ export class AgentRuntime {
       if (processCapabilities.length) {
         for (const assignment of capabilityPlan.assignments.filter((item) => processCapabilities.includes(item.capabilityId))) this.assertProviderAuthorized(assignment);
         task = await this.transition(task, 'executing', 'process_capability_execution_started', 'agent-runtime', { capabilities: processCapabilities }, progress);
-        const results = await this.executeCapabilityPlan({ ...capabilityPlan, assignments: capabilityPlan.assignments.filter((item) => processCapabilities.includes(item.capabilityId)) }, interpretation);
-        task = await this.tasks.patch(task.taskId, { providerExecution: { provider: 'local-process-provider', results } });
-        task = await this.transition(task, 'verifying', 'process_capability_verifying', 'agent-runtime', { resultCount: results.length }, progress);
+        const started = await this.executeWithRun(task, { leaseOwner: String(job.leaseOwner || job.workerId || 'agent-runtime'), providerId: 'local-process-provider', job }, (identity) => this.executeCapabilityPlan({ ...capabilityPlan, assignments: capabilityPlan.assignments.filter((item) => processCapabilities.includes(item.capabilityId)) }, interpretation, identity));
+        const results = started.result;
+        task = await this.transition(task, 'verifying', 'process_capability_verifying', 'agent-runtime', { resultCount: results.length, runId: started.identity.runId }, progress);
         const stopped = results.find((item) => item.capabilityId === 'process.stop');
         if (!stopped) throw new Error('process.stop result missing');
         const text = `Completed: ${interpretation.goal}. Stopped PID ${stopped.result.target.pid} and verified it is absent.`;
         await this.sessions.appendMessage(state, { role: 'tool', text: JSON.stringify({ capability: 'process.stop', provider: stopped.providerId, pid: stopped.result.target.pid, verified: false, executionStarted: true, executionCompleted: true, postconditionObserved: stopped.result.verification?.pidAbsent === true }), messageId: job.messageId, provider: stopped.providerId, taskId });
         await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: stopped.providerId, taskId });
-        return this.finalize(task, { messageId: job.messageId, text, provider: stopped.providerId, toolUsed: 'process.stop', verified: false, executionStarted: true, executionCompleted: true, postconditionObserved: stopped.result.verification?.pidAbsent === true, interpretation, schedulerStatus: capabilityPlan.status, capabilityResults: results, metrics: { readFileCalls: 0, codexCalls: 0, processStopCalls: 1 } }, progress);
+        const verificationRecord = { verifierId: this.verifier.constructor?.name || 'ResultVerifier', verificationMethod: 'capability-result-verification', evidenceReferences: [], passed: true, failureReason: null, verifiedAt: this.now(), results: results.map((item) => item.verification).filter(Boolean), ...started.identity };
+        await this.tasks.bindRunVerification(task.taskId, started.identity, verificationRecord);
+        const finalResult = { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, channelAccount: job.channelAccount || job.channel || 'desktop', text, provider: stopped.providerId, toolUsed: 'process.stop', verified: false, verification: verificationRecord, executionStarted: true, executionCompleted: true, postconditionObserved: stopped.result.verification?.pidAbsent === true, interpretation, schedulerStatus: capabilityPlan.status, capabilityResults: results, taskId: task.taskId, runId: started.identity.runId, attemptId: started.identity.attemptId, leaseOwner: started.identity.leaseOwner, taskRevision: started.identity.taskRevision, metrics: { readFileCalls: 0, codexCalls: 0, processStopCalls: 1 } };
+        const completed = await this.tasks.finalizeRun(task.taskId, started.identity, { finalResult, finalEvidence: { ...verificationRecord, provider: stopped.providerId, toolUsed: 'process.stop' } });
+        return { ...finalResult, activeTaskId: completed.taskId, taskId: completed.taskId };
       }
 
       const codeTask = interpretation.taskType === 'code_task' && interpretation.requiredCapabilities.some((item) => item.startsWith('code.'));
@@ -440,24 +465,34 @@ export class AgentRuntime {
         const executionPrompt = JSON.stringify({ goal: interpretation.goal, actions: interpretation.actions, targets: interpretation.targets, constraints: interpretation.constraints, successCriteria: interpretation.successCriteria, userMessage: job.text });
         for (const assignment of capabilityPlan.assignments.filter((item) => codeCapabilities.includes(item.capabilityId))) this.assertProviderAuthorized(assignment);
         task = await this.transition(task, 'executing', 'code_execution_started', 'agent-runtime', { workspace, writable }, progress);
-        const execution = await this.models.execute({ conversationId, prompt: executionPrompt, workspace, writable });
+        const started = await this.executeWithRun(task, { leaseOwner: String(job.leaseOwner || job.workerId || 'agent-runtime'), providerId: 'codex', job }, (identity) => this.models.execute({ conversationId, prompt: executionPrompt, workspace, writable, ...identity }));
+        const execution = started.result;
         await this.sessions.appendMessage(state, { role: 'tool', text: execution.text, messageId: job.messageId, provider: 'codex', providerSessionId: execution.sessionId, taskId });
-        task = await this.tasks.patch(task.taskId, { providerExecution: { provider: 'codex', sessionId: execution.sessionId, text: execution.text } });
-        task = await this.transition(task, 'verifying', 'code_execution_verifying', 'agent-runtime', { sessionId: execution.sessionId }, progress);
+        task = await this.transition(task, 'verifying', 'code_execution_verifying', 'agent-runtime', { sessionId: execution.sessionId, runId: started.identity.runId }, progress);
         this.verifier.verifyCodeResult?.({ capabilities: codeCapabilities, execution, workspace, writable, successCriteria: interpretation.successCriteria });
+        const verificationRecord = { verifierId: this.verifier.constructor?.name || 'ResultVerifier', verificationMethod: 'code-result-verification', evidenceReferences: [], passed: true, failureReason: null, verifiedAt: this.now(), ...started.identity };
+        await this.tasks.bindRunVerification(task.taskId, started.identity, verificationRecord);
         const finalModel = await this.models.express({ messages: [{ role: 'system', content: 'Summarize the verified execution result as the final user reply.' }, { role: 'user', content: `Original request: ${job.text}\nExecution result: ${execution.text}` }] });
         const text = this.verifier.verifyModelResult(finalModel).text;
         await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: 'deepseek', taskId });
-        return this.finalize(task, { messageId: job.messageId, text, provider: 'deepseek', providerSessionId: execution.sessionId, toolUsed: 'codex', verified: false, executionStarted: true, executionCompleted: true, postconditionObserved: false, classification, metrics: { readFileCalls: 0, codexCalls: 1 } }, progress);
+        const finalResult = { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, channelAccount: job.channelAccount || job.channel || 'desktop', text, provider: 'deepseek', providerSessionId: execution.sessionId, toolUsed: 'codex', verified: false, verification: verificationRecord, executionStarted: true, executionCompleted: true, postconditionObserved: false, classification, taskId: task.taskId, runId: started.identity.runId, attemptId: started.identity.attemptId, leaseOwner: started.identity.leaseOwner, taskRevision: started.identity.taskRevision, metrics: { readFileCalls: 0, codexCalls: 1 } };
+        const completed = await this.tasks.finalizeRun(task.taskId, started.identity, { finalResult, finalEvidence: { ...verificationRecord, provider: 'deepseek', toolUsed: 'codex' } });
+        return { ...finalResult, activeTaskId: completed.taskId, taskId: completed.taskId };
       }
 
       const conversationTask = interpretation.taskType === 'chat' || interpretation.requiredCapabilities.length === 0;
       if (!conversationTask) throw new Error(`Runtime capability not connected: ${interpretation.requiredCapabilities.join(', ')}`);
-      task = await this.transition(task, 'verifying', 'conversation_answer_verifying', 'agent-runtime', { taskType: interpretation.taskType }, progress);
-      const finalModel = await this.models.express({ messages: [{ role: 'system', content: 'Answer naturally from the structured task interpretation. Do not claim unexecuted tools or operations.' }, { role: 'user', content: JSON.stringify({ task: interpretation, userMessage: job.text, conversationContext: historyPrompt(state.originalMessages || []) }) }] });
+      task = await this.transition(task, 'executing', 'conversation_answer_started', 'agent-runtime', { taskType: interpretation.taskType }, progress);
+      const started = await this.executeWithRun(task, { leaseOwner: String(job.leaseOwner || job.workerId || 'agent-runtime'), providerId: 'deepseek', job }, (identity) => this.models.express({ messages: [{ role: 'system', content: 'Answer naturally from the structured task interpretation. Do not claim unexecuted tools or operations.' }, { role: 'user', content: JSON.stringify({ task: interpretation, userMessage: job.text, conversationContext: historyPrompt(state.originalMessages || []), run: identity }) }] }));
+      task = await this.transition(task, 'verifying', 'conversation_answer_verifying', 'agent-runtime', { taskType: interpretation.taskType, runId: started.identity.runId }, progress);
+      const finalModel = started.result;
       const text = this.verifier.verifyModelResult(finalModel).text;
+      const verificationRecord = { verifierId: this.verifier.constructor?.name || 'ResultVerifier', verificationMethod: 'model-result-verification', evidenceReferences: [], passed: true, failureReason: null, verifiedAt: this.now(), ...started.identity };
+      await this.tasks.bindRunVerification(task.taskId, started.identity, verificationRecord);
       await this.sessions.appendMessage(state, { role: 'assistant', text, messageId: job.messageId, provider: 'deepseek', taskId });
-      return this.finalize(task, { messageId: job.messageId, text, provider: 'deepseek', providerSessionId: '', toolUsed: '', verified: false, handled: true, rendered: true, executionStarted: false, executionCompleted: false, interpretation, schedulerStatus: capabilityPlan.status, classification, metrics: { readFileCalls: 0, codexCalls: 0 } }, progress);
+      const finalResult = { messageId: job.messageId, originalMessageId: job.originalMessageId || job.messageId, channelAccount: job.channelAccount || job.channel || 'desktop', text, provider: 'deepseek', providerSessionId: '', toolUsed: '', verified: false, verification: verificationRecord, handled: true, rendered: true, executionStarted: true, executionCompleted: true, interpretation, schedulerStatus: capabilityPlan.status, classification, taskId: task.taskId, runId: started.identity.runId, attemptId: started.identity.attemptId, leaseOwner: started.identity.leaseOwner, taskRevision: started.identity.taskRevision, metrics: { readFileCalls: 0, codexCalls: 0 } };
+      const completed = await this.tasks.finalizeRun(task.taskId, started.identity, { finalResult, finalEvidence: { ...verificationRecord, provider: 'deepseek', toolUsed: '' } });
+      return { ...finalResult, activeTaskId: completed.taskId, taskId: completed.taskId };
     } catch (error) {
       await this.failTask(task, error, progress, error?.runtimeFailureContext || {});
       throw error;

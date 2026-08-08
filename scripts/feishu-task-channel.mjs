@@ -499,6 +499,9 @@ async function check() {
 }
 
 async function start() {
+  if (process.env.AIW_ENABLE_LEGACY_FEISHU_TASK_CHANNEL_START !== '1') {
+    throw new Error('Legacy Feishu task channel production start is disabled; use npm run bridge:start.');
+  }
   const { wsClient, dispatcher, channel } = await buildLiveChannel();
   const code = channel.allowedOpenIds.size ? '' : channel.generatePairingCode();
   if (code) console.log(`Feishu owner pairing code, expires in 10 minutes: ${code}`);

@@ -7,8 +7,6 @@
   "scripts": {
     "dev": "node scripts/dev.mjs",
     "bridge:start": "node scripts/start-feishu-workbench-bridge.mjs",
-    "bridge:runtime": "node scripts/workbench-agent-runtime.mjs",
-    "bridge:feishu": "node scripts/workbench-feishu-adapter.mjs",
     "api": "node server.mjs",
     "build": "vite build",
     "build:icon": "node scripts/generate-icon.mjs",
@@ -53,9 +51,7 @@
     "openclaw:runtime-deep-dive": "node scripts/openclaw-runtime-deep-dive.mjs",
     "health:check": "node scripts/health-check.mjs",
     "health:repair": "node scripts/health-repair.mjs",
-    "task-gateway": "node scripts/task-gateway.mjs",
     "verify:task-gateway": "node scripts/verify-task-gateway.mjs",
-    "feishu-channel:start": "node scripts/feishu-task-channel.mjs start",
     "feishu-channel:check": "node scripts/feishu-task-channel.mjs check",
     "verify:feishu-channel": "node scripts/verify-feishu-task-channel.mjs",
     "docs:generate-handoff": "node scripts/generate-handoff.mjs",
@@ -75,7 +71,14 @@
     "test:step8-contract-validator": "node --test tests/verify-step8-full-impact-regression-contract-001.test.mjs",
     "verify:step8-full-regression": "node scripts/run-step8-full-impact-regression-001.mjs",
     "verify:package-b-contract": "node scripts/verify-package-b-runtime-authority-contract-001.mjs",
-    "test:package-b-contract-validator": "node --test tests/verify-package-b-runtime-authority-contract-001.test.mjs"
+    "test:package-b-contract-validator": "node --test tests/verify-package-b-runtime-authority-contract-001.test.mjs",
+    "verify:package-b-authority-topology": "node scripts/verify-package-b-authority-topology-001.mjs",
+    "test:package-b-authority-topology": "node --test tests/verify-package-b-authority-topology-001.test.mjs",
+    "verify:package-b-run-ipc-fencing": "node scripts/verify-package-b-run-ipc-fencing-001.mjs",
+    "test:package-b-run-ipc-fencing": "node --test tests/verify-package-b-run-ipc-fencing-001.test.mjs",
+    "verify:package-b-production-path-parity": "node scripts/verify-package-b-production-path-parity-001.mjs",
+    "test:package-b-production-path-parity": "node --test tests/verify-package-b-production-path-parity-001.test.mjs",
+    "test:package-b-construction": "node --test tests/verify-package-b-authority-topology-001.test.mjs tests/verify-package-b-run-ipc-fencing-001.test.mjs tests/verify-package-b-production-path-parity-001.test.mjs"
   },
   "dependencies": {
     "@larksuiteoapi/node-sdk": "^1.71.1",
